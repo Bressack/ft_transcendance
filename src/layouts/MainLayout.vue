@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar>
+      <q-toolbar style="height: 90px;">
 
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         <q-toolbar-title>
@@ -72,6 +72,7 @@ export default defineComponent({
     goProfilPage() {
       this.$router.push({
         path: '/profil',
+        query: { user: 'me' }
       })
     }
   },

@@ -5,6 +5,7 @@
         <!-- <Message v-for="item in messagesList" :key="item.id" :message="item" class="messagecomp" /> -->
         <UserCard
           v-for="message in messagesList" :key="message.id"
+          @click=goProfilPage(message?.identity.name)
           :name=message?.identity.name
           :avatar=message?.identity.avatar
           :content=message?.body
@@ -47,7 +48,14 @@ export default defineComponent({
     const duration = 0; // ms - use 0 to instant scroll
     scrollArea.setScrollPosition(scrollTarget.scrollHeight, duration);
   },
-  methods: {},
+  methods: {
+    goProfilPage(user: string) {
+      this.$router.push({
+        path: '/profil',
+        query: { user: user }
+      })
+    }
+  },
 });
 </script>
 

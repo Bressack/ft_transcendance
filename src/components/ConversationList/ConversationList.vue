@@ -65,6 +65,6 @@ export default defineComponent({
   height: 1em
 
 .list
-  background-color: #303030
+  background-color: #404040 !important
   width: 100%
 </style>
