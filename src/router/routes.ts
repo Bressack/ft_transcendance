@@ -10,6 +10,7 @@ const routes: RouteRecordRaw[] = [
       { path: '/profil',       component: () => import('pages/Profil.vue'       ) },
       { path: '/usercard',     component: () => import('pages/UserCardTest.vue' ) },
       { path: '/upload',       component: () => import('pages/UploadTest.vue'   ) },
+      { path: '/feeddb',       component: () => import('pages/FeedDB.vue'       ) },
     ],
   },
 

@@ -1,17 +1,16 @@
 <template>
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
-      <q-toolbar style="height: 90px;">
+      <q-toolbar class="toolbar">
 
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         <q-toolbar-title>
-          <span class="q-pr-lg">Quasar App</span>
-          <q-btn class="q-mr-sm" to="/" color="orange">Home</q-btn>
-          <q-btn class="q-mr-sm" to="/usercard" color="green">UserCardTest</q-btn>
-          <q-btn class="q-mr-sm" to="/upload" color="green">Avatar Upload</q-btn>
+          <!-- <span class="q-pr-lg">PONG ARENA</span> -->
+          <q-btn class="q-mr-sm" to="/"         color="orange">Home</q-btn>
+          <q-btn class="q-mr-sm" to="/usercard" color="green" >UserCardTest</q-btn>
+          <q-btn class="q-mr-sm" to="/upload"   color="green" >Avatar Upload</q-btn>
+          <q-btn class="q-mr-sm" to="/feeddb"   color="green" >Auto Feed Database</q-btn>
         </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
@@ -41,7 +40,7 @@
         </q-img>
       </q-drawer>
 
-    <q-page-container>
+    <q-page-container class="q-mt-md">
       <router-view />
     </q-page-container>
   </q-layout>
@@ -93,5 +92,8 @@ body
 </style>
 
 <style lang="sass" scoped>
-
+.toolbar
+  height: 90px
+  background-color: #303030!important
+  color: grey
 </style>
