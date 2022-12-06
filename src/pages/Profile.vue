@@ -83,13 +83,5 @@ export default defineComponent({
 })
 </script>
 
-<syle lang="sass">
-@use "../css/interpolate" as r
-
-.padding
-	@inculde r.interpolate((padding-left, padding-bottom), 320px, 2560px, 20px, 50px)
-
-.label
-	@inculde r.interpolate(font-size, 320px, 2560px, 12px, 30px)
-	color: white
-</syle>
+<style lang="sass">
+</style>

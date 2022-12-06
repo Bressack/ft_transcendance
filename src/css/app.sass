@@ -1,4 +1,5 @@
 // app global css in Sass form
+@use "./interpolate" as r
 
 .debug
   border: 1px solid red
@@ -19,3 +20,10 @@
           border: 1px solid magenta
           *
             border: 1px solid cyan
+
+.label
+  @include r.interpolate(font-size, 320px, 2560px, 12px, 30px)
+  color: white
+
+.padding
+  @inculde r.interpolate((padding-left, padding-bottom), 320px, 2560px, 200px, 500px)
