@@ -9,9 +9,10 @@
           <q-btn class="q-mr-sm" @click="logout()" color="red">LOGOUT</q-btn>
           <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn>
           <q-btn class="q-mr-sm" to="/"            color="orange">Home</q-btn>
-          <q-btn class="q-mr-sm" to="/usercard"    color="green" >UserCardTest</q-btn>
-          <q-btn class="q-mr-sm" to="/upload"      color="green" >Avatar Upload</q-btn>
-          <q-btn class="q-mr-sm" to="/feeddb"      color="green" >Auto Feed Database</q-btn>
+          <q-btn class="q-mr-sm" to="/usercard"    color="green">UserCardTest</q-btn>
+          <q-btn class="q-mr-sm" to="/upload"      color="green">Avatar Upload</q-btn>
+          <q-btn class="q-mr-sm" to="/feeddb"      color="green">Auto Feed Database</q-btn>
+          <q-btn class="q-mr-sm" to="/profile/me"  color="green">Profile</q-btn>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -43,7 +44,6 @@
         </q-img>
       </q-drawer>
     <q-page-container class="q-mt-md">
-      {{ me }}
       <router-view />
     </q-page-container>
   </q-layout>
