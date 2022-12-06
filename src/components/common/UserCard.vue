@@ -4,21 +4,21 @@
     <q-item class="main" v-if="!content || !timestamp">
       <q-item-section class="avatar">
         <div v-if="validStatus(onlineStatus)" class="onlineStatus" :class="onlineStatusToCSSClass(onlineStatus)"/>
-        <q-img :src="avatar" :width="avatarSizeC" :height="avatarSizeC" img-class="usercard-image"/>
+        <q-img :src="avatar" :width="avatarSize" :height="avatarSize" img-class="usercard-image"/>
       </q-item-section>
       <q-item-section class="datas name-date toto">
         <q-item-label class="name">{{ name }}</q-item-label>
       </q-item-section>
 
       <q-item-section v-if="icon" class="avatar">
-        <q-avatar :icon="icon" :size="avatarSizeC" class=""/>
+        <q-avatar :icon="icon" :size="avatarSize"/>
       </q-item-section>
     </q-item>
 
     <q-item class="main" v-else>
       <q-item-section class="avatar">
         <div v-if="validStatus(onlineStatus)" class="onlineStatus" :class="onlineStatusToCSSClass(onlineStatus)"/>
-        <q-img :src="avatar" :width="avatarSizeC" :height="avatarSizeC" img-class="usercard-image"/>
+        <q-img :src="avatar" :width="avatarSize" :height="avatarSize" img-class="usercard-image"/>
       </q-item-section>
 
       <q-item-section class="datas">
@@ -33,7 +33,7 @@
       </q-item-section>
 
       <q-item-section v-if="icon" class="avatar">
-        <q-avatar :icon="icon" :size="avatarSizeC" class=""/>
+        <q-avatar :icon="icon" :size="avatarSize"/>
       </q-item-section>
     </q-item>
 
@@ -43,6 +43,7 @@
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 import { OnlineStatus } from '../../models/models';
+import UserCard from '../common/UserCard.vue'
 
 let definedSizes = {
   small : { px: 50  , em: 1 },
@@ -52,15 +53,15 @@ let definedSizes = {
 
 
 export default defineComponent({
-  name: 'UserCard',
-  components: {},
+  // name: 'UserCard',
+  components: { },
   props: {
     name         : { type: String , required:  true    },
     avatar       : { type: String , required:  true    },
     content      : { type: String , default :  null    },
     timestamp    : { type: Date   , default :  null    },
     icon         : { type: String , default :  null    },
-    mirror       : { type: Boolean, default :  false   },
+    mirror       : { type: Boolean, default :  false   }, // TODO: add mirror support for match history
     size         : { type: String , default : 'medium' },
     nameColor    : { type: String , default : 'white'  },
     contentColor : { type: String , default : 'white'  },
@@ -70,65 +71,12 @@ export default defineComponent({
   },
   data() {
     return {
-      marginSizeC: this.marginSize(this.size) as string,
-      avatarSizeC: this.avatarSize(this.size) as string,
-      textSizeC: this.textSize(this.size) as string,
-      onlineStatusSizeC: this.onlineStatusSize(this.size) as string,
-      onlineStatusPositionC: this.onlineStatusPosition(this.size) as string,
-      onlineStatusBorderSizeC: this.onlineStatusBorderSize(this.size) as string,
+
     }
   },
   methods: {
-    marginSize(size: string): string {
-      switch (size) {
-        case 'small' : return ((this.ratio * ((definedSizes.small.px / 2)  - definedSizes.small.em  * 8.9)) + 'px');
-        case 'medium': return ((this.ratio * ((definedSizes.medium.px / 2) - definedSizes.medium.em * 8.9)) + 'px');
-        case 'large' : return ((this.ratio * ((definedSizes.large.px / 2)  - definedSizes.large.em  * 8.9)) + 'px');
-        default: return (this.marginSize('medium'));
-      }
-    },
-    avatarSize(size: string): string {
-      switch (size) {
-        case 'small' : return ((this.ratio * definedSizes.small.px) + 'px');
-        case 'medium': return ((this.ratio * definedSizes.medium.px) + 'px');
-        case 'large' : return ((this.ratio * definedSizes.large.px) + 'px');
-        default: return (this.avatarSize('medium'));
-      }
-    },
-    onlineStatusSize(size: string): string {
-      switch (size) {
-        case 'small' : return ((this.ratio * definedSizes.small.px  / 2) + 'px');
-        case 'medium': return ((this.ratio * definedSizes.medium.px / 2) + 'px');
-        case 'large' : return ((this.ratio * definedSizes.large.px  / 3) + 'px');
-        default: return (this.avatarSize('medium'));
-      }
-    },
-    onlineStatusPosition(size: string): string {
-      switch (size) {
-        case 'small' : return ((this.ratio * definedSizes.small.px  * 0.62) + 'px');
-        case 'medium': return ((this.ratio * definedSizes.medium.px * 0.62) + 'px');
-        case 'large' : return ((this.ratio * definedSizes.large.px  * 0.62) + 'px');
-        default: return (this.avatarSize('medium'));
-      }
-    },
-    onlineStatusBorderSize(size: string): string {
-      switch (size) {
-        case 'small' : return ((this.ratio * definedSizes.small.px  * 0.1) + 'px');
-        case 'medium': return ((this.ratio * definedSizes.medium.px * 0.1) + 'px');
-        case 'large' : return ((this.ratio * definedSizes.large.px  * 0.05) + 'px');
-        default: return (this.avatarSize('medium'));
-      }
-    },
-    textSize(size: string): string {
-      switch (size) {
-        case 'small' : return ((this.ratio * definedSizes.small.em) + 'em');
-        case 'medium': return ((this.ratio * definedSizes.medium.em) + 'em');
-        case 'large' : return ((this.ratio * definedSizes.large.em) + 'em');
-        default: return (this.textSize('medium'));
-      }
-    },
     getRelativeDate(cdate: Date): string {
-      let diff : number = (new Date().getTime() - cdate.getTime()) / (3600 * 1000)
+      let diff : number = (new Date().getTime() - cdate.getTime()) / (3600)
       if (diff < 24.)
         return 'Today at '+cdate.getHours()+':'+cdate.getMinutes()
       else if (diff < 48.)
@@ -145,6 +93,56 @@ export default defineComponent({
     },
     validStatus(s: OnlineStatus) { return s != OnlineStatus.NONE }
   },
+  computed: {
+    marginSize(): string {
+      switch (this.size) {
+        case 'small' : return ((this.ratio * ((definedSizes.small.px / 2)  - definedSizes.small.em  * 8.9)) + 'px');
+        case 'medium': return ((this.ratio * ((definedSizes.medium.px / 2) - definedSizes.medium.em * 8.9)) + 'px');
+        case 'large' : return ((this.ratio * ((definedSizes.large.px / 2)  - definedSizes.large.em  * 8.9)) + 'px');
+        default: return ((this.ratio * ((definedSizes.medium.px / 2) - definedSizes.medium.em * 8.9)) + 'px'); // medium
+      }
+    },
+    avatarSize(): string {
+      switch (this.size) {
+        case 'small' : return ((this.ratio * definedSizes.small.px) + 'px');
+        case 'medium': return ((this.ratio * definedSizes.medium.px) + 'px');
+        case 'large' : return ((this.ratio * definedSizes.large.px) + 'px');
+        default: return ((this.ratio * definedSizes.medium.px) + 'px'); // medium
+      }
+    },
+    textSize(): string {
+      switch (this.size) {
+        case 'small' : return ((this.ratio * definedSizes.small.em) + 'em');
+        case 'medium': return ((this.ratio * definedSizes.medium.em) + 'em');
+        case 'large' : return ((this.ratio * definedSizes.large.em) + 'em');
+        default: return ((this.ratio * definedSizes.medium.em) + 'em'); // medium
+      }
+    },
+    onlineStatusSize(): string {
+      switch (this.size) {
+        case 'small' : return ((this.ratio * definedSizes.small.px  / 2) + 'px');
+        case 'medium': return ((this.ratio * definedSizes.medium.px / 2) + 'px');
+        case 'large' : return ((this.ratio * definedSizes.large.px  / 3) + 'px');
+        default: return ((this.ratio * definedSizes.medium.px / 2) + 'px'); // medium
+      }
+    },
+    onlineStatusPosition(): string {
+      switch (this.size) {
+        case 'small' : return ((this.ratio * definedSizes.small.px  * 0.62) + 'px');
+        case 'medium': return ((this.ratio * definedSizes.medium.px * 0.62) + 'px');
+        case 'large' : return ((this.ratio * definedSizes.large.px  * 0.62) + 'px');
+        default: return ((this.ratio * definedSizes.medium.px * 0.62) + 'px'); // medium
+      }
+    },
+    onlineStatusBorderSize(): string {
+      switch (this.size) {
+        case 'small' : return ((this.ratio * definedSizes.small.px  * 0.1) + 'px');
+        case 'medium': return ((this.ratio * definedSizes.medium.px * 0.1) + 'px');
+        case 'large' : return ((this.ratio * definedSizes.large.px  * 0.05) + 'px');
+        default: return ((this.ratio * definedSizes.medium.px * 0.1) + 'px'); // medium
+      }
+    },
+  }
 });
 </script>
 
@@ -164,12 +162,12 @@ export default defineComponent({
   flex-direction: row
 
 .avatar
-  max-width: v-bind(avatarSizeC) !important
+  max-width: v-bind(avatarSize) !important
 
 .name
   font-weight: bold
   color: v-bind(nameColor)
-  font-size: v-bind(textSizeC)
+  font-size: v-bind(textSize)
   margin-right: 0.8vw
 
   // add '...' to the end of name if it overflow the container
@@ -180,7 +178,7 @@ export default defineComponent({
 .content
   margin: 0px
   color: v-bind(contentColor)
-  font-size: v-bind(textSizeC)
+  font-size: v-bind(textSize)
 
 .timestamp
   margin: 0px
@@ -195,28 +193,28 @@ export default defineComponent({
   align-items: flex-start
 
 .toto
-  min-height: v-bind(avatarSizeC) !important
+  min-height: v-bind(avatarSize) !important
   *
-    margin-top: v-bind(marginSizeC)
-    margin-bottom: v-bind(marginSizeC)
+    margin-top: v-bind(marginSize)
+    margin-bottom: v-bind(marginSize)
 
 
 .onlineStatus
   z-index: 1
-  width: v-bind(onlineStatusSizeC)
-  height: v-bind(onlineStatusSizeC)
-  background-color: rgb(25, 220, 25)
+  width: v-bind(onlineStatusSize)
+  height: v-bind(onlineStatusSize)
+  background-color: $onlineStatus-online
   border-radius: 50px
-  border: v-bind(onlineStatusBorderSizeC) solid #303030
+  border: v-bind(onlineStatusBorderSize) solid $bg-secondary
   position: absolute !important
-  margin-left: v-bind(onlineStatusPositionC)
-  margin-top:  v-bind(onlineStatusPositionC)
+  margin-left: v-bind(onlineStatusPosition)
+  margin-top:  v-bind(onlineStatusPosition)
 
 .onlineStatus-online
-  background-color: rgb(25, 220, 25)
+  background-color: $onlineStatus-online
 .onlineStatus-offline
-  background-color: rgb(220, 25, 25)
+  background-color: $onlineStatus-offline
 .onlineStatus-ingame
-  background-color: rgb(15, 125, 200)
+  background-color: $onlineStatus-ingame
 
 </style>

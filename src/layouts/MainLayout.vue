@@ -6,10 +6,12 @@
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         <q-toolbar-title>
           <!-- <span class="q-pr-lg">PONG ARENA</span> -->
-          <q-btn class="q-mr-sm" to="/"         color="orange">Home</q-btn>
-          <q-btn class="q-mr-sm" to="/usercard" color="green" >UserCardTest</q-btn>
-          <q-btn class="q-mr-sm" to="/upload"   color="green" >Avatar Upload</q-btn>
-          <q-btn class="q-mr-sm" to="/feeddb"   color="green" >Auto Feed Database</q-btn>
+          <q-btn class="q-mr-sm" @click="logout()" color="red">LOGOUT</q-btn>
+          <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn>
+          <q-btn class="q-mr-sm" to="/"            color="orange">Home</q-btn>
+          <q-btn class="q-mr-sm" to="/usercard"    color="green" >UserCardTest</q-btn>
+          <q-btn class="q-mr-sm" to="/upload"      color="green" >Avatar Upload</q-btn>
+          <q-btn class="q-mr-sm" to="/feeddb"      color="green" >Auto Feed Database</q-btn>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -20,17 +22,18 @@
         :breakpoint="500"
         :width="300"
       >
-        <q-scroll-area style="height: calc(100% - 90px); margin-top: 90px;">
+        <q-scroll-area class="scroll">
           <ConversationList/>
         </q-scroll-area>
 
 
         <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
           <UserCard
+            v-if="me?.username"
             @click="goProfilPage()"
             class="absolute-top"
-            :name="me?.name"
-            :avatar="me?.avatar"
+            :name="me?.username"
+            :avatar="mme?.avatar"
             icon="settings"
             size="large"
             nameColor="orange"
@@ -39,8 +42,8 @@
           />
         </q-img>
       </q-drawer>
-
     <q-page-container class="q-mt-md">
+      {{ me }}
       <router-view />
     </q-page-container>
   </q-layout>
@@ -52,6 +55,7 @@ import ConversationList from '../components/ConversationList/ConversationList.vu
 import UserCard from '../components/common/UserCard.vue'
 import { IUserBasicInfo, OnlineStatus } from '../models/models'
 import { randomDate } from '../models/fakedatas'
+import api from 'src/services/api.service'
 
 let _me = {
   name: 'tharchen',
@@ -61,10 +65,18 @@ let _me = {
 
 export default defineComponent({
   name: 'MainLayout',
-
   components: {
     ConversationList,
     UserCard
+  },
+  props: {},
+
+  data() {
+    return {
+      drawer: ref(false),
+      me: ref(undefined),
+      mme: ref(_me),
+    }
   },
 
   methods: {
@@ -73,27 +85,44 @@ export default defineComponent({
         path: '/profil',
         query: { user: 'me' }
       })
-    }
+    },
+    logout() {
+      let that = this
+      api.logout()
+      .then(function (status) {
+        that.$router.push('/login')
+      })
+    },
   },
 
-  setup () {
-    return {
-      drawer: ref(false),
-      me: ref(_me),
-    }
-  }
+  beforeCreate () {
+    api.ping()
+  },
+
+  created () {
+    let that = this
+    api.me()
+    .then(function (me) { that.me = me })
+    .catch(function () {})
+  },
+
 });
 </script>
 
 <style lang="sass">
 body
-  background-color: #404040 !important
+  background-color: $bg-primary !important
   color: grey
 </style>
 
 <style lang="sass" scoped>
 .toolbar
   height: 90px
-  background-color: #303030!important
+  background-color: $bg-secondary !important
   color: grey
+
+.scroll
+  height: calc(100% - 90px)
+  margin-top: 90px
+  background-color: $bg-secondary
 </style>

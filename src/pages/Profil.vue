@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    COUCOU :)
+    {{ toto }}
   </q-page>
 </template>
 
@@ -14,6 +14,11 @@ export default defineComponent({
   data() {
     return {
 
+    }
+  },
+  computed: {
+    toto() {
+      return this.$router.currentRoute.value.query
     }
   },
   methods: {},

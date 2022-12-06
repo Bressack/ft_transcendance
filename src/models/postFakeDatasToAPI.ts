@@ -11,23 +11,23 @@ function makeid(length: number = 10) {
   return result;
 }
 
-export function createUsers(count: number) {
+export async function createUsers(count: number = 0) {
   let i = 0;
   while (i < count) {
     let name: string = namesList[Math.floor(Math.random() * (namesList.length - 1))]
-    const headers = {
-      "Content-Type": "application/json",
-      // 'Content-Type': 'application/x-www-form-urlencoded',
-      'Accept': 'application/json',
-    };
+    // const headers = {
+    //   "Content-Type": "application/json",
+    //   // 'Content-Type': 'application/x-www-form-urlencoded',
+    //   'Accept': 'application/json',
+    // };
     const payload: object = Object({
       username : name,
       password : makeid(21),
       email    : name + "@exemple.com",
     })
-    console.log(payload);
+    // console.log(payload);
 
-    axios.post('/api/users/', payload, { headers })
+    await axios.post('/api/auth/signup', payload)
     .then(function (response) {
       console.log(response);
     })
@@ -36,4 +36,8 @@ export function createUsers(count: number) {
     })
     i++;
   }
+}
+
+export function createMatchHistory(count: number = 0, user: string = '') {
+
 }

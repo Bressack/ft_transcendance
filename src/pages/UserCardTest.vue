@@ -106,6 +106,6 @@ export default defineComponent({
 
 .mainposition
   display: flex
-  background-color: #404040
+  background-color: $bg-primary
   flex-direction: column
 </style>

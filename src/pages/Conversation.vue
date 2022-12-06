@@ -1,10 +1,10 @@
 <template>
   <q-page>
-    <q-scroll-area :visible="true" style="height: 88vh; max-width: 100vw;" ref="chatScroll">
+    <q-scroll-area :visible="true" style="height: 88vh; max-width: 100vw;">
       <q-list bordered class="messagelist">
         <!-- <Message v-for="item in messagesList" :key="item.id" :message="item" class="messagecomp" /> -->
         <UserCard
-          v-for="message in messagesList" :key="message.id"
+          v-for="message in messagesListC" :key="message.id"
           @click=goProfilPage(message?.identity.name)
           :name=message?.identity.name
           :avatar=message?.identity.avatar
@@ -21,12 +21,11 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { IMessageList, IUserBasicInfo } from '../models/models';
+import { IMessageList, IUserBasicInfo, IMessage } from '../models/models';
 import { fake_IMessageList } from '../models/fakedatas';
 // import Message from '../components/Conversation/Message.vue';
 import UserCard from '../components/common/UserCard.vue'
 
-let _messagesList: IMessageList = fake_IMessageList(50);
 
 export default defineComponent({
   name: 'Conversation',
@@ -35,18 +34,12 @@ export default defineComponent({
   },
   data() {
     return {
-      messagesList: _messagesList as IMessageList,
+      messagesList: fake_IMessageList(50) as IMessageList,
       text: '',
     }
   },
   updated() {
-    this.messagesList = fake_IMessageList(20);
-  },
-  mounted() {
-    const scrollArea: any = this.$refs.chatScroll;
-    const scrollTarget: any = scrollArea.getScrollTarget();
-    const duration = 0; // ms - use 0 to instant scroll
-    scrollArea.setScrollPosition(scrollTarget.scrollHeight, duration);
+    this.messagesList = fake_IMessageList(50);
   },
   methods: {
     goProfilPage(user: string) {
@@ -56,6 +49,13 @@ export default defineComponent({
       })
     }
   },
+  computed: {
+    messagesListC() : IMessageList {
+      return this.messagesList.sort((a: IMessage, b: IMessage) => {
+        return a.timestamp > b.timestamp ? -1 : 1
+      })
+    }
+  }
 });
 </script>
 

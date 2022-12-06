@@ -59,12 +59,12 @@ export default defineComponent({
 
 <style lang="sass">
 .item
-  background-color: #303030
+  background-color: $bg-secondary
   // margin-bottom: 2px
   width: 100%
   height: 1em
 
 .list
-  background-color: #404040 !important
+  background-color: $bg-primary !important
   width: 100%
 </style>

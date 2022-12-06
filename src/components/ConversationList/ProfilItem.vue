@@ -30,6 +30,6 @@ export default defineComponent({
 
 <style lang="sass">
 .profilitem
-  background-color: #303030
+  background-color: $bg-secondary
   height: 70px
 </style>

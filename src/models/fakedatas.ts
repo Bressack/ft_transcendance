@@ -1,3 +1,4 @@
+import { data } from 'autoprefixer';
 import { LoremIpsum } from 'lorem-ipsum';
 import {
   IUserBasicInfo,
@@ -42,7 +43,7 @@ export function makeavatar() {
   return String(uri)
 }
 
-export function randomDate(start: number = 1668486420, end: number = 1668686420, startHour: number = 0, endHour: number = 23) {
+export function randomDate(start: number = new Date().getTime() - 604800, end: number = new Date().getTime(), startHour: number = 0, endHour: number = 23) {
   let date: Date = new Date(start + Math.random() * (end - start));
   let hour = startHour + Math.random() * (endHour - startHour) | 0;
   date.setHours(hour);

@@ -7,6 +7,7 @@ import {
 } from 'vue-router';
 
 import routes from './routes';
+import auth from '../services/auth.service'
 
 /*
  * If not building with SSR mode, you can
@@ -20,7 +21,8 @@ import routes from './routes';
 export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
+    : createWebHistory; // remove the '#' in the URI
+    // : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -32,5 +34,18 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
+
+  Router.beforeEach(async (to, from) => {
+
+    // const request = await auth.isSessionAuthenticated()
+    // if (
+    //   // to.name !== 'Login'
+    // ) {
+    //   // redirect the user to the login page
+    //   // return { name: 'Login' }
+    // }
+  })
+
   return Router;
 });
+
