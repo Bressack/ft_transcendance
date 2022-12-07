@@ -1,9 +1,13 @@
 <template>
 <q-item class="padding">
-	<ProfileCard
-		:name=name
-		:avatar=avatar
-	></ProfileCard>
+  <q-item-section avatar>
+	<q-avatar class="avatar">
+		<q-img :src="avatar"/>
+	</q-avatar>
+</q-item-section>
+<q-item-section>
+	<q-item-label class="label name">{{name}}</q-item-label>
+</q-item-section>
 </q-item>
 <q-item>
 	<q-item-section>
@@ -14,7 +18,7 @@
 		<q-item-label class="label score">Defeat<div class="bigger defeat">{{defeat}}</div></q-item-label>
 	</q-item-section>
 	<q-separator vertical color="white" spaced></q-separator>
-	<q-item-section> 
+	<q-item-section>
 		<q-item-label class="label score">Ratio<div class="bigger victory">{{ratio(victory, defeat)}}%</div></q-item-label>
 	</q-item-section>
 </q-item>
@@ -23,16 +27,15 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import ProfileCard from './ProfileCard.vue'
 
 export default defineComponent({
 	name: 'ProfileSummary',
-	components: { ProfileCard },
+	components: { },
 	props: {
 		name	: { type: String , default: undefined },
 		avatar	: { type: String , required: true },
 		victory	: { type: Number , default: 0 },
-		defeat	: { type: Number , default: 0 },
+		defeat	: { type: Number , default: 0 }
 	},
 	methods: {
 		ratio(v: number, d: number): string {
@@ -47,6 +50,15 @@ export default defineComponent({
 <style lang="sass" scoped>
 @use "../../css/interpolate" as r
 
+.name
+	@include r.interpolate(font-size, 320px, 2560px, 14px, 40px)
+	@include r.interpolate(padding-left, 320px, 2560px, 0px, 40px)
+	font-weight: bold
+
+.avatar
+	@include r.interpolate(font-size, 320px, 2560px, 40px, 140px)
+	outline: 1.5px solid black
+
 .score
 	text-align: center
 
@@ -55,9 +67,4 @@ export default defineComponent({
 
 .defeat
 	color: $red
-
-.bigger
-	@include r.interpolate(font-size, 320px, 2560px, 14px, 40px)
-	@include r.interpolate((padding-top, padding-bottom), 20rem, 70rem, 0rem, .5rem)
-	font-weight: bold
 </style>
