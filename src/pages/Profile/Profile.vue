@@ -6,7 +6,7 @@
 			avatar="https://avatars.githubusercontent.com/adebureaux"
 			:victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
 			:defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
-		></ProfileSummary>
+		/>
 	</div>
 	<div class="q-pa-md">
 		<q-item v-if="games.total">
@@ -14,7 +14,7 @@
 				<q-item-label class="label">Match History</q-item-label>
 			</q-item-section>
 		</q-item>
-		<q-item v-for="game in games.result">
+		<q-item v-for="game in games.result" :key="game">
 			<MatchHistory
 			:pOne=game.playerOneName
 			:pTwo=game.playerTwoName
@@ -22,7 +22,7 @@
 			:scoreTwo=game.score_playerTwo
 			avatarOne="https://avatars.githubusercontent.com/adebureaux"
 			avatarTwo="https://cdn.intra.42.fr/users/d1ae701a3af5f3dd3070d5c8406e77fe/tharchen.jpg"
-			></MatchHistory>
+			/>
 		</q-item>
 	</div>
 </q-page>
@@ -31,10 +31,10 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
-import { IGameQuery } from '../services/api.models'
-import MatchHistory from '../components/Profile/MatchHistory.vue'
-import ProfileSummary from '../components/Profile/ProfileSummary.vue'
-import api from '../services/api.service'
+import { IGameQuery } from '../../services/api.models'
+import MatchHistory from './components/MatchHistory.vue'
+import ProfileSummary from './components/ProfileSummary.vue'
+import api from '../../services/api.service'
 
 export default defineComponent({
 	name: 'Profile',

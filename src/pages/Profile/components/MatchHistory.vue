@@ -4,7 +4,7 @@
 		:name=pOne
 		:avatar=avatarOne
 		thumb="yes"
-	></ProfileCard>
+	/>
 </q-item>
 <q-separator vertical color="white"></q-separator>
 <q-item class="padding">
@@ -18,7 +18,7 @@
 		:name=pTwo
 		:avatar=avatarTwo
 		thumb="yes"
-	></ProfileCard>
+	/>
 </q-item>
 </template>
 

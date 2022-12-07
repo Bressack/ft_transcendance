@@ -3,7 +3,7 @@
 	<ProfileCard
 		:name=name
 		:avatar=avatar
-	></ProfileCard>
+	/>
 </q-item>
 <q-item>
 	<q-item-section>
@@ -14,7 +14,7 @@
 		<q-item-label class="label score">Defeat<div class="bigger defeat">{{defeat}}</div></q-item-label>
 	</q-item-section>
 	<q-separator vertical color="white" spaced></q-separator>
-	<q-item-section> 
+	<q-item-section>
 		<q-item-label class="label score">Ratio<div class="bigger victory">{{ratio(victory, defeat)}}%</div></q-item-label>
 	</q-item-section>
 </q-item>
