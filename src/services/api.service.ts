@@ -74,9 +74,9 @@ export default {
 
   async search(query: ISearchQuery) {
     const response = await this.axiosInstance.get('/users/search' + SearchQueryBuilder(query))
-    console.log(response);
+    console.log(response.data);
     return response.data
   },
 
-  
+
 }
