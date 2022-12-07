@@ -1,33 +1,34 @@
 <template>
-<q-page>
-	<div class="q-pa-lg">
-		<ProfileSummary
-			:name=profile.username
-			avatar="https://avatars.githubusercontent.com/adebureaux"
-			:victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
-			:defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
-		/>
-	</div>
-	<div class="q-pa-md">
-		<q-item v-if="games.total">
-			<q-item-section>
-				<q-item-label class="label">Match History</q-item-label>
-			</q-item-section>
-		</q-item>
-		<q-item v-for="game in games.result" :key="game">
-			<MatchHistory
-			:pOne=game.playerOneName
-			:pTwo=game.playerTwoName
-			:scoreOne=game.score_playerOne
-			:scoreTwo=game.score_playerTwo
-			avatarOne="https://avatars.githubusercontent.com/adebureaux"
-			avatarTwo="https://cdn.intra.42.fr/users/d1ae701a3af5f3dd3070d5c8406e77fe/tharchen.jpg"
-			/>
-		</q-item>
-	</div>
-</q-page>
+  <q-page>
+    <div class="q-pa-lg">
+      <ProfileSummary
+        :name=profile.username
+        avatar="https://avatars.githubusercontent.com/adebureaux"
+        :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
+        :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
+      />
+    </div>
+    <div class="q-pa-sm">
+      <q-item v-if="games.total">
+        <q-item-section>
+          <q-item-label class="bigger label">Match History</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-item v-else>
+        <q-item-section class="bigger label">No current game history</q-item-section>
+      </q-item>
+    </div>
+        <div v-for="game in games.result" :key="game" class="container">
+            <MatchHistory
+              :status="gameStatus(game)"
+              :pOne=game.playerOneName
+              :pTwo=game.playerTwoName
+              :scoreOne=game.score_playerOne
+              :scoreTwo=game.score_playerTwo
+            />
+        </div>
+  </q-page>
 </template>
-
 
 <script lang="ts">
 import { defineComponent } from 'vue'
@@ -75,6 +76,13 @@ export default defineComponent({
 				console.log('error:',error);
 			})
 		},
+    gameStatus(game : any) : string {
+      if (game.score_playerOne === game.score_playerTwo)
+        return ("Tie")
+      else if (game.score_playerOne > game.score_playerTwo && game.playerOneName === this.profile.username)
+        return ("Victory")
+      return ("Defeat")
+    }
 	},
 	mounted () {
 		this.fetchUserProfile()
@@ -83,13 +91,5 @@ export default defineComponent({
 })
 </script>
 
-<syle lang="sass">
-@use "../css/interpolate" as r
-
-.padding
-	@inculde r.interpolate((padding-left, padding-bottom), 320px, 2560px, 20px, 50px)
-
-.label
-	@inculde r.interpolate(font-size, 320px, 2560px, 12px, 30px)
-	color: white
-</syle>
+<style lang="sass" scoped>
+</style>
