@@ -19,7 +19,7 @@
 	</q-item-section>
 	<q-separator vertical color="white" spaced></q-separator>
 	<q-item-section>
-		<q-item-label class="label score">Ratio<div class="bigger victory">{{ratio(victory, defeat)}}%</div></q-item-label>
+		<q-item-label class="label score">Ratio<div class="bigger">{{ratio(victory, defeat)}}%</div></q-item-label>
 	</q-item-section>
 </q-item>
 <q-separator color="white" spaced></q-separator>
