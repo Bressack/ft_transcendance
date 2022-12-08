@@ -77,6 +77,4 @@ export default {
     console.log(response.data);
     return response.data
   },
-
-
 }
