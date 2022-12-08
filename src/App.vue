@@ -16,6 +16,12 @@ export default defineComponent({
       let that = this // parce que ta gueule le callback
       api.axiosInstance.interceptors.response.use(undefined, async function (error) {
 
+        if (error?.response?.status == 404)
+        {
+          that.$router.push('/')
+          return ;
+        }
+
         if (error?.config?.url === '/auth/refresh' || error?.response?.status == 417)
         {
           that.$router.push('/login')
