@@ -1,14 +1,16 @@
 <template>
-  <q-item class="padding">
-    <q-item-section avatar>
-    <q-avatar class="avatar">
-      <q-img :src="avatar"/>
-    </q-avatar>
-  </q-item-section>
-  <q-item-section>
-    <q-item-label class="label name">{{name}}</q-item-label>
-  </q-item-section>
-  </q-item>
+  <div class="q-pa-lg sp-b">
+    <q-item>
+      <q-item-section avatar>
+      <q-avatar class="avatar">
+        <q-img :src="avatar"/>
+      </q-avatar>
+    </q-item-section>
+      <q-item-section>
+        <q-item-label class="label name">{{name}}</q-item-label>
+      </q-item-section>
+    </q-item>
+  </div>
   <q-item>
     <q-item-section>
       <q-item-label class="label score">Victory<div class="bigger victory">{{victory}}</div></q-item-label>
@@ -23,29 +25,29 @@
     </q-item-section>
   </q-item>
   <q-separator color="white" spaced></q-separator>
-  </template>
+</template>
 
-  <script lang="ts">
-  import { defineComponent } from 'vue'
+<script lang="ts">
+import { defineComponent } from 'vue'
 
-  export default defineComponent({
-    name: 'ProfileSummary',
-    components: { },
-    props: {
-      name	: { type: String , default: undefined },
-      avatar	: { type: String , required: true },
-      victory	: { type: Number , default: 0 },
-      defeat	: { type: Number , default: 0 }
-    },
-    methods: {
-      ratio(v: number, d: number): string {
-        if (v + d === 0)
-          return "0.00"
-        return (v / (v + d) * 100).toPrecision(4)
-      }
+export default defineComponent({
+  name: 'ProfileSummary',
+  components: { },
+  props: {
+    name    : { type: String , default: undefined },
+    avatar  : { type: String , required: true },
+    victory : { type: Number , default: 0 },
+    defeat  : { type: Number , default: 0 }
+  },
+  methods: {
+    ratio(v: number, d: number): string {
+      if (v + d === 0)
+        return "0.00"
+      return (v / (v + d) * 100).toPrecision(4)
     }
-  });
-  </script>
+  }
+})
+</script>
 
 <style lang="sass" scoped>
 @use "../../../css/interpolate" as r
