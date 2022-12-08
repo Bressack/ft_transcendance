@@ -1,13 +1,12 @@
 <template>
-  <q-page>
-    <!-- <q-img src="src/assets/pong_wallpaper.png"/> -->
+  <div>
     <div class="q-pa-md">
       <q-form class="q-pa-md search" style="max-width: 300px" @submit="search()">
-        <q-input v-model="searchInput" label="Standard" />
+        <q-input v-model="searchInput" label="Standard" @update:model-value="search()"/>
         <q-btn dense flat icon="search" @click="search()"/>
         <q-list class="q-py-md">
           <q-item v-ripple v-for="item in searchResult?.result" :key="item">
-            <q-item-section avatar>
+            <q-item-section>
               <q-item-label>
                 {{ item?.username }}
               </q-item-label>
@@ -16,7 +15,7 @@
         </q-list>
       </q-form>
     </div>
-  </q-page>
+  </div>
 </template>
 
 <script lang="ts">
@@ -25,7 +24,7 @@ import api from 'src/services/api.service'
 import { ISearchQuery } from 'src/services/api.models'
 
 export default defineComponent({
-  name: 'Index',
+  name: 'SearchUser',
   components: {},
   props: {},
   data() {
@@ -36,21 +35,18 @@ export default defineComponent({
   },
   methods: {
     search() {
-      let that = this
-      const searchQuery : ISearchQuery = {
-        key: this.searchInput,
+      if (this.searchInput.length == 0)
+      {
+        this.searchResult = []
+        return ;
       }
-      console.log(searchQuery);
-
+      let that = this
+      const searchQuery : ISearchQuery = { key: this.searchInput }
       api.search(searchQuery)
       .then(function(result) {
-        console.log('result:',result);
         that.searchResult = result
       })
-      .catch(function(error) {
-        console.log('error:',error);
-
-      })
+      .catch(function(error) {})
     }
   },
 });

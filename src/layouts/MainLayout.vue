@@ -51,10 +51,10 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import ConversationList from '../components/ConversationList/ConversationList.vue'
+import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import UserCard from '../components/common/UserCard.vue'
 import { IUserBasicInfo, OnlineStatus } from '../models/models'
-import { randomDate } from '../models/fakedatas'
+// import { randomDate } from '../models/fakedatas'
 import api from 'src/services/api.service'
 
 let _me = {
@@ -82,8 +82,7 @@ export default defineComponent({
   methods: {
     goProfilPage() {
       this.$router.push({
-        path: '/profil',
-        query: { user: 'me' }
+        path: '/profile/me',
       })
     },
     logout() {

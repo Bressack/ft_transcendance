@@ -28,8 +28,8 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { IMessage } from '../../models/models'
-import UserCard from '../common/UserCard.vue'
+import { IMessage } from '../../../models/models'
+import UserCard from '../../../components/common/UserCard.vue'
 
 export default defineComponent({
   name: 'Message',

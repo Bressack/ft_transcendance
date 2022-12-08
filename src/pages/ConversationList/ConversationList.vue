@@ -22,9 +22,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import axios from 'axios';
 import { IUserBasicInfo, IConvList, IConvItem, OnlineStatus, Scope } from '../../models/models';
-import UserCard from '../common/UserCard.vue'
+import UserCard from '../../components/common/UserCard.vue'
 import { fake_IConvList } from '../../models/fakedatas'
 
 export default defineComponent({

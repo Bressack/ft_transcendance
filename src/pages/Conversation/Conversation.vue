@@ -44,8 +44,7 @@ export default defineComponent({
   methods: {
     goProfilPage(user: string) {
       this.$router.push({
-        path: '/profil',
-        query: { user: user }
+        path: `/profile/${user}`
       })
     }
   },
