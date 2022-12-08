@@ -48,10 +48,6 @@ export default defineComponent({
     }
   },
   beforeMount () {
-    // axios.get('/api/conversation/list')
-    // .then (res => {
-
-    // })
   },
 });
 </script>

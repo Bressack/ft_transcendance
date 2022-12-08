@@ -21,10 +21,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
-import { IMessageList, IUserBasicInfo, IMessage } from '../models/models';
-import { fake_IMessageList } from '../models/fakedatas';
+import { IMessageList, IUserBasicInfo, IMessage } from '../../models/models';
+import { fake_IMessageList } from '../../models/fakedatas';
 // import Message from '../components/Conversation/Message.vue';
-import UserCard from '../components/common/UserCard.vue'
+import UserCard from '../../components/common/UserCard.vue'
 
 
 export default defineComponent({
