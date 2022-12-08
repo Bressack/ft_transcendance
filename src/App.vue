@@ -16,7 +16,7 @@ export default defineComponent({
       let that = this // parce que ta gueule le callback
       api.axiosInstance.interceptors.response.use(undefined, async function (error) {
 
-        if (error?.response?.status == 404)
+        if (error?.response?.status === 404 || error?.response?.status === 400)
         {
           that.$router.push('/')
           return ;
