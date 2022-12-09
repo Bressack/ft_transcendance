@@ -34,6 +34,7 @@ export default defineComponent({
             const response = await api.refresh()
             if (response.status == 417)
               that.$router.push('/login')
+            that.$router.replace('/')
           } catch(error: any) {
             console.log('error', error.response)
           }
