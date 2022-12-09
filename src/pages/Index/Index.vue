@@ -1,14 +1,17 @@
 <template>
   <q-page>
     <!-- <q-img src="src/assets/pong_wallpaper.png"/> -->
-    <SearchUser/>
+    <div class="lists">
+      <SearchUser
+        @reloadme="getMe"
+      />
 
-    <FriendList
-      v-if="me"
-      :friends=friends
-      :friendRequestSent=friendRequestSent
-      :friendRequestRecevied=friendRequestRecevied
-    />
+      <FriendList
+        v-if="me"
+        :me=me
+        @reloadme="getMe"
+      />
+    </div>
   </q-page>
 </template>
 
@@ -17,7 +20,6 @@ import { defineComponent, ref } from 'vue';
 import SearchUser from './components/SearchUser.vue'
 import FriendList from './components/FriendList.vue'
 import api from 'src/services/api.service'
-import ld from 'lodash'
 
 export default defineComponent({
   name: 'Index',
@@ -26,31 +28,33 @@ export default defineComponent({
   data() {
     return {
       me: ref(undefined),
-      friends: [] as Array<any>,
-      friendRequestSent: [] as Array<any>,
-      friendRequestRecevied: [] as Array<any>,
     }
   },
   created () {
-    let that = this
-    api.me()
-    .then(function (me) {
-      that.me = me
-      console.log(me);
-
-      let followedBy = [] ; for (let f of me.followedBy) { followedBy.push(f.followerId) }
-      let following = [] ; for (let f of me.following) { following.push(f.followingId) }
-      that.friends = ld.intersection(followedBy, following)
-      that.friendRequestSent = ld.difference(followedBy, following)
-      that.friendRequestRecevied = ld.difference(following, followedBy)
-    })
-    .catch(function () {})
+    this.getMe()
+  },
+  beforeUpdate () {
+    this.getMe()
   },
   methods: {
+    getMe()
+    {
+      let that = this
+      api.me()
+      .then(function (me) {
+        that.me = me
+        console.log(me)
+      })
+      .catch(function () {})
+    }
   },
 });
 </script>
 
 <style lang="sass" scoped>
-
+.lists
+  display: table
+  width: 100%
+  > div
+    display: table-cell
 </style>

@@ -3,7 +3,8 @@
     <div class="q-pa-md">
       <q-uploader
         label="Auto Uploader"
-        url="http://localhost:3000/upload"
+        url="/api/avatar/"
+        field-name="avatar"
       />
     </div>
   </q-page>
@@ -21,7 +22,18 @@ export default defineComponent({
 
     }
   },
-  methods: {},
+  methods: {
+    // factoryFn (files: any) {
+    //   return new Promise((resolve) => {
+    //     resolve({
+    //         headers: [
+    //           { name: 'Content-Disposition', value: `form-data; name="avatar"; filename="${files[0]?.name}"` },
+    //           // { name: 'Content-Type', value: 'image/png'}
+    //         ]
+    //       })
+    //   })
+    // }
+  },
 });
 </script>
 

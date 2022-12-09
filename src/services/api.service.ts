@@ -77,4 +77,17 @@ export default {
     console.log(response.data);
     return response.data
   },
+
+  async unfollow(username: String) {
+    const response = await this.axiosInstance.patch(`/users/${username}/unfollow`)
+    console.log(response);
+    return response
+  },
+
+  async follow(username: String) {
+    const response = await this.axiosInstance.patch(`/users/${username}/follow`)
+    console.log(response);
+    return response
+  },
+
 }

@@ -27,14 +27,13 @@
           <ConversationList/>
         </q-scroll-area>
 
-
         <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
           <UserCard
-            v-if="me?.username"
+            v-if="(me?.username)"
             @click="goProfilPage()"
             class="absolute-top"
             :name="me?.username"
-            :avatar="mme?.avatar"
+            avatar="api/avatar/me/medium"
             icon="settings"
             size="large"
             nameColor="orange"
@@ -75,7 +74,6 @@ export default defineComponent({
     return {
       drawer: ref(false),
       me: ref(undefined),
-      mme: ref(_me),
     }
   },
 
@@ -101,7 +99,9 @@ export default defineComponent({
   created () {
     let that = this
     api.me()
-    .then(function (me) { that.me = me })
+    .then(function (me) {
+      that.me = me
+    })
     .catch(function () {})
   },
 
