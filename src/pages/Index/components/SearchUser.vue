@@ -1,20 +1,18 @@
 <template>
-  <div>
-    <div class="q-pa-md">
-      <q-form class="q-pa-md search" style="max-width: 300px" @submit="search()">
-        <q-input v-model="searchInput" label="Standard" @update:model-value="search()"/>
-        <q-btn dense flat icon="search" @click="search()"/>
-        <q-list class="q-py-md">
-          <q-item v-ripple v-for="item in searchResult?.result" :key="item">
-            <q-item-section>
-              <q-item-label>
-                {{ item?.username }}
-              </q-item-label>
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-form>
-    </div>
+  <div class="q-pa-md">
+    <q-form class="q-pa-md search" style="max-width: 300px" @submit="search()">
+      <q-input v-model="searchInput" label="Standard" @update:model-value="search()"/>
+      <q-btn dense flat icon="search" @click="search()"/>
+      <q-list class="q-py-md">
+        <q-item v-ripple v-for="item in searchResult?.result" :key="item">
+          <q-item-section>
+            <q-item-label>
+              {{ item?.username }}
+            </q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-form>
   </div>
 </template>
 
