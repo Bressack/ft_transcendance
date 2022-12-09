@@ -3,7 +3,7 @@
   <div class="q-pa-lg">
     <ProfileSummary
     :name=profile.username
-    avatar="https://avatars.githubusercontent.com/adebureaux"
+    :avatar=avatar
     :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
     :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
     />
@@ -20,7 +20,7 @@
       :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
     />
   </div>
-  <div class="q-pt-xl q-px-md">
+  <div class="q-px-md">
     <q-item v-if="games.total">
       <q-item-section>
         <q-item-label class="bigger label">Match History</q-item-label>
@@ -43,7 +43,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, getCurrentInstance } from 'vue'
+import { defineComponent } from 'vue'
 import { IGameQuery } from '../../services/api.models'
 import ProfileSummary from './components/ProfileSummary.vue'
 import MatchHistory from './components/MatchHistory.vue'
@@ -57,6 +57,7 @@ export default defineComponent({
   data() {
     return {
       username: this.$route.params.username.toString() as string,
+      avatar: '/api/avatar/' as string,
       profile: [] as any,
       games: [] as any
     }
@@ -99,12 +100,15 @@ export default defineComponent({
     }
   },
   created () {
+    this.avatar += `${this.username}/large`
     this.fetchUserProfile()
     this.fetchGameHistory()
   },
   updated () {
     this.username = this.$route.params.username.toString()
-    console.log(this.fetchUserProfile())
+    this.avatar = `/api/avatar/${this.username}/large`
+    this.fetchUserProfile()
+    this.fetchGameHistory()
   }
 })
 </script>

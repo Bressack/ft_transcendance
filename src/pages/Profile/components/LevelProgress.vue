@@ -4,9 +4,9 @@
     <q-item-label class="absolute-full flex flex-center label bigger">Level {{level}}</q-item-label>
   </q-item>
 </div>
-<q-linear-progress size="35px" :value="progress" color="green">
+<q-linear-progress class="progress" :value="progress" color="green">
   <div class="absolute-full flex flex-center">
-    <q-badge color="white" text-color="black" :label="progressLabel"/>
+    <q-badge class="badge" color="white" text-color="black" :label="progressLabel"/>
   </div>
 </q-linear-progress>
 </template>
@@ -48,9 +48,6 @@ export default defineComponent({
       }
     }
   },
-  created () {
-    this.pushData()
-  },
   updated () {
     this.pushData()
   }
@@ -58,4 +55,13 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+@use "../../../css/interpolate" as r
+
+.progress
+  @include r.interpolate(font-size, 320px, 2560px, 30px, 50px)
+
+.badge
+  @include r.interpolate(font-size, 320px, 2560px, 10px, 30px)
+  @include r.interpolate(height, 320px, 2560px, 20px, 40px)
+  font-weight: bold
 </style>

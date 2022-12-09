@@ -15,16 +15,16 @@
     <q-item-section>
       <q-item-label class="label score">Victory<div class="bigger victory">{{victory}}</div></q-item-label>
     </q-item-section>
-    <q-separator vertical color="white" spaced></q-separator>
+    <q-separator vertical color="white" spaced/>
     <q-item-section>
       <q-item-label class="label score">Defeat<div class="bigger defeat">{{defeat}}</div></q-item-label>
     </q-item-section>
-    <q-separator vertical color="white" spaced></q-separator>
+    <q-separator vertical color="white" spaced/>
     <q-item-section>
       <q-item-label class="label score">Ratio<div class="bigger">{{ratio(victory, defeat)}}%</div></q-item-label>
     </q-item-section>
   </q-item>
-  <q-separator color="white" spaced></q-separator>
+  <q-separator color="white" spaced/>
 </template>
 
 <script lang="ts">
@@ -59,7 +59,6 @@ export default defineComponent({
 
 .avatar
   @include r.interpolate(font-size, 320px, 2560px, 40px, 140px)
-  outline: 1.5px solid black
 
 .score
   text-align: center

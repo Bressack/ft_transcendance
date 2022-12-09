@@ -1,33 +1,35 @@
 <template>
-<q-item class="main">
-  <q-item class="col left">
-    <q-item-section avatar>
-    <q-avatar class="avatar">
-      <q-img src="https://avatars.githubusercontent.com/u/54967855?v=4"/>
-    </q-avatar>
-  </q-item-section>
-  <q-item-section>
-    <q-item-label class="label">{{pOne}}</q-item-label>
-  </q-item-section>
-  </q-item>
-  <q-separator vertical color="white" spaced="-20%"></q-separator>
-  <q-item class="col middle">
-    <q-item-section>
-      <q-item-label class="label bigger score"><span v-bind:class="`${status}`">{{status}}</span></q-item-label>
-    </q-item-section>
-  </q-item>
-  <q-separator vertical color="white" spaced="-20%"></q-separator>
-  <q-item class="col right">
-    <q-item-section>
-      <q-item-label class="label">{{pTwo}}</q-item-label>
-    </q-item-section>
-    <q-item-section avatar>
-    <q-avatar class="avatar">
-      <q-img src="https://avatars.githubusercontent.com/u/54767555?v=4"/>
-    </q-avatar>
-  </q-item-section>
-  </q-item>
-</q-item>
+<div class="doc-container">
+  <div class="row">
+      <q-item v-bind:href=pOne class="col">
+        <q-item-section>
+          <q-avatar class="avatar">
+              <q-img :src="avatarOne"/>
+            </q-avatar>
+          </q-item-section>
+        <q-item-section>
+          <q-item-label class="label">{{pOne}}</q-item-label>
+        </q-item-section>
+      </q-item>
+    <q-separator vertical color="white"/>
+      <q-item class="col middle">
+      <q-item-section>
+        <q-item-label class="label bigger score"><span v-bind:class=status>{{status}}</span></q-item-label>
+      </q-item-section>
+    </q-item>
+    <q-separator vertical color="white"/>
+      <q-item v-bind:href=pTwo class="col right">
+        <q-item-section>
+          <q-avatar class="avatar">
+              <q-img :src="avatarTwo"/>
+            </q-avatar>
+          </q-item-section>
+        <q-item-section>
+          <q-item-label class="label">{{pTwo}}</q-item-label>
+        </q-item-section>
+      </q-item>
+  </div>
+</div>
 </template>
 
 <script lang="ts">
@@ -41,11 +43,23 @@ export default defineComponent({
     pOne : { type: String , default: undefined },
     pTwo : { type: String , default: undefined },
     scoreOne : { type: Number, default: 0 },
-    scoreTwo : { type: Number, default: 0 },
-    avatarOne : { type: String, default: undefined },
-    avatarTwo : { type: String, default: undefined },
+    scoreTwo : { type: Number, default: 0 }
   },
-  methods: { }
+  data () {
+    return {
+      avatarOne: '/api/avatar/' as string,
+      avatarTwo: '/api/avatar/' as string
+    }
+  },
+  methods: { },
+  created () {
+    this.avatarOne += `${this.pOne}/medium`
+    this.avatarTwo += `${this.pTwo}/medium`
+  },
+  updated () {
+    this.avatarOne = `/api/avatar/${this.pOne}/medium`
+    this.avatarTwo = `/api/avatar/${this.pTwo}/medium`
+  }
 })
 </script>
 
@@ -65,32 +79,19 @@ export default defineComponent({
   color: $red
 
 .right
-  text-align: right
+  direction: rtl
 
-.left
-  text-align: left
 .avatar
-  @include r.interpolate(font-size, 320px, 2560px, 35px, 60px)
-  outline: 0.5px solid black
+  @include r.interpolate(font-size, 320px, 2560px, 35px, 75px)
 
 .q-item
-  @include r.interpolate(padding, 320px, 2560px, 6px, 10px)
+  @include r.interpolate(padding, 320px, 2560px, 2px, 15px)
 
-.q-item__section--avatar
-  min-width: 0px
-
-.q-item__section--main ~ .q-item__section--side
-  @include r.interpolate((padding-left), 320px, 2560px, 4px, 35px)
-  padding-right: 0px !important
-
-.q-item__section--side
-  @include r.interpolate((padding-right), 320px, 2560px, 4px, 35px)
-
-.main
-  @include r.interpolate(width, 320px, 2560px, 305px, 1250px)
+.doc-container
+  @include r.interpolate(width, 320px, 2560px, 300px, 1350px)
   @include r.interpolate((margin-top, margin-bottom), 320px, 2560px, 12px, 50px)
   @include r.interpolate((margin-left, margin-right), 320px, 2560px, 6px, 25px)
+  height: auto
   background-color: grey
   border-radius: 25px
-  color: white
 </style>

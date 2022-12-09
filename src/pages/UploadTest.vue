@@ -3,7 +3,8 @@
     <div class="q-pa-md">
       <q-uploader
         label="Auto Uploader"
-        url="http://localhost:3000/upload"
+        url="/api/avatar/"
+        field-name="avatar"
       />
     </div>
   </q-page>
