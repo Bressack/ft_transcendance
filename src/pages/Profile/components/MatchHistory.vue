@@ -1,31 +1,31 @@
 <template>
 <div class="doc-container">
   <div class="row">
-      <q-item v-bind:href=pOne class="col">
-        <q-item-section>
+    <q-item v-bind:href=pOne class="col">
+      <q-item-section avatar>
           <q-avatar class="avatar">
               <q-img :src="avatarOne"/>
-            </q-avatar>
-          </q-item-section>
+          </q-avatar>
+        </q-item-section>
         <q-item-section>
-          <q-item-label class="label">{{pOne}}</q-item-label>
+          <q-item-label class="label username">{{pOne}}</q-item-label>
         </q-item-section>
       </q-item>
-    <q-separator vertical color="white"/>
-      <q-item class="col middle">
+      <q-separator class="mobile-hide" vertical inset color="white"/>
+      <q-item class="col-2">
+        <q-item-section>
+          <q-item-label class="label bigger score"><span v-bind:class=status>{{status}}</span></q-item-label>
+        </q-item-section>
+      </q-item>
+    <q-separator class="mobile-hide" vertical inset color="white"/>
+    <q-item v-bind:href=pTwo class="col">
       <q-item-section>
-        <q-item-label class="label bigger score"><span v-bind:class=status>{{status}}</span></q-item-label>
+        <q-item-label class="right label username">{{pTwo}}</q-item-label>
       </q-item-section>
-    </q-item>
-    <q-separator vertical color="white"/>
-      <q-item v-bind:href=pTwo class="col right">
-        <q-item-section>
-          <q-avatar class="avatar">
-              <q-img :src="avatarTwo"/>
-            </q-avatar>
-          </q-item-section>
-        <q-item-section>
-          <q-item-label class="label">{{pTwo}}</q-item-label>
+      <q-item-section avatar>
+        <q-avatar class="avatar">
+            <q-img :src="avatarTwo"/>
+          </q-avatar>
         </q-item-section>
       </q-item>
   </div>
@@ -78,14 +78,23 @@ export default defineComponent({
 .Defeat
   color: $red
 
+.username
+  overflow: scroll
+
 .right
-  direction: rtl
+  text-align: right
 
 .avatar
   @include r.interpolate(font-size, 320px, 2560px, 35px, 75px)
 
 .q-item
   @include r.interpolate(padding, 320px, 2560px, 2px, 15px)
+
+.q-item__section--side
+  @include r.interpolate(padding, 320px, 2560px, 2px, 15px)
+
+.q-item__section--avatar
+  min-width: 2.5rem
 
 .doc-container
   @include r.interpolate(width, 320px, 2560px, 300px, 1350px)
