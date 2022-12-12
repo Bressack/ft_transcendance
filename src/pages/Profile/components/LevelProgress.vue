@@ -31,7 +31,7 @@ export default defineComponent({
     }
   },
   methods: {
-    pushData() {
+    setLevelProgress() {
       const total = this.victory * this.winReward + this.defeat * this.loseReward
       const progress = ref(total / 100 % 1)
 
@@ -49,7 +49,7 @@ export default defineComponent({
     }
   },
   updated () {
-    this.pushData()
+    this.setLevelProgress()
   }
 })
 </script>
