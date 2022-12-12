@@ -79,7 +79,7 @@ export default defineComponent({
   color: $red
 
 .username
-  overflow: scroll
+  overflow: auto
 
 .right
   text-align: right
