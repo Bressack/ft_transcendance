@@ -2,8 +2,8 @@
 <div>
   <q-item>
     <q-item-section>
-      <q-img class="rank-img" :src="`/src/assets/rank/${rank}.png`"/>
-      <q-item-label class="label bigger rank">{{rank}}</q-item-label>
+      <q-img class="rank-img" :src="`/src/assets/rank/${setRank(victory, defeat)}.png`"/>
+      <q-item-label class="label bigger rank">{{setRank(victory, defeat)}}</q-item-label>
     </q-item-section>
   </q-item>
 </div>
@@ -19,30 +19,21 @@ export default defineComponent({
       victory : { type: Number , default: 0  },
       defeat  : { type: Number , default: 0  }
   },
-  data () {
-    return {
-      rank: 'Unranked' as string
-    }
-  },
-  created () {
-    this.setRank(this.victory, this.defeat)
-  },
-  updated () {
-    this.setRank(this.victory, this.defeat)
-  },
   methods: {
-    setRank(v: number, d: number) {
+    setRank(v: number, d: number) : string {
       const ratio : number = v / (v + d)
 
       console.log(1/3, ratio, v, d)
       if (v + d >= 10) {
         if (ratio < 1/3)
-          this.rank = 'Bronze'
+          return ('Bronze')
         else if (ratio > 1/3)
-          this.rank = 'Gold'
+          return ('Gold')
         else
-          this.rank = 'Silver'
+          return ('Silver')
       }
+      else
+        return('Unranked')
     }
   },
 })
