@@ -18,7 +18,7 @@
         url="/api/avatar/"
         field-name="avatar"
         color="black"
-        @added="add"
+        @uploaded="add"
         @rejected="onRejected"
       >
       <template v-slot:list="scope">
@@ -42,6 +42,11 @@
 import { defineComponent } from 'vue'
 import api from '../../services/api.service'
 
+interface EventObject {
+  files: Array<any>
+  xhr: Object
+}
+
 export default defineComponent({
   name: 'Settings',
   data () {
@@ -59,7 +64,7 @@ export default defineComponent({
       api.me()
       .then(function(result) {
         that.profile = result
-        that.avatar = `/api/avatar/${result.username}/medium`
+        that.avatar = `/api/avatar/${result.username}/large`
       })
       .catch(function(error) {
           console.error('error:', error);
@@ -68,8 +73,9 @@ export default defineComponent({
     removeAvatar () {
       api.delete('avatar')
     },
-    add (file : readonly any []) {
-      this.avatar = file[0].__img.src
+    add (info : any) {
+      console.log(typeof(info.files[0]))
+      this.avatar = info.files[0].__img.src
     },
     onRejected (files : any) {
       this.$q.notify('Some other message')
