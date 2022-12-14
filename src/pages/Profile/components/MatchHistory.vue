@@ -37,9 +37,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'MatchHistory',
-  components: { },
   props: {
-    status : { type: String , default: "Defeat" },
+    status : { type: String , default: 'Defeat' },
     pOne : { type: String , default: undefined },
     pTwo : { type: String , default: undefined },
     scoreOne : { type: Number, default: 0 },
@@ -51,7 +50,6 @@ export default defineComponent({
       avatarTwo: '/api/avatar/' as string
     }
   },
-  methods: { },
   created () {
     this.avatarOne += `${this.pOne}/medium`
     this.avatarTwo += `${this.pTwo}/medium`

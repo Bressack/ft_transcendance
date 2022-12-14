@@ -1,5 +1,5 @@
 <template>
-<div class="q-pb-lg">
+<div class="r-py-md">
   <q-item>
     <q-item-label class="absolute-full flex flex-center label bigger">Level {{level}}</q-item-label>
   </q-item>
@@ -16,7 +16,6 @@ import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   name: 'LevelProgress',
-  components: { },
   props: {
       victory     : { type: Number , default: 0  },
       defeat      : { type: Number , default: 0  },
@@ -30,6 +29,9 @@ export default defineComponent({
       level: 0 as number
     }
   },
+  updated () {
+    this.setLevelProgress()
+  },
   methods: {
     setLevelProgress() {
       const total = this.victory * this.winReward + this.defeat * this.loseReward
@@ -39,7 +41,7 @@ export default defineComponent({
       if (level > 50) {
         this.level = 50
         this.progress = 1
-        this.progressLabel = "100%"
+        this.progressLabel = '100%'
       }
       else {
         this.level = level
@@ -47,9 +49,6 @@ export default defineComponent({
         this.progressLabel = (progress.value * 100).toFixed(2) + '%'
       }
     }
-  },
-  updated () {
-    this.setLevelProgress()
   }
 })
 </script>

@@ -1,5 +1,5 @@
 <template>
-<div class="q-pb-lg">
+<div>
   <q-item>
     <q-item-section>
       <q-img class="rank-img" :src="`/src/assets/rank/${rank}.png`"/>
@@ -21,8 +21,14 @@ export default defineComponent({
   },
   data () {
     return {
-      rank: "Unranked" as string
+      rank: 'Unranked' as string
     }
+  },
+  created () {
+    this.setRank(this.victory, this.defeat)
+  },
+  updated () {
+    this.setRank(this.victory, this.defeat)
   },
   methods: {
     setRank(v: number, d: number) {
@@ -31,20 +37,14 @@ export default defineComponent({
       console.log(1/3, ratio, v, d)
       if (v + d >= 10) {
         if (ratio < 1/3)
-          this.rank = "Bronze"
+          this.rank = 'Bronze'
         else if (ratio > 1/3)
-          this.rank = "Gold"
+          this.rank = 'Gold'
         else
-          this.rank = "Silver"
+          this.rank = 'Silver'
       }
-    },
+    }
   },
-  created () {
-    this.setRank(this.victory, this.defeat)
-  },
-  updated () {
-    this.setRank(this.victory, this.defeat)
-  }
 })
 </script>
 
@@ -52,7 +52,7 @@ export default defineComponent({
 @use "../../../css/interpolate" as r
 
 .rank-img
-  @include r.interpolate(width, 320px, 2560px, 100px, 350px)
+  @include r.interpolate(width, 320px, 2560px, 75px, 175px)
   display: block
   margin-left: auto
   margin-right: auto

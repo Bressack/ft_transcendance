@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-lg sp-b">
+  <div class="q-pa-lg">
     <q-item>
       <q-item-section avatar>
       <q-avatar class="avatar">
@@ -32,7 +32,6 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ProfileSummary',
-  components: { },
   props: {
     name    : { type: String , default: undefined },
     avatar  : { type: String , required: true },
@@ -42,7 +41,7 @@ export default defineComponent({
   methods: {
     ratio(v: number, d: number): string {
       if (v + d === 0)
-        return "0.00"
+        return '0.00'
       return (v / (v + d) * 100).toPrecision(4)
     }
   }

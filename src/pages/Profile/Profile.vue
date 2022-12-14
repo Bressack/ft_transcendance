@@ -1,6 +1,6 @@
 <template>
 <q-page>
-  <div class="q-pa-lg">
+  <div class="q-px-xl">
     <ProfileSummary
     :name=profile.username
     :avatar=avatar
@@ -8,36 +8,44 @@
     :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
     />
   </div>
-  <div class="q-py-md q-px-xl">
-    <LevelProgress
-      :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
-      :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
-    />
-  </div>
-  <div v-if="games.total" class="q-py-md q-px-xl">
-    <Rank
-      :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
-      :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
-    />
-  </div>
-  <div class="q-px-md">
-    <q-item v-if="games.total">
-      <q-item-section>
-        <q-item-label class="bigger label">Match History</q-item-label>
-      </q-item-section>
-    </q-item>
-    <q-item v-else>
-      <q-item-section class="bigger label">No current game history</q-item-section>
-    </q-item>
-  </div>
-  <div v-for="game in games.result" :key="game">
-    <MatchHistory
-    :status="gameStatus(game)"
-    :pOne=game.playerOneName
-    :pTwo=game.playerTwoName
-    :scoreOne=game.score_playerOne
-    :scoreTwo=game.score_playerTwo
-    />
+  <q-item class="r-py-lg q-px-xl">
+    <q-item-section>
+      <div>
+        <LevelProgress
+          :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
+          :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
+        />
+      </div>
+    </q-item-section>
+    <q-item-section class="r-py-lg q-pr-xl col-3">
+    <div v-if="games.total">
+      <Rank
+        :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
+        :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
+      />
+    </div>
+    </q-item-section>
+  </q-item>
+  <div class="r-py-md">
+    <div class="q-px-md">
+      <q-item v-if="games.total">
+        <q-item-section>
+          <q-item-label class="bigger label">Match History</q-item-label>
+        </q-item-section>
+      </q-item>
+      <q-item v-else>
+        <q-item-section class="bigger label">No current game history</q-item-section>
+      </q-item>
+    </div>
+    <div v-for="game in games.result" :key="game">
+      <MatchHistory
+      :status="gameStatus(game)"
+      :pOne=game.playerOneName
+      :pTwo=game.playerTwoName
+      :scoreOne=game.score_playerOne
+      :scoreTwo=game.score_playerTwo
+      />
+    </div>
   </div>
 </q-page>
 </template>
@@ -45,11 +53,11 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { IGameQuery } from '../../services/api.models'
+import api from '../../services/api.service'
 import ProfileSummary from './components/ProfileSummary.vue'
 import MatchHistory from './components/MatchHistory.vue'
 import LevelProgress from './components/LevelProgress.vue'
 import Rank from './components/Rank.vue'
-import api from '../../services/api.service'
 
 export default defineComponent({
   name: 'Profile',
@@ -62,16 +70,26 @@ export default defineComponent({
       games: [] as any
     }
   },
+  created () {
+    this.avatar += `${this.username}/large`
+    this.fetchUserProfile()
+    this.fetchGameHistory()
+  },
+  updated () {
+    this.username = this.$route.params.username.toString()
+    this.avatar = `/api/avatar/${this.username}/large`
+    this.fetchUserProfile()
+    this.fetchGameHistory()
+  },
   methods: {
     fetchUserProfile() {
       let that = this
       api.userProfile(this.username)
       .then(function(result) {
-        console.log('result:',result);
         that.profile = result
       })
       .catch(function(error) {
-        console.log('error:',error);
+        console.error('error:', error);
       })
     },
     fetchGameHistory() {
@@ -93,25 +111,11 @@ export default defineComponent({
     },
     gameStatus(game : any) : string {
       if (game.score_playerOne === game.score_playerTwo)
-        return ("Tie")
+        return ('Tie')
       else if (game.score_playerOne > game.score_playerTwo && game.playerOneName === this.profile.username)
-        return ("Victory")
-      return ("Defeat")
+        return ('Victory')
+      return ('Defeat')
     }
-  },
-  created () {
-    this.avatar += `${this.username}/large`
-    this.fetchUserProfile()
-    this.fetchGameHistory()
-  },
-  updated () {
-    this.username = this.$route.params.username.toString()
-    this.avatar = `/api/avatar/${this.username}/large`
-    this.fetchUserProfile()
-    this.fetchGameHistory()
   }
 })
 </script>
-
-<style lang="sass" scoped>
-</style>
