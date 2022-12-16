@@ -25,10 +25,13 @@
   @include r.interpolate(font-size, 320px, 2560px, 12px, 30px)
   color: white
 
-.padding
-  @inculde r.interpolate((padding-left, padding-bottom), 320px, 2560px, 200px, 500px)
-
 .bigger
   @include r.interpolate(font-size, 320px, 2560px, 14px, 40px)
   @include r.interpolate((padding-top, padding-bottom), 20rem, 70rem, 0rem, .5rem)
   font-weight: bold
+
+.r-py-md
+  @include r.interpolate((padding-bottom, padding-top), 320px, 2560px, 10px, 40px)
+
+.r-py-lg
+  @include r.interpolate((padding-bottom, padding-top), 320px, 2560px, 18px, 60px)

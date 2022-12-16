@@ -49,8 +49,7 @@ module.exports = configure(function (/* ctx */) {
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: [ 'es2019', 'edge88', 'firefox78', 'chrome87', 'safari13.1' ],
-        node: 'node16'
+        browser: [ 'es2021' ]
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
@@ -150,57 +149,57 @@ module.exports = configure(function (/* ctx */) {
     },
 
     // https://v2.quasar.dev/quasar-cli-vite/developing-pwa/configuring-pwa
-    pwa: {
-      workboxMode: 'generateSW', // or 'injectManifest'
-      injectPwaMetaTags: true,
-      swFilename: 'sw.js',
-      manifestFilename: 'manifest.json',
-      useCredentialsForManifestTag: false,
-      // useFilenameHashes: true,
-      // extendGenerateSWOptions (cfg) {}
-      // extendInjectManifestOptions (cfg) {},
-      // extendManifestJson (json) {}
-      // extendPWACustomSWConf (esbuildConf) {}
-    },
+    // pwa: {
+    //   workboxMode: 'generateSW', // or 'injectManifest'
+    //   injectPwaMetaTags: true,
+    //   swFilename: 'sw.js',
+    //   manifestFilename: 'manifest.json',
+    //   useCredentialsForManifestTag: false,
+    //   // useFilenameHashes: true,
+    //   // extendGenerateSWOptions (cfg) {}
+    //   // extendInjectManifestOptions (cfg) {},
+    //   // extendManifestJson (json) {}
+    //   // extendPWACustomSWConf (esbuildConf) {}
+    // },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-cordova-apps/configuring-cordova
-    cordova: {
-      // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
-    },
+    // cordova: {
+    //   // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
+    // },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-capacitor-apps/configuring-capacitor
-    capacitor: {
-      hideSplashscreen: true
-    },
+    // capacitor: {
+    //   hideSplashscreen: true
+    // },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-electron-apps/configuring-electron
-    electron: {
-      // extendElectronMainConf (esbuildConf)
-      // extendElectronPreloadConf (esbuildConf)
+    // electron: {
+    //   // extendElectronMainConf (esbuildConf)
+    //   // extendElectronPreloadConf (esbuildConf)
 
-      inspectPort: 5858,
+    //   inspectPort: 5858,
 
-      bundler: 'packager', // 'packager' or 'builder'
+    //   bundler: 'packager', // 'packager' or 'builder'
 
-      packager: {
-        // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
+    //   packager: {
+    //     // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
 
-        // OS X / Mac App Store
-        // appBundleId: '',
-        // appCategoryType: '',
-        // osxSign: '',
-        // protocol: 'myapp://path',
+    //     // OS X / Mac App Store
+    //     // appBundleId: '',
+    //     // appCategoryType: '',
+    //     // osxSign: '',
+    //     // protocol: 'myapp://path',
 
-        // Windows only
-        // win32metadata: { ... }
-      },
+    //     // Windows only
+    //     // win32metadata: { ... }
+    //   },
 
-      builder: {
-        // https://www.electron.build/configuration/configuration
+    //   builder: {
+    //     // https://www.electron.build/configuration/configuration
 
-        appId: 'ft_transcendance'
-      }
-    },
+    //     appId: 'ft_transcendance'
+    //   }
+    // },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/developing-browser-extensions/configuring-bex
     bex: {

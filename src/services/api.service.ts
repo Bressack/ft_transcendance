@@ -90,4 +90,10 @@ export default {
     return response
   },
 
+  async delete(target: string) {
+    const response = await this.axiosInstance.delete(target)
+    console.log(response);
+    return response
+  }
+
 }
