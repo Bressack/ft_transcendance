@@ -31,7 +31,13 @@
   font-weight: bold
 
 .r-py-md
-  @include r.interpolate((padding-bottom, padding-top), 320px, 2560px, 10px, 40px)
+  @include r.interpolate((padding-bottom, padding-top), 320px, 2560px, 8px, 20px)
+
+.r-pt-md
+  @include r.interpolate(padding-top, 320px, 2560px, 16px, 40px)
 
 .r-py-lg
-  @include r.interpolate((padding-bottom, padding-top), 320px, 2560px, 18px, 60px)
+  @include r.interpolate((padding-bottom, padding-top), 320px, 2560px, 18px, 45px)
+
+.r-pt-lg
+  @include r.interpolate(padding-top, 320px, 2560px, 36px, 90px)
