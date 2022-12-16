@@ -2,15 +2,8 @@
   <q-page>
     <!-- <q-img src="src/assets/pong_wallpaper.png"/> -->
     <div class="lists">
-      <SearchUser
-        @reloadme="getMe"
-      />
-
-      <FriendList
-        v-if="me"
-        :me=me
-        @reloadme="getMe"
-      />
+      <SearchUser/>
+      <FriendList/>
     </div>
   </q-page>
 </template>
@@ -20,6 +13,8 @@ import { defineComponent, ref } from 'vue';
 import SearchUser from './components/SearchUser.vue'
 import FriendList from './components/FriendList.vue'
 import api from 'src/services/api.service'
+import * as models from 'src/services/api.models'
+import { useMeStore } from 'src/stores/me';
 
 export default defineComponent({
   name: 'Index',
@@ -27,26 +22,16 @@ export default defineComponent({
   props: {},
   data() {
     return {
-      me: ref(undefined),
+      storeMe: useMeStore(),
     }
   },
   created () {
-    this.getMe()
+    this.storeMe.fetch() // useless
   },
   beforeUpdate () {
-    this.getMe()
+    this.storeMe.fetch() // useless
   },
   methods: {
-    getMe()
-    {
-      let that = this
-      api.me()
-      .then(function (me) {
-        that.me = me
-        console.log(me)
-      })
-      .catch(function () {})
-    }
   },
 });
 </script>

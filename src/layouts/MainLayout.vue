@@ -29,16 +29,15 @@
 
         <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
           <UserCard
-            v-if="(me?.username)"
+            v-if="(storeMe.me.username)"
             @click="goProfilPage()"
             class="absolute-top"
-            :name="me?.username"
+            :name="storeMe.me.username"
             avatar="api/avatar/me/medium"
             icon="settings"
             size="large"
             nameColor="orange"
             :ratio="0.42"
-            :onlineStatus="me?.onlineStatus"
           />
         </q-img>
       </q-drawer>
@@ -55,6 +54,7 @@ import UserCard from '../components/common/UserCard.vue'
 import { IUserBasicInfo, OnlineStatus } from '../models/models'
 // import { randomDate } from '../models/fakedatas'
 import api from 'src/services/api.service'
+import { useMeStore } from 'src/stores/me';
 
 let _me = {
   name: 'tharchen',
@@ -73,7 +73,7 @@ export default defineComponent({
   data() {
     return {
       drawer: ref(false),
-      me: ref(undefined),
+      storeMe: useMeStore()
     }
   },
 
@@ -97,12 +97,7 @@ export default defineComponent({
   },
 
   created () {
-    let that = this
-    api.me()
-    .then(function (me) {
-      that.me = me
-    })
-    .catch(function () {})
+    this.storeMe.fetch()
   },
 
 });

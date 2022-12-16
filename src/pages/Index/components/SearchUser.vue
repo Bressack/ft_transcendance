@@ -45,6 +45,7 @@
 import { defineComponent, ref } from 'vue';
 import api from 'src/services/api.service'
 import { ISearchQuery } from 'src/services/api.models'
+import { useMeStore } from 'src/stores/me';
 
 export default defineComponent({
   name: 'SearchUser',
@@ -52,6 +53,7 @@ export default defineComponent({
   props: {},
   data() {
     return {
+      storeMe: useMeStore(),
       searchInput: '',
       searchResult: [] as Array<any>,
     }
@@ -64,9 +66,7 @@ export default defineComponent({
     follow(username: string) {
       let that = this
       api.follow(username)
-      .then(function () {
-        that.$emit('reloadme')
-      })
+      .then(function () { that.storeMe.fetch() })
       .catch(function () {})
     },
     search() {

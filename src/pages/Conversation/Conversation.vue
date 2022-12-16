@@ -34,12 +34,12 @@ export default defineComponent({
   },
   data() {
     return {
-      messagesList: fake_IMessageList(50) as IMessageList,
+      messagesList: fake_IMessageList(20) as IMessageList,
       text: '',
     }
   },
   updated() {
-    this.messagesList = fake_IMessageList(50);
+    this.messagesList = fake_IMessageList(20);
   },
   methods: {
     goProfilPage(user: string) {

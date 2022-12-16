@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <div class="q-pa-md list" style="max-width: 350px" v-if="friends">
+    <div class="q-pa-md list" style="max-width: 350px" v-if="storeMe.me.followedBy">
 
       <q-toolbar class="bg-secondary text-white shadow-2">
         <q-toolbar-title>Contacts</q-toolbar-title>
@@ -9,7 +9,7 @@
       <q-list bordered class="q-my-sm">
 
         <q-item-label header class="header">Friend Requests Sent</q-item-label>
-        <q-item clickable v-ripple v-for="rsent in friendRequestSent" :key="rsent">
+        <q-item clickable v-ripple v-for="rsent in storeMe.friendRequestSent" :key="rsent">
           <q-item-section style="max-width: 50px;">
             <q-avatar class="avatar">
               <img size="20px" :src="`api/avatar/${rsent}/thumbnail`" >
@@ -26,7 +26,7 @@
         <q-separator />
 
         <q-item-label header class="header">Friend Requests Recevied</q-item-label>
-        <q-item clickable v-ripple v-for="rrecv in friendRequestRecevied" :key="rrecv">
+        <q-item clickable v-ripple v-for="rrecv in storeMe.friendRequestRecevied" :key="rrecv">
           <q-item-section style="max-width: 50px;">
             <q-avatar class="avatar">
               <img size="20px" :src="`api/avatar/${rrecv}/thumbnail`" >
@@ -43,7 +43,7 @@
         <q-separator />
 
         <q-item-label header class="header">Friends</q-item-label>
-        <q-item clickable v-ripple v-for="friend in friends" :key="friend">
+        <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend">
           <q-item-section style="max-width: 50px;">
             <q-avatar class="avatar">
               <img size="20px" :src="`api/avatar/${friend}/thumbnail`" >
@@ -66,56 +66,39 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, PropType } from 'vue';
 import api from 'src/services/api.service'
-import ld from 'lodash'
+// import ld from 'lodash'
+// import * as models from 'src/services/api.models'
+import { useMeStore } from 'src/stores/me';
 
 export default defineComponent({
   name: 'FriendList',
   components: {},
   props: {
-    // friends: { type: Array<any>, required: true },
-    // friendRequestSent: { type: Array<any>, required: true },
-    // friendRequestRecevied: { type: Array<any>, required: true },
-    me: { type: Object, required: true }
   },
   data() {
     return {
-      friends: [] as Array<any>,
-      friendRequestSent: [] as Array<any>,
-      friendRequestRecevied: [] as Array<any>,
+      storeMe: useMeStore()
     }
   },
   created () {
-    this.processFriendList()
+    this.storeMe.fetch();
   },
   beforeUpdate () {
-    this.processFriendList()
+    this.storeMe.fetch();
   },
   methods: {
-    processFriendList() {
-      if (this.me) {
-        let followedBy = [] ; for (let f of this.me.followedBy) { followedBy.push(f.followerId) }
-        let following = [] ; for (let f of this.me.following) { following.push(f.followingId) }
-        this.friends = ld.intersection(followedBy, following)
-        this.friendRequestSent = ld.difference(following, followedBy)
-        this.friendRequestRecevied = ld.difference(followedBy, following)
-      }
-    },
     follow(username: string) {
       let that = this
       api.follow(username)
-      .then(function () {
-        that.$emit('reloadme')
-      })
+      .then(function () { that.storeMe.fetch() })
       .catch(function () {})
     },
     unfollow(username: string) {
       let that = this
       api.unfollow(username)
-      .then(function () {
-        that.$emit('reloadme')
-      })
+      .then(function () { that.storeMe.fetch() })
       .catch(function () {})
     },
   },
