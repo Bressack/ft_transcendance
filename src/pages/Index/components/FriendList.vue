@@ -86,7 +86,7 @@ export default defineComponent({
     this.storeMe.fetch();
   },
   beforeUpdate () {
-    this.storeMe.fetch();
+    // this.storeMe.fetch();
   },
   methods: {
     follow(username: string) {

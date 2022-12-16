@@ -49,6 +49,7 @@ export const useMeStore = defineStore('me', {
         that.me = me;
       })
       .catch(function () {})
-    }
+    },
+    
   }
 });

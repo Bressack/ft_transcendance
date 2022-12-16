@@ -88,6 +88,7 @@ export default defineComponent({
       api.logout()
       .then(function (status) {
         that.$router.push('/login')
+        that.storeMe.$reset()
       })
     },
   },
