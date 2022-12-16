@@ -23,7 +23,6 @@ export default defineComponent({
     setRank(v: number, d: number) : string {
       const ratio : number = v / (v + d)
 
-      console.log(1/3, ratio, v, d)
       if (v + d >= 10) {
         if (ratio < 1/3)
           return ('Bronze')

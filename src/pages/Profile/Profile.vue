@@ -8,7 +8,7 @@
     :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
     />
   </div>
-  <q-item class="r-py-lg q-px-xl">
+  <q-item class="q-px-xl">
     <q-item-section>
       <div>
         <LevelProgress
@@ -17,26 +17,20 @@
         />
       </div>
     </q-item-section>
-    <q-item-section class="r-py-lg q-pr-xl col-3">
-    <div v-if="games.total">
+    <q-item-section class="q-pr-xl col-3">
       <Rank
         :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
         :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
       />
-    </div>
     </q-item-section>
   </q-item>
-  <div class="r-py-md">
-    <div class="q-px-md">
-      <q-item v-if="games.total">
+  <div class="r-py-md q-px-md">
+      <q-item>
         <q-item-section>
-          <q-item-label class="bigger label">Match History</q-item-label>
+          <q-item-label v-if="games.total" class="bigger label">Match History</q-item-label>
+          <q-item-label v-else class="bigger label">No current game history</q-item-label>
         </q-item-section>
       </q-item>
-      <q-item v-else>
-        <q-item-section class="bigger label">No current game history</q-item-section>
-      </q-item>
-    </div>
     <div v-for="game in games.result" :key="game">
       <MatchHistory
       :status="gameStatus(game)"
