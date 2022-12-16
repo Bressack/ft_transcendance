@@ -10,7 +10,9 @@
       <q-uploader
         auto-upload
         hide-upload-btn
+        max-files=1
         class="uploader"
+        ref="uploader"
         label="Change avatar"
         url="/api/avatar/"
         field-name="avatar"
@@ -56,7 +58,9 @@ export default defineComponent({
       return {
         profile : [] as any,
         avatar : '' as string,
-        twoFA : false as boolean
+        twoFA : false as boolean,
+        refresh : 0 as number,
+        $refs : undefined as any
       }
   },
   created () {
@@ -70,7 +74,7 @@ export default defineComponent({
       api.me()
       .then(function(result) {
         that.profile = result
-        that.avatar = `/api/avatar/${result.username}/large`
+        that.avatar = `/api/avatar/${result.username}/large?refresh?refresh=${that.refresh++}`
         that.twoFA = result.TwoFA
       })
       .catch(function(error) {
@@ -92,8 +96,9 @@ export default defineComponent({
             type: 'positive',
             message: 'Avatar successfully removed'
           })
-          this.avatar = `/api/avatar/${this.profile.username}/medium`
+          this.avatar = `/api/avatar/${this.profile.username}/large?refresh=${this.refresh++}`
         }
+        this.$refs.uploader.reset()
       })
     },
     imgOnly (files : readonly any [] | FileList) : readonly any [] {
@@ -103,11 +108,12 @@ export default defineComponent({
       return ([])
     },
     onUploaded (info : UploadObject) {
-      this.avatar = info.files[0].__img.src
       this.$q.notify({
         type: 'positive',
         message: 'Avatar successfully uploaded'
       })
+      this.$refs.uploader.removeUploadedFiles()
+      this.avatar = `/api/avatar/${this.profile.username}/large?refresh=${this.refresh++}`
     },
     onRejected (rejectedEntries : QRejectedEntry[]) {
       if (rejectedEntries[0].failedPropValidation === 'filter') {
