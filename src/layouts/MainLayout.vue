@@ -13,6 +13,7 @@
           <q-btn class="q-mr-sm" to="/feeddb"      color="green">Auto Feed Database</q-btn>
           <q-btn class="q-mr-sm" to="/profile/me"  color="green">Profile</q-btn>
           <q-btn class="q-mr-sm" to="/settings"    color="green">Settings</q-btn>
+          <q-btn class="q-mr-sm" to="/play"        color="green">Play</q-btn>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>

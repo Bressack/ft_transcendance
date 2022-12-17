@@ -37,7 +37,7 @@
   </q-item>
   <q-item class="q-pa-xl">
     <q-toggle @update:model-value="onUpdate" v-model="twoFA">
-      <q-item-label class="label">Two Factor Authentification</q-item-label>
+      <q-item-label class="label">Two factor authentification</q-item-label>
     </q-toggle>
   </q-item>
 </q-page>
@@ -65,19 +65,17 @@ export default defineComponent({
   },
   created () {
     this.fetchMe()
-    // this.twoFA = this.profile.TwoFA
-    // console.log(this.profile)
   },
   methods: {
     fetchMe() {
       let that = this
       api.me()
-      .then(function(result) {
+      .then((result) => {
         that.profile = result
         that.avatar = `/api/avatar/${result.username}/large?refresh?refresh=${that.refresh++}`
         that.twoFA = result.TwoFA
       })
-      .catch(function(error) {
+      .catch((error) => {
           console.error('error:', error);
       })
     },
@@ -102,7 +100,6 @@ export default defineComponent({
       })
     },
     imgOnly (files : readonly any [] | FileList) : readonly any [] {
-      console.log(this.profile)
       if (files[0].type === 'image/png' || files[0].type === 'image/jpg' || files[0].type === 'image/jpeg')
         return (files as readonly any [])
       return ([])
