@@ -2,28 +2,28 @@
   <div>
 
     <q-item class="main" v-if="!content || !timestamp">
-      <q-item-section class="avatar">
+      <q-item-section class="avatar" @click="profilefun ? profilefun() : null">
         <div v-if="validStatus(onlineStatus)" class="onlineStatus" :class="onlineStatusToCSSClass(onlineStatus)"/>
         <q-img :src="avatar" :width="avatarSize" :height="avatarSize" img-class="usercard-image"/>
       </q-item-section>
-      <q-item-section class="datas name-date toto">
+      <q-item-section class="datas name-date toto" @click="profilefun ? profilefun() : null">
         <q-item-label class="name">{{ name }}</q-item-label>
       </q-item-section>
 
-      <q-item-section v-if="icon" class="avatar">
+      <q-item-section v-if="icon" class="avatar" @click="iconfun ? iconfun() : null">
         <q-avatar :icon="icon" :size="avatarSize"/>
       </q-item-section>
     </q-item>
 
     <q-item class="main" v-else>
-      <q-item-section class="avatar">
+      <q-item-section class="avatar" @click="profilefun ? profilefun() : null">
         <div v-if="validStatus(onlineStatus)" class="onlineStatus" :class="onlineStatusToCSSClass(onlineStatus)"/>
         <q-img :src="avatar" :width="avatarSize" :height="avatarSize" img-class="usercard-image"/>
       </q-item-section>
 
       <q-item-section class="datas">
         <q-item-section class="name-date">
-          <q-item-label class="name">{{ name }}</q-item-label>
+          <q-item-label class="name" @click="profilefun ? profilefun() : null">{{ name }}</q-item-label>
           <q-item-label class="timestamp" v-if="timestamp">{{ getRelativeDate(timestamp) }}</q-item-label>
         </q-item-section>
 
@@ -41,9 +41,8 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { OnlineStatus } from '../../models/models';
-import UserCard from '../common/UserCard.vue'
 
 let definedSizes = {
   small : { px: 50  , em: 1 },
@@ -53,21 +52,21 @@ let definedSizes = {
 
 
 export default defineComponent({
-  // name: 'UserCard',
+  name: 'UserCard',
   components: { },
   props: {
-    name         : { type: String , required:  true    },
-    avatar       : { type: String , required:  true    },
-    content      : { type: String , default :  null    },
-    timestamp    : { type: Date   , default :  null    },
-    icon         : { type: String , default :  null    },
-    mirror       : { type: Boolean, default :  false   }, // TODO: add mirror support for match history
-    size         : { type: String , default : 'medium' },
-    nameColor    : { type: String , default : 'white'  },
-    contentColor : { type: String , default : 'white'  },
-    ratio        : { type: Number , default : 1        },
-    onlineStatus : { type: Number, default :  OnlineStatus.NONE    },
-
+    name         : { type: String  , required: true    },
+    avatar       : { type: String  , required: true    },
+    content      : { type: String  , default : null    },
+    timestamp    : { type: Date    , default : null    },
+    icon         : { type: String  , default : null    },
+    size         : { type: String  , default : 'medium' },
+    nameColor    : { type: String  , default : 'white'  },
+    contentColor : { type: String  , default : 'white'  },
+    ratio        : { type: Number  , default : 1        },
+    onlineStatus : { type: Number  , default : OnlineStatus.NONE },
+    iconfun      : { type: Function, default : undefined },
+    profilefun   : { type: Function, default : undefined },
   },
   data() {
     return {

@@ -6,13 +6,14 @@
         <q-btn flat @click="drawer = !drawer" round dense icon="menu" />
         <q-toolbar-title>
           <!-- <span class="q-pr-lg">PONG ARENA</span> -->
-          <q-btn class="q-mr-sm" @click="logout()" color="red">LOGOUT</q-btn>
-          <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn>
+          <!-- <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn> -->
           <q-btn class="q-mr-sm" to="/"            color="orange">Home</q-btn>
-          <q-btn class="q-mr-sm" to="/usercard"    color="green">UserCardTest</q-btn>
           <q-btn class="q-mr-sm" to="/feeddb"      color="green">Auto Feed Database</q-btn>
           <q-btn class="q-mr-sm" to="/profile/me"  color="green">Profile</q-btn>
           <q-btn class="q-mr-sm" to="/settings"    color="green">Settings</q-btn>
+          <div class="q-mr-lg logout">
+            <q-btn class="absolute-right"    @click="logout()" color="red">LOGOUT</q-btn>
+          </div>
         </q-toolbar-title>
       </q-toolbar>
     </q-header>
@@ -29,10 +30,11 @@
 
         <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
           <UserCard
-            v-if="(storeMe.me.username)"
-            @click="goProfilPage()"
+            v-if="(storeMe.username)"
+            :iconfun="goSettingPage"
+            :profilefun="goProfilPage"
             class="absolute-top"
-            :name="storeMe.me.username"
+            :name="storeMe.username"
             avatar="api/avatar/me/medium"
             icon="settings"
             size="large"
@@ -83,6 +85,11 @@ export default defineComponent({
         path: '/profile/me',
       })
     },
+    goSettingPage() {
+      this.$router.push({
+        path: '/settings',
+      })
+    },
     logout() {
       let that = this
       api.logout()
@@ -105,6 +112,10 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
+.usercard-image
+  border-radius: 1000px
+  z-index: 2
+
 body
   background-color: $bg-primary !important
   color: grey
@@ -120,4 +131,23 @@ body
   height: calc(100% - 90px)
   margin-top: 90px
   background-color: $bg-secondary
+
+.name
+  font-weight: bold
+  color: v-bind(nameColor)
+  font-size: v-bind(textSize)
+  margin-right: 0.8vw
+
+  // add '...' to the end of name if it overflow the container
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+
+.main
+  display: flex-start
+  align-items: flex-start
+  margin:  0.1em
+  padding: 0.1em
+  flex-direction: row
+
 </style>
