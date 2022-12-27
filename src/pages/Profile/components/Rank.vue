@@ -26,7 +26,7 @@ export default defineComponent({
       if (v + d >= 10) {
         if (ratio < 1/3)
           return ('Bronze')
-        else if (ratio > 1/3)
+        else if (ratio > 2/3)
           return ('Gold')
         else
           return ('Silver')
