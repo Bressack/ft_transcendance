@@ -8,7 +8,6 @@ const routes: RouteRecordRaw[] = [
       { path: '/',                    component: () => import('pages/Index/Index.vue'               ) },
       { path: '/conversation',        component: () => import('pages/Conversation/Conversation.vue' ) },
       { path: '/profile/:username',   component: () => import('pages/Profile/Profile.vue'           ) },
-      { path: '/settings',            component: () => import('pages/Settings/Settings.vue'         ) },
       { path: '/play',                component: () => import('pages/GameLobby/GameLobby.vue'       ) },
       { path: '/usercard',            component: () => import('pages/UserCardTest.vue'              ) },
       { path: '/upload',              component: () => import('pages/UploadTest.vue'                ) },
