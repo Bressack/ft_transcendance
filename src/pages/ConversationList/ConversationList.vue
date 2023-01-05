@@ -22,7 +22,7 @@
             <q-item v-ripple v-for="item in searchResult?.result" :key="item.username">
               <q-item-section style="max-width: 50px;">
                 <q-avatar class="avatar">
-                  <img size="20px" :src="`api/avatar/${item?.username}/thumbnail`" >
+                  <img size="20px" :src="`/api/avatar/${item?.username}/thumbnail`" >
                 </q-avatar>
               </q-item-section>
               <q-item-section>
@@ -46,7 +46,7 @@
           <q-item clickable v-ripple v-for="rrecv in storeMe.friendRequestRecevied" :key="rrecv">
             <q-item-section style="max-width: 50px;">
               <q-avatar class="avatar">
-                <img size="20px" :src="`api/avatar/${rrecv}/thumbnail`" >
+                <img size="20px" :src="`/api/avatar/${rrecv}/thumbnail`" >
               </q-avatar>
             </q-item-section>
             <q-item-section>
@@ -67,7 +67,7 @@
           <q-item clickable v-ripple v-for="rsent in storeMe.friendRequestSent" :key="rsent">
             <q-item-section style="max-width: 50px;">
               <q-avatar class="avatar">
-                <img size="20px" :src="`api/avatar/${rsent}/thumbnail`" >
+                <img size="20px" :src="`/api/avatar/${rsent}/thumbnail`" >
               </q-avatar>
             </q-item-section>
             <q-item-section>
@@ -85,7 +85,7 @@
         <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="unfollow" >
           <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
             <q-avatar class="avatar">
-              <img size="20px" :src="`api/avatar/${friend}/thumbnail`" >
+              <img size="20px" :src="`/api/avatar/${friend}/thumbnail`" >
             </q-avatar>
           </q-item-section>
           <q-item-section @click="userSelected(friend)">

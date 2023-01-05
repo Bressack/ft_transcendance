@@ -11,46 +11,6 @@
           <q-btn class="q-mr-sm" to="/feeddb"      color="green">Auto Feed Database</q-btn>
           <q-btn class="q-mr-sm" to="/profile/me"  color="green">Profile</q-btn>
           <q-btn class="q-mr-sm" to="/play"        color="green">Play</q-btn>
-
-
-          <!-- rework this in a component ! -->
-          <q-btn-dropdown class="q-mr-sm" stretch flat icon="notifications">
-            <!-- should display number of notif ? -->
-            <q-badge floating color="red">2</q-badge>
-            <q-list>
-              <q-item-label header>Folders</q-item-label>
-              <q-item v-for="n in 3" :key="`x.${n}`" clickable v-close-popup tabindex="0">
-                <q-item-section avatar>
-                  <q-avatar icon="folder" color="secondary" text-color="white"></q-avatar>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Photos</q-item-label>
-                  <q-item-label caption>February 22, 2016</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-icon name="info"></q-icon>
-                </q-item-section>
-              </q-item>
-              <q-separator inset spaced></q-separator>
-              <q-item-label header>Files</q-item-label>
-              <q-item v-for="n in 3" :key="`y.${n}`" clickable v-close-popup tabindex="0">
-                <q-item-section avatar>
-                  <q-avatar icon="assignment" color="primary" text-color="white"></q-avatar>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label>Vacation</q-item-label>
-                  <q-item-label caption>February 22, 2016</q-item-label>
-                </q-item-section>
-                <q-item-section side>
-                  <q-icon name="info"></q-icon>
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-btn-dropdown>
-
-          <!-- <q-btn class="right" round icon="notifications">
-            <q-badge floating color="red" rounded/>
-          </q-btn> -->
           <div class="q-mr-lg logout">
             <q-btn class="absolute-right"    @click="logout()" color="red" label="LOGOUT"/>
           </div>
@@ -75,7 +35,7 @@
             :profilefun="goProfilPage"
             class="absolute-top"
             :name="storeMe.username"
-            avatar="api/avatar/me/medium"
+            avatar="/api/avatar/me/medium"
             icon="settings"
             size="large"
             nameColor="orange"
