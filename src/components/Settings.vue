@@ -2,7 +2,7 @@
 <div class="main">
   <q-item class="q-px-xl r-py-md">
     <q-item-section>
-      <q-item-label class="label bigger">Settings</q-item-label>
+      <q-item-label class="bigger">Settings</q-item-label>
     </q-item-section>
   </q-item>
     <q-item class="justify-center centers q-px-xl r-pt-md">
@@ -39,7 +39,7 @@
       <q-item-label class="label">Two factor authentification</q-item-label>
     </q-toggle>
   </q-item>
-  <q-item class="justify-center centers label bigger q-mb-lg">
+  <q-item class="justify-center centers bigger q-mb-lg">
     <q-btn label="CLOSE" v-close-popup/>
   </q-item>
 </div>
