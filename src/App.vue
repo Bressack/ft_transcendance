@@ -5,6 +5,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import api from './services/api.service'
+import wsService from './services/ws.service';
 
 export default defineComponent({
   name: 'App',
@@ -64,6 +65,12 @@ export default defineComponent({
   },
   beforeMount() {
     this.initSystem()
+  },
+  created() {
+	wsService.connect()
+  },
+  beforeUnMount() {
+	wsService.disconnect()
   }
 });
 </script>

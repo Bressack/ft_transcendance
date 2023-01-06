@@ -110,10 +110,6 @@ export default defineComponent({
     },
   },
 
-  beforeCreate () {
-    api.ping()
-  },
-
   created () {
     this.storeMe.fetch()
 	//   ws.connect();
