@@ -17,16 +17,6 @@ export default defineComponent({
   props: {
     me: { type: Object, default: {} }
   },
-  beforeCreate () {
-    let that = this
-    api.ping()
-    .then(function (status) {
-      if (status === 200) {
-        that.$router.push('/')
-      }
-    })
-    .catch(function () {})
-  },
   data() {
     return {
     }
