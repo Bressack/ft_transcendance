@@ -90,6 +90,11 @@ export default {
     return response
   },
 
+  async auth() {
+    const response = await this.axiosInstance.get('auth')
+    return (response)
+  },
+
 
 
   /**
