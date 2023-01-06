@@ -79,10 +79,12 @@ export default defineComponent({
   },
   props: {},
   setup () {
-
     const dialog = ref(false)
     return {
       dialog,
+      open() {
+        dialog.value = true
+      }
     }
   },
   data: () => {
@@ -98,7 +100,7 @@ export default defineComponent({
       })
     },
     goSettingPage() {
-      this.dialog.valueOf = true
+      this.open()
     },
     logout() {
       let that = this
