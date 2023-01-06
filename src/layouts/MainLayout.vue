@@ -10,10 +10,9 @@
           <q-btn class="q-mr-sm" to="/"            color="orange">Home</q-btn>
           <q-btn class="q-mr-sm" to="/feeddb"      color="green">Auto Feed Database</q-btn>
           <q-btn class="q-mr-sm" to="/profile/me"  color="green">Profile</q-btn>
-          <q-btn class="q-mr-sm" to="/settings"    color="green">Settings</q-btn>
           <q-btn class="q-mr-sm" to="/play"        color="green">Play</q-btn>
           <div class="q-mr-lg logout">
-            <q-btn class="absolute-right"    @click="logout()" color="red">LOGOUT</q-btn>
+            <q-btn class="absolute-right"    @click="logout()" color="red" label="LOGOUT"/>
           </div>
         </q-toolbar-title>
       </q-toolbar>
@@ -36,13 +35,16 @@
             :profilefun="goProfilPage"
             class="absolute-top"
             :name="storeMe.username"
-            avatar="api/avatar/me/medium"
+            avatar="/api/avatar/me/medium"
             icon="settings"
             size="large"
             nameColor="orange"
             :ratio="0.42"
           />
         </q-img>
+          <q-dialog v-model="dialog">
+            <settings/>
+        </q-dialog>
       </q-drawer>
     <q-page-container class="q-mt-md">
       <router-view />
@@ -51,42 +53,47 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import UserCard from '../components/common/UserCard.vue'
+import Settings from '../components/Settings.vue'
 import { IUserBasicInfo, OnlineStatus } from '../models/models'
 // import { randomDate } from '../models/fakedatas'
 import api from 'src/services/api.service'
 import { useMeStore } from 'src/stores/me';
+// import WsService from 'src/services/ws.service';
 
 let _me = {
   name: 'tharchen',
   avatar: 'https://cdn.intra.42.fr/users/d1ae701a3af5f3dd3070d5c8406e77fe/tharchen.jpg',
   onlineStatus: OnlineStatus.ONLINE,
 } as IUserBasicInfo
+// const ws = WsService;
 
 export default defineComponent({
   name: 'MainLayout',
   components: {
     ConversationList,
-    UserCard
+    UserCard,
+    Settings
   },
   props: {},
+  setup () {
 
-  // data() {
-  //   return {
-  //     drawer: ref(false),
-  //     storeMe: useMeStore()
-  //   }
-  // },
-
+    const dialog = ref(false)
+    return {
+      dialog,
+      open() {
+        dialog.value = true
+      }
+    }
+  },
   data: () => {
     return {
       drawer: ref(false),
       storeMe: useMeStore(),
     }
   },
-
   methods: {
     goProfilPage() {
       this.$router.push({
@@ -94,9 +101,7 @@ export default defineComponent({
       })
     },
     goSettingPage() {
-      this.$router.push({
-        path: '/settings',
-      })
+      this.open()
     },
     logout() {
       let that = this
@@ -114,6 +119,8 @@ export default defineComponent({
 
   created () {
     this.storeMe.fetch()
+	//   ws.connect();
+
   },
 
 });

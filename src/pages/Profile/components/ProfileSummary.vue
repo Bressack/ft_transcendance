@@ -55,6 +55,7 @@ export default defineComponent({
   @include r.interpolate(font-size, 320px, 2560px, 14px, 40px)
   @include r.interpolate(padding-left, 320px, 2560px, 0px, 40px)
   font-weight: bold
+  overflow: auto
 
 .avatar
   @include r.interpolate(font-size, 320px, 2560px, 40px, 140px)

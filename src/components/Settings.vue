@@ -1,12 +1,11 @@
 <template>
-<q-page>
+<div class="main">
   <q-item class="q-px-xl r-py-md">
     <q-item-section>
-      <q-item-label class="label bigger">Profile settings</q-item-label>
-      <q-item-label class="label">{{profile.username}}</q-item-label>
+      <q-item-label class="bigger">Settings</q-item-label>
     </q-item-section>
   </q-item>
-    <q-item class="q-px-xl r-pt-md">
+    <q-item class="justify-center centers q-px-xl r-pt-md">
       <q-uploader
         auto-upload
         hide-upload-btn
@@ -26,7 +25,7 @@
       </template>
     </q-uploader>
   </q-item>
-  <q-item class="q-px-xl">
+  <q-item class="justify-center centers q-px-xl">
     <q-btn
       color="white"
       label="Remove Avatar"
@@ -35,18 +34,21 @@
       @click="removeAvatar()"
     />
   </q-item>
-  <q-item class="q-pa-xl">
+  <q-item class="justify-center centers q-pa-xl">
     <q-toggle @update:model-value="onUpdate" v-model="twoFA">
       <q-item-label class="label">Two factor authentification</q-item-label>
     </q-toggle>
   </q-item>
-</q-page>
+  <q-item class="justify-center centers bigger q-mb-lg">
+    <q-btn label="CLOSE" v-close-popup/>
+  </q-item>
+</div>
 </template>
 
 <script lang="ts">
 import { QRejectedEntry } from 'quasar'
-import { defineComponent, ref } from 'vue'
-import api from '../../services/api.service'
+import { defineComponent } from 'vue'
+import api from '../services/api.service'
 
 interface UploadObject {
   files: readonly any []
@@ -143,6 +145,9 @@ export default defineComponent({
 </style>
 
 <style lang="sass" scoped>
+.main
+  background-color: #696969
+  text-align: center
 .avatar
   object-fit: cover
   width: 100%

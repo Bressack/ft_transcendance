@@ -14,7 +14,8 @@
       <q-separator class="mobile-hide" vertical inset color="white"/>
       <q-item class="col-2">
         <q-item-section>
-          <q-item-label class="label bigger score"><span v-bind:class=status>{{status}}</span></q-item-label>
+          <q-item-label class="bigger score"><span v-bind:class=status>{{status}}</span></q-item-label>
+          <q-item-label class="label score">{{scoreOne}} - {{scoreTwo}}</q-item-label>
         </q-item-section>
       </q-item>
     <q-separator class="mobile-hide" vertical inset color="white"/>

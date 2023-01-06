@@ -27,8 +27,8 @@
   <div class="r-py-md q-px-md">
       <q-item>
         <q-item-section>
-          <q-item-label v-if="games.total" class="bigger label">Match History</q-item-label>
-          <q-item-label v-else class="bigger label">No current game history</q-item-label>
+          <q-item-label v-if="games.total" class="bigger">Match History</q-item-label>
+          <q-item-label v-else class="bigger">No game history</q-item-label>
         </q-item-section>
       </q-item>
     <div v-for="game in games.result" :key="game">
