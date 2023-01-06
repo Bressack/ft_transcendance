@@ -92,7 +92,23 @@
             {{ friend }}
           </q-item-section>
           <q-item-section side class="toto">
-            <q-icon name="cancel" color="red" @click="unfollow(friend)"/>
+            <q-icon name="more_vert" color="white">
+              <q-menu class="bg-grey-9 text-white" auto-close>
+                <q-list style="min-width: 100px">
+                  <q-item clickable>
+                    <q-item-section>Invite to play</q-item-section>
+                  </q-item>
+                  <q-item clickable @click="goProfilPage(friend)">
+                    <q-item-section>Profile</q-item-section>
+                  </q-item>
+                  <q-separator dark />
+                  <q-item clickable class="text-red-7" @click="unfollow(friend)">
+                    <q-item-section>Remove friend</q-item-section>
+                  </q-item>
+                </q-list>
+              </q-menu>
+            </q-icon>
+            <!-- <q-icon name="cancel" color="red" @click="unfollow(friend)"/> -->
           </q-item-section>
         </q-item>
       </q-list>
@@ -135,6 +151,11 @@ export default defineComponent({
     }
   },
   methods: {
+    goProfilPage(username: string) {
+      this.$router.push({
+        path: '/profile/' + username,
+      })
+    },
     clearInput() {
       this.searchInput = ''
       this.searchResult = {} as IResult

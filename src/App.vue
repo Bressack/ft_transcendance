@@ -3,13 +3,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 import api from './services/api.service'
+// import wsService from './services/ws.service';
 
 export default defineComponent({
   name: 'App',
+
   data() {
-    return {}
+    return {
+      isrefreshing: false,
+    }
+  },
+  setup() {
+
   },
   methods: {
     initSystem () {
@@ -27,14 +34,32 @@ export default defineComponent({
           that.$router.push('/login')
           return ;
         }
-        // console.log('config:', error.config)
-        // console.log('response:', error.response.status)
+        // 401 sur la request
         if (error?.response?.status == 401) {
           try {
-            const response = await api.refresh()
-            if (response.status == 417)
-              that.$router.push('/login')
-            that.$router.replace('/')
+            if (that.isrefreshing == false)
+            {
+              // on get le access token
+              that.isrefreshing = true
+              const response = await api.refresh()
+              that.isrefreshing = false
+              if (response.status == 417) {
+                that.$router.push('/login')
+                return;
+              }
+            }
+            else {
+              // on attend le refresh
+              while (that.isrefreshing) {
+                await new Promise((resolve: any, reject: any) => {
+                  setTimeout(() => {
+                    resolve()
+                  }, 100)
+                })
+              }
+            }
+            error.config._retry = true;
+            return api.axiosInstance(error.config)
           } catch(error: any) {
             console.log('error', error.response)
           }
@@ -44,6 +69,7 @@ export default defineComponent({
   },
   beforeMount() {
     this.initSystem()
-  }
+  },
+
 });
 </script>
