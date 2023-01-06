@@ -98,12 +98,13 @@ export default defineComponent({
       })
     },
     goSettingPage() {
-      this.dialog.value = true
+      this.dialog.valueOf = true
     },
     logout() {
       let that = this
       api.logout()
       .then(function (status) {
+		that.$ws.disconnect()
         that.$router.push('/login')
         that.storeMe.$reset()
       })
@@ -112,9 +113,18 @@ export default defineComponent({
 
   created () {
     this.storeMe.fetch()
-	//   ws.connect();
 
   },
+  mounted () {
+	  this.$ws.connect()
+
+  },
+
+	beforeUnMount() {
+		console.log("beforeunmount login page")
+		this.$ws.disconnect()
+
+	}
 
 });
 </script>

@@ -26,17 +26,13 @@ class WsService {
 	// should only be called once access token has been received after initial REST request
 	connect() {
 		if (!this.socket) {
-			this.socket = io('ws://127.0.0.1:3000/api/ws', {auth: { token: this.getToken() }});
-			if (this.socket)
-			    return this.setupDefaultListeners();
-			throw new Error('connection error')
+			this.socket = io('ws://127.0.0.1:3000/api/ws', {auth: { token: this.getToken() }}).connect();
 		}
-		this.emit('coucou', {'caca': "cocoucoasdu"});
+		else this.socket.connect();
 	    return this.setupDefaultListeners();
 	}
 
 	setupDefaultListeners(){
-		console.log(this.socket.id, "YOOO");
 		this.listen('user-connected',  this.handleUserConnectedEvent)
 		this.listen('user-disconnected', this.handleUserDisconnectedEvent)
 	}
@@ -57,4 +53,4 @@ class WsService {
 	}
 }
 
-export default new WsService();
+export default WsService;

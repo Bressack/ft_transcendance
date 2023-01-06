@@ -3,16 +3,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 import api from './services/api.service'
-import wsService from './services/ws.service';
+// import wsService from './services/ws.service';
 
 export default defineComponent({
   name: 'App',
+
   data() {
     return {
-      isrefreshing: false
+      isrefreshing: false,
     }
+  },
+  setup() {
+
   },
   methods: {
     initSystem () {
@@ -66,12 +70,7 @@ export default defineComponent({
   beforeMount() {
     this.initSystem()
   },
-  created() {
-	wsService.connect()
-  },
-  beforeUnMount() {
-	wsService.disconnect()
-  }
+
 });
 </script>
 

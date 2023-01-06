@@ -22,10 +22,14 @@ export default defineComponent({
     api.ping()
     .then(function (status) {
       if (status === 200) {
+
         that.$router.push('/')
       }
     })
     .catch(function () {})
+  },
+  unmounted () {
+
   },
   data() {
     return {
