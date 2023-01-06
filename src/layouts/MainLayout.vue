@@ -73,10 +73,17 @@ export default defineComponent({
   },
   props: {},
 
-  data() {
+  // data() {
+  //   return {
+  //     drawer: ref(false),
+  //     storeMe: useMeStore()
+  //   }
+  // },
+
+  data: () => {
     return {
       drawer: ref(false),
-      storeMe: useMeStore()
+      storeMe: useMeStore(),
     }
   },
 
