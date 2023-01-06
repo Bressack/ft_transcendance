@@ -61,12 +61,14 @@ import { IUserBasicInfo, OnlineStatus } from '../models/models'
 // import { randomDate } from '../models/fakedatas'
 import api from 'src/services/api.service'
 import { useMeStore } from 'src/stores/me';
+// import WsService from 'src/services/ws.service';
 
 let _me = {
   name: 'tharchen',
   avatar: 'https://cdn.intra.42.fr/users/d1ae701a3af5f3dd3070d5c8406e77fe/tharchen.jpg',
   onlineStatus: OnlineStatus.ONLINE,
 } as IUserBasicInfo
+// const ws = WsService;
 
 export default defineComponent({
   name: 'MainLayout',
@@ -77,6 +79,7 @@ export default defineComponent({
   },
   props: {},
   setup () {
+	
     const dialog = ref(false)
     return {
       dialog,
@@ -116,6 +119,8 @@ export default defineComponent({
 
   created () {
     this.storeMe.fetch()
+	//   ws.connect();
+
   },
 
 });
