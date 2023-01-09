@@ -14,5 +14,8 @@
       - The user should be able to watch a live play between other users without interfering with it
     </q-item>
   </q-list>
+  <q-item>
+    <q-btn class="label" label="Play"/>
+  </q-item>
 </q-page>
 </template>

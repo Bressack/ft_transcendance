@@ -31,7 +31,7 @@
         <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
           <UserCard
             v-if="(storeMe.username)"
-            :iconfun="goSettingPage"
+            :iconfun="goSettingNotif"
             :profilefun="goProfilPage"
             class="absolute-top"
             :name="storeMe.username"
@@ -42,7 +42,7 @@
             :ratio="0.42"
           />
         </q-img>
-          <q-dialog v-model="dialog">
+          <q-dialog v-model="settings">
             <settings/>
         </q-dialog>
       </q-drawer>
@@ -79,12 +79,10 @@ export default defineComponent({
   },
   props: {},
   setup () {
-    const dialog = ref(false)
+    const settings = ref(false)
     return {
-      dialog,
-      open() {
-        dialog.value = true
-      }
+      settings,
+      openSettings() { settings.value = true },
     }
   },
   data: () => {
@@ -99,8 +97,8 @@ export default defineComponent({
         path: '/profile/me',
       })
     },
-    goSettingPage() {
-      this.open()
+    goSettingNotif() {
+      this.openSettings()
     },
     logout() {
       let that = this
