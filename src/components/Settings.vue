@@ -40,7 +40,7 @@
     </q-toggle>
   </q-item>
   <q-item class="justify-center centers bigger q-mb-lg">
-    <q-btn class="label" color="orange" label="Close" v-close-popup/>
+    <q-btn label="CLOSE" v-close-popup/>
   </q-item>
 </div>
 </template>
