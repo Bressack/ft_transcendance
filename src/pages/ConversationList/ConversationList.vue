@@ -95,7 +95,7 @@
             <q-icon name="more_vert" color="white">
               <q-menu class="bg-grey-9 text-white" auto-close>
                 <q-list style="min-width: 100px">
-                  <q-item clickable @click="goInviteNotif(friend)">
+                  <q-item clickable @click="goGameOptions(friend)">
                     <q-item-section>Invite to play</q-item-section>
                   </q-item>
                   <q-item clickable @click="goProfilPage(friend)">
@@ -112,8 +112,8 @@
           </q-item-section>
         </q-item>
       </q-list>
-      <q-dialog v-model="invite">
-        <GameOptions :opponentUsername="opponent"/>
+      <q-dialog v-model="gameOptions">
+        <GameOptions :opponent="opponent"/>
       </q-dialog>
     <!-- </q-scroll-area> -->
   <!-- </div> -->
@@ -147,11 +147,11 @@ export default defineComponent({
   components: { UserCard, GameOptions },
   props: {},
   setup () {
-    const invite = ref(false)
+    const gameOptions = ref(false)
     return {
-      invite,
-      openInvite() {
-        invite.value = true
+      gameOptions,
+      openGameOptions() {
+        gameOptions.value = true
       }
     }
   },
@@ -170,9 +170,9 @@ export default defineComponent({
         path: '/profile/' + username,
       })
     },
-    goInviteNotif(username: string) {
+    goGameOptions(username: string) {
       this.opponent = username
-      this.openInvite()
+      this.openGameOptions()
     },
     clearInput() {
       this.searchInput = ''
