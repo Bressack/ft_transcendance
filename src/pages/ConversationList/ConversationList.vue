@@ -125,7 +125,7 @@ import { IConvList, IConvItem, Scope } from '../../models/models';
 import UserCard from '../../components/common/UserCard.vue'
 import { fake_IConvList } from '../../models/fakedatas'
 import GameOptions from '../../components/GameOptions.vue'
-import api from 'src/services/api.service'
+// import api from 'src/services/api.service'
 import { ISearchQuery } from 'src/services/api.models'
 import { useMeStore } from 'src/stores/me';
 
@@ -185,7 +185,7 @@ export default defineComponent({
       }
       let that = this
       const searchQuery: ISearchQuery = { key: this.searchInput }
-      api.search(searchQuery)
+      this.$api.search(searchQuery)
         .then(function (result) {
           that.searchResult = result
         })
@@ -203,13 +203,13 @@ export default defineComponent({
     },
     follow(username: string) {
       let that = this
-      api.follow(username)
+      this.$api.follow(username)
       .then(function () { that.storeMe.fetch() })
       .catch(function () {})
     },
     unfollow(username: string) {
       let that = this
-      api.unfollow(username)
+      this.$api.unfollow(username)
       .then(function () { that.storeMe.fetch() })
       .catch(function () {})
     },

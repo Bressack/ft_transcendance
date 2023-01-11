@@ -9,7 +9,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import Auth from '../pages/Auth.vue'
-import api from 'src/services/api.service'
+// import api from 'src/services/api.service'
 
 export default defineComponent({
   name: 'LoginLayout',

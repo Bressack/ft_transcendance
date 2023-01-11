@@ -4,7 +4,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import api from './services/api.service'
+// import api from './services/api.service'
 // import wsService from './services/ws.service';
 
 export default defineComponent({
@@ -21,7 +21,7 @@ export default defineComponent({
   methods: {
     initSystem () {
       let that = this // parce que ta gueule le callback
-      api.axiosInstance.interceptors.response.use(undefined, async function (error) {
+      this.$api.axiosInstance.interceptors.response.use(undefined, async function (error) {
 
         if (error?.response?.status === 404 || error?.response?.status === 400)
         {
@@ -41,7 +41,7 @@ export default defineComponent({
             {
               // on get le access token
               that.isrefreshing = true
-              const response = await api.refresh()
+              const response = await this.$api.refresh()
               that.isrefreshing = false
               if (response.status == 417) {
                 that.$router.push('/login')
@@ -59,7 +59,7 @@ export default defineComponent({
               }
             }
             error.config._retry = true;
-            return api.axiosInstance(error.config)
+            return this.$api.axiosInstance(error.config)
           } catch(error: any) {
             console.log('error', error.response)
           }

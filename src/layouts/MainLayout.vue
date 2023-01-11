@@ -59,7 +59,7 @@ import UserCard from '../components/common/UserCard.vue'
 import Settings from '../components/Settings.vue'
 import { IUserBasicInfo, OnlineStatus } from '../models/models'
 // import { randomDate } from '../models/fakedatas'
-import api from 'src/services/api.service'
+// import api from 'src/services/api.service'
 import { useMeStore } from 'src/stores/me';
 // import WsService from 'src/services/ws.service';
 
@@ -102,9 +102,9 @@ export default defineComponent({
     },
     logout() {
       let that = this
-      api.logout()
-      .then(function (status) {
-		that.$ws.disconnect()
+      this.$api.logout()
+      .then(function (status: any) {
+        that.$ws.disconnect()
         that.$router.push('/login')
         that.storeMe.$reset()
       })

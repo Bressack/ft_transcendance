@@ -89,7 +89,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 // import axios from 'axios'
-import api from '../services/api.service'
+// import api from '../services/api.service'
 
 export default defineComponent({
   name: 'Auth',
@@ -116,7 +116,7 @@ export default defineComponent({
         password: this.password,
       })
 
-      api.login(payload)
+      this.$api.login(payload)
       .then(function (/* data */) {
         that.$router.replace('/')
       })
@@ -132,7 +132,7 @@ export default defineComponent({
         password: this.password,
       })
 
-      api.signup(payload)
+      this.$api.signup(payload)
       .then(function (/* data */) {
         that.$router.replace('/')
       })

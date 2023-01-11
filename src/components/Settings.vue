@@ -48,7 +48,7 @@
 <script lang="ts">
 import { QRejectedEntry } from 'quasar'
 import { defineComponent } from 'vue'
-import api from '../services/api.service'
+// import api from '../services/api.service'
 
 interface UploadObject {
   files: readonly any []
@@ -71,7 +71,7 @@ export default defineComponent({
   methods: {
     fetchMe() {
       let that = this
-      api.me()
+      this.$api.me()
       .then((result) => {
         that.profile = result
         that.avatar = `/api/avatar/${result.username}/large?refresh?refresh=${that.refresh++}`
@@ -82,7 +82,7 @@ export default defineComponent({
       })
     },
     removeAvatar () {
-      api.delete('avatar')
+      this.$api.delete('avatar')
       .then((res) => {
         console.log(res)
         if (res.data === true) {
@@ -130,7 +130,7 @@ export default defineComponent({
       }
     },
     onUpdate (value : any, evt : Event) {
-      api.patch(`/users/2FA?toggle=${value}`)
+      this.$api.patch(`/users/2FA?toggle=${value}`)
     }
   }
 })

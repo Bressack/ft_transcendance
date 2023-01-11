@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import api from 'src/services/api.service'
+// import api from 'src/services/api.service'
 import * as models from 'src/services/api.models'
 import { useMeStore } from 'src/stores/me';
 
