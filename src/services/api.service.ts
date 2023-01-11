@@ -12,7 +12,6 @@ import {
 
 export default {
   axiosInstance: axios.create({
-    // withCredentials: true,
     baseURL: '/api',
   }),
 

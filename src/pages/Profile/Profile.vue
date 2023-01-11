@@ -69,7 +69,7 @@ export default defineComponent({
     this.fetchUserProfile()
     this.fetchGameHistory()
   },
-  updated () {
+  beforeUpdate() {
     this.username = this.$route.params.username.toString()
     this.avatar = `/api/avatar/${this.username}/large`
     this.fetchUserProfile()

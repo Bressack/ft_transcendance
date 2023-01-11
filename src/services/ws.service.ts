@@ -10,7 +10,7 @@ class WsService {
 	getToken() {
 		return this.token || (this.token = Cookies.get('WsAuth'));
 	}
-	
+
 	emit(eventType : string, payload: object) {
 		this.socket.emit(eventType, {...payload, auth: { token: this.getToken() }});
 	}
@@ -25,11 +25,11 @@ class WsService {
 
 	// should only be called once access token has been received after initial REST request
 	connect() {
-		if (!this.socket) {
+		if (!this.socket)
 			this.socket = io('ws://127.0.0.1:3000/api/ws', {auth: { token: this.getToken() }}).connect();
-		}
-		else this.socket.connect();
-	    return this.setupDefaultListeners();
+		else
+      this.socket.connect();
+	  return this.setupDefaultListeners();
 	}
 
 	setupDefaultListeners(){

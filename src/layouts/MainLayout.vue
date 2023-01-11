@@ -35,7 +35,7 @@
             :profilefun="goProfilPage"
             class="absolute-top"
             :name="storeMe.username"
-            avatar="/api/avatar/me/medium"
+            :avatar="`/api/avatar/${storeMe.username}/medium`"
             icon="settings"
             size="large"
             nameColor="orange"
