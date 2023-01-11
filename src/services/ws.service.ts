@@ -51,6 +51,11 @@ class WsService {
 	handleUserDisconnectedEvent(username:string) {
 		console.log(`${username} disconnected`); // should update an array of connected users
 	}
+
+	// sendInvite(obj: any) {
+	// 	this.emit('invite-to-game', obj);
+	// }
+
 }
 
 export default WsService;
