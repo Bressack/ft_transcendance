@@ -95,7 +95,7 @@
             <q-icon name="more_vert" color="white">
               <q-menu class="bg-grey-9 text-white" auto-close>
                 <q-list style="min-width: 100px">
-                  <q-item clickable>
+                  <q-item clickable @click="goGameOptions(friend)">
                     <q-item-section>Invite to play</q-item-section>
                   </q-item>
                   <q-item clickable @click="goProfilPage(friend)">
@@ -112,15 +112,19 @@
           </q-item-section>
         </q-item>
       </q-list>
+      <q-dialog v-model="gameOptions">
+        <GameOptions :opponent="opponent"/>
+      </q-dialog>
     <!-- </q-scroll-area> -->
   <!-- </div> -->
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { IConvList, IConvItem, Scope } from '../../models/models';
 import UserCard from '../../components/common/UserCard.vue'
 import { fake_IConvList } from '../../models/fakedatas'
+import GameOptions from '../../components/GameOptions.vue'
 import api from 'src/services/api.service'
 import { ISearchQuery } from 'src/services/api.models'
 import { useMeStore } from 'src/stores/me';
@@ -140,14 +144,24 @@ interface IUserSelected {
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { UserCard },
+  components: { UserCard, GameOptions },
   props: {},
+  setup () {
+    const gameOptions = ref(false)
+    return {
+      gameOptions,
+      openGameOptions() {
+        gameOptions.value = true
+      }
+    }
+  },
   data() {
     return {
       storeMe: useMeStore(),
       conversationList : fake_IConvList(15) as IConvList,
       searchInput: '',
       searchResult: {} as IResult,
+      opponent: '' as string
     }
   },
   methods: {
@@ -155,6 +169,10 @@ export default defineComponent({
       this.$router.push({
         path: '/profile/' + username,
       })
+    },
+    goGameOptions(username: string) {
+      this.opponent = username
+      this.openGameOptions()
     },
     clearInput() {
       this.searchInput = ''
