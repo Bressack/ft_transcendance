@@ -116,12 +116,24 @@ export default defineComponent({
   },
   mounted () {
 	  this.$ws.connect()
+	//   this.$ws.listen('game-invitation', (data : any) => { // main-layout
+
+	//   })
+	//   this.$ws.listen('game-invitation-error', (data: any) => {  // composant dialog
+	//   })
+	//   this.$ws.listen('game-invitation-accepted', (data: any) => {  // composant dialog
+
+	//   })
+
 
   },
 
 	beforeUnMount() {
 		console.log("beforeunmount login page")
 		this.$ws.disconnect()
+		// this.$ws.sendInvite({})
+		// this.$ws.removeListener('game-invitation-error') //  composant dialog
+	 	//  this.$ws.removeListener('game-invitation-accepted') // composant dialog
 
 	}
 
