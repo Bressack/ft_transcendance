@@ -12,7 +12,22 @@ class WsService {
 	}
 	
 	emit(eventType : string, payload: object) {
-		this.socket.emit(eventType, {...payload, auth: { token: this.getToken() }});
+		this.socket.emit(eventType, {...payload, auth: { token: this.getToken() }})
+	}
+	
+	emitcb(eventType : string, payload: object, onSuccessCallback : Function, onErrorCallback : Function) {
+		this.socket.emit(eventType, {...payload, auth: { token: this.getToken() }}, function (response: any) {
+			if (response.status === 'error') {
+				if (onErrorCallback) 
+					return onErrorCallback(response);
+				return new Error(response.message);
+			}
+			else {
+				if (onSuccessCallback)
+					return onSuccessCallback(response);
+                return response.data;
+			}
+		});
 	}
 
 	listen(eventType : string, callback: Function) {
@@ -35,6 +50,8 @@ class WsService {
 	setupDefaultListeners(){
 		this.listen('user-connected',  this.handleUserConnectedEvent)
 		this.listen('user-disconnected', this.handleUserDisconnectedEvent)
+		// this.listen('chat-infos', (data: any) => { console.log( 'chat-info event', data)})
+		// this.listen('messages', (data: any) => { console.log( 'error event', data)})
 	}
 
 	disconnect() {
