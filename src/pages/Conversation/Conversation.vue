@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <q-scroll-area :visible="true" style="height: 88vh; max-width: 100vw;">
+    <q-scroll-area ref="ScrollDown" style="height: 88vh; max-width: 100vw;">
       <q-list bordered class="messagelist">
         <!-- <Message v-for="item in messagesList" :key="item.id" :message="item" class="messagecomp" /> -->
         <UserCard
@@ -36,10 +36,14 @@ export default defineComponent({
     return {
       messagesList: fake_IMessageList(20) as IMessageList,
       text: '',
+      $refs : undefined as any
     }
   },
   updated() {
     this.messagesList = fake_IMessageList(20);
+  },
+  mounted () {
+    this.$refs.ScrollDown.setScrollPosition('vertical',  this.$refs.ScrollDown.getScroll().verticalSize)
   },
   methods: {
     goProfilPage(user: string) {

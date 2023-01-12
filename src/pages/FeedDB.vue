@@ -1,5 +1,5 @@
 <template>
-  <q-page>
+  <q-page style="min-height: 100%;">
     <q-card class="q-ma-lg q-pa-lg" style="max-width: 400px">
       <q-form
         @submit="onSubmit"

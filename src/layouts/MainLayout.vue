@@ -46,7 +46,7 @@
             <settings/>
         </q-dialog>
       </q-drawer>
-    <q-page-container class="q-mt-md">
+    <q-page-container>
       <router-view />
     </q-page-container>
   </q-layout>

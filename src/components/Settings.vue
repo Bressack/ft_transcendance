@@ -40,7 +40,7 @@
     </q-toggle>
   </q-item>
   <q-item class="justify-center centers bigger q-mb-lg">
-    <q-btn label="CLOSE" v-close-popup/>
+    <q-btn label="Close" v-close-popup/>
   </q-item>
 </div>
 </template>
@@ -137,11 +137,9 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-.scroll
-  overflow: hidden
-
 .q-uploader__list
   padding: 0px
+  overflow: hidden
 </style>
 
 <style lang="sass" scoped>
@@ -155,6 +153,6 @@ export default defineComponent({
 
 .uploader
   width: 224px
-  miheight: 240px
+  min-height: 240px
   max-height: 100%
 </style>
