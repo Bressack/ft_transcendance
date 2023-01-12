@@ -12,7 +12,6 @@ import {
 
 export default {
   axiosInstance: axios.create({
-    // withCredentials: true,
     baseURL: '/api',
   }),
 
@@ -40,12 +39,12 @@ export default {
     return response.data
   },
 
-  async ping() {
-    const response = await this.axiosInstance.get('/auth')
-    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-    sleep(1000).then()
-    return response.status
-  },
+  // async ping() {
+  //   const response = await this.axiosInstance.get('/auth')
+  //   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+  //   sleep(1000).then()
+  //   return response.status
+  // },
 
 
   /**

@@ -47,7 +47,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { IGameQuery } from '../../services/api.models'
-import api from '../../services/api.service'
+// import api from '../../services/api.service'
 import ProfileSummary from './components/ProfileSummary.vue'
 import MatchHistory from './components/MatchHistory.vue'
 import LevelProgress from './components/LevelProgress.vue'
@@ -69,7 +69,7 @@ export default defineComponent({
     this.fetchUserProfile()
     this.fetchGameHistory()
   },
-  updated () {
+  beforeUpdate() {
     this.username = this.$route.params.username.toString()
     this.avatar = `/api/avatar/${this.username}/large`
     this.fetchUserProfile()
@@ -78,13 +78,9 @@ export default defineComponent({
   methods: {
     fetchUserProfile() {
       let that = this
-      api.userProfile(this.username)
-      .then(function(result) {
-        that.profile = result
-      })
-      .catch(function(error) {
-        console.error('error:', error);
-      })
+      this.$api.userProfile(this.username)
+      .then(function(result: any) { that.profile = result })
+      .catch(function(error: any) { console.error('error:', error); })
     },
     fetchGameHistory() {
       let that = this
@@ -93,15 +89,9 @@ export default defineComponent({
         take: '20',
         order: 'desc',
       }
-      console.log(searchQuery);
-      api.userGame(this.username, searchQuery)
-      .then(function(result) {
-        console.log('result:',result);
-        that.games = result
-      })
-      .catch(function(error) {
-        console.log('error:',error);
-      })
+      this.$api.userGame(this.username, searchQuery)
+      .then(function(result: any) { that.games = result })
+      .catch(function(error: any) { console.error('error:', error); })
     },
     gameStatus(game : any) : string {
       if (game.score_playerOne === game.score_playerTwo)
