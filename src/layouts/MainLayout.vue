@@ -23,19 +23,28 @@
 				<ConversationList />
 			</q-scroll-area>
 
-			<q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
-				<UserCard v-if="(storeMe.username)" :iconfun="goSettingNotif" :profilefun="goProfilPage"
-					class="absolute-top" :name="storeMe.username" :avatar="`/api/avatar/${storeMe.username}/medium`"
-					icon="settings" size="large" nameColor="orange" :ratio="0.42" />
-			</q-img>
-			<q-dialog v-model="settings">
-				<settings />
-			</q-dialog>
-		</q-drawer>
-		<q-page-container class="q-mt-md">
-			<router-view />
-		</q-page-container>
-	</q-layout>
+        <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
+          <UserCard
+            v-if="(storeMe.username)"
+            :iconfun="goSettingsNotif"
+            :profilefun="goProfilePage"
+            class="absolute-top"
+            :name="storeMe.username"
+            avatar="/api/avatar/me/medium"
+            icon="settings"
+            size="large"
+            nameColor="orange"
+            :ratio="0.42"
+          />
+        </q-img>
+          <q-dialog v-model="settings">
+            <settings/>
+        </q-dialog>
+      </q-drawer>
+    <q-page-container>
+      <router-view />
+    </q-page-container>
+  </q-layout>
 </template>
 
 <script lang="ts">
@@ -78,12 +87,12 @@ export default defineComponent({
 		}
 	},
 	methods: {
-		goProfilPage() {
+		goProfilePage() {
 			this.$router.push({
 				path: '/profile/me',
 			})
 		},
-		goSettingNotif() {
+		goSettingsNotif() {
 			this.openSettings()
 		},
 		logout() {

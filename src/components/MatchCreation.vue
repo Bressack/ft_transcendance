@@ -1,3 +1,9 @@
+<!--
+  This vue file have to handle :
+  - Invitation from an other player to you  -> You are requested to accept or decline the invitation, 30s delay before it declines automaticaly
+  - Invitation from you to an other player  -> You wait at most 30s to the opponent to accept your game request, you can cancel anytime
+  - Matchmaking launch                      -> You will look for other player indefintely, you can cancel anytime. If you find an opponent, you will enter in the game (Aymeric's problem)
+ -->
 <template>
 <div class="main q-pa-lg">
   <q-item v-if="opponent === null">

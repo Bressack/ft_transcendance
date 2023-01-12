@@ -1,46 +1,46 @@
 <template>
-<div class="main">
-  <q-item class="q-px-xl r-py-md">
-    <q-item-section>
-      <q-item-label class="bigger">Settings</q-item-label>
-    </q-item-section>
-  </q-item>
-    <q-item class="justify-center centers q-px-xl r-pt-md">
-      <q-uploader
-        auto-upload
-        hide-upload-btn
-        max-files=1
-        class="uploader"
-        ref="uploader"
-        label="Change avatar"
+  <div class="main">
+    <q-item class="q-px-xl r-py-md">
+      <q-item-section>
+        <q-item-label class="bigger">Settings</q-item-label>
+      </q-item-section>
+    </q-item>
+  <q-item class="justify-center centers q-px-xl r-pt-md">
+    <q-uploader
+    auto-upload
+    hide-upload-btn
+    max-files=1
+    class="uploader"
+    ref="uploader"
+    label="Change avatar"
         url="/api/avatar/"
         field-name="avatar"
         color="black"
         :filter="imgOnly"
         @uploaded="onUploaded"
         @rejected="onRejected"
-      >
-      <template v-slot:list="scope">
+        >
+        <template v-slot:list="scope">
           <img class="avatar" :src=avatar>
-      </template>
-    </q-uploader>
-  </q-item>
-  <q-item class="justify-center centers q-px-xl">
-    <q-btn
+        </template>
+      </q-uploader>
+    </q-item>
+    <q-item class="justify-center centers q-px-xl">
+      <q-btn
       color="white"
       label="Remove Avatar"
       flat
       icon="delete"
       @click="removeAvatar()"
-    />
-  </q-item>
-  <q-item class="justify-center centers q-pa-xl">
+      />
+    </q-item>
+    <q-item class="justify-center centers q-pa-xl">
     <q-toggle @update:model-value="onUpdate" v-model="twoFA">
       <q-item-label class="label">Two factor authentification</q-item-label>
     </q-toggle>
   </q-item>
   <q-item class="justify-center centers bigger q-mb-lg">
-    <q-btn label="CLOSE" v-close-popup/>
+    <q-btn color="orange" label="Close" v-close-popup/>
   </q-item>
 </div>
 </template>
@@ -137,11 +137,9 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-.scroll
-  overflow: hidden
-
 .q-uploader__list
   padding: 0px
+  overflow: hidden
 </style>
 
 <style lang="sass" scoped>
@@ -155,6 +153,6 @@ export default defineComponent({
 
 .uploader
   width: 224px
-  miheight: 240px
+  min-height: 240px
   max-height: 100%
 </style>

@@ -6,10 +6,13 @@
 -->
 <template>
 <q-page>
-  <q-list>
-    <q-item>
-      <q-btn class="q-mx-lg" label="Game Options" @click="goGameOptions()"/>
+  <q-list class="flex-center">
+    <q-item class="q-py-xl">
+      <q-btn color="orange" class="q-mx-lg" label="Game Options" @click="goGameOptions()"/>
       <!-- <q-btn class="q-mx-lg" label="Play" @click="goInviteNotif()"/> -->
+    </q-item>
+    <q-item class="q-pb-xl">
+      <q-btn color="orange" class="q-mx-lg" label="Invite Notification" @click="goInviteNotif()"/>
     </q-item>
   </q-list>
   <q-dialog v-model="GameOptions">
@@ -22,8 +25,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import GameOptions from '../../components/GameOptions.vue'
-import InviteToPlay from '../../components/InviteToPlay.vue'
+import GameOptions from '../components/GameOptions.vue'
+import InviteToPlay from '../components/MatchCreation.vue'
 
 export default defineComponent({
   name: 'ConversationList',
@@ -31,10 +34,15 @@ export default defineComponent({
   props: {},
   setup () {
     const GameOptions = ref(false)
+    const InviteNotif = ref(false)
     return {
       GameOptions,
       openGameOptions() {
         GameOptions.value = true
+      },
+      InviteNotif,
+      openInviteNotif() {
+        InviteNotif.value = true
       }
     }
   },
@@ -42,6 +50,9 @@ export default defineComponent({
     goGameOptions() {
       this.openGameOptions()
     },
+    goInviteNotif() {
+      this.openInviteNotif()
+    }
   },
 });
 </script>

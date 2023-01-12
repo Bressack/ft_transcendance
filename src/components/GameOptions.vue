@@ -1,41 +1,42 @@
 <template>
-<div class="main">
-  <q-item class="q-px-xl r-py-md">
-    <q-item-section>
+  <div class="main">
+    <div class="close-cross">
+      <q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup/>
+    </div>
+    <div class="q-px-xl r-py-md">
       <q-item-label class="bigger">Game Options</q-item-label>
-    </q-item-section>
-  </q-item>
-  <q-separator color="white"/>
-    <q-item-section class="q-pa-md">
-      <q-option-group inline
-        v-model="map"
-        :options="maps"
-        color="white"
-        keep-color
-      >
+  </div>
+  <q-item-section class="q-pa-md">
+    <q-separator color="white"/>
+    <q-option-group inline
+    v-model="map"
+    :options="maps"
+    color="white"
+    keep-color
+    >
       <template v-slot:label="opt">
         <div class="row items-center">
           <q-item-label class="label">{{opt.label}}</q-item-label>
           <q-img class="image q-ma-md" :src="`/src/assets/maps/${opt.value}.png`"/>
         </div>
-     </template>
-  </q-option-group>
-  <q-separator color="white"/>
-  <div class="q-pa-md rounded-borders">
-    <q-option-group inline
+      </template>
+    </q-option-group>
+    <q-separator color="white"/>
+    <div class="q-pa-md rounded-borders">
+      <q-option-group inline
       v-model="opt"
       :options="opts"
       type="checkbox"
       color="white"
       keep-color
-    >
-      <template v-slot:label="opt">
-        <div class="row items-center">
-          <q-item-label class="q-pa-auto label">{{opt.label}}</q-item-label>
-        </div>
-      </template>
-    </q-option-group>
-  </div>
+      >
+        <template v-slot:label="opt">
+          <div class="row items-center">
+            <q-item-label class="q-pa-auto label">{{opt.label}}</q-item-label>
+          </div>
+        </template>
+      </q-option-group>
+    </div>
   </q-item-section>
   <q-item class="justify-center centers bigger q-mb-lg">
     <q-btn class="label" v-if="opponent" :label="`Play against ${opponent}`" color="orange"/>
@@ -83,5 +84,12 @@ export default defineComponent({
 .image
   border: solid 1px black
   @include r.interpolate(width, 320px, 2560px, 30px, 60px)
+
+.close-cross
+  position: relative
+  cursor: pointer
+
+.cross
+  @include r.interpolate(font-size, 320px, 2560px, 10px, 35px)
 
 </style>
