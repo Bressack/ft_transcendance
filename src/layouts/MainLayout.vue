@@ -103,7 +103,7 @@ export default defineComponent({
 	},
 	mounted() {
 		// EXAMPLE
-		this.$ws.emitcb('join-channel', { channel_id: '#gecacaneral' }, console.log, console.error)
+		this.$ws.emitcb('join-channel', { channelId: '#gecacaneral' }, console.log, console.error)
 		console.log(this.storeMe.username)
 		// if (this.storeMe.username == 'Alice99') {
 		this.$ws.emitcb('game-invite', { target_user: 'admin' }, console.log, console.error)
