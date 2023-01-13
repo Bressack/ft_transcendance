@@ -19,6 +19,9 @@
     <!-- Either matchmaking or play against a friend (add :opponent="username"), leave opponent as null for a random match -->
     <GameOptions/>
   </q-dialog>
+  <q-dialog v-model="InviteNotif">
+    <MatchCreation opponent="faltese"/>
+  </q-dialog>
 </q-page>
 </template>
 
@@ -26,11 +29,11 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import GameOptions from '../components/GameOptions.vue'
-import InviteToPlay from '../components/MatchCreation.vue'
+import MatchCreation from '../components/MatchCreation.vue'
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { GameOptions },
+  components: { GameOptions, MatchCreation },
   props: {},
   setup () {
     const GameOptions = ref(false)
