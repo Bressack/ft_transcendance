@@ -189,7 +189,7 @@ export default defineComponent({
         .then(function (result) {
           that.searchResult = result
         })
-        .catch(function (error) { })
+        .catch(function (error) {})
     },
     isPrivate(item: IConvItem) {
       return item.scope == Scope.PRIVATE
@@ -197,8 +197,7 @@ export default defineComponent({
     userSelected(name: String) {
       let query = { user: name } as IUserSelected
       this.$router.push({
-        path: '/conversation',
-        query: query
+        path: `/conversation/${name}`,
       })
     },
     follow(username: string) {

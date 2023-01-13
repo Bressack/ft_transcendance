@@ -41,7 +41,7 @@ export default defineComponent({
             {
               // on get le access token
               that.isrefreshing = true
-              const response = await this.$api.refresh()
+              const response = await that.$api.refresh()
               that.isrefreshing = false
               if (response.status == 417) {
                 that.$router.push('/login')
@@ -59,7 +59,7 @@ export default defineComponent({
               }
             }
             error.config._retry = true;
-            return this.$api.axiosInstance(error.config)
+            return that.$api.axiosInstance(error.config)
           } catch(error: any) {
             console.log('error', error.response)
           }

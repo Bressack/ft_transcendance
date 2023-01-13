@@ -65,7 +65,7 @@ export const useMeStore = defineStore('me', {
   },
 
   actions: {
-    fetch() {
+    async fetch() {
       let that = this
       api.me()
       .then(function (me: models.User) {

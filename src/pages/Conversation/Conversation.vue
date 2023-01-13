@@ -3,9 +3,9 @@
     <q-scroll-area :visible="true" style="height: 88vh; max-width: 100vw;">
       <q-list bordered class="messagelist">
         <!-- <Message v-for="item in messagesList" :key="item.id" :message="item" class="messagecomp" /> -->
+        <!-- @click=goProfilPage(message?.identity.name) -->
         <UserCard
           v-for="message in messagesListC" :key="message.id"
-          @click=goProfilPage(message?.identity.name)
           :name=message?.identity.name
           :avatar=message?.identity.avatar
           :content=message?.body
@@ -23,8 +23,14 @@
 import { defineComponent, PropType } from 'vue';
 import { IMessageList, IUserBasicInfo, IMessage } from '../../models/models';
 import { fake_IMessageList } from '../../models/fakedatas';
+import {
+  IWSMessages,
+  IWSError,
+  IWSInfos,
+} from '../../models/messages.ws';
 // import Message from '../components/Conversation/Message.vue';
 import UserCard from '../../components/common/UserCard.vue'
+// import ws from 'src/services/ws.service';
 
 
 export default defineComponent({
@@ -34,12 +40,12 @@ export default defineComponent({
   },
   data() {
     return {
-      messagesList: fake_IMessageList(20) as IMessageList,
+      messagesList: [],
       text: '',
     }
   },
   updated() {
-    this.messagesList = fake_IMessageList(20);
+    // this.messagesList = fake_IMessageList(20);
   },
   methods: {
     goProfilPage(user: string) {
@@ -54,6 +60,17 @@ export default defineComponent({
         return a.timestamp > b.timestamp ? -1 : 1
       })
     }
+  },
+  beforeCreate() {
+    this.$ws.listen('message', ((payload: IWSMessages) => {
+      this.messagesList.push()
+    }));
+    this.$ws.listen('error', ((payload: IWSError) => {
+      console.log('ws error:', payload)
+    }));
+    this.$ws.listen('infos', ((payload: IWSInfos) => {
+      console.log('ws infos:', payload)
+    }));
   }
 });
 </script>

@@ -26,6 +26,7 @@
       >
         <q-scroll-area class="scroll">
           <ConversationList/>
+          {{ storeMe.channelSubscriptions }}
         </q-scroll-area>
 
         <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">

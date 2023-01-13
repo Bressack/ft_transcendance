@@ -6,6 +6,8 @@ import API from 'src/services/api.service';
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
+    $ws: typeof ws;
+    $api: typeof api;
   }
 }
 
