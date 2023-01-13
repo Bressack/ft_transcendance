@@ -23,28 +23,19 @@
 				<ConversationList />
 			</q-scroll-area>
 
-        <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
-          <UserCard
-            v-if="(storeMe.username)"
-            :iconfun="goSettingsNotif"
-            :profilefun="goProfilePage"
-            class="absolute-top"
-            :name="storeMe.username"
-            avatar="/api/avatar/me/medium"
-            icon="settings"
-            size="large"
-            nameColor="orange"
-            :ratio="0.42"
-          />
-        </q-img>
-          <q-dialog v-model="settings">
-            <settings/>
-        </q-dialog>
-      </q-drawer>
-    <q-page-container>
-      <router-view />
-    </q-page-container>
-  </q-layout>
+			<q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
+				<UserCard v-if="(storeMe.username)" :iconfun="goSettingsNotif" :profilefun="goProfilePage"
+					class="absolute-top" :name="storeMe.username" avatar="/api/avatar/me/medium" icon="settings"
+					size="large" nameColor="orange" :ratio="0.42" />
+			</q-img>
+			<q-dialog v-model="settings">
+				<settings />
+			</q-dialog>
+		</q-drawer>
+		<q-page-container>
+			<router-view />
+		</q-page-container>
+	</q-layout>
 </template>
 
 <script lang="ts">
@@ -113,6 +104,11 @@ export default defineComponent({
 	mounted() {
 		// EXAMPLE
 		this.$ws.emitcb('join-channel', { channel_id: '#gecacaneral' }, console.log, console.error)
+		console.log(this.storeMe.username)
+		// if (this.storeMe.username == 'Alice99') {
+		this.$ws.emitcb('game-invite', { target_user: 'admin' }, console.log, console.error)
+
+		// }
 		//   this.$ws.listen('game-invitation', (data : any) => { // main-layout
 
 		//   })
