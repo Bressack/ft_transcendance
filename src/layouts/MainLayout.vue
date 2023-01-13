@@ -48,6 +48,7 @@
 </template>
 
 <script lang="ts">
+import { LocalStorage } from 'quasar'
 import { defineComponent, ref, computed } from 'vue';
 import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import UserCard from '../components/common/UserCard.vue'
@@ -102,6 +103,7 @@ export default defineComponent({
 					that.$ws.disconnect()
 					that.$router.push('/login')
 					that.storeMe.$reset()
+          LocalStorage.set('logged', false)
 				})
 		},
 	},

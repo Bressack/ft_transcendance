@@ -14,11 +14,11 @@ class WsService {
 	emit(eventType : string, payload: object) {
 		this.socket.emit(eventType, {...payload, auth: { token: this.getToken() }})
 	}
-	
+
 	emitcb(eventType : string, payload: object, onSuccessCallback : Function, onErrorCallback : Function) {
 		this.socket.emit(eventType, {...payload, auth: { token: this.getToken() }}, function (response: any) {
 			if (response.status === 'error') {
-				if (onErrorCallback) 
+				if (onErrorCallback)
 					return onErrorCallback(response);
 				return new Error(response.message);
 			}

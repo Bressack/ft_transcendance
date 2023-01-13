@@ -36,10 +36,10 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   // Navigation navigation guard
-  Router.beforeEach((to : RouteLocationNormalized, from : RouteLocationNormalized, next : NavigationGuardNext) => {
-    api.auth()
-    next()
-  })
+  // Router.beforeEach((to : RouteLocationNormalized, from : RouteLocationNormalized, next : NavigationGuardNext) => {
+  //   api.auth()
+  //   next()
+  // })
 
 
   return Router;

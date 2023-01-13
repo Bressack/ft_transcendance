@@ -39,19 +39,24 @@
     </div>
   </q-item-section>
   <q-item class="justify-center centers bigger q-mb-lg">
-    <q-btn class="label" v-if="opponent" :label="`Play against ${opponent}`" color="orange"/>
-    <q-btn class="label" v-else label="Play" color="orange"/>
+    <q-btn class="label" v-if="opponent" :label="`Play against ${opponent}`" color="orange" @click="InviteNotif = true"/>
+    <q-btn class="label" v-else label="Play" color="orange" @click="InviteNotif = true"/>
   </q-item>
+  <q-dialog persistent v-model="InviteNotif">
+    <InvitationFrom :opponent=opponent />
+  </q-dialog>
 </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import InvitationFrom from './InvitationFrom.vue'
 
 export default defineComponent({
-  components: {},
+  components: { InvitationFrom },
   name: 'GameOptions',
   setup () {
+    const InviteNotif = ref(false)
     return {
       map: ref('map1'),
       maps: [
@@ -65,7 +70,8 @@ export default defineComponent({
         { label: 'Powerup 1', value: 'powerup1'},
         { label: 'Powerup 2', value: 'powerup2'},
         { label: 'Powerup 3', value: 'powerup3'},
-      ]
+      ],
+      InviteNotif
     }
   },
   props: {

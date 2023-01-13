@@ -4,30 +4,18 @@
   - Invitation from you to an other player  -> You wait at most 30s to the opponent to accept your game request, you can cancel anytime
   - Matchmaking launch                      -> You will look for other player indefintely, you can cancel anytime. If you find an opponent, you will enter in the game (Aymeric's problem)
  -->
- <template>
-  <div class="main">
-    <div class="close-cross">
-      <q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup/>
-    </div>
-    <div class="q-px-xl r-py-md">
-      <q-item-label v-if="matchmaking" class="bigger">
-          Waiting for an opponent ...
-      </q-item-label>
-      <q-item-label v-else class="bigger">
-          Waiting for {{ opponent }} to accept your invitation ...
-      </q-item-label>
-  </div>
-  <q-item-section class="q-pa-md">
-    <q-separator color="white"/>
-    <q-separator color="white"/>
-    <div class="q-pa-md rounded-borders">
-
-    </div>
-  </q-item-section>
-  <q-item class="justify-center centers bigger q-mb-lg">
-    <q-btn class="label" v-if="opponent" :label="`Play against ${opponent}`" color="orange"/>
-    <q-btn class="label" v-else label="Play" color="orange"/>
-  </q-item>
+<template>
+<div class="main">
+  <q-item-label class="bigger">
+    {{ opponent }} has sent you a game invitation ...
+  </q-item-label>
+  <q-ajax-bar
+      ref="bar"
+      position="bottom"
+      color="accent"
+      size="10px"
+      skip-hijack
+    ></q-ajax-bar>
 </div>
 </template>
 
@@ -41,7 +29,7 @@ export default defineComponent({
     opponent : { type: String , default: null },
     matchmaking : { type: Boolean, default: false }
   },
-  methods: {}
+  methods: {},
 })
 </script>
 
