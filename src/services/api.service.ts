@@ -113,7 +113,13 @@ export default {
   async post(target: string) {
     const response = await this.axiosInstance.post(target)
     return response
-  }
+  },
 
+  logIt(message: string) {
+    let stack = new Error().stack as string
+    let caller = stack.split('\n')[2].trim().split('?')[0].split('/').slice(-1)[0] as any;
+    let lines = stack.split('\n')[2].trim().split(':').slice(-1)[0] + ':' + stack.split('\n')[2].trim().split(':').slice(-2)[0] as any;
+    console.log('[ DEBUG MESSAGE ] ' + caller + ' at ' + lines + ": " + message);
+  }
 
 }

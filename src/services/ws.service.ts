@@ -14,11 +14,11 @@ class WsService {
 	emit(eventType : string, payload: object) {
 		this.socket.emit(eventType, {...payload, auth: { token: this.getToken() }})
 	}
-	
+
 	emitcb(eventType : string, payload: object, onSuccessCallback : Function, onErrorCallback : Function) {
 		this.socket.emit(eventType, {...payload, auth: { token: this.getToken() }}, function (response: any) {
 			if (response.status === 'error') {
-				if (onErrorCallback) 
+				if (onErrorCallback)
 					return onErrorCallback(response);
 				return new Error(response.message);
 			}
@@ -53,9 +53,9 @@ class WsService {
 		this.socket.on('game-invite', (d: any, callback: any) => {
 			console.log('Game invite received', d)
 			setTimeout(() => {callback("ACCEPTED")}, 31000)
-			
+
 		})
-		
+
 		this.listen('game-invite-canceled', (d: any) => console.log('Game invite canceled', d))
 		this.socket.on('game-invite-accepted', (callback: any) => {
 			console.log('Game invite accepted')
