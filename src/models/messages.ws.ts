@@ -1,11 +1,11 @@
 
 export interface IWSMessages {
   id: string;
-  username: string;
-  timestamp: string;
-  channelId: string;
+  CreatedAt: Date;
+  ReceivedAt: Date;
   content: string;
-  passwords: string;
+  username: string;
+  channelId: string;
 }
 
 export interface IWSError {
