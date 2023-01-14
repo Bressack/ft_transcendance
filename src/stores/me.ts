@@ -94,5 +94,11 @@ export const useMeStore = defineStore('me', {
       })
       .catch(function () {})
     },
+    getChannelIDByUsername(username: string) {
+      const needle = this.channelSubscriptions.find((e: models.Subscription) => e.channel.channel_type === "ONE_TO_ONE" && e.channel.SubscribedUsers.some((u) => u.username == 'Victor'))
+      return needle?.channelId
+    }
   }
 });
+
+

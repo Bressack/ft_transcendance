@@ -1,122 +1,117 @@
 <template>
-  <!-- <div class=""> -->
-    <!-- TODO penser à une reel solution de scroll pour la liste -->
-    <!-- <q-scroll-area :visible="true" style="height: 88vh; max-width: 15vw;"> -->
-      <q-list bordered class="list">
+  <q-list bordered class="list">
 
-        <q-form class="q-pa-sm" style="max-width: 300px" @submit="search()">
+    <q-form class="q-pa-sm" style="max-width: 300px" @submit="search()">
 
-          <q-item>
-            <q-item-section>
-              <q-input v-model="searchInput" label="Search User by name" @update:model-value="search()" />
-            </q-item-section>
-            <q-item-section style="max-width: 30px" v-if="searchInput.length" @click="clearInput">
-              <q-btn dense flat color="red" icon="cancel" @click="search()" />
-            </q-item-section>
-            <q-item-section style="max-width: 10px">
-              <q-btn dense flat color="cyan" icon="search" @click="search()" />
-            </q-item-section>
-          </q-item>
+      <q-item>
+        <q-item-section>
+          <q-input v-model="searchInput" label="Search User by name" @update:model-value="search()" />
+        </q-item-section>
+        <q-item-section style="max-width: 30px" v-if="searchInput.length" @click="clearInput">
+          <q-btn dense flat color="red" icon="cancel" @click="search()" />
+        </q-item-section>
+        <q-item-section style="max-width: 10px">
+          <q-btn dense flat color="cyan" icon="search" @click="search()" />
+        </q-item-section>
+      </q-item>
 
-          <q-list class="q-py-md overall" v-if="searchResult?.result?.length">
-            <q-item v-ripple v-for="item in searchResult?.result" :key="item.username">
-              <q-item-section style="max-width: 50px;">
-                <q-avatar class="avatar">
-                  <img size="20px" :src="`/api/avatar/${item?.username}/thumbnail`" >
-                </q-avatar>
-              </q-item-section>
-              <q-item-section>
-                <q-item-label>
-                  {{ item?.username }}
-                </q-item-label>
-              </q-item-section>
-              <q-item-section side>
-                <q-icon name="add" color="green" @click="follow(item?.username)" />
-              </q-item-section>
-            </q-item>
-          </q-list>
-
-        </q-form>
-
-        <q-expansion-item
-          icon="perm_identity"
-          label="Friend Requests Recevied"
-          header-class="text-orange"
-        >
-          <q-item clickable v-ripple v-for="rrecv in storeMe.friendRequestRecevied" :key="rrecv">
-            <q-item-section style="max-width: 50px;">
-              <q-avatar class="avatar">
-                <img size="20px" :src="`/api/avatar/${rrecv}/thumbnail`" >
-              </q-avatar>
-            </q-item-section>
-            <q-item-section>
-              {{ rrecv }}
-            </q-item-section>
-            <q-item-section side>
-              <q-icon name="done" color="green" @click="follow(rrecv)"/>
-            </q-item-section>
-          </q-item>
-        </q-expansion-item>
-        <q-separator />
-
-        <q-expansion-item
-          icon="perm_identity"
-          label="Friend Requests Sent"
-          header-class="text-orange"
-        >
-          <q-item clickable v-ripple v-for="rsent in storeMe.friendRequestSent" :key="rsent">
-            <q-item-section style="max-width: 50px;">
-              <q-avatar class="avatar">
-                <img size="20px" :src="`/api/avatar/${rsent}/thumbnail`" >
-              </q-avatar>
-            </q-item-section>
-            <q-item-section>
-              {{ rsent }}
-            </q-item-section>
-            <q-item-section side>
-              <q-icon name="cancel" color="red" @click="unfollow(rsent)"/>
-            </q-item-section>
-          </q-item>
-        </q-expansion-item>
-
-        <q-separator />
-
-        <q-item-label header class="header">Friends</q-item-label>
-        <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="unfollow" >
-          <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
+      <q-list class="q-py-md overall" v-if="searchResult?.result?.length">
+        <q-item v-ripple v-for="item in searchResult?.result" :key="item.username">
+          <q-item-section style="max-width: 50px;">
             <q-avatar class="avatar">
-              <img size="20px" :src="`/api/avatar/${friend}/thumbnail`" >
+              <img size="20px" :src="`/api/avatar/${item?.username}/thumbnail`" >
             </q-avatar>
           </q-item-section>
-          <q-item-section @click="userSelected(friend)">
-            {{ friend }}
+          <q-item-section>
+            <q-item-label>
+              {{ item?.username }}
+            </q-item-label>
           </q-item-section>
-          <q-item-section side class="toto">
-            <q-icon name="more_vert" color="white">
-              <q-menu class="bg-grey-9 text-white" auto-close>
-                <q-list style="min-width: 100px">
-                  <q-item clickable @click="goGameOptions(friend)">
-                    <q-item-section>Invite to play</q-item-section>
-                  </q-item>
-                  <q-item clickable @click="goProfilPage(friend)">
-                    <q-item-section>Profile</q-item-section>
-                  </q-item>
-                  <q-separator dark />
-                  <q-item clickable class="text-red-7" @click="unfollow(friend)">
-                    <q-item-section>Remove friend</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-icon>
-            <!-- <q-icon name="cancel" color="red" @click="unfollow(friend)"/> -->
+          <q-item-section side>
+            <q-icon name="add" color="green" @click="follow(item?.username)" />
           </q-item-section>
         </q-item>
       </q-list>
-      <q-dialog v-model="gameOptions">
-        <GameOptions :opponent="opponent"/>
-      </q-dialog>
-    <!-- </q-scroll-area> -->
-  <!-- </div> -->
+
+    </q-form>
+
+    <q-expansion-item
+      icon="perm_identity"
+      label="Friend Requests Recevied"
+      header-class="text-orange"
+    >
+      <q-item clickable v-ripple v-for="rrecv in storeMe.friendRequestRecevied" :key="rrecv">
+        <q-item-section style="max-width: 50px;">
+          <q-avatar class="avatar">
+            <img size="20px" :src="`/api/avatar/${rrecv}/thumbnail`" >
+          </q-avatar>
+        </q-item-section>
+        <q-item-section>
+          {{ rrecv }}
+        </q-item-section>
+        <q-item-section side>
+          <q-icon name="done" color="green" @click="follow(rrecv)"/>
+        </q-item-section>
+      </q-item>
+    </q-expansion-item>
+    <q-separator />
+
+    <q-expansion-item
+      icon="perm_identity"
+      label="Friend Requests Sent"
+      header-class="text-orange"
+    >
+      <q-item clickable v-ripple v-for="rsent in storeMe.friendRequestSent" :key="rsent">
+        <q-item-section style="max-width: 50px;">
+          <q-avatar class="avatar">
+            <img size="20px" :src="`/api/avatar/${rsent}/thumbnail`" >
+          </q-avatar>
+        </q-item-section>
+        <q-item-section>
+          {{ rsent }}
+        </q-item-section>
+        <q-item-section side>
+          <q-icon name="cancel" color="red" @click="unfollow(rsent)"/>
+        </q-item-section>
+      </q-item>
+    </q-expansion-item>
+
+    <q-separator />
+
+    <q-item-label header class="header">Friends</q-item-label>
+    <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="unfollow" >
+      <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
+        <q-avatar class="avatar">
+          <img size="20px" :src="`/api/avatar/${friend}/thumbnail`" >
+        </q-avatar>
+      </q-item-section>
+      <q-item-section @click="userSelected(friend)">
+        {{ friend }}
+      </q-item-section>
+      <q-item-section side class="toto">
+        <q-icon name="more_vert" color="white">
+          <q-menu class="bg-grey-9 text-white" auto-close>
+            <q-list style="min-width: 100px">
+              <q-item clickable @click="goGameOptions(friend)">
+                <q-item-section>Invite to play</q-item-section>
+              </q-item>
+              <q-item clickable @click="goProfilPage(friend)">
+                <q-item-section>Profile</q-item-section>
+              </q-item>
+              <q-separator dark />
+              <q-item clickable class="text-red-7" @click="unfollow(friend)">
+                <q-item-section>Remove friend</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-icon>
+        <!-- <q-icon name="cancel" color="red" @click="unfollow(friend)"/> -->
+      </q-item-section>
+    </q-item>
+  </q-list>
+  <q-dialog v-model="gameOptions">
+    <GameOptions :opponent="opponent"/>
+  </q-dialog>
 </template>
 
 <script lang="ts">
@@ -128,6 +123,7 @@ import GameOptions from '../../components/GameOptions.vue'
 // import api from 'src/services/api.service'
 import { ISearchQuery } from 'src/services/api.models'
 import { useMeStore } from 'src/stores/me';
+import { store } from 'quasar/wrappers';
 
 interface IResult {
   total: number,
@@ -194,10 +190,10 @@ export default defineComponent({
     isPrivate(item: IConvItem) {
       return item.scope == Scope.PRIVATE
     },
-    userSelected(name: String) {
-      let query = { user: name } as IUserSelected
+    userSelected(username: string) {
+      const channelID = this.storeMe.getChannelIDByUsername(username)
       this.$router.push({
-        path: `/conversation/${name}`,
+        path: `/conversation/${channelID}`,
       })
     },
     follow(username: string) {

@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div>
-      <q-img src="src/assets/pong_wallpaper.png"/>
+      <!-- <q-img src="src/assets/pong_wallpaper.png"/> -->
     </div>
   </q-page>
 </template>

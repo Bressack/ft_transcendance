@@ -137,8 +137,8 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
-.scroll
-  overflow: hidden
+// .scroll
+//   overflow: hidden
 
 .q-uploader__list
   padding: 0px
@@ -148,6 +148,7 @@ export default defineComponent({
 .main
   background-color: #696969
   text-align: center
+
 .avatar
   object-fit: cover
   width: 100%

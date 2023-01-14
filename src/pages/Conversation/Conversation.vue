@@ -54,6 +54,10 @@ export default defineComponent({
       })
     }
   },
+  beforeMount() {
+
+  },
+  // ici tu get le channel id from le path de l'url dans un
   computed: {
     messagesListC() : IMessageList {
       return this.messagesList.sort((a: IMessage, b: IMessage) => {
@@ -62,6 +66,12 @@ export default defineComponent({
     }
   },
   beforeCreate() {
+    const channelID = this.$route.path.split('/').slice(-1)[0]
+
+    const res = this.$ws.emit('join-channel', { channelId: channelID }) as any;
+
+    this.messagesList = res.data.messages
+
     this.$ws.listen('message', ((payload: IWSMessages) => {
       this.messagesList.push()
     }));
