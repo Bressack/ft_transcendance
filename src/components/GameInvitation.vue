@@ -6,43 +6,63 @@
  -->
 <template>
 <div class="main">
-  <q-item>
-    <q-item-label class="bigger">
-      {{ opponent }} sent you a game invitation ...
+  <q-item class="r-pt-md flex-center">
+    <q-item-label v-if="sent" class="label">
+      Waiting for <span style="color:orange;" class="bigger">{{ opponent }}</span> to accept your game invitation
+    </q-item-label>
+    <q-item-label v-else class="label">
+      You recieved a game invitation from <span style="color:orange;" class="bigger">{{ opponent }}</span>
     </q-item-label>
   </q-item>
-  <q-item class="q-pa-md">
+  <q-item v-if="sent" class="q-py-xl">
+    <q-inner-loading size="50px" class="load" :showing="visible" color="orange" ref="load"/>
+  </q-item>
+  <q-item class="q-py-xl flex-center">
     <q-btn label="Decline" color="red" v-close-popup/>
-    <q-btn label="Accept" color="green" v-close-popup/>
+    <q-btn v-if="!sent" class="q-ml-md" label="Accept" color="green" v-close-popup/>
   </q-item>
-  <q-item>
-    <q-ajax-bar class="relative"
-      ref="bar"
-      position="bottom"
-      color="accent"
-      size="10px"
-    ></q-ajax-bar>
-  </q-item>
+  <q-ajax-bar v-if="!sent"
+    skip-hijack
+    class="relative"
+    ref="bar"
+    position="bottom"
+    color="orange"
+    size="20px"/>
 </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 
 export default defineComponent({
   components: {},
   name: 'GameInvitation',
+  setup () {
+    const visible = ref(false)
+    return {
+      visible,
+      loader () {
+      visible.value = true
+        setTimeout(() => {
+          visible.value = false
+        }, 30000)
+      }
+    }
+  },
   data () {
     return {
       $refs : undefined as any
     }
   },
   props: {
-    opponent : { type: String , default: null },
-    sent : { type: Boolean, default: false }
+    opponent  : { type: String , default: null },
+    sent      : { type: Boolean, default: false }
   },
   mounted () {
-    this.trigger()
+    if (!this.sent) {
+      this.trigger()
+    }
+    this.loader()
   },
   methods: {
     trigger () {
@@ -50,19 +70,25 @@ export default defineComponent({
       setTimeout(() => {
         if (this.$refs.bar) {
           this.$refs.bar.stop()
+          console.log(this.$refs)
         }
       }, 30000)
-    }
+    },
   },
 })
 </script>
 
 <style lang="sass" scoped>
 @use "../css/interpolate" as r
+
+.load
+  background: 0
+
 .relative
   position: relative
 
 .main
+  overflow: hidden
   background-color: #696969
   text-align: center
 

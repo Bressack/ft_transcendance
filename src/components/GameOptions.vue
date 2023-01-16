@@ -43,7 +43,7 @@
     <q-btn class="label" v-else label="Play" color="orange" @click="InviteNotif = true"/>
   </q-item>
   <q-dialog persistent v-model="InviteNotif">
-    <InvitationFrom :opponent=opponent />
+    <InvitationFrom opponent="test" sent/>
   </q-dialog>
 </div>
 </template>

@@ -19,8 +19,8 @@
     <!-- Either matchmaking or play against a friend (add :opponent="username"), leave opponent as null for a random match -->
     <GameOptions/>
   </q-dialog>
-  <q-dialog v-model="InvitationFrom">
-    <GameInvitation opponent="usernametest" sent/>
+  <q-dialog persistent v-model="InvitationFrom">
+    <GameInvitation opponent="usernametest"/>
   </q-dialog>
 </q-page>
 </template>
