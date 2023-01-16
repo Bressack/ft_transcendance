@@ -76,7 +76,7 @@ export class GameInfo {
         this.anim = 0;
         }
 
-    draw() {
+    draw(data:any) {
         // console.log("draw");
         this.height_ratio = this.canvas.height / 720;
         this.width_ratio = this.canvas.width / 1100;

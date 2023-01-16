@@ -100,6 +100,8 @@ export default defineComponent({
 	created() {
 		this.storeMe.fetch()
 		this.$ws.connect()
+		// this.$ws.emit('game-update', {});
+
 
 	},
 	mounted() {
@@ -113,12 +115,14 @@ export default defineComponent({
 		//   this.$ws.listen('game-invitation', (data : any) => { // main-layout
 
 		//   })
-		//   this.$ws.listen('game-invitation-error', (data: any) => {  // composant dialog
-		//   })
-		//   this.$ws.listen('game-invitation-accepted', (data: any) => {  // composant dialog
+		// setInterval(() => {
+		// 	this.$ws.emit('caca', {})
 
-		//   })
+		// }, 1000)
 
+		this.$ws.listen('game-start', () => {
+			this.$router.push('/game')
+		})
 
 	},
 
