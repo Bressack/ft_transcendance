@@ -42,19 +42,14 @@ export default defineComponent({
       items,
       onLoad (index: any, done: any) {
         setTimeout(() => {
-          // items.value.splice(0, 0, {}, {}, {}, {}, {}, {}, {})
           done()
-        }, 200)
+        }, 20)
       },
       messagesList: [] as Array<IWSMessages>,
       text: '',
-      $refs : undefined as any
+      $refs : undefined as any,
+      id: ''
     }
-  },
-  updated() {
-    // this.messagesList = fake_IMessageList(20);
-  },
-  mounted () {
   },
   methods: {
     goProfilPage(user: string) {
@@ -67,22 +62,35 @@ export default defineComponent({
     },
     getMessages() {
       const channelID = this.$route.path.split('/').slice(-1)[0]
+      this.leaveChannel(this.id)
+      .then(() => {
+        this.id = channelID
+        this.$ws.emitcb('join-channel', { channelId: channelID }, (res: any) => {
+          console.log('join-channel success');
+          this.messagesList = res.data.messages
+        }, (err: any) => {
+          console.log('join-channel failed:', err);
+        })
 
-      this.$ws.emitcb('join-channel', { channelId: channelID }, (res: any) => {
-        this.messagesList = res.data.messages
-      }, (err: any) => {
-        console.log(err);
+        this.$ws.listen('message', ((payload: IWSMessages) => {
+          this.messagesList.push()
+        }));
+        this.$ws.listen('error', ((payload: IWSError) => {
+          console.log('ws error:', payload)
+        }));
+        this.$ws.listen('infos', ((payload: IWSInfos) => {
+          console.log('ws infos:', payload)
+        }));
       })
-
-      this.$ws.listen('message', ((payload: IWSMessages) => {
-        this.messagesList.push()
-      }));
-      this.$ws.listen('error', ((payload: IWSError) => {
-        console.log('ws error:', payload)
-      }));
-      this.$ws.listen('infos', ((payload: IWSInfos) => {
-        console.log('ws infos:', payload)
-      }));
+    },
+    async leaveChannel(id: string) {
+      if (id !== '') {
+        this.$ws.emitcb('leave-channel', { channelId: id }, (res: any) => {
+          console.log('leave-channel success:', res);
+        }, (err: any) => {
+          console.log('leave-channel fail:', err);
+        })
+      }
     }
   },
   // ici tu get le channel id from le path de l'url dans un
@@ -100,12 +108,7 @@ export default defineComponent({
     this.getMessages()
   },
   beforeUnmount() {
-    const channelID = this.$route.path.split('/').slice(-1)[0]
-    this.$ws.emitcb('leave-channel', { channelId: channelID }, (res: any) => {
-      console.log(res);
-    }, (err: any) => {
-      console.log(err);
-    })
+    this.leaveChannel(this.id)
   }
 });
 </script>

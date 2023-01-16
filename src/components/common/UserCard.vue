@@ -18,7 +18,7 @@
     <q-item class="main" v-else>
       <q-item-section class="avatar" @click="profilefun ? profilefun() : null">
         <div v-if="validStatus(onlineStatus)" class="onlineStatus" :class="onlineStatusToCSSClass(onlineStatus)"/>
-        <q-img :src="avatar" :width="avatarSize" :height="avatarSize" img-class="usercard-image"/>
+        <q-img :src="avatar" width="42px" height="42px" img-class="usercard-image"/>
       </q-item-section>
 
       <q-item-section class="datas">
@@ -174,6 +174,9 @@ export default defineComponent({
 
 .avatar
   max-width: v-bind(avatarSize) !important
+
+.avatar2
+  max-width: 20px !important
 
 .name
   font-weight: bold
