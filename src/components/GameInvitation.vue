@@ -8,18 +8,19 @@
 <div class="main">
   <q-item class="r-pt-md flex-center">
     <q-item-label v-if="sent" class="label">
-      Waiting for <span style="color:orange;" class="bigger">{{ opponent }}</span> to accept your game invitation
+      Waiting <span style="color:orange;" class="bigger">{{ opponent }}</span> to accept your game invitation
     </q-item-label>
     <q-item-label v-else class="label">
       You recieved a game invitation from <span style="color:orange;" class="bigger">{{ opponent }}</span>
     </q-item-label>
   </q-item>
-  <q-item v-if="sent" class="q-py-xl">
+  <q-item v-if="sent" class="q-mt-xl">
     <q-inner-loading size="50px" class="load" :showing="visible" color="orange" ref="load"/>
   </q-item>
   <q-item class="q-py-xl flex-center">
-    <q-btn label="Decline" color="red" v-close-popup/>
-    <q-btn v-if="!sent" class="q-ml-md" label="Accept" color="green" v-close-popup/>
+    <q-btn v-if="!sent" class="q-mx-lg" label="Decline" color="red" v-close-popup/>
+    <q-btn v-if="!sent" class="q-mx-lg" label="Accept" color="green" v-close-popup/>
+    <q-btn v-else label="Cancel" color="red" v-close-popup/>
   </q-item>
   <q-ajax-bar v-if="!sent"
     skip-hijack
