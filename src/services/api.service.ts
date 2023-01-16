@@ -13,6 +13,7 @@ import {
 export default {
   axiosInstance: axios.create({
     baseURL: '/api',
+	timeout: 1000
   }),
 
   /**
