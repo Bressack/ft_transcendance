@@ -8,6 +8,7 @@
 					<!-- <span class="q-pr-lg">PONG ARENA</span> -->
 					<!-- <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn> -->
 					<q-btn class="q-mr-sm" to="/" color="orange">Home</q-btn>
+					<q-btn class="q-mr-sm" to="/game" color="brown">TEST_GAME</q-btn>
 					<q-btn class="q-mr-sm" to="/feeddb" color="green">Auto Feed Database</q-btn>
 					<q-btn class="q-mr-sm" to="/profile/me" color="green">Profile</q-btn>
 					<q-btn class="q-mr-sm" to="/play" color="green">Play</q-btn>
