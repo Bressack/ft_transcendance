@@ -36,11 +36,22 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   // Navigation navigation guard
-  // Router.beforeEach((to : RouteLocationNormalized, from : RouteLocationNormalized, next : NavigationGuardNext) => {
-  //   api.auth()
-  //   next()
-  // })
+  Router.beforeEach((to : RouteLocationNormalized, from : RouteLocationNormalized, next : NavigationGuardNext) => {
+    setTimeout(() => {
+      if (to.path == '/login')
+      {
+        next()
+        return ;
+      }
 
+      api.auth()
+      .then(() => {
+        next()
+      }).catch(() => {
+        next({ path: '/login', replace: true })
+      });
+    }, 1);
+  })
 
   return Router;
 });

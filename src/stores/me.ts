@@ -65,7 +65,7 @@ export const useMeStore = defineStore('me', {
   },
 
   actions: {
-    fetch() {
+    async fetch() {
       let that = this
       api.me()
       .then(function (me: models.User) {
@@ -94,5 +94,13 @@ export const useMeStore = defineStore('me', {
       })
       .catch(function () {})
     },
+    getChannelIDByUsername(username: string) {
+      console.log('TOTO');
+
+      const needle = this.channelSubscriptions.find((e: models.Subscription) => e.channel.channel_type === "ONE_TO_ONE" && e.channel.SubscribedUsers.some((u) => u.username == username))
+      return needle?.channelId
+    }
   }
 });
+
+

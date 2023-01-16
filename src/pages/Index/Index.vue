@@ -1,6 +1,8 @@
 <template>
   <q-page>
-    <q-img src="src/assets/pong_wallpaper.png"/>
+    <div>
+      <!-- <q-img src="src/assets/pong_wallpaper.png"/> -->
+    </div>
   </q-page>
 </template>
 
@@ -25,4 +27,5 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+
 </style>

@@ -1,5 +1,8 @@
 import axios from 'axios'
 import { namesList } from './names'
+import api from 'src/services/api.service'
+import { ISearchQuery } from 'src/services/api.models'
+import ld from 'lodash'
 
 function makeid(length: number = 10) {
   var result           = '';
@@ -38,6 +41,20 @@ export async function createUsers(count: number = 0) {
   }
 }
 
-export function createMatchHistory(count: number = 0, user: string = '') {
+export function createMessages(count: number = 0, user: string = '') {
+  let users = [] as Array<Object>;
 
+  // getting all users
+  let users_tmp = [] as Array<Object>;
+  for (let l of 'abcdefghijklmnopqrstuvwxyz') {
+    const searchQuery: ISearchQuery = { key: '' }
+    api.search(searchQuery)
+    .then(function (result) {
+      users_tmp.push(...result)
+    })
+    .catch(function (error) {})
+  }
+  users = ld.uniqBy(users_tmp, 'username');
+
+  
 }

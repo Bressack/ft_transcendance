@@ -1,31 +1,35 @@
 <template>
   <q-page>
-    <q-scroll-area ref="ScrollDown" style="height: 88vh; max-width: 100vw;">
-      <q-list bordered class="messagelist">
-        <!-- <Message v-for="item in messagesList" :key="item.id" :message="item" class="messagecomp" /> -->
-        <UserCard
-          v-for="message in messagesListC" :key="message.id"
-          @click=goProfilPage(message?.identity.name)
-          :name=message?.identity.name
-          :avatar=message?.identity.avatar
-          :content=message?.body
-          :timestamp=message?.timestamp
-          size="small"
-          class="messagecomp"
-        />
-      </q-list>
-    </q-scroll-area>
-    <q-input filled v-model="text" placeholder="Enter text here" class="absolute-bottom input"/>
+    <div>
+      <div class="q-pa-md">
+        <q-infinite-scroll @load="onLoad" reverse class="scrollmessage">
+          <UserCard
+            v-for="message in messagesListC" :key="message.id"
+            :name=message?.username
+            :avatar=avatarstr(message?.username)
+            :content=message?.content
+            :timestamp="new Date(message?.CreatedAt)"
+            size="small"
+            class="messagecomp"
+          />
+        </q-infinite-scroll>
+        <q-input filled v-model="text" placeholder="Enter text here" class="absolute-bottom input"/>
+      </div>
+    </div>
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { IMessageList, IUserBasicInfo, IMessage } from '../../models/models';
+import { defineComponent, PropType, ref } from 'vue';
 import { fake_IMessageList } from '../../models/fakedatas';
+import {
+  IWSMessages,
+  IWSError,
+  IWSInfos,
+} from '../../models/messages.ws';
 // import Message from '../components/Conversation/Message.vue';
 import UserCard from '../../components/common/UserCard.vue'
-
+// import ws from 'src/services/ws.service';
 
 export default defineComponent({
   name: 'Conversation',
@@ -33,36 +37,80 @@ export default defineComponent({
   props: {
   },
   data() {
+    const items = ref([ {}, {}, {}, {}, {}, {}, {} ])
     return {
-      messagesList: fake_IMessageList(20) as IMessageList,
+      items,
+      onLoad (index: any, done: any) {
+        setTimeout(() => {
+          // items.value.splice(0, 0, {}, {}, {}, {}, {}, {}, {})
+          done()
+        }, 200)
+      },
+      messagesList: [] as Array<IWSMessages>,
       text: '',
       $refs : undefined as any
     }
   },
   updated() {
-    this.messagesList = fake_IMessageList(20);
+    // this.messagesList = fake_IMessageList(20);
   },
   mounted () {
-    this.$refs.ScrollDown.setScrollPosition('vertical', this.$refs.ScrollDown.getScroll().verticalSize)
   },
   methods: {
     goProfilPage(user: string) {
       this.$router.push({
         path: `/profile/${user}`
       })
+    },
+    avatarstr(username: string) {
+      return `/api/avatar/${username}/medium`
+    },
+    getMessages() {
+      const channelID = this.$route.path.split('/').slice(-1)[0]
+
+      this.$ws.emitcb('join-channel', { channelId: channelID }, (res: any) => {
+        this.messagesList = res.data.messages
+      }, (err: any) => {
+        console.log(err);
+      })
+
+      this.$ws.listen('message', ((payload: IWSMessages) => {
+        this.messagesList.push()
+      }));
+      this.$ws.listen('error', ((payload: IWSError) => {
+        console.log('ws error:', payload)
+      }));
+      this.$ws.listen('infos', ((payload: IWSInfos) => {
+        console.log('ws infos:', payload)
+      }));
     }
   },
+  // ici tu get le channel id from le path de l'url dans un
   computed: {
-    messagesListC() : IMessageList {
-      return this.messagesList.sort((a: IMessage, b: IMessage) => {
-        return a.timestamp > b.timestamp ? -1 : 1
+    messagesListC() : Array<IWSMessages> {
+      return this.messagesList.sort((a: IWSMessages, b: IWSMessages) => {
+        return a.CreatedAt > b.CreatedAt ? 1 : -1
       })
-    }
+    },
+  },
+  beforeMount() {
+    this.getMessages()
+  },
+  beforeUpdate() {
+    this.getMessages()
+  },
+  beforeUnmount() {
+    const channelID = this.$route.path.split('/').slice(-1)[0]
+    this.$ws.emitcb('leave-channel', { channelId: channelID }, (res: any) => {
+      console.log(res);
+    }, (err: any) => {
+      console.log(err);
+    })
   }
 });
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
 .messagelist
   width: 100% !important
 
@@ -70,9 +118,13 @@ export default defineComponent({
   margin-bottom: 1vh
 
 .input
-  // padding-left: 15% !important
-  // margin: 15px
-  // border-radius: 20px
-  > div
-    background-color: #555555
+  height: 50px
+  background-color: #555555
+  position: fixed
+  margin-left: 300px
+
+.scrollmessage
+  height: calc(100% - 50px)
+  margin-bottom: 50px
+  // background-color: $bg-secondary
 </style>

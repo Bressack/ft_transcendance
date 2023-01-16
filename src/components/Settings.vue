@@ -146,6 +146,7 @@ export default defineComponent({
 .main
   background-color: #696969
   text-align: center
+
 .avatar
   object-fit: cover
   width: 100%

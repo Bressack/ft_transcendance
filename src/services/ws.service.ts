@@ -50,6 +50,20 @@ class WsService {
 	setupDefaultListeners(){
 		this.listen('user-connected',  this.handleUserConnectedEvent)
 		this.listen('user-disconnected', this.handleUserDisconnectedEvent)
+		this.socket.on('game-invite', (d: any, callback: any) => {
+			console.log('Game invite received', d)
+			setTimeout(() => {callback("ACCEPTED")}, 31000)
+
+		})
+
+		this.listen('game-invite-canceled', (d: any) => console.log('Game invite canceled', d))
+		this.socket.on('game-invite-accepted', (callback: any) => {
+			console.log('Game invite accepted')
+			callback("ACCEPTED")
+	})
+		this.listen('game-invite-declined', (d: any) => console.log('Game invite declined', d))
+		this.listen('game-start', (d: any) => console.log('Game started', d))
+
 		// this.listen('chat-infos', (data: any) => { console.log( 'chat-info event', data)})
 		// this.listen('messages', (data: any) => { console.log( 'error event', data)})
 	}

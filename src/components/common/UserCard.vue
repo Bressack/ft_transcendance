@@ -74,13 +74,25 @@ export default defineComponent({
     }
   },
   methods: {
+    floorStr(n: number) {
+      return (n < 10 ? '0' : '') + n
+    },
     getRelativeDate(cdate: Date): string {
-      let diff : number = (new Date().getTime() - cdate.getTime()) / (3600)
+      let diff : number = (Date.now() - cdate.getTime()) / (3600)
       if (diff < 24.)
-        return 'Today at '+cdate.getHours()+':'+cdate.getMinutes()
+        return 'Today at ' + this.floorStr(cdate.getHours()) + ':' + this.floorStr(cdate.getMinutes())
       else if (diff < 48.)
-        return 'Yesterday at '+cdate.getHours()+':'+cdate.getMinutes()
-      return cdate.toLocaleString()
+        return 'Yesterday at ' + this.floorStr(cdate.getHours()) + ':' + this.floorStr(cdate.getMinutes())
+      else
+      {
+        const d = cdate.getDate()
+        const m = (cdate.getMonth() + 1)
+        return this.floorStr(d) + '/'
+             + this.floorStr(m) + '/'
+             + cdate.getFullYear() + ' '
+             + this.floorStr(cdate.getHours()) + ':'
+             + this.floorStr(cdate.getMinutes())
+      }
     },
     onlineStatusToCSSClass(s: OnlineStatus) {
       switch (s) {
@@ -178,6 +190,7 @@ export default defineComponent({
   margin: 0px
   color: v-bind(contentColor)
   font-size: v-bind(textSize)
+  word-break: break-word
 
 .timestamp
   margin: 0px
@@ -196,7 +209,6 @@ export default defineComponent({
   *
     margin-top: v-bind(marginSize)
     margin-bottom: v-bind(marginSize)
-
 
 .onlineStatus
   z-index: 1
