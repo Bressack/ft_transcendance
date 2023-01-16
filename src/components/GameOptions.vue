@@ -50,7 +50,7 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import InvitationFrom from './InvitationFrom.vue'
+import InvitationFrom from './GameInvitation.vue'
 
 export default defineComponent({
   components: { InvitationFrom },

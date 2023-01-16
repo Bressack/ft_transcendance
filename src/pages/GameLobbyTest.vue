@@ -20,7 +20,7 @@
     <GameOptions/>
   </q-dialog>
   <q-dialog v-model="InvitationFrom">
-    <MatchCreation opponent="usernametest"/>
+    <GameInvitation opponent="usernametest" sent/>
   </q-dialog>
 </q-page>
 </template>
@@ -29,11 +29,11 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import GameOptions from '../components/GameOptions.vue'
-import MatchCreation from '../components/InvitationFrom.vue'
+import GameInvitation from '../components/GameInvitation.vue'
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { GameOptions, MatchCreation },
+  components: { GameOptions, GameInvitation },
   props: {},
   setup () {
     const GameOptions = ref(false)
