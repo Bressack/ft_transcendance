@@ -48,8 +48,7 @@
 </template>
 
 <script lang="ts">
-import { LocalStorage } from 'quasar'
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref } from 'vue';
 import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import UserCard from '../components/common/UserCard.vue'
 import Settings from '../components/Settings.vue'
@@ -103,20 +102,17 @@ export default defineComponent({
 					that.$ws.disconnect()
 					that.$router.push('/login')
 					that.storeMe.$reset()
-          LocalStorage.set('logged', false)
 				})
 		},
 	},
 	created() {
 		this.storeMe.fetch()
 		this.$ws.connect()
-
 	},
 	mounted() {
 		// EXAMPLE
 		this.$ws.emitcb('join-channel', { channel_id: '#gecacaneral' }, console.log, console.error)
 		//   this.$ws.listen('game-invitation', (data : any) => { // main-layout
-
 		//   })
 		//   this.$ws.listen('game-invitation-error', (data: any) => {  // composant dialog
 		//   })

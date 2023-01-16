@@ -87,10 +87,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { LocalStorage } from 'quasar'
-// import axios from 'axios'
-// import api from '../services/api.service'
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   name: 'Auth',
@@ -120,7 +117,6 @@ export default defineComponent({
       this.$api.login(payload)
       .then(function (/* data */) {
         that.$router.replace('/')
-        LocalStorage.set('logged', true)
       })
       .catch(function (error) {
         console.log(error);
