@@ -8,16 +8,19 @@
 <q-page>
   <q-list class="flex-center">
     <q-item class="q-py-xl">
-      <q-btn color="orange" class="q-mx-lg" label="Game Options" @click="goGameOptions()"/>
+      <q-btn color="orange" class="q-mx-lg" label="Game Options" @click="GameOptions = true"/>
       <!-- <q-btn class="q-mx-lg" label="Play" @click="goInviteNotif()"/> -->
     </q-item>
     <q-item class="q-pb-xl">
-      <q-btn color="orange" class="q-mx-lg" label="Invite Notification" @click="goInviteNotif()"/>
+      <q-btn color="orange" class="q-mx-lg" label="Invitation From" @click="sendInvite"/>
     </q-item>
   </q-list>
   <q-dialog v-model="GameOptions">
     <!-- Either matchmaking or play against a friend (add :opponent="username"), leave opponent as null for a random match -->
     <GameOptions/>
+  </q-dialog>
+  <q-dialog persistent v-model="InvitationFrom">
+    <GameInvitation opponent="usernametest"/>
   </q-dialog>
 </q-page>
 </template>
@@ -26,33 +29,28 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import GameOptions from '../components/GameOptions.vue'
-import InviteToPlay from '../components/MatchCreation.vue'
+import GameInvitation from '../components/GameInvitation.vue'
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { GameOptions },
+  components: { GameOptions, GameInvitation },
   props: {},
   setup () {
     const GameOptions = ref(false)
-    const InviteNotif = ref(false)
+    let InvitationFrom = ref(false)
+
     return {
       GameOptions,
-      openGameOptions() {
-        GameOptions.value = true
-      },
-      InviteNotif,
-      openInviteNotif() {
-        InviteNotif.value = true
-      }
+      InvitationFrom
     }
   },
   methods: {
-    goGameOptions() {
-      this.openGameOptions()
-    },
-    goInviteNotif() {
-      this.openInviteNotif()
-    }
-  },
+    sendInvite() {
+        this.InvitationFrom = true
+        setTimeout(() => {
+          this.InvitationFrom = false
+        }, 30000)
+      }
+  }
 });
 </script>

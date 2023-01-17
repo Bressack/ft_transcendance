@@ -47,7 +47,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { IGameQuery } from '../../services/api.models'
-// import api from '../../services/api.service'
 import ProfileSummary from './components/ProfileSummary.vue'
 import MatchHistory from './components/MatchHistory.vue'
 import LevelProgress from './components/LevelProgress.vue'
@@ -79,7 +78,7 @@ export default defineComponent({
     fetchUserProfile() {
       let that = this
       this.$api.userProfile(this.username)
-      .then(function(result: any) { that.profile = result })
+      .then(function(result: Promise<String>) { that.profile = result })
       .catch(function(error: any) { console.error('error:', error); })
     },
     fetchGameHistory() {

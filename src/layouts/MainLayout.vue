@@ -32,22 +32,28 @@
 			<q-dialog v-model="settings">
 				<settings />
 			</q-dialog>
+			<q-dialog persistent v-model="InvitationFrom">
+				<GameInvitation :opponent="opponent" />
+			</q-dialog>
 		</q-drawer>
 		<q-page-container>
 			<router-view />
 		</q-page-container>
+
 	</q-layout>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref } from 'vue';
 import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import UserCard from '../components/common/UserCard.vue'
 import Settings from '../components/Settings.vue'
+import GameInvitation from '../components/GameInvitation.vue'
 import { IUserBasicInfo, OnlineStatus } from '../models/models'
 // import { randomDate } from '../models/fakedatas'
 // import api from 'src/services/api.service'
 import { useMeStore } from 'src/stores/me';
+import { callbackify } from 'util';
 // import WsService from 'src/services/ws.service';
 
 let _me = {
@@ -62,20 +68,27 @@ export default defineComponent({
 	components: {
 		ConversationList,
 		UserCard,
-		Settings
+		Settings,
+		GameInvitation
 	},
 	props: {},
 	setup() {
+		let InvitationFrom = ref(false)
 		const settings = ref(false)
 		return {
 			settings,
 			openSettings() { settings.value = true },
+			InvitationFrom
 		}
 	},
 	data: () => {
 		return {
 			drawer: ref(false),
 			storeMe: useMeStore(),
+			// invite_cb: null,
+			// invite_data: undefined
+			opponent: ""
+
 		}
 	},
 	methods: {
@@ -96,32 +109,36 @@ export default defineComponent({
 					that.storeMe.$reset()
 				})
 		},
+
 	},
 	created() {
 		this.storeMe.fetch()
 		this.$ws.connect()
-		// this.$ws.emit('game-update', {});
-
-
 	},
 	mounted() {
-		// EXAMPLE
-		// this.$ws.emitcb('join-channel', { channelId: '#gecacaneral' }, console.log, console.error)
-		// console.log(this.storeMe.username)
-		// if (this.storeMe.username == 'Alice99') {
-		// this.$ws.emitcb('game-invite', { target_user: 'admin' }, console.log, console.error)
 
-		// }
-		//   this.$ws.listen('game-invitation', (data : any) => { // main-layout
-
-		//   })
-		// setInterval(() => {
-		// 	this.$ws.emit('caca', {})
-
-		// }, 1000)
-
-		this.$ws.listen('game-start', () => {
-			this.$router.push('/game')
+		// RECEPTION
+		this.$ws.listen('game-invite', (data: any, callback: Function) => {
+			const that = this
+			const accept = function (res: any) {
+				console.log(res)
+				callback('ACCEPTED')
+				that.InvitationFrom = false
+				document.removeEventListener('invite-response-accept', accept);
+				document.removeEventListener('invite-response-decline', decline);
+			}
+			const decline = function (res: any) {
+				console.log(res)
+				callback('DECLINED')
+				that.InvitationFrom = false
+				document.removeEventListener('invite-response-accept', accept);
+				document.removeEventListener('invite-response-decline', decline);
+			}
+			console.log(data)
+			this.opponent = data.username
+			this.InvitationFrom = true
+			document.addEventListener('invite-response-accept', accept)
+			document.addEventListener('invite-response-decline', decline)
 		})
 
 	},
