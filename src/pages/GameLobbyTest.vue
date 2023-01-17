@@ -12,7 +12,7 @@
       <!-- <q-btn class="q-mx-lg" label="Play" @click="goInviteNotif()"/> -->
     </q-item>
     <q-item class="q-pb-xl">
-      <q-btn color="orange" class="q-mx-lg" label="Invitation From" @click="InvitationFrom = true"/>
+      <q-btn color="orange" class="q-mx-lg" label="Invitation From" @click="sendInvite"/>
     </q-item>
   </q-list>
   <q-dialog v-model="GameOptions">
@@ -37,12 +37,20 @@ export default defineComponent({
   props: {},
   setup () {
     const GameOptions = ref(false)
-    const InvitationFrom = ref(false)
+    let InvitationFrom = ref(false)
+
     return {
       GameOptions,
       InvitationFrom
     }
   },
-  methods: {}
+  methods: {
+    sendInvite() {
+        this.InvitationFrom = true
+        setTimeout(() => {
+          this.InvitationFrom = false
+        }, 30000)
+      }
+  }
 });
 </script>

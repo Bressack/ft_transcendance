@@ -22,6 +22,7 @@
     <q-btn v-if="!sent" class="q-mx-lg" label="Accept" color="green" v-close-popup/>
     <q-btn v-else label="Cancel" color="red" v-close-popup/>
   </q-item>
+  <!-- Replace by a linear loading bar -->
   <q-ajax-bar v-if="!sent"
     skip-hijack
     class="relative"

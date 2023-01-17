@@ -43,10 +43,12 @@ import { defineComponent, ref } from 'vue';
 import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import UserCard from '../components/common/UserCard.vue'
 import Settings from '../components/Settings.vue'
+import GameInvitation from '../components/GameInvitation.vue'
 import { IUserBasicInfo, OnlineStatus } from '../models/models'
 // import { randomDate } from '../models/fakedatas'
 // import api from 'src/services/api.service'
 import { useMeStore } from 'src/stores/me';
+import { callbackify } from 'util';
 // import WsService from 'src/services/ws.service';
 
 let _me = {
@@ -61,7 +63,8 @@ export default defineComponent({
 	components: {
 		ConversationList,
 		UserCard,
-		Settings
+		Settings,
+    GameInvitation
 	},
 	props: {},
 	setup() {
@@ -101,15 +104,19 @@ export default defineComponent({
 		this.$ws.connect()
 	},
 	mounted() {
+    this.$ws.listen('game-invite', (data : any, callback: any) => {
+      console.log(data)
+      setTimeout(() => {
+        callback('ACCEPTED')
+      }, 30000)
+    })
+
 		// EXAMPLE
 		// this.$ws.emitcb('join-channel', { channelId: '#gecacaneral' }, console.log, console.error)
 		// console.log(this.storeMe.username)
 		// if (this.storeMe.username == 'Alice99') {
 		// this.$ws.emitcb('game-invite', { target_user: 'admin' }, console.log, console.error)
-
 		// }
-		//   this.$ws.listen('game-invitation', (data : any) => { // main-layout
-		//   })
 		//   this.$ws.listen('game-invitation-error', (data: any) => {  // composant dialog
 		//   })
 		//   this.$ws.listen('game-invitation-accepted', (data: any) => {  // composant dialog
