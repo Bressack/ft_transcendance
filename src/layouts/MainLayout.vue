@@ -31,10 +31,14 @@
 			<q-dialog v-model="settings">
 				<settings />
 			</q-dialog>
+			<q-dialog persistent v-model="InvitationFrom">
+				<GameInvitation :opponent="opponent" />
+			</q-dialog>
 		</q-drawer>
 		<q-page-container>
 			<router-view />
 		</q-page-container>
+
 	</q-layout>
 </template>
 
@@ -64,20 +68,26 @@ export default defineComponent({
 		ConversationList,
 		UserCard,
 		Settings,
-    GameInvitation
+		GameInvitation
 	},
 	props: {},
 	setup() {
+		let InvitationFrom = ref(false)
 		const settings = ref(false)
 		return {
 			settings,
 			openSettings() { settings.value = true },
+			InvitationFrom
 		}
 	},
 	data: () => {
 		return {
 			drawer: ref(false),
 			storeMe: useMeStore(),
+			// invite_cb: null,
+			// invite_data: undefined
+			opponent: ""
+
 		}
 	},
 	methods: {
@@ -98,31 +108,37 @@ export default defineComponent({
 					that.storeMe.$reset()
 				})
 		},
+
 	},
 	created() {
 		this.storeMe.fetch()
 		this.$ws.connect()
 	},
 	mounted() {
-    this.$ws.listen('game-invite', (data : any, callback: any) => {
-      console.log(data)
-      setTimeout(() => {
-        callback('ACCEPTED')
-      }, 30000)
-    })
 
-		// EXAMPLE
-		// this.$ws.emitcb('join-channel', { channelId: '#gecacaneral' }, console.log, console.error)
-		// console.log(this.storeMe.username)
-		// if (this.storeMe.username == 'Alice99') {
-		// this.$ws.emitcb('game-invite', { target_user: 'admin' }, console.log, console.error)
-		// }
-		//   this.$ws.listen('game-invitation-error', (data: any) => {  // composant dialog
-		//   })
-		//   this.$ws.listen('game-invitation-accepted', (data: any) => {  // composant dialog
-
-		//   })
-
+		// RECEPTION
+		this.$ws.listen('game-invite', (data: any, callback: Function) => {
+			const that = this
+			const accept = function (res: any) {
+				console.log(res)
+				callback('ACCEPTED')
+				that.InvitationFrom = false
+				document.removeEventListener('invite-response-accept', accept);
+				document.removeEventListener('invite-response-decline', decline);
+			}
+			const decline = function (res: any) {
+				console.log(res)
+				callback('DECLINED')
+				that.InvitationFrom = false
+				document.removeEventListener('invite-response-accept', accept);
+				document.removeEventListener('invite-response-decline', decline);
+			}
+			console.log(data)
+			this.opponent = data.username
+			this.InvitationFrom = true
+			document.addEventListener('invite-response-accept', accept)
+			document.addEventListener('invite-response-decline', decline)
+		})
 
 	},
 

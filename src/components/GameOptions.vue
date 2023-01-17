@@ -1,51 +1,41 @@
 <template>
-  <div class="main">
-    <div class="close-cross">
-      <q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup/>
-    </div>
-    <div class="q-px-xl r-py-md">
-      <q-item-label class="bigger">Game Options</q-item-label>
-  </div>
-  <q-item-section class="q-pa-md">
-    <q-separator color="white"/>
-    <q-option-group inline
-    v-model="map"
-    :options="maps"
-    color="white"
-    keep-color
-    >
-      <template v-slot:label="opt">
-        <div class="row items-center">
-          <q-item-label class="label">{{opt.label}}</q-item-label>
-          <q-img class="image q-ma-md" :src="`/src/assets/maps/${opt.value}.png`"/>
-        </div>
-      </template>
-    </q-option-group>
-    <q-separator color="white"/>
-    <div class="q-pa-md rounded-borders">
-      <q-option-group inline
-      v-model="opt"
-      :options="opts"
-      type="checkbox"
-      color="white"
-      keep-color
-      >
-        <template v-slot:label="opt">
-          <div class="row items-center">
-            <q-item-label class="q-pa-auto label">{{opt.label}}</q-item-label>
-          </div>
-        </template>
-      </q-option-group>
-    </div>
-  </q-item-section>
-  <q-item class="justify-center centers bigger q-mb-lg">
-    <q-btn class="label" v-if="opponent" :label="`Play against ${opponent}`" color="orange" @click="InviteNotif = true"/>
-    <q-btn class="label" v-else label="Play" color="orange" @click="InviteNotif = true"/>
-  </q-item>
-  <q-dialog persistent v-model="InviteNotif">
-    <InvitationFrom opponent="test" sent/>
-  </q-dialog>
-</div>
+	<div class="main">
+		<div class="close-cross">
+			<q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup />
+		</div>
+		<div class="q-px-xl r-py-md">
+			<q-item-label class="bigger">Game Options</q-item-label>
+		</div>
+		<q-item-section class="q-pa-md">
+			<q-separator color="white" />
+			<q-option-group inline v-model="map" :options="maps" color="white" keep-color>
+				<template v-slot:label="opt">
+					<div class="row items-center">
+						<q-item-label class="label">{{ opt.label }}</q-item-label>
+						<q-img class="image q-ma-md" :src="`/src/assets/maps/${opt.value}.png`" />
+					</div>
+				</template>
+			</q-option-group>
+			<q-separator color="white" />
+			<div class="q-pa-md rounded-borders">
+				<q-option-group inline v-model="opt" :options="opts" type="checkbox" color="white" keep-color>
+					<template v-slot:label="opt">
+						<div class="row items-center">
+							<q-item-label class="q-pa-auto label">{{ opt.label }}</q-item-label>
+						</div>
+					</template>
+				</q-option-group>
+			</div>
+		</q-item-section>
+		<q-item class="justify-center centers bigger q-mb-lg">
+			<q-btn class="label" v-if="opponent" :label="`Play against ${opponent}`" color="orange"
+				@click="sendInviteAndOpen" />
+			<q-btn class="label" v-else label="Play" color="orange" @click="InviteNotif = true" />
+		</q-item>
+		<q-dialog persistent v-model="InviteNotif">
+			<InvitationFrom :opponent="opponent" sent />
+		</q-dialog>
+	</div>
 </template>
 
 <script lang="ts">
@@ -53,31 +43,72 @@ import { defineComponent, ref } from 'vue'
 import InvitationFrom from './GameInvitation.vue'
 
 export default defineComponent({
-  components: { InvitationFrom },
-  name: 'GameOptions',
-  setup () {
-    const InviteNotif = ref(false)
-    return {
-      map: ref('map1'),
-      maps: [
-        { label: 'Map 1', value: 'map1'},
-        { label: 'Map 2', value: 'map2'},
-        { label: 'Map 3', value: 'map3'},
-        { label: 'Map 4', value: 'map4'}
-      ],
-      opt: ref([]),
-      opts : [
-        { label: 'Powerup 1', value: 'powerup1'},
-        { label: 'Powerup 2', value: 'powerup2'},
-        { label: 'Powerup 3', value: 'powerup3'},
-      ],
-      InviteNotif
-    }
-  },
-  props: {
-    opponent : { type: String , default: null },
-  },
-  methods: {}
+	components: { InvitationFrom },
+	name: 'GameOptions',
+	setup() {
+		const InviteNotif = ref(false)
+		return {
+			map: ref('map1'),
+			maps: [
+				{ label: 'Map 1', value: 'map1' },
+				{ label: 'Map 2', value: 'map2' },
+				{ label: 'Map 3', value: 'map3' },
+				{ label: 'Map 4', value: 'map4' }
+			],
+			opt: ref([]),
+			opts: [
+				{ label: 'Powerup 1', value: 'powerup1' },
+				{ label: 'Powerup 2', value: 'powerup2' },
+				{ label: 'Powerup 3', value: 'powerup3' },
+			],
+			InviteNotif
+		}
+	},
+	props: {
+		opponent: { type: String, default: null },
+	},
+	methods: {
+		async invite() {
+			return new Promise((resolve, reject) => {
+				this.$ws.emit('game-invite', { target_user: this.opponent })
+				this.$ws.listen('game-invite-accepted', (data: object) => {
+					resolve({ status: 'ACCEPTED', gameOptions: data })
+				})
+				this.$ws.listen('game-invite-declined', () => {
+					reject({ status: 'DECLINED', gameOptions: null })
+				})
+			})
+		},
+		async sendInviteAndOpen() {
+			this.InviteNotif = true
+			console.log('sendInviteAndOpen')
+			try {
+				await this.invite()
+				this.InviteNotif = false
+				this.$ws.removeListener('game-invite-accepted')
+				this.$ws.removeListener('game-invite-declined')
+
+			}
+			catch (err) {
+				console.error(err)
+				this.InviteNotif = false
+				this.$ws.removeListener('game-invite-accepted')
+				this.$ws.removeListener('game-invite-declined')
+			}
+		}
+		// this.$ws.emit('game-invite', { target_user: this.opponent })
+	},
+	mounted() {
+		// this.$ws.listen('game-invite-accepted', (d: any, callback: Function) => {
+		// 	console.log('game-invite-accepted')
+		// 	this.InviteNotif = false
+		// 	callback("ACCEPTED")
+		// })
+		// this.$ws.listen('game-invite-declined', (d: any) => {
+		// 	this.InviteNotif = false
+		// 	console.log('game-invite-declined')
+		// })
+	}
 })
 </script>
 
