@@ -228,10 +228,6 @@ export default defineComponent({
   font-weight: bold
   color: orange
 
-// .list
-//   border: 1px solid black
-//   border-radius: 5px
-
 .avatar
   width: 30px
   height: 30px
