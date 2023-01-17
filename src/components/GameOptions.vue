@@ -105,10 +105,16 @@ export default defineComponent({
 				this.$ws.removeListener('game-invite-accepted')
 				this.$ws.removeListener('game-invite-declined')
 			}
-		}
+		},
+    async closeDialog() {
+      setTimeout(() => {
+        this.InviteNotif = false
+      }, 30000)
+    }
 		// this.$ws.emit('game-invite', { target_user: this.opponent })
 	},
 	mounted() {
+    this.closeDialog()
 		// this.$ws.listen('game-invite-accepted', (d: any, callback: Function) => {
 		// 	console.log('game-invite-accepted')
 		// 	this.InviteNotif = false

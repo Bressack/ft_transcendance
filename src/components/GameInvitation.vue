@@ -24,8 +24,11 @@
 				v-close-popup />
 			<q-btn v-else label="Cancel" color="red" @click="gameInviteCancel" v-close-popup />
 		</q-item>
+    <q-linear-progress v-if="sent" ref="bar" color="orange" size="20px" :value="progress"/>
+    <q-linear-progress v-else reverse ref="bar" color="orange" size="20px" :value="progress"/>
 		<!-- Replace by a linear loading bar -->
-		<q-ajax-bar v-if="!sent" skip-hijack class="relative" ref="bar" position="bottom" color="orange" size="20px" />
+		<!-- <q-ajax-bar v-if="sent" class="relative" ref="bar" position="bottom" color="orange" size="20px" />
+    <q-ajax-bar v-else reverse class="relative" ref="bar" position="bottom" color="orange" size="20px" /> -->
 	</div>
 </template>
 
@@ -37,19 +40,18 @@ export default defineComponent({
 	name: 'GameInvitation',
 	setup() {
 		const visible = ref(false)
+    const progress = ref(0.00)
 		return {
 			visible,
 			loader() {
 				visible.value = true
-				setTimeout(() => {
-					visible.value = false
-				}, 30000)
-			}
+			},
+      progress
 		}
 	},
 	data() {
 		return {
-			$refs: undefined as any
+			$refs: undefined as any,
 		}
 	},
 	props: {
@@ -57,21 +59,15 @@ export default defineComponent({
 		sent: { type: Boolean, default: false },
 	},
 	mounted() {
-		if (!this.sent) {
-			this.trigger()
-		}
+    this.recursiveProgress()
 		this.loader()
 	},
 	methods: {
-		trigger() {
-			this.$refs.bar.start()
-			setTimeout(() => {
-				if (this.$refs.bar) {
-					this.$refs.bar.stop()
-					console.log(this.$refs)
-				}
-			}, 30000)
-		},
+    async recursiveProgress() {
+      this.progress += 0.011
+      if (this.progress < 1.0)
+        setTimeout(this.recursiveProgress, 300)
+    },
 		gameInviteResponse(res: string) {
 			console.log(res)
 			if (res === 'ACCEPTED')
