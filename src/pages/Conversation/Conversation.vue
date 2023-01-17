@@ -21,14 +21,14 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
-import { fake_IMessageList } from '../../models/fakedatas';
+import { fake_IMessageList } from 'src/models/fakedatas';
 import {
   IWSMessages,
   IWSError,
   IWSInfos,
-} from '../../models/messages.ws';
+} from 'src/models/messages.ws';
 // import Message from '../components/Conversation/Message.vue';
-import UserCard from '../../components/common/UserCard.vue'
+import UserCard from 'src/components/common/UserCard.vue'
 // import ws from 'src/services/ws.service';
 
 export default defineComponent({
@@ -63,33 +63,27 @@ export default defineComponent({
     getMessages() {
       const channelID = this.$route.path.split('/').slice(-1)[0]
       this.leaveChannel(this.id)
-      .then(() => {
-        this.id = channelID
-        this.$ws.emitcb('join-channel', { channelId: channelID }, (res: any) => {
-          console.log('join-channel success');
-          this.messagesList = res.data.messages
-        }, (err: any) => {
-          console.log('join-channel failed:', err);
-        })
-
-        this.$ws.listen('message', ((payload: IWSMessages) => {
-          this.messagesList.push()
-        }));
-        this.$ws.listen('error', ((payload: IWSError) => {
-          console.log('ws error:', payload)
-        }));
-        this.$ws.listen('infos', ((payload: IWSInfos) => {
-          console.log('ws infos:', payload)
-        }));
+      this.id = channelID
+      this.$ws.emitcb('join-channel', { channelId: channelID }, (res: any) => {
+        console.log('join-channel success');
+        this.messagesList = res.data.messages
+      }, (err: any) => {
+        console.log('join-channel failed:', err);
       })
+
+      this.$ws.listen('message', ((payload: IWSMessages) => {
+        this.messagesList.push()
+      }));
+      this.$ws.listen('error', ((payload: IWSError) => {
+        console.log('ws error:', payload)
+      }));
+      this.$ws.listen('infos', ((payload: IWSInfos) => {
+        console.log('ws infos:', payload)
+      }));
     },
-    async leaveChannel(id: string) {
+    leaveChannel(id: string) {
       if (id !== '') {
-        this.$ws.emitcb('leave-channel', { channelId: id }, (res: any) => {
-          console.log('leave-channel success:', res);
-        }, (err: any) => {
-          console.log('leave-channel fail:', err);
-        })
+        this.$ws.emit('leave-channel', { channelId: id });
       }
     }
   },
