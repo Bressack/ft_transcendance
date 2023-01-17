@@ -120,12 +120,19 @@ export default defineComponent({
 		// RECEPTION
 		this.$ws.listen('game-invite', (data: any, callback: Function) => {
 			const that = this
+			this.$ws.listen('game-invite-canceled', () => {
+				that.InvitationFrom = false
+				document.removeEventListener('invite-response-accept', accept);
+				document.removeEventListener('invite-response-decline', decline);
+				this.opponent = ""
+			})
 			const accept = function (res: any) {
 				console.log(res)
 				callback('ACCEPTED')
 				that.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
+				that.opponent = ""
 			}
 			const decline = function (res: any) {
 				console.log(res)
@@ -133,6 +140,7 @@ export default defineComponent({
 				that.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
+				that.opponent = ""
 			}
 			console.log(data)
 			this.opponent = data.username

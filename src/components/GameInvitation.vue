@@ -22,7 +22,7 @@
 				v-close-popup />
 			<q-btn v-if="!sent" class="q-mx-lg" label="Accept" color="green" @click="gameInviteResponse('ACCEPTED')"
 				v-close-popup />
-			<q-btn v-else label="Cancel" color="red" v-close-popup />
+			<q-btn v-else label="Cancel" color="red" @click="gameInviteCancel" v-close-popup />
 		</q-item>
 		<!-- Replace by a linear loading bar -->
 		<q-ajax-bar v-if="!sent" skip-hijack class="relative" ref="bar" position="bottom" color="orange" size="20px" />
@@ -55,8 +55,6 @@ export default defineComponent({
 	props: {
 		opponent: { type: String, default: null },
 		sent: { type: Boolean, default: false },
-		invite_cb: { type: Function, default: undefined },
-		invite_data: { type: Object, default: undefined }
 	},
 	mounted() {
 		if (!this.sent) {
@@ -81,6 +79,9 @@ export default defineComponent({
 			else
 				document.dispatchEvent(new CustomEvent('invite-response-decline', { detail: { status: res } }));
 			// this.$emit('invite-response', res)
+		},
+		gameInviteCancel() {
+			document.dispatchEvent(new CustomEvent('invite-response-canceled'));
 		},
 	},
 })

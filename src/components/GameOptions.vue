@@ -69,12 +69,22 @@ export default defineComponent({
 	},
 	methods: {
 		async invite() {
+
 			return new Promise((resolve, reject) => {
+				const that = this;
+				const cancel = function () {
+					that.$ws.emit('game-invite-canceled', {})
+					document.removeEventListener('invite-response-canceled', cancel);
+					reject();
+				}
+				document.addEventListener('invite-response-canceled', cancel)
 				this.$ws.emit('game-invite', { target_user: this.opponent })
 				this.$ws.listen('game-invite-accepted', (data: object) => {
+					document.removeEventListener('invite-response-canceled', cancel);
 					resolve({ status: 'ACCEPTED', gameOptions: data })
 				})
 				this.$ws.listen('game-invite-declined', () => {
+					document.removeEventListener('invite-response-canceled', cancel);
 					reject({ status: 'DECLINED', gameOptions: null })
 				})
 			})
