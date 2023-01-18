@@ -1,5 +1,5 @@
 
-export class Speed {
+class Speed {
     x : number;
     y : number;
     constructor() {
@@ -8,7 +8,7 @@ export class Speed {
     }
 }
 
-export class Ball {
+class Ball {
     x : number;
     y : number;
     r: number;
@@ -21,7 +21,7 @@ export class Ball {
      }
 }
 
-export class Computer {
+class Computer {
     score: number;
     y : number;
     speedRatio: number;
@@ -33,7 +33,7 @@ export class Computer {
     }
 };
 
-export class Player {
+class Player {
     score: number;
     y : number;
 
@@ -43,7 +43,7 @@ export class Player {
     }
 };
 
-export class Game {
+class Game {
     player: Player;
     computer: Computer;
     ball: Ball;
@@ -111,6 +111,7 @@ export class GameInfo {
     };
     update_and_draw(data: any)
     {
+		console.log('yo', data)
         /*
             update game value
         */

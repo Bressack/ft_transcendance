@@ -12,7 +12,7 @@ const routes: RouteRecordRaw[] = [
       { path: '/usercard',                  component: () => import('pages/UserCardTest.vue'              ) },
       { path: '/upload',                    component: () => import('pages/UploadTest.vue'                ) },
       { path: '/feeddb',                    component: () => import('pages/FeedDB.vue'                    ) },
-      { path: '/game',                      component: () => import('pages/Game.vue'       ) },
+      { path: '/game/:gameId',                      component: () => import('pages/Game.vue'       ) },
     ],
   },
 

@@ -11,7 +11,7 @@
 				<!-- <q-btn icon="play_arrow" padding="xs" @click="startGame()" color="green" no-caps /> -->
 				<q-btn icon="stop_circle" padding="xs" @click="stop()" color="red" no-caps />
 				<q-btn color="blue" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
-
+				<p> {{ gameId }}</p>
 				<div id="bidule">
 					<canvas id="canvas"></canvas>
 					<q-btn id="test" color="light-grey" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
@@ -37,8 +37,7 @@ export default defineComponent({
 	data() {
 
 		return {
-			gameId: 'auniquegameid',
-
+			gameId: this.$route.params.gameId.toString() as string,
 			animResize: 0,
 			gameInfo: new GameInfo,
 			test: useQuasar(),
@@ -113,6 +112,14 @@ export default defineComponent({
 			console.log("toggle 2 ", this.test.fullscreen.isActive)
 			this.gameInfo.draw();
 		},
+		update_and_draw(data: any) {
+			console.log('yo', data)
+			this.game.player.y = data.y
+			/*
+				update game value
+			*/
+			this.gameInfo.draw();
+		}
 	},
 	beforeMount() {
 		/* receive game from serv */
@@ -137,7 +144,7 @@ export default defineComponent({
 			}
 		})
 		this.onResize();
-		this.$ws.listen('frame-update', this.gameInfo.update_and_draw)
+		this.$ws.listen(`${this.gameId}___frame-update`, this.gameInfo.update_and_draw)
 		this.$ws.listen('game-end', this.stop)
 	}
 })

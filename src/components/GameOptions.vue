@@ -79,17 +79,19 @@ export default defineComponent({
 				}
 				document.addEventListener('invite-response-canceled', cancel)
 				this.$ws.emit('game-invite', { target_user: this.opponent })
-				this.$ws.listen('game-invite-accepted', (data: object) => {
+				this.$ws.socket.once('game-invite-accepted', (data: object) => {
+					that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
+						callback("OK")
+						console.log(gameId)
+						that.$router.push(`/game/${gameId}`)
+
+					})
 					document.removeEventListener('invite-response-canceled', cancel);
-					that.$ws.removeListener('game-invite-accepted')
-					that.$ws.removeListener('game-invite-declined')
 
 					resolve({ status: 'ACCEPTED', gameOptions: data })
 				})
-				this.$ws.listen('game-invite-declined', () => {
+				this.$ws.socket.once('game-invite-declined', () => {
 					document.removeEventListener('invite-response-canceled', cancel);
-					that.$ws.removeListener('game-invite-accepted')
-					that.$ws.removeListener('game-invite-declined')
 					reject({ status: 'DECLINED', gameOptions: null })
 				})
 			})

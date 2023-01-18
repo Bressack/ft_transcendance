@@ -117,21 +117,27 @@ export default defineComponent({
 			this.opponent = data.from
 			that.$ws.removeListener('game-invite')
 
-			this.$ws.listen('game-invite-canceled', (res: any) => {
+			this.$ws.socket.once('game-invite-canceled', (res: any) => {
 				that.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
-				that.$ws.removeListener('game-invite-canceled')
 				that.$ws.listen('game-invite', that.onGameInvite)
 			})
 			const accept = function (res: any) {
 				console.log(res)
 				callback('ACCEPTED')
 				that.InvitationFrom = false
+				that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
+					callback("OK")
+					console.log(gameId)
+					that.$router.push(`/game/${gameId}`)
+
+				})
+
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
 				that.$ws.removeListener('game-invite-canceled')
-				that.$ws.listen('game-invite', that.onGameInvite)
+				that.$ws.listen('game-invite', that.onGameInvite) //might need to remove this until the game is finished
 
 
 			}
@@ -164,6 +170,7 @@ export default defineComponent({
 
 		// RECEPTION
 		this.$ws.listen('game-invite', this.onGameInvite)
+
 
 	},
 
