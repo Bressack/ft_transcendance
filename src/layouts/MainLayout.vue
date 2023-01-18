@@ -112,6 +112,45 @@ export default defineComponent({
 					that.storeChat.$reset()
 				})
 		},
+		onGameInvite(data: any, callback: Function) {
+			const that = this
+			this.opponent = data.from
+			that.$ws.removeListener('game-invite')
+
+			this.$ws.listen('game-invite-canceled', (res: any) => {
+				that.InvitationFrom = false
+				document.removeEventListener('invite-response-accept', accept);
+				document.removeEventListener('invite-response-decline', decline);
+				that.$ws.removeListener('game-invite-canceled')
+				that.$ws.listen('game-invite', that.onGameInvite)
+			})
+			const accept = function (res: any) {
+				console.log(res)
+				callback('ACCEPTED')
+				that.InvitationFrom = false
+				document.removeEventListener('invite-response-accept', accept);
+				document.removeEventListener('invite-response-decline', decline);
+				that.$ws.removeListener('game-invite-canceled')
+				that.$ws.listen('game-invite', that.onGameInvite)
+
+
+			}
+			const decline = function (res: any) {
+				console.log(res)
+				callback('DECLINED')
+				that.InvitationFrom = false
+				document.removeEventListener('invite-response-accept', accept);
+				document.removeEventListener('invite-response-decline', decline);
+				that.$ws.removeListener('game-invite-canceled')
+				that.$ws.listen('game-invite', that.onGameInvite)
+
+			}
+			console.log(data)
+			this.opponent = data.username
+			this.InvitationFrom = true
+			document.addEventListener('invite-response-accept', accept)
+			document.addEventListener('invite-response-decline', decline)
+		}
 
 	},
 	created() {
@@ -124,39 +163,13 @@ export default defineComponent({
 	mounted() {
 
 		// RECEPTION
-		this.$ws.listen('game-invite', (data: any, callback: Function) => {
-			const that = this
-			this.opponent = data.from
-			this.$ws.listen('game-invite-canceled', (res: any) => {
-				that.InvitationFrom = false
-				document.removeEventListener('invite-response-accept', accept);
-				document.removeEventListener('invite-response-decline', decline);
-			})
-			const accept = function (res: any) {
-				console.log(res)
-				callback('ACCEPTED')
-				that.InvitationFrom = false
-				document.removeEventListener('invite-response-accept', accept);
-				document.removeEventListener('invite-response-decline', decline);
-			}
-			const decline = function (res: any) {
-				console.log(res)
-				callback('DECLINED')
-				that.InvitationFrom = false
-				document.removeEventListener('invite-response-accept', accept);
-				document.removeEventListener('invite-response-decline', decline);
-			}
-			console.log(data)
-			this.opponent = data.username
-			this.InvitationFrom = true
-			document.addEventListener('invite-response-accept', accept)
-			document.addEventListener('invite-response-decline', decline)
-		})
+		this.$ws.listen('game-invite', this.onGameInvite)
 
 	},
 
 	beforeUnMount() {
 		console.log("beforeunmount login page")
+		this.$ws.removeListener('game-invite')
 		this.$ws.disconnect()
 		// this.$ws.sendInvite({})
 		// this.$ws.removeListener('game-invitation-error') //  composant dialog
