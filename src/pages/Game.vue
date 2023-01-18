@@ -3,12 +3,12 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com">
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-		<p>
+		<!-- <p>
 			<Score :scoreP1="gameInfo.game.computer.score" :scoreP2="gameInfo.game.player.score" />
-		</p>
+		</p> -->
 		<ul>
 			<div class="q-ml-md q-gutter-sm">
-				<q-btn icon="play_arrow" padding="xs" @click="startGame()" color="green" no-caps />
+				<!-- <q-btn icon="play_arrow" padding="xs" @click="startGame()" color="green" no-caps /> -->
 				<q-btn icon="stop_circle" padding="xs" @click="stop()" color="red" no-caps />
 				<q-btn color="blue" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
 
@@ -61,38 +61,21 @@ export default defineComponent({
 			}
 			this.gameInfo.game.player.y = (this.gameInfo.game.player.y / this.gameInfo.height_ratio)
 
-			this.$ws.emit('mousemove', new Uint8Array(this.gameInfo.game.player.y))
-
-			// if ((mouseLocation - ((this.gameInfo.game.player.y + this.gameInfo.player_height / 2) * this.gameInfo.height_ratio)) < 10 && (mouseLocation - ((this.gameInfo.game.player.y + this.gameInfo.player_height / 2) * this.gameInfo.height_ratio)) > -10)
-			// {
-			//     this.gameInfo.game.player.y = (mouseLocation - ((this.gameInfo.player_height * this.gameInfo.height_ratio)) / 2) / this.gameInfo.height_ratio;
-			// }
-			// else if (mouseLocation > ((this.gameInfo.game.player.y + this.gameInfo.player_height / 2) * this.gameInfo.height_ratio)) {
-			//     this.gameInfo.game.player.y = this.gameInfo.game.player.y + 5 ;
-
-			// } else {
-			//     this.gameInfo.game.player.y = this.gameInfo.game.player.y- 5;
-			// }
+			this.$ws.emit('mousemove', new Uint16Array(this.gameInfo.game.player.y))
+			// this.$ws.emit('mousemove', new Uint16Array(this.gameInfo.game.computer.y))
 		},
-		startGame() {
-			this.gameInfo.game.computer.score = 0;
-			this.gameInfo.game.player.score = 0;
-			this.play();
-		},
-		play() {
-			if (this.gameInfo.game.computer.score === 2 || this.gameInfo.game.player.score === 2) {
-				console.log("end game")
-				this.stop();
-				return;
-			}
-			this.gameInfo.draw();
-			this.gameInfo.computerMove();
-			this.gameInfo.ballMove();
-			this.gameInfo.anim = requestAnimationFrame(this.play);
-		},
+		// startGame() {
+		// 	this.gameInfo.game.computer.score = 0;
+		// 	this.gameInfo.game.player.score = 0;
+		// 	this.play();
+		// },
+		// play() {
+		// 	this.gameInfo.draw();
+		// 	this.gameInfo.computerMove();
+		// 	this.gameInfo.anim = requestAnimationFrame(this.play);
+		// },
 		stop() {
 			cancelAnimationFrame(this.gameInfo.anim);
-			this.gameInfo.reset();
 			this.gameInfo.draw();
 		},
 		waitEndResize() {
@@ -100,8 +83,6 @@ export default defineComponent({
 			timeOutFunctionId = setTimeout(this.onResize, 200);
 		},
 		onResize() {
-			console.log('TA PUTAIN DERACE');
-			console.log("onResize ", this.test.fullscreen.isActive)
 			if (this.test.fullscreen.isActive == true) {
 
 				if (window.screen.orientation.type == "portrait-primary") {
@@ -109,7 +90,7 @@ export default defineComponent({
 					this.gameInfo.canvas.width = window.innerWidth;
 				}
 				else {
-					this.gameInfo.canvas.width = window.innerWidth - 3;
+					this.gameInfo.canvas.width = window.innerWidth;
 					this.gameInfo.canvas.height = window.innerHeight * 0.90;
 				}
 
@@ -132,36 +113,31 @@ export default defineComponent({
 			console.log("toggle 2 ", this.test.fullscreen.isActive)
 			this.gameInfo.draw();
 		},
-		myfunction() {
-
-		},
-
 	},
 	beforeMount() {
+		/* receive game from serv */
 		this.gameInfo = new GameInfo;
 	},
 	mounted() {
-		this.gameInfo.reset();
 		this.test = useQuasar()
 		this.gameInfo.canvas = <HTMLCanvasElement>document.getElementById('canvas')
-		this.onResize();
 		this.gameInfo.canvas.addEventListener('mousemove', this.playerMove);
 		this.gameInfo.canvas.addEventListener('touchmove', this.playerMove);
-		var example = <HTMLElement>document.getElementById('test');
-		example.style.display = "none";
-		example.style.zIndex = "1";
+		var fullscreenButton = <HTMLElement>document.getElementById('test');
+		fullscreenButton.style.display = "none";
 		window.addEventListener('resize', this.waitEndResize);
 		watch(() => this.test.fullscreen.isActive, val => {
 			console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
 			this.waitEndResize();
 			if (this.test.fullscreen.isActive == true) {
-				example.style.display = "block";
+				fullscreenButton.style.display = "block";
 			}
 			else {
-				example.style.display = "none";
+				fullscreenButton.style.display = "none";
 			}
 		})
-		this.$ws.listen('frame-update', this.gameInfo.draw)
+		this.onResize();
+		this.$ws.listen('frame-update', this.gameInfo.update_and_draw)
 		this.$ws.listen('game-end', this.stop)
 	}
 })
@@ -180,10 +156,6 @@ ul {
 	list-style: none;
 	padding: 0;
 	flex-direction: column;
-}
-
-#canvas {
-	outline: rgb(255, 7, 255) 3px solid;
 }
 
 li {
