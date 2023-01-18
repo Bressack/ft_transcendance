@@ -79,7 +79,7 @@
     <q-separator />
 
     <q-item-label header class="header">Friends</q-item-label>
-    <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="unfollow" >
+    <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="usermenu" >
       <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
         <q-avatar class="avatar">
           <img size="20px" :src="`/api/avatar/${friend}/thumbnail`" >
@@ -89,7 +89,7 @@
         {{ friend }}
       </q-item-section>
       <q-item-section side class="toto">
-        <q-icon name="more_vert" color="white">
+        <q-icon name="more_vert" color="white" class="toto">
           <q-menu class="bg-grey-9 text-white" auto-close>
             <q-list style="min-width: 100px">
               <q-item clickable @click="goGameOptions(friend)">
@@ -233,10 +233,10 @@ export default defineComponent({
   height: 30px
   border-radius: 50%
 
-.unfollow .toto
+.usermenu .toto
   visibility: hidden
 
-.unfollow:hover .toto
+.usermenu:hover .toto
   visibility: visible
 
 .overall

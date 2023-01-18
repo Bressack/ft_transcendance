@@ -29,6 +29,7 @@ export const useMeStore = defineStore('me', {
     victoriesAsPTwo               :  0     as Number,
     defeatsAsPOne                 :  0     as Number,
     defeatsAsPTwo                 :  0     as Number,
+    drawerStatus                  :  false as boolean
   }),
 
   getters: {

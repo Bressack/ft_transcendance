@@ -3,13 +3,12 @@
 		<q-header elevated>
 			<q-toolbar class="toolbar">
 
-				<q-btn flat @click="drawer = !drawer" round dense icon="menu" />
+				<q-btn flat @click="storeMe.drawerStatus = !storeMe.drawerStatus" round dense icon="menu" />
 				<q-toolbar-title>
 					<!-- <span class="q-pr-lg">PONG ARENA</span> -->
 					<!-- <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn> -->
 					<q-btn class="q-mr-sm" to="/" color="orange">Home</q-btn>
 					<q-btn class="q-mr-sm" to="/game" color="brown">TEST_GAME</q-btn>
-					<q-btn class="q-mr-sm" to="/feeddb" color="green">Auto Feed Database</q-btn>
 					<q-btn class="q-mr-sm" to="/profile/me" color="green">Profile</q-btn>
 					<q-btn class="q-mr-sm" to="/play" color="green">Play</q-btn>
 					<div class="q-mr-lg logout">
@@ -19,7 +18,7 @@
 			</q-toolbar>
 		</q-header>
 
-		<q-drawer v-model="drawer" show-if-above :breakpoint="500" :width="300">
+		<q-drawer v-model="storeMe.drawerStatus" show-if-above :breakpoint="500" :width="300">
 			<q-scroll-area class="scroll">
 				<ConversationList />
 			</q-scroll-area>
@@ -84,7 +83,7 @@ export default defineComponent({
 	},
 	data: () => {
 		return {
-			drawer: ref(false),
+			// drawer: ref(false),
 			storeMe: useMeStore(),
 			storeChat: useChatSocketStore(),
 			// invite_cb: null,
@@ -205,23 +204,5 @@ body
   height: calc(100% - 90px)
   margin-top: 90px
   background-color: $bg-secondary
-
-.name
-  font-weight: bold
-  color: v-bind(nameColor)
-  font-size: v-bind(textSize)
-  margin-right: 0.8vw
-
-  // add '...' to the end of name if it overflow the container
-  overflow: hidden
-  white-space: nowrap
-  text-overflow: ellipsis
-
-.main
-  display: flex-start
-  align-items: flex-start
-  margin:  0.1em
-  padding: 0.1em
-  flex-direction: row
 
 </style>

@@ -19,16 +19,9 @@
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
-import { fake_IMessageList } from 'src/models/fakedatas';
-import {
-  IWSMessages,
-  IWSError,
-  IWSInfos,
-} from 'src/models/messages.ws';
-// import Message from '../components/Conversation/Message.vue';
 import UserCard from 'src/components/common/UserCard.vue'
-// import ws from 'src/services/ws.service';
 import { useChatSocketStore } from 'src/stores/chatSocket';
+import { useMeStore } from 'src/stores/me';
 
 export default defineComponent({
   name: 'Conversation',
@@ -39,6 +32,7 @@ export default defineComponent({
     return {
       text: '',
       storeChat: useChatSocketStore(),
+      storeMe: useMeStore(),
     }
   },
   methods: {
@@ -54,26 +48,21 @@ export default defineComponent({
       const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
       while (element.children.length != this.storeChat.messages.length)
         await new Promise(r => setTimeout(r, 10));
-      element.scrollTop = element.scrollHeight // est censé faire dessendre le scroll tout en bas de la page
+      element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
     }
   },
-  // ici tu get le channel id from le path de l'url dans un
   computed: {
-    // messagesListC() : Array<IWSMessages> {
-    //   return this.storeChat.messages.sort((a: IWSMessages, b: IWSMessages) => {
-    //     return a.CreatedAt > b.CreatedAt ? 1 : -1
-    //   })
-    // },
+    margin_input() {
+      if (this.storeMe.drawerStatus)
+        return "300px"
+      return "0px"
+    }
   },
   beforeMount() {
     this.storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
   },
-  mounted() {
-  },
   beforeUpdate() {
     this.storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
-  },
-  updated() {
   },
   beforeUnmount() {
     this.storeChat.leaveCurrentRoom()
@@ -95,7 +84,7 @@ export default defineComponent({
   height: 50px
   background-color: #555555
   position: fixed
-  margin-left: 300px
+  margin-left: v-bind(margin_input)
 
 .scrollmessage
   height: calc(100% - 50px)
