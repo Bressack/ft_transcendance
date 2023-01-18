@@ -19,23 +19,25 @@ export const useChatSocketStore = defineStore('chatSocket', {
   },
 
   actions: {
-    joinRoom(channelID: string) {
+    joinRoom(channelId: string) {
       if (this.init == false)
         throw new Error("socket not initialized");
 
-      this.currentChannel = channelID;
-      this.socket.emitcb('join-channel', { channelId: channelID }, (res: any) => {
+      if (this.currentChannel !== '')
+        this.leaveCurrentRoom()
+      this.currentChannel = channelId;
+      this.socket.emitcb('join-channel', { channelId: channelId }, (res: any) => {
         console.log('join-channel success');
         this.messages = res.data.messages
       }, (err: any) => {
         console.log('join-channel failed:', err);
       })
     },
-    leaveRoom(channelID: string) {
+    leaveCurrentRoom() {
       if (this.init == false)
         throw new Error("socket not initialized");
 
-      this.socket.emit('leave room', channelID);
+      this.socket.emit('leave room', { channelId: this.currentChannel });
       this.currentChannel = '';
     },
     sendMessage(message: string) {
@@ -52,6 +54,16 @@ export const useChatSocketStore = defineStore('chatSocket', {
     init_socket(socket: ws) {
       this.socket = socket
       this.init = true
-    }
+
+      this.socket.listen('message', ((payload: IWSMessages) => {
+        this.messages.push(payload) // TODO wait the good type, here the type is wrong
+      }));
+      this.socket.listen('error', ((payload: IWSError) => {
+        console.log('ws error:', payload)
+      }));
+      this.socket.listen('infos', ((payload: IWSInfos) => {
+        console.log('ws infos:', payload)
+      }));
+    },
   }
 });

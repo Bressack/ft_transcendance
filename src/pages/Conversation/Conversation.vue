@@ -1,20 +1,20 @@
 <template>
   <q-page>
     <div>
-      <div class="q-pa-md">
-        <q-infinite-scroll @load="onLoad" reverse class="scrollmessage">
-          <UserCard
-            v-for="message in messagesListC" :key="message.id"
-            :name=message?.username
-            :avatar=avatarstr(message?.username)
-            :content=message?.content
-            :timestamp="new Date(message?.CreatedAt)"
-            size="small"
-            class="messagecomp"
-          />
-        </q-infinite-scroll>
-        <q-input filled v-model="text" placeholder="Enter text here" class="absolute-bottom input"/>
+      <!-- <q-infinite-scroll reverse class="list_messages"> -->
+      <div ref="chatList" class="list_messages">
+        <UserCard
+          v-for="message in messagesListC" :key="message.id"
+          :name=message?.username
+          :avatar=avatarstr(message?.username)
+          :content=message?.content
+          :timestamp="new Date(message?.CreatedAt)"
+          size="small"
+          class="messagecomp"
+        />
       </div>
+      <!-- </q-infinite-scroll> -->
+      <q-input filled v-model="text" placeholder="Enter text here" class="absolute-bottom input"/>
     </div>
   </q-page>
 </template>
@@ -67,12 +67,14 @@ export default defineComponent({
       this.$ws.emitcb('join-channel', { channelId: channelID }, (res: any) => {
         console.log('join-channel success');
         this.messagesList = res.data.messages
+        this.scrollBottom()
       }, (err: any) => {
         console.log('join-channel failed:', err);
       })
 
       this.$ws.listen('message', ((payload: IWSMessages) => {
         this.messagesList.push()
+        this.scrollBottom()
       }));
       this.$ws.listen('error', ((payload: IWSError) => {
         console.log('ws error:', payload)
@@ -85,6 +87,15 @@ export default defineComponent({
       if (id !== '') {
         this.$ws.emit('leave-channel', { channelId: id });
       }
+    },
+    sleep(ms: number) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    },
+    async scrollBottom() {
+      const element = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
+      while (element.children.length != this.messagesList.length)
+        await new Promise(r => setTimeout(r, 10));
+      element.scrollTop = element.scrollHeight // est censé faire dessendre le scroll tout en bas de la page
     }
   },
   // ici tu get le channel id from le path de l'url dans un
@@ -98,8 +109,12 @@ export default defineComponent({
   beforeMount() {
     this.getMessages()
   },
+  mounted() {
+  },
   beforeUpdate() {
     this.getMessages()
+  },
+  updated() {
   },
   beforeUnmount() {
     this.leaveChannel(this.id)
@@ -108,8 +123,11 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-.messagelist
-  width: 100% !important
+
+.list_messages
+  overflow: scroll
+  height: calc(100vh - (90px + 50px))
+  padding: 1vh
 
 .messagecomp
   margin-bottom: 1vh
