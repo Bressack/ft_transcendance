@@ -76,7 +76,7 @@ export class GameInfo {
         this.anim = 0;
         }
 
-    draw(data:any) {
+    draw(/*data:any*/) {
         // console.log("draw");
         this.height_ratio = this.canvas.height / 720;
         this.width_ratio = this.canvas.width / 1100;
@@ -103,6 +103,10 @@ export class GameInfo {
         context.fillStyle = 'white';
         context.arc(this.game.ball.x * this.width_ratio, this.game.ball.y * this.height_ratio, this.game.ball.r * this.height_ratio, 0, Math.PI * 2, false);
         context.fill();
+
+        context.font = `${this.canvas.height * 0.07}px 'Press Start 2P'`;
+        context.fillText(this.game.player.score.toString(), (this.canvas.width / 2) - (this.canvas.width * 0.05 + context.measureText(this.game.player.score.toString()).width), this.canvas.height * 0.1);
+        context.fillText(this.game.computer.score.toString(), (this.canvas.width / 2)  + (this.canvas.width * 0.05), this.canvas.height * 0.1);
     };
     //server part
     changeDirection(playerPosition: any) {
