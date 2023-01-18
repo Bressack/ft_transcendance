@@ -106,10 +106,11 @@ export default defineComponent({
 			let that = this
 			this.$api.logout()
 				.then(function (status) {
-					that.$ws.disconnect()
-					that.$router.push('/login')
-					that.storeMe.$reset()
-					that.storeChat.$reset()
+          that.$ws.disconnect()
+          that.storeMe.$reset()
+          that.storeChat.leaveCurrentRoom()
+          that.storeChat.$reset()
+          that.$router.push('/login')
 				})
 		},
 		onGameInvite(data: any, callback: Function) {
@@ -154,11 +155,15 @@ export default defineComponent({
 
 	},
 	created() {
-		this.storeMe.$reset()
-		this.storeChat.$reset()
-		this.storeMe.fetch()
-		this.$ws.connect()
-		this.storeChat.init_socket(this.$ws) // set socket in the store
+    // clean possibly old datas
+    this.storeMe.$reset()
+    this.storeChat.leaveCurrentRoom()
+    this.storeChat.$reset()
+    // connect and init WebSockets
+    this.$ws.connect()
+    this.storeChat.init_socket(this.$ws) // set socket in the store
+    // fetch datas
+    this.storeMe.fetch()
 	},
 	mounted() {
 

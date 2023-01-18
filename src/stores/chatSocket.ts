@@ -19,12 +19,12 @@ export const useChatSocketStore = defineStore('chatSocket', {
   },
 
   actions: {
-    joinRoom(channelId: string) {
+    async joinRoom(channelId: string) {
       if (this.init == false)
-        throw new Error("socket not initialized");
+        return
 
       if (this.currentChannel !== '')
-        this.leaveCurrentRoom()
+        await this.leaveCurrentRoom()
       this.currentChannel = channelId;
       this.socket.emitcb('join-channel', { channelId: channelId }, (res: any) => {
         console.log('join-channel success');
@@ -33,16 +33,18 @@ export const useChatSocketStore = defineStore('chatSocket', {
         console.log('join-channel failed:', err);
       })
     },
-    leaveCurrentRoom() {
-      if (this.init == false)
-        throw new Error("socket not initialized");
+    async leaveCurrentRoom() {
+      if (this.init == false || this.currentChannel === '')
+        return
 
-      this.socket.emit('leave room', { channelId: this.currentChannel });
+      this.socket.emitcb('leave-channel', { channelId: this.currentChannel }, (res: any) => {
+
+      }, (err: any) => {})
       this.currentChannel = '';
     },
     sendMessage(message: string) {
-      if (this.init == false)
-        throw new Error("socket not initialized");
+      if (this.init == false || this.currentChannel === '')
+        return
 
       let payload = {
         channelId: this.currentChannel,
@@ -51,7 +53,7 @@ export const useChatSocketStore = defineStore('chatSocket', {
       }
       this.socket.emit('new message', payload);
     },
-    init_socket(socket: ws) {
+    init_socket(socket: ws) { // used in MainLayout in created()
       this.socket = socket
       this.init = true
 
