@@ -109,14 +109,14 @@ export class GameInfo {
         context.fillText(this.game.player.score.toString(), (this.canvas.width / 2) - (this.canvas.width * 0.05 + context.measureText(this.game.player.score.toString()).width), this.canvas.height * 0.1);
         context.fillText(this.game.computer.score.toString(), (this.canvas.width / 2)  + (this.canvas.width * 0.05), this.canvas.height * 0.1);
     };
-    update_and_draw(data: any)
-    {
-		console.log('yo', data)
-        /*
-            update game value
-        */
-        this.draw();
-    }
+    // update_and_draw(data: any)
+    // {
+	// 	console.log('yo', data)
+    //     /*
+    //         update game value
+    //     */
+    //     this.draw();
+    // }
     //server part
     // changeDirection(playerPosition: any) {
     //     var impact = this.game.ball.y - playerPosition - this.player_height / 2;

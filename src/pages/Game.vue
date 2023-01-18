@@ -60,7 +60,7 @@ export default defineComponent({
 			}
 			this.gameInfo.game.player.y = (this.gameInfo.game.player.y / this.gameInfo.height_ratio)
 
-			this.$ws.emit('mousemove', new Uint16Array(this.gameInfo.game.player.y))
+			// this.$ws.emit('mousemove', new Uint16Array(this.gameInfo.game.player.y))
 			// this.$ws.emit('mousemove', new Uint16Array(this.gameInfo.game.computer.y))
 		},
 		// startGame() {
@@ -113,23 +113,31 @@ export default defineComponent({
 			this.gameInfo.draw();
 		},
 		update_and_draw(data: any) {
-			console.log('yo', data)
-			this.game.player.y = data.y
 			/*
 				update game value
+				
 			*/
+			this.gameInfo.game.player.y = data.p1
+			this.gameInfo.game.computer.y = data.p2
+			this.gameInfo.game.computer.score = data.scorep2
+			this.gameInfo.game.player.score = data.scorep1
+			this.gameInfo.game.ball.x = data.ball.x
+			this.gameInfo.game.ball.y = data.ball.y
 			this.gameInfo.draw();
-		}
+		},
+
 	},
 	beforeMount() {
 		/* receive game from serv */
 		this.gameInfo = new GameInfo;
 	},
 	mounted() {
+		this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
+
 		this.test = useQuasar()
 		this.gameInfo.canvas = <HTMLCanvasElement>document.getElementById('canvas')
-		this.gameInfo.canvas.addEventListener('mousemove', this.playerMove);
-		this.gameInfo.canvas.addEventListener('touchmove', this.playerMove);
+		// this.gameInfo.canvas.addEventListener('mousemove', this.playerMove);
+		// this.gameInfo.canvas.addEventListener('touchmove', this.playerMove);
 		var fullscreenButton = <HTMLElement>document.getElementById('test');
 		fullscreenButton.style.display = "none";
 		window.addEventListener('resize', this.waitEndResize);
@@ -144,8 +152,12 @@ export default defineComponent({
 			}
 		})
 		this.onResize();
-		this.$ws.listen(`${this.gameId}___frame-update`, this.gameInfo.update_and_draw)
-		this.$ws.listen('game-end', this.stop)
+		console.log(`${this.gameId}___frame-update`)
+		// this.$ws.listen('game-end', this.stop)
+	},
+	unmouted() {
+		this.gameInfo.canvas.removeEventListener('mousemove', this.playerMove);
+		this.gameInfo.canvas.removeEventListener('touchmove', this.playerMove);
 	}
 })
 </script>
