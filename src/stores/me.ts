@@ -96,10 +96,11 @@ export const useMeStore = defineStore('me', {
       .catch(function () {})
     },
     getChannelIDByUsername(username: string) {
-      console.log('TOTO');
-
       const needle = this.channelSubscriptions.find((e: models.Subscription) => e.channel.channel_type === "ONE_TO_ONE" && e.channel.SubscribedUsers.some((u) => u.username == username))
       return needle?.channelId
+    },
+    getPublicPrivateChannels() {
+      return this.channelSubscriptions.filter((e: models.Subscription) => e.channel.channel_type !== "ONE_TO_ONE")
     }
   }
 });

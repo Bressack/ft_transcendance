@@ -12,22 +12,28 @@ export const useChatSocketStore = defineStore('chatSocket', {
     init           : false as boolean,
     socket         : {} as ws,
     messages       : [] as Array<IWSMessages>,
-    currentChannel : '' as string
+    currentChannel : '' as string,
+    password       : '' as string,
+    name           : '' as string,
   }),
 
   getters: {
   },
 
   actions: {
-    joinRoom(channelId: string, onFinishCallback: Function) {
+    joinRoom(channelId: string, password: string, onFinishCallback: Function) {
       if (this.init == false)
         return
 
       if (this.currentChannel !== '')
         this.leaveCurrentRoom()
       this.currentChannel = channelId;
-      this.socket.emitcb('join-channel', { channelId: channelId }, (res: any) => {
+      this.socket.emitcb('join-channel', { channelId: channelId, password: this.password }, (res: any) => {
         console.log('join-channel success');
+        if (res.data.channel_type == 'ONE_TO_ONE')
+          this.name = res.data.name
+        else
+          this.name = res.data.name
         this.messages = res.data.messages
         this.messages.sort((a: IWSMessages, b: IWSMessages) => {
           return a.CreatedAt > b.CreatedAt ? 1 : -1
@@ -46,15 +52,20 @@ export const useChatSocketStore = defineStore('chatSocket', {
       this.messages = []
     },
     sendMessage(message: string) {
+      console.log('[ send message ] start');
+
       if (this.init == false || this.currentChannel === '')
         return
 
+      console.log('[ send message ] checks passed');
       let payload = {
         channelId: this.currentChannel,
         timestamp: new Date(),
-        content: message
+        content: message,
+        password: this.password
       }
       this.socket.emit('new message', payload);
+      console.log('[ send message ] emit done');
     },
     init_socket(socket: ws) { // used in MainLayout in created()
       this.socket = socket

@@ -38,7 +38,7 @@
     <q-expansion-item
       icon="perm_identity"
       label="Friend Requests Recevied"
-      header-class="text-orange"
+      header-class="text-orange-3"
     >
       <q-item clickable v-ripple v-for="rrecv in storeMe.friendRequestRecevied" :key="rrecv">
         <q-item-section style="max-width: 50px;">
@@ -59,7 +59,7 @@
     <q-expansion-item
       icon="perm_identity"
       label="Friend Requests Sent"
-      header-class="text-orange"
+      header-class="text-orange-3"
     >
       <q-item clickable v-ripple v-for="rsent in storeMe.friendRequestSent" :key="rsent">
         <q-item-section style="max-width: 50px;">
@@ -77,37 +77,60 @@
     </q-expansion-item>
 
     <q-separator />
+    <q-expansion-item
+      icon="perm_identity"
+      label="Publics Channels"
+      header-class="text-orange text-bold text-h6"
+      default-opened
+    >
+      <q-item clickable v-ripple v-for="channel in storeMe.getPublicPrivateChannels()" :key="channel.channelId" @click="chanSelected(String(channel.channelId))">
+        <q-item-section>
+          <span class="text-bold text-h6 pubchan" @click="chanSelected(channel.channelId)">{{ channel.channel.name }}</span>
+        </q-item-section>
+        <q-item-section side v-if="channel.channel.channel_type === 'PRIVATE'">
+          <q-icon name="lock" color="grey-7"/>
+        </q-item-section>
+      </q-item>
+    </q-expansion-item>
+    <q-separator />
 
-    <q-item-label header class="header">Friends</q-item-label>
-    <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="usermenu" >
-      <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
-        <q-avatar class="avatar">
-          <img size="20px" :src="`/api/avatar/${friend}/thumbnail`" >
-        </q-avatar>
-      </q-item-section>
-      <q-item-section @click="userSelected(friend)">
-        {{ friend }}
-      </q-item-section>
-      <q-item-section side class="toto">
-        <q-icon name="more_vert" color="white" class="toto">
-          <q-menu class="bg-grey-9 text-white" auto-close>
-            <q-list style="min-width: 100px">
-              <q-item clickable @click="goGameOptions(friend)">
-                <q-item-section>Invite to play</q-item-section>
-              </q-item>
-              <q-item clickable @click="goProfilPage(friend)">
-                <q-item-section>Profile</q-item-section>
-              </q-item>
-              <q-separator dark />
-              <q-item clickable class="text-red-7" @click="unfollow(friend)">
-                <q-item-section>Remove friend</q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
-        </q-icon>
-        <!-- <q-icon name="cancel" color="red" @click="unfollow(friend)"/> -->
-      </q-item-section>
-    </q-item>
+    <q-expansion-item
+      icon="perm_identity"
+      label="Friends"
+      header-class="text-orange text-bold text-h6"
+      default-opened
+    >
+      <!-- <q-item-label header class="header">Friends</q-item-label> -->
+      <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="usermenu" >
+        <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
+          <q-avatar class="avatar">
+            <img size="20px" :src="`/api/avatar/${friend}/thumbnail`" >
+          </q-avatar>
+        </q-item-section>
+        <q-item-section @click="userSelected(friend)">
+          {{ friend }}
+        </q-item-section>
+        <q-item-section side class="toto">
+          <q-icon name="more_vert" color="white" class="toto">
+            <q-menu class="bg-grey-9 text-white" auto-close>
+              <q-list style="min-width: 100px">
+                <q-item clickable @click="goGameOptions(friend)">
+                  <q-item-section>Invite to play</q-item-section>
+                </q-item>
+                <q-item clickable @click="goProfilPage(friend)">
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+                <q-separator dark />
+                <q-item clickable class="text-red-7" @click="unfollow(friend)">
+                  <q-item-section>Remove friend</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-icon>
+          <!-- <q-icon name="cancel" color="red" @click="unfollow(friend)"/> -->
+        </q-item-section>
+      </q-item>
+    </q-expansion-item>
   </q-list>
   <q-dialog v-model="gameOptions">
     <GameOptions :opponent="opponent"/>
@@ -196,6 +219,11 @@ export default defineComponent({
         path: `/conversation/${channelID}`,
       })
     },
+    chanSelected(id: string) {
+      this.$router.push({
+        path: `/conversation/${id}`,
+      })
+    },
     follow(username: string) {
       let that = this
       this.$api.follow(username)
@@ -238,6 +266,9 @@ export default defineComponent({
 
 .usermenu:hover .toto
   visibility: visible
+
+.pubchan
+  word-break: break-all
 
 .overall
   z-index: 2
