@@ -19,28 +19,31 @@ export const useChatSocketStore = defineStore('chatSocket', {
   },
 
   actions: {
-    async joinRoom(channelId: string) {
+    joinRoom(channelId: string, onFinishCallback: Function) {
       if (this.init == false)
         return
 
       if (this.currentChannel !== '')
-        await this.leaveCurrentRoom()
+        this.leaveCurrentRoom()
       this.currentChannel = channelId;
       this.socket.emitcb('join-channel', { channelId: channelId }, (res: any) => {
         console.log('join-channel success');
         this.messages = res.data.messages
+        this.messages.sort((a: IWSMessages, b: IWSMessages) => {
+          return a.CreatedAt > b.CreatedAt ? 1 : -1
+        })
+        onFinishCallback()
       }, (err: any) => {
         console.log('join-channel failed:', err);
       })
     },
-    async leaveCurrentRoom() {
+    leaveCurrentRoom() {
       if (this.init == false || this.currentChannel === '')
         return
 
-      this.socket.emitcb('leave-channel', { channelId: this.currentChannel }, (res: any) => {
-
-      }, (err: any) => {})
+      this.socket.emit('leave-channel', { channelId: this.currentChannel })
       this.currentChannel = '';
+      this.messages = []
     },
     sendMessage(message: string) {
       if (this.init == false || this.currentChannel === '')

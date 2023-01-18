@@ -3,7 +3,7 @@
     <div>
       <div ref="chatList" class="list_messages">
         <UserCard
-          v-for="message in messagesListC" :key="message.id"
+          v-for="message in storeChat.messages" :key="message.id"
           :name=message?.username
           :avatar=avatarstr(message?.username)
           :content=message?.content
@@ -38,7 +38,6 @@ export default defineComponent({
   data() {
     return {
       text: '',
-      channelID: this.$route.path.split('/').slice(-1)[0],
       storeChat: useChatSocketStore(),
     }
   },
@@ -60,20 +59,19 @@ export default defineComponent({
   },
   // ici tu get le channel id from le path de l'url dans un
   computed: {
-    messagesListC() : Array<IWSMessages> {
-      return this.messagesList.sort((a: IWSMessages, b: IWSMessages) => {
-        return a.CreatedAt > b.CreatedAt ? 1 : -1
-      })
-    },
+    // messagesListC() : Array<IWSMessages> {
+    //   return this.storeChat.messages.sort((a: IWSMessages, b: IWSMessages) => {
+    //     return a.CreatedAt > b.CreatedAt ? 1 : -1
+    //   })
+    // },
   },
   beforeMount() {
-    this.storeChat.joinRoom(this.channelID)
-    // this.getMessages()
+    this.storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
   },
   mounted() {
   },
   beforeUpdate() {
-    this.storeChat.joinRoom(this.channelID)
+    this.storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
   },
   updated() {
   },
