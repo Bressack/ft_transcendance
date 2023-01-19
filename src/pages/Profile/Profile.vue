@@ -78,8 +78,8 @@ export default defineComponent({
     fetchUserProfile() {
       let that = this
       this.$api.userProfile(this.username)
-      .then(function(result: Promise<String>) { that.profile = result })
-      .catch(function(error: any) { console.error('error:', error); })
+      .then((result) => { that.profile = result })
+      .catch((error) => { console.error('error:', error); })
     },
     fetchGameHistory() {
       let that = this
@@ -89,8 +89,8 @@ export default defineComponent({
         order: 'desc',
       }
       this.$api.userGame(this.username, searchQuery)
-      .then(function(result: any) { that.games = result })
-      .catch(function(error: any) { console.error('error:', error); })
+      .then((result) => { that.games = result })
+      .catch((error) => { console.error('error:', error); })
     },
     gameStatus(game : any) : string {
       if (game.score_playerOne === game.score_playerTwo)
