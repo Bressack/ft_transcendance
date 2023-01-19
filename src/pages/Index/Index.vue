@@ -1,7 +1,8 @@
 <template>
   <q-page>
     <div>
-      <q-img src="src/assets/pong_wallpaper.png"/>
+      <!-- <q-img src="src/assets/pong_wallpaper.png"/> -->
+      <!-- {{ storeMe.getPublicPrivateChannels() }} -->
     </div>
   </q-page>
 </template>

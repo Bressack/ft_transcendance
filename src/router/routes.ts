@@ -8,11 +8,8 @@ const routes: RouteRecordRaw[] = [
       { path: '/',                          component: () => import('pages/Index/Index.vue'               ) },
       { path: '/conversation/:channel_id',  component: () => import('pages/Conversation/Conversation.vue' ) },
       { path: '/profile/:username',         component: () => import('pages/Profile/Profile.vue'           ) },
-      { path: '/play',                      component: () => import('pages/GameLobbyTest.vue'   ) },
-      { path: '/usercard',                  component: () => import('pages/UserCardTest.vue'              ) },
-      { path: '/upload',                    component: () => import('pages/UploadTest.vue'                ) },
-      { path: '/feeddb',                    component: () => import('pages/FeedDB.vue'                    ) },
-      { path: '/game/:gameId',                      component: () => import('pages/Game.vue'       ) },
+      { path: '/play',                      component: () => import('pages/GameLobbyTest.vue'             ) },
+      { path: '/game/:id',                      component: () => import('pages/Game.vue'                      ) },
     ],
   },
 
