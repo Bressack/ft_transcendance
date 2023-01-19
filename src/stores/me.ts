@@ -29,7 +29,9 @@ export const useMeStore = defineStore('me', {
     victoriesAsPTwo               :  0     as Number,
     defeatsAsPOne                 :  0     as Number,
     defeatsAsPTwo                 :  0     as Number,
-    drawerStatus                  :  false as boolean
+    // others
+    drawerStatus                  :  false as boolean,
+    usersAvatars                  :  []    as Array<any>,
   }),
 
   getters: {
@@ -69,7 +71,7 @@ export const useMeStore = defineStore('me', {
     async fetch() {
       let that = this
       api.me()
-      .then(function (me: models.User) {
+      .then((me: models.User) => {
         that.username             = me.username
         that.email                = me.email
         that.createdAt            = me.createdAt
@@ -93,7 +95,7 @@ export const useMeStore = defineStore('me', {
         that.defeatsAsPOne        = me.defeatsAsPOne
         that.defeatsAsPTwo        = me.defeatsAsPTwo
       })
-      .catch(function () {})
+      .catch(() => {})
     },
     getChannelIDByUsername(username: string) {
       const needle = this.channelSubscriptions.find((e: models.Subscription) => e.channel.channel_type === "ONE_TO_ONE" && e.channel.SubscribedUsers.some((u) => u.username == username))
@@ -101,6 +103,26 @@ export const useMeStore = defineStore('me', {
     },
     getPublicPrivateChannels() {
       return this.channelSubscriptions.filter((e: models.Subscription) => e.channel.channel_type !== "ONE_TO_ONE")
+    },
+    getAvatar(username: string) {
+      const found = this.usersAvatars.find(u => u.username === username)
+      console.log(found);
+      if (found)
+        return found
+      return undefined
+      // return { username: username, avatar: ''}
+    },
+    saveAvatar(username: string) {
+      api.avatar(username)
+      .then((res) => {
+        this.usersAvatars.push({
+          username: username,
+          avatar: res
+        })
+      })
+      .catch((e) => {
+        console.log(username);
+      })
     }
   }
 });

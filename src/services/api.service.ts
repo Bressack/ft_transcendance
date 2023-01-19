@@ -95,6 +95,11 @@ export default {
     return (response)
   },
 
+  async avatar(username: String) {
+    const response = await this.axiosInstance.get(`/avatar/${username}/medium`)
+    return (response.data)
+  },
+
 
 
   /**

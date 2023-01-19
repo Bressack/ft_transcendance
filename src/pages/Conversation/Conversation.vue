@@ -5,7 +5,7 @@
         @{{ storeChat.name }}
       </div>
       <div ref="chatList" class="list_messages">
-        <UserCard
+        <!-- <UserCard
           v-for="message in storeChat.messages" :key="message.id"
           :name=message?.username
           :avatar=avatarstr(message?.username)
@@ -13,6 +13,13 @@
           :timestamp="new Date(message?.CreatedAt)"
           size="small"
           class="messagecomp"
+        /> -->
+        <Message
+          v-for="message in storeChat.messages" :key="message.id"
+          :username=message?.username
+          :avatar=storeMe.avatar(message?.username).avatar
+          :content=message?.content
+          :timestamp="new Date(message?.CreatedAt)"
         />
       </div>
       <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here" class="absolute-bottom input"/>
@@ -23,12 +30,13 @@
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import UserCard from 'src/components/common/UserCard.vue'
+import Message from './components/Message.vue'
 import { useChatSocketStore } from 'src/stores/chatSocket';
 import { useMeStore } from 'src/stores/me';
 
 export default defineComponent({
   name: 'Conversation',
-  components: { UserCard },
+  components: { UserCard, Message },
   props: {
   },
   data() {
@@ -52,6 +60,8 @@ export default defineComponent({
     },
     async scrollBottom() {
       const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
+      console.log(this.storeChat.messages.length);
+
       while (element.children.length != this.storeChat.messages.length)
         await new Promise(r => setTimeout(r, 10));
       element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
