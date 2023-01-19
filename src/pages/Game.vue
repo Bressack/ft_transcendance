@@ -28,6 +28,7 @@ import { useQuasar } from 'quasar'
 import Score from '../components/Game/Score.vue'
 import { GameInfo } from '../models/gameCalculation'
 import { watch } from 'vue'
+import { throttle } from 'lodash'
 
 var timeOutFunctionId = undefined as any;
 
@@ -35,34 +36,29 @@ export default defineComponent({
 	name: 'Game',
 	components: { Score },
 	data() {
-
 		return {
 			gameId: this.$route.params.gameId.toString() as string,
 			animResize: 0,
 			gameInfo: new GameInfo,
 			test: useQuasar(),
 			intdesesmort: 0,
+			throttleValue: 15
 		};
 	},
 	methods:
 	{
-		playerMove(event: any) {
-			var canvasLocation = this.gameInfo.canvas.getBoundingClientRect();
-			var mouseLocation = (event.type === "touchmove" ? event.changedTouches[0].clientY : event.clientY) - canvasLocation.y;
-			// console.log(mouseLocation);
-
+		getPlayerPosition(event: any) {
+			const canvasLocation = this.gameInfo.canvas.getBoundingClientRect();
+			let mouseLocation = (event.type === "touchmove" ? event.changedTouches[0].clientY : event.clientY) - canvasLocation.y;
+			let y = 50
 			if (mouseLocation < (this.gameInfo.player_height / 2 * this.gameInfo.height_ratio)) {
-				this.gameInfo.game.player.y = 0;
+				y = 0;
 			} else if (mouseLocation > this.gameInfo.canvas.height - (this.gameInfo.player_height / 2 * this.gameInfo.height_ratio)) {
-				this.gameInfo.game.player.y = this.gameInfo.canvas.height - (this.gameInfo.player_height * this.gameInfo.height_ratio);
+				y = this.gameInfo.canvas.height - (this.gameInfo.player_height * this.gameInfo.height_ratio);
 			} else {
-				this.gameInfo.game.player.y = mouseLocation - ((this.gameInfo.player_height * this.gameInfo.height_ratio)) / 2;
+				y = mouseLocation - ((this.gameInfo.player_height * this.gameInfo.height_ratio)) / 2;
 			}
-			this.gameInfo.game.player.y = (this.gameInfo.game.player.y / this.gameInfo.height_ratio)
-
-			// this.$ws.emit('mousemove', new Uint16Array(this.gameInfo.game.player.y))
-			// this.$ws.emit('mousemove', new Uint16Array(this.gameInfo.game.computer.y))
-
+			return (y / this.gameInfo.height_ratio)
 		},
 		// startGame() {
 		// 	this.gameInfo.game.computer.score = 0;
@@ -126,6 +122,12 @@ export default defineComponent({
 			this.gameInfo.game.ball.y = data.ball.y
 			this.gameInfo.draw();
 		},
+		sendPosition(event: any) {
+			console.log("send position throttled")
+			const y: number = this.getPlayerPosition(event)
+			console.log(y)
+			this.$ws.socket.volatile.emit(`${this.gameId}___mousemove`, y)
+		}
 
 	},
 	beforeMount() {
@@ -134,10 +136,11 @@ export default defineComponent({
 	},
 	mounted() {
 		this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
+		const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
 
 		this.test = useQuasar()
 		this.gameInfo.canvas = <HTMLCanvasElement>document.getElementById('canvas')
-		// this.gameInfo.canvas.addEventListener('mousemove', this.playerMove);
+		this.gameInfo.canvas.addEventListener('mousemove', sendPositionThrottled);
 		// this.gameInfo.canvas.addEventListener('touchmove', this.playerMove);
 		var fullscreenButton = <HTMLElement>document.getElementById('test');
 		fullscreenButton.style.display = "none";
@@ -157,8 +160,8 @@ export default defineComponent({
 		// this.$ws.listen('game-end', this.stop)
 	},
 	unmouted() {
-		this.gameInfo.canvas.removeEventListener('mousemove', this.playerMove);
-		this.gameInfo.canvas.removeEventListener('touchmove', this.playerMove);
+		this.gameInfo.canvas.removeEventListener('mousemove', this.sendPosition);
+		this.gameInfo.canvas.removeEventListener('touchmove', this.sendPosition);
 	}
 })
 </script>
