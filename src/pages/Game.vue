@@ -62,6 +62,7 @@ export default defineComponent({
 
 			// this.$ws.emit('mousemove', new Uint16Array(this.gameInfo.game.player.y))
 			// this.$ws.emit('mousemove', new Uint16Array(this.gameInfo.game.computer.y))
+
 		},
 		// startGame() {
 		// 	this.gameInfo.game.computer.score = 0;
