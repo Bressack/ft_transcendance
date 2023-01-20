@@ -6,7 +6,7 @@
       </svg> -->
       <!-- <img src="data:image/png;base64, iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAHElEQVQI12P4//8/w38GIAXDIBKE0DHxgljNBAAO9TXL0Y4OHwAAAABJRU5ErkJggg=="/> -->
 
-      <img :src="avat" alt="NO IMAGE">
+      <img src="https://thispersondoesnotexist.com/image" alt="NO IMAGE"/>
       <!-- <q-img src="src/assets/pong_wallpaper.png"/> -->
     </div>
   </q-page>
@@ -42,6 +42,9 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+.toto_rows
+
+.toto_cols
 
 </style>
 
