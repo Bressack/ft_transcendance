@@ -92,6 +92,8 @@ export default defineComponent({
   overflow: scroll
   height: calc(100vh - (90px + 50px + 50px))
   padding: 1vh
+  // max-width: calc(100vw - v-bind(margin_input))
+  word-break: break-word
 
 .messagecomp
   margin-bottom: 1vh
