@@ -60,18 +60,7 @@ export default defineComponent({
 			}
 			return (y / this.gameInfo.height_ratio)
 		},
-		// startGame() {
-		// 	this.gameInfo.game.computer.score = 0;
-		// 	this.gameInfo.game.player.score = 0;
-		// 	this.play();
-		// },
-		// play() {
-		// 	this.gameInfo.draw();
-		// 	this.gameInfo.computerMove();
-		// 	this.gameInfo.anim = requestAnimationFrame(this.play);
-		// },
 		stop() {
-			cancelAnimationFrame(this.gameInfo.anim);
 			this.gameInfo.draw();
 		},
 		waitEndResize() {
@@ -110,10 +99,7 @@ export default defineComponent({
 			this.gameInfo.draw();
 		},
 		update_and_draw(data: any) {
-			/*
-				update game value
-				
-			*/
+
 			this.gameInfo.game.player.y = data.p1
 			this.gameInfo.game.computer.y = data.p2
 			this.gameInfo.game.computer.score = data.scorep2
@@ -123,18 +109,26 @@ export default defineComponent({
 			this.gameInfo.draw();
 		},
 		sendPosition(event: any) {
-			console.log("send position throttled")
-			const y: number = this.getPlayerPosition(event)
-			console.log(y)
-			this.$ws.socket.volatile.emit(`${this.gameId}___mousemove`, y)
-		}
+			this.$ws.socket.volatile.emit(`${this.gameId}___mousemove`, this.getPlayerPosition(event))
+		},
+		handleCoundown(data: any) {
+			if (data.status == 'done') {
+				this.gameInfo.game_paused = false;
+				this.gameInfo.countdown_value = null;
 
+			}
+			else if (data.status == 'pending') {
+				this.gameInfo.game_paused = true;
+				this.gameInfo.countdown_value = data.value;
+			}
+			this.gameInfo.draw()
+		}
 	},
 	beforeMount() {
-		/* receive game from serv */
 		this.gameInfo = new GameInfo;
 	},
 	mounted() {
+		this.$ws.listen(`${this.gameId}___countdown`, this.handleCoundown);
 		this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
 		const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
 
@@ -156,7 +150,6 @@ export default defineComponent({
 			}
 		})
 		this.onResize();
-		console.log(`${this.gameId}___frame-update`)
 		// this.$ws.listen('game-end', this.stop)
 	},
 	unmouted() {

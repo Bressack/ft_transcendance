@@ -31,5 +31,17 @@
     "node": "^18 || ^16 || ^14.19",
     "npm": ">= 6.13.4",
     "yarn": ">= 1.21.1"
+  },
+  "prettier":{
+	"printWidth": 120,
+	"tabWidth": 4,
+    "useTabs": false,
+	"semi": true,
+    "doubleQuote": true,
+    "trailingComma": "es5",
+	"bracketSpacing": true,
+    "BracketSameLine": true,
+	"arrowParens": "always"
+
   }
 }
