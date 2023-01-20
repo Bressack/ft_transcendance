@@ -69,7 +69,7 @@ export default defineComponent({
 	},
 	methods: {
 		async invite() {
-
+			this.$ws.removeListener('game-invite')
 			return new Promise((resolve, reject) => {
 				const that = this;
 				const cancel = function () {
@@ -79,11 +79,18 @@ export default defineComponent({
 				}
 				document.addEventListener('invite-response-canceled', cancel)
 				this.$ws.emit('game-invite', { target_user: this.opponent })
-				this.$ws.listen('game-invite-accepted', (data: object) => {
+				this.$ws.socket.once('game-invite-accepted', (data: object) => {
+					that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
+						callback("OK")
+						console.log(gameId)
+						that.$router.push(`/game/${gameId}`)
+
+					})
 					document.removeEventListener('invite-response-canceled', cancel);
+
 					resolve({ status: 'ACCEPTED', gameOptions: data })
 				})
-				this.$ws.listen('game-invite-declined', () => {
+				this.$ws.socket.once('game-invite-declined', () => {
 					document.removeEventListener('invite-response-canceled', cancel);
 					reject({ status: 'DECLINED', gameOptions: null })
 				})
@@ -106,15 +113,15 @@ export default defineComponent({
 				this.$ws.removeListener('game-invite-declined')
 			}
 		},
-    async closeDialog() {
-      setTimeout(() => {
-        this.InviteNotif = false
-      }, 30000)
-    }
+		async closeDialog() {
+			setTimeout(() => {
+				this.InviteNotif = false
+			}, 30000)
+		}
 		// this.$ws.emit('game-invite', { target_user: this.opponent })
 	},
 	mounted() {
-    this.closeDialog()
+		this.closeDialog()
 		// this.$ws.listen('game-invite-accepted', (d: any, callback: Function) => {
 		// 	console.log('game-invite-accepted')
 		// 	this.InviteNotif = false

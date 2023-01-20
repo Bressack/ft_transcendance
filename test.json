@@ -1,0 +1,209 @@
+[
+  {
+    "channelId": "58c73120-bb21-4b28-bbd4-b7da61c94955",
+    "role": "USER",
+    "stateActiveUntil": null,
+    "state": "OK",
+    "channel": {
+      "SubscribedUsers": [
+        {
+          "username": "adeburea",
+          "role": "USER"
+        },
+        {
+          "username": "rballage",
+          "role": "USER"
+        },
+        {
+          "username": "tharchen",
+          "role": "USER"
+        },
+        {
+          "username": "leCaca",
+          "role": "USER"
+        },
+        {
+          "username": "admin",
+          "role": "USER"
+        },
+        {
+          "username": "guestman",
+          "role": "USER"
+        },
+        {
+          "username": "HelloTheDude",
+          "role": "USER"
+        },
+        {
+          "username": "BigBoss",
+          "role": "USER"
+        },
+        {
+          "username": "Victor",
+          "role": "USER"
+        },
+        {
+          "username": "Alice99",
+          "role": "USER"
+        },
+        {
+          "username": "dracula",
+          "role": "USER"
+        },
+        {
+          "username": "Jasper",
+          "role": "USER"
+        },
+        {
+          "username": "PongMaster",
+          "role": "USER"
+        },
+        {
+          "username": "toto",
+          "role": "USER"
+        }
+      ],
+      "id": "58c73120-bb21-4b28-bbd4-b7da61c94955",
+      "name": "#general",
+      "channel_type": "PUBLIC"
+    }
+  },
+  {
+    "channelId": "074302e5-7f77-4274-885b-620171fd7d0e",
+    "role": "USER",
+    "stateActiveUntil": null,
+    "state": "OK",
+    "channel": {
+      "SubscribedUsers": [
+        {
+          "username": "adeburea",
+          "role": "USER"
+        },
+        {
+          "username": "rballage",
+          "role": "USER"
+        },
+        {
+          "username": "tharchen",
+          "role": "USER"
+        },
+        {
+          "username": "leCaca",
+          "role": "USER"
+        },
+        {
+          "username": "admin",
+          "role": "USER"
+        },
+        {
+          "username": "guestman",
+          "role": "USER"
+        },
+        {
+          "username": "HelloTheDude",
+          "role": "USER"
+        },
+        {
+          "username": "BigBoss",
+          "role": "USER"
+        },
+        {
+          "username": "Victor",
+          "role": "USER"
+        },
+        {
+          "username": "Alice99",
+          "role": "USER"
+        },
+        {
+          "username": "dracula",
+          "role": "USER"
+        },
+        {
+          "username": "Jasper",
+          "role": "USER"
+        },
+        {
+          "username": "PongMaster",
+          "role": "USER"
+        },
+        {
+          "username": "toto",
+          "role": "USER"
+        }
+      ],
+      "id": "074302e5-7f77-4274-885b-620171fd7d0e",
+      "name": "#event",
+      "channel_type": "PUBLIC"
+    }
+  },
+  {
+    "channelId": "b3ddad54-1a42-49ad-a83b-fa7f74b7210b",
+    "role": "USER",
+    "stateActiveUntil": null,
+    "state": "OK",
+    "channel": {
+      "SubscribedUsers": [
+        {
+          "username": "adeburea",
+          "role": "USER"
+        },
+        {
+          "username": "rballage",
+          "role": "USER"
+        },
+        {
+          "username": "tharchen",
+          "role": "USER"
+        },
+        {
+          "username": "leCaca",
+          "role": "USER"
+        },
+        {
+          "username": "admin",
+          "role": "USER"
+        },
+        {
+          "username": "guestman",
+          "role": "USER"
+        },
+        {
+          "username": "HelloTheDude",
+          "role": "USER"
+        },
+        {
+          "username": "BigBoss",
+          "role": "USER"
+        },
+        {
+          "username": "Victor",
+          "role": "USER"
+        },
+        {
+          "username": "Alice99",
+          "role": "USER"
+        },
+        {
+          "username": "dracula",
+          "role": "USER"
+        },
+        {
+          "username": "Jasper",
+          "role": "USER"
+        },
+        {
+          "username": "PongMaster",
+          "role": "USER"
+        },
+        {
+          "username": "toto",
+          "role": "USER"
+        }
+      ],
+      "id": "b3ddad54-1a42-49ad-a83b-fa7f74b7210b",
+      "name": "#orga",
+      "channel_type": "PUBLIC"
+    }
+  }
+]

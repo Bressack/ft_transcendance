@@ -1,51 +1,57 @@
 <template>
-	<router-view />
+  <router-view />
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Cookies } from 'quasar'
+import { useMeStore } from 'src/stores/me';
+import { useChatSocketStore } from 'src/stores/chatSocket';
 
 // import api from './services/api.service'
 // import wsService from './services/ws.service';
 
 export default defineComponent({
-	name: 'App',
+  name: 'App',
 
-	data() {
-		return {
-			isrefreshing: false,
-		}
-	},
-	setup() {
+  data() {
+    return {
+      isrefreshing: false,
+      storeMe: useMeStore(),
+      storeChat: useChatSocketStore(),
+    }
+  },
+  setup() {
 
-	},
-	methods: {
+  },
+  methods: {
 
-		initSystem() {
-			// this.$router.beforeEach()
-			let that = this // parce que ta gueule le callback
-			this.$api.axiosInstance.interceptors.request.use(async (req) => {
-				// console.log(req)
+    initSystem() {
+      // this.$router.beforeEach()
+      let that = this // parce que ta gueule le callback
+      this.$api.axiosInstance.interceptors.request.use(async (req) => {
+        // console.log(req)
 
-				if (req.url !== '/auth/login' && !Cookies.get('has_access') && Cookies.get('has_refresh')) {
-					return fetch('/api/auth/refresh')
-						.then(() => req)
-						.catch((err) => {
-							that.$router.push('/login')
-							that.$ws.disconnect()
-							// that.storeMe.$reset()
-							throw new Error(err)
-						});
-				}
-				else if (req.url !== '/auth/login' && !Cookies.get('has_access') && !Cookies.get('has_refresh')) {
-					that.$router.push('/login')
-					that.$ws.disconnect()
-					// that.storeMe.$reset()
-					throw new Error()
+        if (req.url !== '/auth/login' && !Cookies.get('has_access') && Cookies.get('has_refresh')) {
+          return fetch('/api/auth/refresh')
+            .then(() => req)
+            .catch((err) => {
+              that.$router.push('/login')
+              that.$ws.disconnect()
+              that.storeMe.$reset()
+              that.storeChat.$reset()
+              throw new Error(err)
+            });
+        }
+        else if (req.url !== '/auth/login' && !Cookies.get('has_access') && !Cookies.get('has_refresh')) {
+          that.$router.push('/login')
+          that.$ws.disconnect()
+          that.storeMe.$reset()
+          that.storeChat.$reset()
+          throw new Error()
 
-				}
-				else return req;
+        }
+        else return req;
 
 			})
 			// this.$api.axiosInstance.interceptors.response.use(undefined, async function (error) {

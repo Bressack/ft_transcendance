@@ -3,13 +3,12 @@
 		<q-header elevated>
 			<q-toolbar class="toolbar">
 
-				<q-btn flat @click="drawer = !drawer" round dense icon="menu" />
+				<q-btn flat @click="storeMe.drawerStatus = !storeMe.drawerStatus" round dense icon="menu" />
 				<q-toolbar-title>
 					<!-- <span class="q-pr-lg">PONG ARENA</span> -->
 					<!-- <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn> -->
 					<q-btn class="q-mr-sm" to="/" color="orange">Home</q-btn>
 					<q-btn class="q-mr-sm" to="/game" color="brown">TEST_GAME</q-btn>
-					<q-btn class="q-mr-sm" to="/feeddb" color="green">Auto Feed Database</q-btn>
 					<q-btn class="q-mr-sm" to="/profile/me" color="green">Profile</q-btn>
 					<q-btn class="q-mr-sm" to="/play" color="green">Play</q-btn>
 					<div class="q-mr-lg logout">
@@ -19,7 +18,7 @@
 			</q-toolbar>
 		</q-header>
 
-		<q-drawer v-model="drawer" show-if-above :breakpoint="500" :width="300">
+		<q-drawer v-model="storeMe.drawerStatus" show-if-above :breakpoint="500" :width="300">
 			<q-scroll-area class="scroll">
 				<ConversationList />
 			</q-scroll-area>
@@ -53,6 +52,7 @@ import { IUserBasicInfo, OnlineStatus } from '../models/models'
 // import { randomDate } from '../models/fakedatas'
 // import api from 'src/services/api.service'
 import { useMeStore } from 'src/stores/me';
+import { useChatSocketStore } from 'src/stores/chatSocket';
 import { callbackify } from 'util';
 // import WsService from 'src/services/ws.service';
 
@@ -83,8 +83,9 @@ export default defineComponent({
 	},
 	data: () => {
 		return {
-			drawer: ref(false),
+			// drawer: ref(false),
 			storeMe: useMeStore(),
+			storeChat: useChatSocketStore(),
 			// invite_cb: null,
 			// invite_data: undefined
 			opponent: ""
@@ -104,34 +105,41 @@ export default defineComponent({
 			let that = this
 			this.$api.logout()
 				.then(function (status) {
-					that.$ws.disconnect()
-					that.$router.push('/login')
-					that.storeMe.$reset()
+          that.$ws.disconnect()
+          that.storeMe.$reset()
+          that.storeChat.leaveCurrentRoom()
+          that.storeChat.$reset()
+          that.$router.push('/login')
 				})
 		},
-
-	},
-	created() {
-		this.storeMe.fetch()
-		this.$ws.connect()
-	},
-	mounted() {
-
-		// RECEPTION
-		this.$ws.listen('game-invite', (data: any, callback: Function) => {
+		onGameInvite(data: any, callback: Function) {
 			const that = this
-      this.opponent = data.from
-			this.$ws.listen('game-invite-canceled', (res: any) => {
+			this.opponent = data.from
+			that.$ws.removeListener('game-invite')
+
+			this.$ws.socket.once('game-invite-canceled', (res: any) => {
 				that.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
+				that.$ws.listen('game-invite', that.onGameInvite)
 			})
 			const accept = function (res: any) {
 				console.log(res)
 				callback('ACCEPTED')
 				that.InvitationFrom = false
+				that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
+					callback("OK")
+					console.log(gameId)
+					that.$router.push(`/game/${gameId}`)
+
+				})
+
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
+				that.$ws.removeListener('game-invite-canceled')
+				that.$ws.listen('game-invite', that.onGameInvite) //might need to remove this until the game is finished
+
+
 			}
 			const decline = function (res: any) {
 				console.log(res)
@@ -139,16 +147,40 @@ export default defineComponent({
 				that.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
+				that.$ws.removeListener('game-invite-canceled')
+				that.$ws.listen('game-invite', that.onGameInvite)
+
 			}
+			console.log(data)
+			this.opponent = data.username
 			this.InvitationFrom = true
 			document.addEventListener('invite-response-accept', accept)
 			document.addEventListener('invite-response-decline', decline)
-		})
+		}
+
+	},
+	created() {
+    // clean possibly old datas
+    this.storeMe.$reset()
+    this.storeChat.leaveCurrentRoom()
+    this.storeChat.$reset()
+    // connect and init WebSockets
+    this.$ws.connect()
+    this.storeChat.init_socket(this.$ws) // set socket in the store
+    // fetch datas
+    this.storeMe.fetch()
+	},
+	mounted() {
+
+		// RECEPTION
+		this.$ws.listen('game-invite', this.onGameInvite)
+
 
 	},
 
 	beforeUnMount() {
 		console.log("beforeunmount login page")
+		this.$ws.removeListener('game-invite')
 		this.$ws.disconnect()
 		// this.$ws.sendInvite({})
 		// this.$ws.removeListener('game-invitation-error') //  composant dialog
@@ -179,23 +211,5 @@ body
   height: calc(100% - 90px)
   margin-top: 90px
   background-color: $bg-secondary
-
-.name
-  font-weight: bold
-  color: v-bind(nameColor)
-  font-size: v-bind(textSize)
-  margin-right: 0.8vw
-
-  // add '...' to the end of name if it overflow the container
-  overflow: hidden
-  white-space: nowrap
-  text-overflow: ellipsis
-
-.main
-  display: flex-start
-  align-items: flex-start
-  margin:  0.1em
-  padding: 0.1em
-  flex-direction: row
 
 </style>

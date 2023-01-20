@@ -1,44 +1,37 @@
 <template>
-    <q-item class="message" v-ripple :item="message">
-      <!-- <UserCard :item="message?.identity"/> -->
+    <q-item class="message" v-ripple>
 
       <q-item-section class="avatar absolute-top">
-        <q-img :src="message?.identity?.avatar" width="42px" height="42px" img-class="image"/>
+        <img v-bind:src="'data:image/webp;base64,'+avatar" class="image"/>
       </q-item-section>
 
       <q-item-section class="datas">
 
         <q-item-section class="layer_1">
-          <span class="name">{{ message?.identity?.name }}</span>
-          <span class="date">{{ getRelativeDate(message?.timestamp) }}</span>
+          <span class="name">{{ username }}</span>
+          <span class="date">{{ getRelativeDate(timestamp) }}</span>
         </q-item-section>
 
         <q-item-section class="layer_2">
-          <span class="body">{{ message?.body }}</span>
+          <span class="body">{{ content }}</span>
         </q-item-section>
 
       </q-item-section>
-      <!-- <q-item-section class="body">
-
-      </q-item-section>
-      <q-item-section class="date">
-      </q-item-section> -->
     </q-item>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import { IMessage } from '../../../models/models'
 import UserCard from '../../../components/common/UserCard.vue'
 
 export default defineComponent({
   name: 'Message',
   components: { UserCard },
   props: {
-    message: {
-      type: Object as PropType<IMessage>,
-      required: true
-    }
+    username:  { type: String, required: true },
+    avatar:    { type: String, required: true },
+    content:   { type: String, required: true },
+    timestamp: { type: Date  , required: true },
   },
   data() {
     return {
@@ -48,19 +41,35 @@ export default defineComponent({
   mounted() {
   },
   methods: {
+    floorStr(n: number) {
+      return (n < 10 ? '0' : '') + n
+    },
     getRelativeDate(cdate: Date): string {
-      let diff : number = (new Date().getTime() - cdate.getTime()) / (3600 * 1000)
+      let diff : number = (Date.now() - cdate.getTime()) / 3600
       if (diff < 24.)
-        return 'Aujourd\'hui à '+cdate.getHours()+':'+cdate.getMinutes()
+        return 'Today at ' + this.floorStr(cdate.getHours()) + ':' + this.floorStr(cdate.getMinutes())
       else if (diff < 48.)
-        return 'Hier à '+cdate.getHours()+':'+cdate.getMinutes()
-      return cdate.toLocaleString()
-    }
+        return 'Yesterday at ' + this.floorStr(cdate.getHours()) + ':' + this.floorStr(cdate.getMinutes())
+      else
+      {
+        const d = cdate.getDate()
+        const m = (cdate.getMonth() + 1)
+        return this.floorStr(d) + '/'
+             + this.floorStr(m) + '/'
+             + cdate.getFullYear() + ' '
+             + this.floorStr(cdate.getHours()) + ':'
+             + this.floorStr(cdate.getMinutes())
+      }
+    },
   },
 });
 </script>
 
-<style lang="sass">
+<style lang="sass" scoped>
+.image
+  width: 42px
+  height: 42px
+
 .avatar
   max-width: 42px !important
   margin-top: 10px
