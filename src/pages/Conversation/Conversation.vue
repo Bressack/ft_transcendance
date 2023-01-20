@@ -5,22 +5,14 @@
         @{{ storeChat.name }}
       </div>
       <div ref="chatList" class="list_messages">
-        <!-- <UserCard
-          v-for="message in storeChat.messages" :key="message.id"
-          :name=message?.username
-          :avatar=avatarstr(message?.username)
-          :content=message?.content
-          :timestamp="new Date(message?.CreatedAt)"
-          size="small"
-          class="messagecomp"
-        /> -->
         <Message
           v-for="message in storeChat.messages" :key="message.id"
           :username=message?.username
-          :avatar=storeMe.avatar(message?.username).avatar
+          :avatar=avatarstr(message?.username)
           :content=message?.content
           :timestamp="new Date(message?.CreatedAt)"
-        />
+          />
+          <!-- :avatar=storeMe.getAvatar(message?.username).avatar -->
       </div>
       <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here" class="absolute-bottom input"/>
     </div>

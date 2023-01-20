@@ -2,7 +2,7 @@
     <q-item class="message" v-ripple>
 
       <q-item-section class="avatar absolute-top">
-        <img v-bind:src="'data:image/webp;base64,'+avatar" class="image"/>
+        <img :src="avatar" class="image"/>
       </q-item-section>
 
       <q-item-section class="datas">
@@ -69,6 +69,7 @@ export default defineComponent({
 .image
   width: 42px
   height: 42px
+  border-radius: 250px
 
 .avatar
   max-width: 42px !important
