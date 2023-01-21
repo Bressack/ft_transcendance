@@ -114,13 +114,18 @@ export default defineComponent({
 		handleCoundown(data: any) {
 			if (data.status == 'done') {
 				this.gameInfo.game_paused = false;
-				this.gameInfo.countdown_value = null;
+				this.gameInfo.info_value = null;
 
 			}
 			else if (data.status == 'pending') {
 				this.gameInfo.game_paused = true;
-				this.gameInfo.countdown_value = data.value;
+				this.gameInfo.info_value = data.value;
 			}
+			this.gameInfo.draw()
+		},
+		handleGameEnd(data: any) {
+			this.gameInfo.game_paused = true;
+			this.gameInfo.info_value = data.value;
 			this.gameInfo.draw()
 		}
 	},
@@ -129,6 +134,7 @@ export default defineComponent({
 	},
 	mounted() {
 		this.$ws.listen(`${this.gameId}___countdown`, this.handleCoundown);
+		this.$ws.listen(`${this.gameId}___game-end`, this.handleGameEnd);
 		this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
 		const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
 

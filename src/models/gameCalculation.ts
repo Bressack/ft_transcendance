@@ -57,7 +57,7 @@ class Game {
 export class GameInfo {
     canvas: HTMLCanvasElement;
     game_paused: boolean = true;
-    countdown_value: string | null = null;
+    info_value: string | null = null;
     height_ratio: number;
     width_ratio: number;
     player_height: number;
@@ -78,7 +78,7 @@ export class GameInfo {
     }
 
     draw() {
-        const elementsColor: string = this.game_paused ? "#202020" : "white";
+        const elementsColor: string = this.game_paused && this.info_value ? "#202020" : "white";
         this.height_ratio = this.canvas.height / 720;
         this.width_ratio = this.canvas.width / 1100;
         var context = <CanvasRenderingContext2D>this.canvas.getContext("2d");
@@ -134,10 +134,10 @@ export class GameInfo {
             this.canvas.width / 2 + this.canvas.width * 0.05,
             this.canvas.height * 0.1
         );
-        if (this.game_paused && this.countdown_value) {
-            const textSize = context.measureText(this.countdown_value);
+        if (this.game_paused && this.info_value) {
+            const textSize = context.measureText(this.info_value);
             context.fillStyle = "white";
-            context.fillText(this.countdown_value, this.canvas.width / 2 - textSize.width / 2, this.canvas.height / 2);
+            context.fillText(this.info_value, this.canvas.width / 2 - textSize.width / 2, this.canvas.height / 2);
         }
     }
 
