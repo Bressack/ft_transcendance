@@ -97,6 +97,8 @@ export default defineComponent({
         return ('Tie')
       else if (game.score_playerOne > game.score_playerTwo && game.playerOneName === this.profile.username)
         return ('Victory')
+      else if (game.score_playerOne < game.score_playerTwo && game.playerTwoName === this.profile.username)
+        return ('Victory')
       return ('Defeat')
     }
   }

@@ -73,6 +73,7 @@ export default defineComponent({
 				if (window.screen.orientation.type == "portrait-primary") {
 					this.gameInfo.canvas.height = window.innerWidth / 1.6;
 					this.gameInfo.canvas.width = window.innerWidth;
+
 				}
 				else {
 					this.gameInfo.canvas.width = window.innerWidth;
@@ -127,6 +128,9 @@ export default defineComponent({
 			this.gameInfo.game_paused = true;
 			this.gameInfo.info_value = data.value;
 			this.gameInfo.draw()
+			setTimeout(() => {
+				this.$router.push("/profile/me")
+			}, 1000)
 		}
 	},
 	beforeMount() {
@@ -160,7 +164,9 @@ export default defineComponent({
 
 		this.onResize();
 	},
-	unmouted() {
+	beforeUnmount() {
+		console.log('quit');
+		this.$ws.emit('quit', {})
 		this.gameInfo.canvas.removeEventListener('mousemove', this.sendPosition);
 		this.gameInfo.canvas.removeEventListener('touchmove', this.sendPosition);
 	}

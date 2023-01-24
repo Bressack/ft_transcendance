@@ -70,7 +70,7 @@ export class GameInfo {
         this.canvas = <HTMLCanvasElement>document.getElementById("canvas");
         this.height_ratio = 1;
         this.width_ratio = 1;
-        this.player_height = 100;
+        this.player_height = 90;
         this.player_width = 5;
         this.max_speed = 20;
         this.game = new Game();
@@ -96,15 +96,23 @@ export class GameInfo {
 
         // Draw players
         context.fillStyle = elementsColor;
-        context.fillRect(
-            0,
-            this.game.player.y * this.height_ratio,
+        // context.fillRect(
+        //     0 + 2,
+        //     (this.game.player.y) * this.height_ratio,
+        //     this.player_width * this.width_ratio,
+        //     (this.player_height + 10) * this.height_ratio
+        // );
+		// context.fillStyle = "purple";
+		context.fillRect(
+            2,
+            (this.game.player.y + 5) * this.height_ratio,
             this.player_width * this.width_ratio,
             this.player_height * this.height_ratio
         );
+		context.fillStyle = elementsColor;
         context.fillRect(
-            this.canvas.width - this.player_width * this.width_ratio,
-            this.game.computer.y * this.height_ratio,
+            (this.canvas.width - this.player_width * this.width_ratio)- 2,
+            (this.game.computer.y + 5) * this.height_ratio,
             this.player_width * this.width_ratio,
             this.player_height * this.height_ratio
         );
@@ -117,7 +125,7 @@ export class GameInfo {
             this.game.ball.y * this.height_ratio,
             this.game.ball.r * this.height_ratio,
             0,
-            Math.PI * 2,
+            7,
             false
         );
         context.fill();
