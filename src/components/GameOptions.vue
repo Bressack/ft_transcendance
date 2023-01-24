@@ -82,7 +82,7 @@ export default defineComponent({
 					reject();
 				}
 				document.addEventListener('invite-response-canceled', cancel)
-				this.$ws.emit('game-invite', { target_user: this.opponent })
+				this.$ws.emit('game-invite', { target_user: this.opponent, map: this.map, difficulty: this.opt })
 				this.$ws.socket.once('game-invite-accepted', (data: object) => {
 					that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
 						callback("OK")
