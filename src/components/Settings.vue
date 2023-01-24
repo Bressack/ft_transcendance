@@ -46,8 +46,8 @@
 </template>
 
 <script lang="ts">
-import { QRejectedEntry } from 'quasar'
 import { defineComponent } from 'vue'
+import { QRejectedEntry } from 'quasar'
 // import api from '../services/api.service'
 
 interface UploadObject {
@@ -125,7 +125,7 @@ export default defineComponent({
         console.log(rejectedEntries[0])
         this.$q.notify({
           type: 'warning',
-          message: 'This file has already been downloaded once'
+          message: 'This file has already been downloaded'
         })
       }
     },

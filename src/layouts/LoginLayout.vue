@@ -7,16 +7,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 import Auth from '../pages/Auth.vue'
-// import api from 'src/services/api.service'
 
 export default defineComponent({
   name: 'LoginLayout',
   components: { Auth },
   props: {
     me: { type: Object, default: {} }
-  },
+  },  
   data() {
     return {
     }

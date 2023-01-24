@@ -152,7 +152,6 @@ export default defineComponent({
 
 			}
 			console.log(data)
-			this.opponent = data.username
 			this.InvitationFrom = true
 			document.addEventListener('invite-response-accept', accept)
 			document.addEventListener('invite-response-decline', decline)
