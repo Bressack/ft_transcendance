@@ -7,16 +7,31 @@
 <template>
 	<div class="main">
 		<q-item class="r-pt-md flex-center">
-			<q-item-label v-if="sent" class="label">
-				Waiting <span style="color:orange;" class="bigger">{{ opponent }}</span> to accept your game invitation
+			<q-item-label v-if="sent" class="bigger">
+				Waiting <span style="color:orange;">{{ opponent }}</span> to accept your game invitation
 			</q-item-label>
-			<q-item-label v-else class="label">
-				You recieved a game invitation from <span style="color:orange;" class="bigger">{{ opponent }}</span>
+			<q-item-label v-else class="bigger">
+				You recieved a game invitation from <span style="color:orange;">{{ opponent }}</span>
 			</q-item-label>
 		</q-item>
-		<q-item v-if="sent" class="q-mt-xl">
-			<q-inner-loading size="50px" class="load" :showing="visible" color="orange" ref="load" />
-		</q-item>
+    <ProfileSummary
+      :name=profile.username
+      :avatar=avatar
+      :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
+      :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
+    />
+    <q-item-section class="flex-center">
+      <Rank
+        :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
+        :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
+      />
+    </q-item-section>
+    <q-item-section class="q-pt-md flex-center">
+      {{ map }}
+      {{ difficulty }}
+    </q-item-section>
+			<!-- <q-inner-loading v-if="sent" size="50px" class="load" :showing="visible" color="orange" ref="load" />
+      <q-item v-else> -->
 		<q-item class="q-py-xl flex-center">
 			<q-btn v-if="!sent" class="q-mx-lg" label="Decline" color="red" @click="gameInviteResponse('DECLINED')"
 				v-close-popup />
@@ -24,8 +39,8 @@
 				v-close-popup />
 			<q-btn v-else label="Cancel" color="red" @click="gameInviteCancel" v-close-popup />
 		</q-item>
-    <q-linear-progress v-if="sent" ref="bar" color="orange" size="20px" :value="progress"/>
-    <q-linear-progress v-else reverse ref="bar" color="orange" size="20px" :value="progress"/>
+    <q-linear-progress instant-feedback ref="bar" color="orange" size="20px" :value="progress"/>
+    <!-- <q-linear-progress v-else reverse ref="bar" color="orange" size="20px" :value="progress"/> -->
 		<!-- Replace by a linear loading bar -->
 		<!-- <q-ajax-bar v-if="sent" class="relative" ref="bar" position="bottom" color="orange" size="20px" />
     <q-ajax-bar v-else reverse class="relative" ref="bar" position="bottom" color="orange" size="20px" /> -->
@@ -34,9 +49,11 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import Rank from '../pages/Profile/components/Rank.vue'
+import ProfileSummary from '../pages/Profile/components/ProfileSummary.vue'
 
 export default defineComponent({
-	components: {},
+	components: { ProfileSummary, Rank },
 	name: 'GameInvitation',
 	setup() {
 		const visible = ref(false)
@@ -52,16 +69,24 @@ export default defineComponent({
 	data() {
 		return {
 			$refs: undefined as any,
+      profile: [] as any,
+      avatar: '/api/avatar/' as string
 		}
 	},
 	props: {
 		opponent: { type: String, default: null },
 		sent: { type: Boolean, default: false },
+    map: { type: String, default: '0' },
+    difficulty: { type: String, default: '0' }
 	},
 	mounted() {
     this.recursiveProgress()
 		this.loader()
+    this.fetchUserProfile(this.opponent)
+    this.avatar += `${this.opponent}/medium`
 	},
+  created() {
+  },
 	methods: {
     async recursiveProgress() {
       this.progress += 0.011
@@ -79,6 +104,12 @@ export default defineComponent({
 		gameInviteCancel() {
 			document.dispatchEvent(new CustomEvent('invite-response-canceled'));
 		},
+    fetchUserProfile(username : String) {
+      let that = this
+      this.$api.userProfile(username)
+      .then((result) => { that.profile = result })
+      .catch((error) => { console.error('error:', error); })
+    },
 	},
 })
 </script>

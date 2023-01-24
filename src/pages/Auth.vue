@@ -119,6 +119,12 @@ export default defineComponent({
         that.$router.replace('/')
       })
       .catch(function (error) {
+        that.$q.notify({
+            // position: 'center',
+            // multiLine: true,
+            type: 'negative',
+            message: "Can't SignIn : incorrect username/password"
+          })
         console.log(error);
       })
     },
@@ -135,6 +141,11 @@ export default defineComponent({
         that.$router.replace('/')
       })
       .catch(function (error) {
+        that.$q.notify({
+            // Should know if it's the username which is already taken or the password isn't strong enough, or the email address has a bad format / already used
+            type: 'negative',
+            message: "Can't SignUp : incorrect username/email/password ?"
+          })
         console.log(error);
       })
     },

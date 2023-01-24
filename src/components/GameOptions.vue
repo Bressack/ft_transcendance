@@ -9,19 +9,23 @@
 		<q-item-section class="q-pa-md">
 			<q-separator color="white" />
 			<q-option-group inline v-model="map" :options="maps" color="white" keep-color>
-				<template v-slot:label="opt">
+				<template v-slot:label="map">
 					<div class="row items-center">
-						<q-item-label class="label">{{ opt.label }}</q-item-label>
-						<q-img class="image q-ma-md" :src="`/src/assets/maps/${opt.value}.png`" />
+						<q-item-label class="label">{{ map.label }}</q-item-label>
+						<q-img class="image q-ma-md" :src="`/src/assets/maps/${map.value}.png`" />
 					</div>
 				</template>
 			</q-option-group>
 			<q-separator color="white" />
 			<div class="q-pa-md rounded-borders">
-				<q-option-group inline v-model="opt" :options="opts" type="checkbox" color="white" keep-color>
-					<template v-slot:label="opt">
+        <q-item-label class="label">
+          Difficulty level
+        </q-item-label>
+        <!-- <q-slider v-model="difficulty" :min="1" :max="3" color="white"/> -->
+				<q-option-group inline v-model="opt" :options="opts" color="white" keep-color>
+					<template v-slot:label="dif">
 						<div class="row items-center">
-							<q-item-label class="q-pa-auto label">{{ opt.label }}</q-item-label>
+							<q-item-label class="q-pa-auto label">{{ dif.label }}</q-item-label>
 						</div>
 					</template>
 				</q-option-group>
@@ -33,17 +37,17 @@
 			<q-btn class="label" v-else label="Play" color="orange" @click="InviteNotif = true" />
 		</q-item>
 		<q-dialog persistent v-model="InviteNotif">
-			<InvitationFrom :opponent="opponent" sent />
+			<GameInvitation :opponent="opponent" sent :map=map :difficulty=opt />
 		</q-dialog>
 	</div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import InvitationFrom from './GameInvitation.vue'
+import GameInvitation from './GameInvitation.vue'
 
 export default defineComponent({
-	components: { InvitationFrom },
+	components: { GameInvitation },
 	name: 'GameOptions',
 	setup() {
 		const InviteNotif = ref(false)
@@ -55,11 +59,11 @@ export default defineComponent({
 				{ label: 'Map 3', value: 'map3' },
 				{ label: 'Map 4', value: 'map4' }
 			],
-			opt: ref([]),
+			opt: ref('1'),
 			opts: [
-				{ label: 'Powerup 1', value: 'powerup1' },
-				{ label: 'Powerup 2', value: 'powerup2' },
-				{ label: 'Powerup 3', value: 'powerup3' },
+				{ label: '1', value: '1' },
+				{ label: '2', value: '2' },
+				{ label: '3', value: '3' },
 			],
 			InviteNotif
 		}
@@ -116,7 +120,7 @@ export default defineComponent({
 		async closeDialog() {
 			setTimeout(() => {
 				this.InviteNotif = false
-			}, 30000)
+			}, 29000)
 		}
 		// this.$ws.emit('game-invite', { target_user: this.opponent })
 	},
