@@ -123,7 +123,7 @@ export default defineComponent({
             // position: 'center',
             // multiLine: true,
             type: 'negative',
-            message: "Can't SignIn : incorrect username/password"
+            message: 'incorrect username or password'
           })
         console.log(error);
       })
@@ -141,16 +141,12 @@ export default defineComponent({
         that.$router.replace('/')
       })
       .catch(function (error) {
-        that.$q.notify({
-          type: 'negative',
-          message: error.response.data.message[0]
-        })
-        // for (let i = 0; i < error.response.data.message.len(); i++) {
-        //   that.$q.notify({
-        //       type: 'negative',
-        //       message: error.response.data.message[i]
-        //     })
-        // }
+        for (let i = 0; i < error.response.data.message.length; i++) {
+          that.$q.notify({
+              type: 'negative',
+              message: error.response.data.message[i]
+            })
+        }
       })
     },
   },

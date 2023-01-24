@@ -120,7 +120,7 @@ export default defineComponent({
 		async closeDialog() {
 			setTimeout(() => {
 				this.InviteNotif = false
-			}, 29000)
+			}, 30000)
 		}
 		// this.$ws.emit('game-invite', { target_user: this.opponent })
 	},

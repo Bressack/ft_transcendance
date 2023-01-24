@@ -32,7 +32,7 @@
 				<settings />
 			</q-dialog>
 			<q-dialog persistent v-model="InvitationFrom">
-				<GameInvitation :opponent="opponent" />
+				<GameInvitation :opponent="opponent" :map=maps :difficulty=difficulty />
 			</q-dialog>
 		</q-drawer>
 		<q-page-container>
@@ -88,8 +88,9 @@ export default defineComponent({
 			storeChat: useChatSocketStore(),
 			// invite_cb: null,
 			// invite_data: undefined
-			opponent: ""
-
+			opponent: "",
+      maps: "",
+      difficulty: ""
 		}
 	},
 	methods: {
@@ -115,6 +116,8 @@ export default defineComponent({
 		onGameInvite(data: any, callback: Function) {
 			const that = this
 			this.opponent = data.from
+      this.maps = data.map
+      this.difficulty = data.difficulty
 			that.$ws.removeListener('game-invite')
 
 			this.$ws.socket.once('game-invite-canceled', (res: any) => {

@@ -27,8 +27,12 @@
       />
     </q-item-section>
     <q-item-section class="q-pt-md flex-center">
-      {{ map }}
-      {{ difficulty }}
+    <q-item>
+      <q-img class="image" :src="`/src/assets/maps/${map}.png`" />
+    </q-item>
+      <q-item-label class="label">
+          Difficulty : {{ difficulty }}
+      </q-item-label>
     </q-item-section>
 			<!-- <q-inner-loading v-if="sent" size="50px" class="load" :showing="visible" color="orange" ref="load" />
       <q-item v-else> -->
@@ -130,7 +134,7 @@ export default defineComponent({
 
 .image
   border: solid 1px black
-  @include r.interpolate(width, 320px, 2560px, 30px, 60px)
+  @include r.interpolate(width, 320px, 2560px, 45px, 75px)
 
 .close-cross
   position: relative
