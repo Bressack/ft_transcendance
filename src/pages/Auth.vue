@@ -142,11 +142,15 @@ export default defineComponent({
       })
       .catch(function (error) {
         that.$q.notify({
-            // Should know if it's the username which is already taken or the password isn't strong enough, or the email address has a bad format / already used
-            type: 'negative',
-            message: "Can't SignUp : incorrect username/email/password ?"
-          })
-        console.log(error);
+          type: 'negative',
+          message: error.response.data.message[0]
+        })
+        // for (let i = 0; i < error.response.data.message.len(); i++) {
+        //   that.$q.notify({
+        //       type: 'negative',
+        //       message: error.response.data.message[i]
+        //     })
+        // }
       })
     },
   },
