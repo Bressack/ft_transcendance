@@ -47,7 +47,7 @@ export default defineComponent({
 	},
 	methods:
 	{
-		getPlayerPosition(event: any) {
+		getPlayerPosition(event: any): any {
 			const canvasLocation = this.gameInfo.canvas.getBoundingClientRect();
 			let mouseLocation = (event.type === "touchmove" ? event.changedTouches[0].clientY : event.clientY) - canvasLocation.y;
 			let y = 50
@@ -58,7 +58,7 @@ export default defineComponent({
 			} else {
 				y = mouseLocation - ((this.gameInfo.player_height * this.gameInfo.height_ratio)) / 2;
 			}
-			return (y / this.gameInfo.height_ratio)
+			return y / this.gameInfo.height_ratio
 		},
 		stop() {
 			this.gameInfo.draw();
@@ -133,21 +133,22 @@ export default defineComponent({
 		this.gameInfo = new GameInfo;
 	},
 	mounted() {
+		this.gameInfo.canvas = <HTMLCanvasElement>document.getElementById('canvas')
 		this.$ws.listen(`${this.gameId}___countdown`, this.handleCoundown);
 		this.$ws.listen(`${this.gameId}___game-end`, this.handleGameEnd);
 		this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
 		const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
+		const onResizeThrottled = throttle(this.onResize, 200)
+		this.gameInfo.canvas.addEventListener('mousemove', sendPositionThrottled);
 
 		this.test = useQuasar()
-		this.gameInfo.canvas = <HTMLCanvasElement>document.getElementById('canvas')
-		this.gameInfo.canvas.addEventListener('mousemove', sendPositionThrottled);
 		// this.gameInfo.canvas.addEventListener('touchmove', this.playerMove);
 		var fullscreenButton = <HTMLElement>document.getElementById('test');
 		fullscreenButton.style.display = "none";
-		window.addEventListener('resize', this.waitEndResize);
+		window.addEventListener('resize', onResizeThrottled);
 		watch(() => this.test.fullscreen.isActive, val => {
 			console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
-			this.waitEndResize();
+			onResizeThrottled();
 			if (this.test.fullscreen.isActive == true) {
 				fullscreenButton.style.display = "block";
 			}
@@ -155,8 +156,9 @@ export default defineComponent({
 				fullscreenButton.style.display = "none";
 			}
 		})
+		// onResizeThrottled();
+
 		this.onResize();
-		// this.$ws.listen('game-end', this.stop)
 	},
 	unmouted() {
 		this.gameInfo.canvas.removeEventListener('mousemove', this.sendPosition);
