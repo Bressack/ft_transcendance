@@ -18,10 +18,10 @@
 			</q-option-group>
 			<q-separator color="white" />
 			<div class="q-pa-md rounded-borders">
-        <q-item-label class="label">
-          Difficulty level
-        </q-item-label>
-        <!-- <q-slider v-model="difficulty" :min="1" :max="3" color="white"/> -->
+				<q-item-label class="label">
+					Difficulty level
+				</q-item-label>
+				<!-- <q-slider v-model="difficulty" :min="1" :max="3" color="white"/> -->
 				<q-option-group inline v-model="opt" :options="opts" color="white" keep-color>
 					<template v-slot:label="dif">
 						<div class="row items-center">
@@ -39,6 +39,8 @@
 		<q-dialog persistent v-model="InviteNotif">
 			<GameInvitation :opponent="opponent" sent :map=map :difficulty=opt />
 		</q-dialog>
+	</div>
+	<div>
 	</div>
 </template>
 
@@ -70,6 +72,7 @@ export default defineComponent({
 	},
 	props: {
 		opponent: { type: String, default: null },
+		closeFunction: { type: Function, default: null },
 	},
 	methods: {
 		async invite() {
@@ -79,24 +82,19 @@ export default defineComponent({
 				const cancel = () => {
 					that.$ws.emit('game-invite-canceled', {})
 					document.removeEventListener('invite-response-canceled', cancel);
-					reject();
+					reject({ status: 'CANCELED', gameOptions: null });
 				}
-				document.addEventListener('invite-response-canceled', cancel)
+				document.addEventListener('invite-response-canceled', cancel) // listening cancel action from inviter
 				this.$ws.emit('game-invite', { target_user: this.opponent, map: this.map, difficulty: this.opt })
 				this.$ws.socket.once('game-invite-accepted', (data: object) => {
-					that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
-						callback("OK")
-						console.log(gameId)
-						that.$router.push(`/game/${gameId}`)
-            
-					})
+
 					document.removeEventListener('invite-response-canceled', cancel);
 
 					resolve({ status: 'ACCEPTED', gameOptions: data })
 				})
-				this.$ws.socket.once('game-invite-declined', () => {
+				this.$ws.socket.once('game-invite-declined', (reason: string) => {
 					document.removeEventListener('invite-response-canceled', cancel);
-					reject({ status: 'DECLINED', gameOptions: null })
+					reject({ status: reason, gameOptions: null })
 				})
 			})
 		},
@@ -108,24 +106,37 @@ export default defineComponent({
 				this.InviteNotif = false
 				this.$ws.removeListener('game-invite-accepted')
 				this.$ws.removeListener('game-invite-declined')
+				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
+					callback("OK")
+					console.log(gameId)
+					this.$router.push(`/game/${gameId}`)
+
+				})
 
 			}
-			catch (err) {
+			catch (err: any) {
 				console.error(err)
 				this.InviteNotif = false
 				this.$ws.removeListener('game-invite-accepted')
 				this.$ws.removeListener('game-invite-declined')
+				if (err.status === "DECLINED")
+					this.$q.notify({ type: 'warning', message: this.opponent + " refused your invitation" })
+				else if (err.status === "NOT_CONNECTED")
+					this.$q.notify({ type: 'warning', message: this.opponent + " is not connected" })
+				else if (err.status === "TIMEOUT")
+					this.$q.notify({ type: 'warning', message: this.opponent + " did not respond" })
+				this.closeFunction()
 			}
 		},
-		async closeDialog() {
-			setTimeout(() => {
-				this.InviteNotif = false
-			}, 30000)
-		}
+		// async closeDialog() {
+		// 	setTimeout(() => {
+		// 		this.InviteNotif = false
+		// 	}, 30000)
+		// }
 		// this.$ws.emit('game-invite', { target_user: this.opponent })
 	},
 	mounted() {
-		this.closeDialog()
+		// this.closeDialog()
 		// this.$ws.listen('game-invite-accepted', (d: any, callback: Function) => {
 		// 	console.log('game-invite-accepted')
 		// 	this.InviteNotif = false
