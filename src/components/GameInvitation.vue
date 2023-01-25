@@ -14,14 +14,14 @@
 				You recieved a game invitation from <span style="color:orange;">{{ opponent }}</span>
 			</q-item-label>
 		</q-item>
-    <ProfileSummary
+    <ProfileSummary v-if="userFetched"
       :name=profile.username
       :avatar=avatar
       :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
       :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
     />
     <q-item-section class="flex-center">
-      <Rank
+      <Rank v-if="userFetched"
         :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
         :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
       />
@@ -74,7 +74,8 @@ export default defineComponent({
 		return {
 			$refs: undefined as any,
       profile: [] as any,
-      avatar: '/api/avatar/' as string
+      avatar: '/api/avatar/' as string,
+      userFetched: false as Boolean
 		}
 	},
 	props: {
@@ -108,10 +109,12 @@ export default defineComponent({
 		gameInviteCancel() {
 			document.dispatchEvent(new CustomEvent('invite-response-canceled'));
 		},
-    fetchUserProfile(username : String) {
-      let that = this
+    fetchUserProfile(username : string) {
       this.$api.userProfile(username)
-      .then((result) => { that.profile = result })
+      .then((result) => {
+        this.profile = result
+        this.userFetched = true
+      })
       .catch((error) => { console.error('error:', error); })
     },
 	},

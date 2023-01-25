@@ -162,7 +162,7 @@ export default defineComponent({
   background-color: $bg-secondary
 
 .input
-  background-color: $bg-primary
+  background-color: white
 
 .submitbutton
   width: 100%

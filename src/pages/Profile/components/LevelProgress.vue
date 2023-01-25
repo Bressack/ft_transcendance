@@ -29,6 +29,9 @@ export default defineComponent({
       level: 0 as number
     }
   },
+  created () {
+    this.setLevelProgress()
+  },
   updated () {
     this.setLevelProgress()
   },
