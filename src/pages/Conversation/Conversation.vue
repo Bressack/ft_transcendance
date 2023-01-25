@@ -11,7 +11,7 @@
 				<!-- :avatar=storeMe.getAvatar(message?.username).avatar -->
 			</div>
 			<q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
-				class="absolute-bottom input" />
+				class="absolute-bottom custom-input input" />
 		</div>
 	</q-page>
 </template>

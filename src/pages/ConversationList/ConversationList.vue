@@ -5,7 +5,7 @@
 
       <q-item>
         <q-item-section>
-          <q-input v-model="searchInput" label="Search User by name" @update:model-value="search()" />
+          <q-input class="custom-input" v-model="searchInput" label-color="orange" label="Search User by name" @update:model-value="search()" />
         </q-item-section>
         <q-item-section style="max-width: 30px" v-if="searchInput.length" @click="clearInput">
           <q-btn dense flat color="red" icon="cancel" @click="search()" />
@@ -13,6 +13,7 @@
         <q-item-section style="max-width: 10px">
           <q-btn dense flat color="cyan" icon="search" @click="search()" />
         </q-item-section>
+
       </q-item>
 
       <q-list class="q-py-md overall" v-if="searchResult?.result?.length">

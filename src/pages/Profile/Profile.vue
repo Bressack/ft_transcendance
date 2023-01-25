@@ -1,7 +1,7 @@
 <template>
 <q-page>
   <div class="q-px-xl">
-    <ProfileSummary
+    <ProfileSummary v-if="userFetched"
     :name=profile.username
     :avatar=avatar
     :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
@@ -11,14 +11,14 @@
   <q-item class="q-px-xl">
     <q-item-section>
       <div>
-        <LevelProgress
+        <LevelProgress v-if="userFetched"
           :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
           :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
         />
       </div>
     </q-item-section>
     <q-item-section class="q-pr-xl col-3">
-      <Rank
+      <Rank v-if="userFetched"
         :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
         :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
       />
@@ -28,7 +28,7 @@
       <q-item>
         <q-item-section>
           <q-item-label v-if="games.total" class="bigger">Match History</q-item-label>
-          <q-item-label v-else class="bigger">No game history</q-item-label>
+          <q-item-label v-else-if="gameFetched" class="bigger">No game history</q-item-label>
         </q-item-section>
       </q-item>
     <div v-for="game in games.result" :key="game">
@@ -60,7 +60,9 @@ export default defineComponent({
       username: this.$route.params.username.toString() as string,
       avatar: '/api/avatar/' as string,
       profile: [] as any,
-      games: [] as any
+      games: [] as any,
+      userFetched: false as boolean,
+      gameFetched : false as boolean
     }
   },
   created () {
@@ -68,7 +70,7 @@ export default defineComponent({
     this.fetchUserProfile()
     this.fetchGameHistory()
   },
-  beforeUpdate() {
+  updated() {
     this.username = this.$route.params.username.toString()
     this.avatar = `/api/avatar/${this.username}/large`
     this.fetchUserProfile()
@@ -76,20 +78,24 @@ export default defineComponent({
   },
   methods: {
     fetchUserProfile() {
-      let that = this
       this.$api.userProfile(this.username)
-      .then((result) => { that.profile = result })
+      .then((result) => {
+        this.profile = result
+        this.userFetched = true
+      })
       .catch((error) => { console.error('error:', error); })
     },
     fetchGameHistory() {
-      let that = this
       const searchQuery : IGameQuery = {
         skip: '0',
         take: '20',
         order: 'desc',
       }
       this.$api.userGame(this.username, searchQuery)
-      .then((result) => { that.games = result })
+      .then((result) => {
+        this.games = result
+        this.gameFetched = true
+      })
       .catch((error) => { console.error('error:', error); })
     },
     gameStatus(game : any) : string {

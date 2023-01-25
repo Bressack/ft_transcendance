@@ -7,21 +7,24 @@
     </q-item>
   <q-item class="justify-center centers q-px-xl r-pt-md">
     <q-uploader
-    auto-upload
-    hide-upload-btn
-    max-files=1
-    class="uploader"
-    ref="uploader"
-    label="Change avatar"
-        url="/api/avatar/"
-        field-name="avatar"
-        color="black"
-        :filter="imgOnly"
-        @uploaded="onUploaded"
-        @rejected="onRejected"
-        >
+      auto-upload
+      hide-upload-btn
+      max-files=1
+      class="uploader"
+      ref="uploader"
+      label="Change avatar"
+      url="/api/avatar/"
+      field-name="avatar"
+      color="black"
+      :filter="imgOnly"
+      @uploaded="onUploaded"
+      @rejected="onRejected"
+    >
         <template v-slot:list="scope">
-          <img class="avatar" :src=avatar>
+          <img v-if="avatar" class="avatar" :src=avatar>
+          <q-inner-loading v-else
+            :showing=true
+            label="Please wait..." />
         </template>
       </q-uploader>
     </q-item>
@@ -60,9 +63,9 @@ export default defineComponent({
       return {
         profile : [] as any,
         avatar : '' as string,
-        twoFA : false as boolean,
+        twoFA : false as Boolean,
         refresh : 0 as number,
-        $refs : undefined as any
+        $refs : undefined as any,
       }
   },
   created () {
@@ -70,12 +73,11 @@ export default defineComponent({
   },
   methods: {
     fetchMe() {
-      let that = this
       this.$api.me()
       .then((result) => {
-        that.profile = result
-        that.avatar = `/api/avatar/${result.username}/large?refresh?refresh=${that.refresh++}`
-        that.twoFA = result.TwoFA
+        this.profile = result
+        this.avatar = `/api/avatar/${result.username}/large?refresh?refresh=${this.refresh++}`
+        this.twoFA = result.TwoFA
       })
       .catch((error) => {
           console.error('error:', error);
@@ -84,7 +86,6 @@ export default defineComponent({
     removeAvatar () {
       this.$api.delete('avatar')
       .then((res) => {
-        console.log(res)
         if (res.data === true) {
             this.$q.notify({
             type: 'warning',
