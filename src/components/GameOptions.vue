@@ -34,7 +34,7 @@
 		<q-item class="justify-center centers bigger q-mb-lg">
 			<q-btn class="label" v-if="opponent" :label="`Play against ${opponent}`" color="orange"
 				@click="sendInviteAndOpen" />
-			<q-btn class="label" v-else label="Play" color="orange" @click="InviteNotif = true" />
+			<q-btn class="label" v-else label="Matchmaking" color="orange" @click="InviteNotif = true" />
 		</q-item>
 		<q-dialog persistent v-model="InviteNotif">
 			<GameInvitation :opponent="opponent" sent :map=map :difficulty=opt />
@@ -76,7 +76,7 @@ export default defineComponent({
 			this.$ws.removeListener('game-invite')
 			return new Promise((resolve, reject) => {
 				const that = this;
-				const cancel = function () {
+				const cancel = () => {
 					that.$ws.emit('game-invite-canceled', {})
 					document.removeEventListener('invite-response-canceled', cancel);
 					reject();
@@ -88,7 +88,7 @@ export default defineComponent({
 						callback("OK")
 						console.log(gameId)
 						that.$router.push(`/game/${gameId}`)
-
+            
 					})
 					document.removeEventListener('invite-response-canceled', cancel);
 

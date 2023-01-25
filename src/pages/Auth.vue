@@ -13,8 +13,8 @@
         color="white"
         text-color="primary"
         :options="[
-          {label: 'SingIn', value: true},
-          {label: 'SignUp', value: false}
+          {label: 'SIGN IN', value: true},
+          {label: 'SIGN UP', value: false}
         ]"
       />
       <q-form
@@ -141,6 +141,8 @@ export default defineComponent({
         that.$router.replace('/')
       })
       .catch(function (error) {
+        // if (error.response)
+        console.log(error.response.data)
         for (let i = 0; i < error.response.data.message.length; i++) {
           that.$q.notify({
               type: 'negative',

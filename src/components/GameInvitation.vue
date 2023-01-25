@@ -128,7 +128,7 @@ export default defineComponent({
   position: relative
 
 .main
-  overflow: hidden
+  overflow: auto
   background-color: #696969
   text-align: center
 
