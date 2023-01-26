@@ -9,6 +9,7 @@
 					<!-- <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn> -->
 					<q-btn class="q-mr-sm" to="/" color="orange">Home</q-btn>
 					<q-btn class="q-mr-sm" to="/game" color="brown">TEST_GAME</q-btn>
+					<q-btn class="q-mr-sm" to="/spectate" color="brown">TEST_SPECTATE</q-btn>
 					<q-btn class="q-mr-sm" to="/profile/me" color="green">Profile</q-btn>
 					<q-btn class="q-mr-sm" to="/play" color="green">Play</q-btn>
 					<div class="q-mr-lg logout">
