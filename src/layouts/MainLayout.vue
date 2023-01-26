@@ -87,7 +87,6 @@ export default defineComponent({
 			// drawer: ref(false),
 			storeMe: useMeStore(),
 			storeChat: useChatSocketStore(),
-			running_games: [], 
 			// invite_cb: null,
 			// invite_data: undefined
 			opponent: "",
@@ -161,9 +160,7 @@ export default defineComponent({
 			document.addEventListener('invite-response-accept', accept)
 			document.addEventListener('invite-response-decline', decline)
 		},
-		onGameAnnoucement(running_games : any[]) {
-			this.running_games = running_games;
-		}
+
 
 	},
 	created() {
@@ -181,7 +178,7 @@ export default defineComponent({
 
 		// RECEPTION
 		this.$ws.listen('game-invite', this.onGameInvite)
-		this.$ws.listen('game-announcement', this.onGameAnnoucement)
+
 
 
 	},

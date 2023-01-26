@@ -52,7 +52,7 @@ export default defineComponent({
 
 .doc-container
   @include r.interpolate(width, 320px, 2560px, 300px, 1350px)
-  @include r.interpolate((margin-top, margin-bottom), 320px, 2560px, 12px, 50px)
+  @include r.interpolate((margin-top, margin-bottom), 320px, 2560px, 5px, 15px)
   @include r.interpolate((margin-left, margin-right), 320px, 2560px, 6px, 25px)
   height: auto
   background-color: grey
