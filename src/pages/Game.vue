@@ -1,7 +1,5 @@
 <template>
 	<q-page>
-		<link rel="preconnect" href="https://fonts.googleapis.com">
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 		<!-- <p>
 			<Score :scoreP1="gameInfo.game.computer.score" :scoreP2="gameInfo.game.player.score" />
@@ -24,13 +22,13 @@
 <!-- window.innerHeight -->
 <script lang="ts">
 import { ref, defineComponent, computed } from 'vue'
-import { useQuasar } from 'quasar'
 import Score from '../components/Game/Score.vue'
 import { GameInfo } from '../models/gameCalculation'
 import { watch } from 'vue'
 import { throttle } from 'lodash'
 
 var timeOutFunctionId = undefined as any;
+
 
 export default defineComponent({
 	name: 'Game',
@@ -40,9 +38,8 @@ export default defineComponent({
 			gameId: this.$route.params.gameId.toString() as string,
 			animResize: 0,
 			gameInfo: new GameInfo,
-			test: useQuasar(),
 			intdesesmort: 0,
-			throttleValue: 15
+			throttleValue: 15,
 		};
 	},
 	methods:
@@ -68,7 +65,7 @@ export default defineComponent({
 			timeOutFunctionId = setTimeout(this.onResize, 200);
 		},
 		onResize() {
-			if (this.test.fullscreen.isActive == true) {
+			if (this.$q.fullscreen.isActive == true) {
 
 				if (window.screen.orientation.type == "portrait-primary") {
 					this.gameInfo.canvas.height = window.innerWidth / 1.6;
@@ -89,14 +86,14 @@ export default defineComponent({
 		},
 		toggle(e: any) {
 			const target = <HTMLElement>document.getElementById('bidule')
-			console.log("toggle 1", this.test.fullscreen.isActive)
-			this.test.fullscreen.toggle(target)
+			console.log("toggle 1", this.$q.fullscreen.isActive)
+			this.$q.fullscreen.toggle(target)
 				.then(() => {
 				})
 				.catch((err) => {
 					alert(err)
 				})
-			console.log("toggle 2 ", this.test.fullscreen.isActive)
+			console.log("toggle 2 ", this.$q.fullscreen.isActive)
 			this.gameInfo.draw();
 		},
 		update_and_draw(data: any) {
@@ -145,15 +142,15 @@ export default defineComponent({
 		const onResizeThrottled = throttle(this.onResize, 200)
 		this.gameInfo.canvas.addEventListener('mousemove', sendPositionThrottled);
 
-		this.test = useQuasar()
+		// this.test = useQuasar()
 		// this.gameInfo.canvas.addEventListener('touchmove', this.playerMove);
 		var fullscreenButton = <HTMLElement>document.getElementById('test');
 		fullscreenButton.style.display = "none";
 		window.addEventListener('resize', onResizeThrottled);
-		watch(() => this.test.fullscreen.isActive, val => {
+		watch(() => this.$q.fullscreen.isActive, val => {
 			console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
 			onResizeThrottled();
-			if (this.test.fullscreen.isActive == true) {
+			if (this.$q.fullscreen.isActive == true) {
 				fullscreenButton.style.display = "block";
 			}
 			else {
