@@ -14,9 +14,11 @@
     <q-item class="q-pb-xl">
       <q-btn color="orange" class="q-mx-lg" label="Invitation From" @click="sendInvite"/>
     </q-item>
+    <q-item class="q-pb-xl">
+      <SpectateGames pOne="user1" pTwo="user2"/>
+    </q-item>
   </q-list>
   <q-dialog v-model="GameOptions">
-    <!-- Either matchmaking or play against a friend (add :opponent="username"), leave opponent as null for a random match -->
     <GameOptions/>
   </q-dialog>
   <q-dialog persistent v-model="InvitationFrom">
@@ -30,10 +32,11 @@
 import { defineComponent, ref } from 'vue';
 import GameOptions from '../components/GameOptions.vue'
 import GameInvitation from '../components/GameInvitation.vue'
+import SpectateGames from '../components/SpectateGames.vue'
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { GameOptions, GameInvitation },
+  components: { GameOptions, GameInvitation, SpectateGames },
   props: {},
   setup () {
     const GameOptions = ref(false)
