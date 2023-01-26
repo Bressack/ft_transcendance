@@ -16,7 +16,7 @@
     </q-item>
   </q-list>
   <q-item v-for="game in games" :key="game.gameId">
-    <SpectateGames :pOne=game.playerOneName :pTwo=game.playerTwoName />
+    <SpectateGames :pOne=game.playerOneName :pTwo=game.playerTwoName :gameId=game.gameId />
   </q-item>
   <q-dialog v-model="GameOptions">
     <GameOptions/>
@@ -48,7 +48,7 @@ export default defineComponent({
     }
   },
   mounted () {
-    this.$ws.listen('game-announcement', this.onGameAnnoucement)
+    this.$ws.listen('game-announcement', this.onGameAnnouncement)
   },
   created () {
     this.fetchGames()
@@ -68,7 +68,7 @@ export default defineComponent({
           this.InvitationFrom = false
         }, 30000)
       },
-      onGameAnnoucement(running_games : any[]) {
+      onGameAnnouncement(running_games : any[]) {
 			  this.games = running_games
 		  },
       fetchGames() {
