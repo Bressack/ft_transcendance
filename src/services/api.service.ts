@@ -125,6 +125,11 @@ export default {
     return response;
   },
 
+  async games() {
+    const response = await this.axiosInstance.get('/games/running')
+    return response;
+  },
+
   logIt(message: string) {
     let stack = new Error().stack as string;
     let caller = stack

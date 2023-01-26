@@ -14,10 +14,10 @@
     <q-item class="q-pb-xl">
       <q-btn color="orange" class="q-mx-lg" label="Invitation From" @click="sendInvite"/>
     </q-item>
-    <q-item class="q-pb-xl">
-      <SpectateGames pOne="user1" pTwo="user2"/>
-    </q-item>
   </q-list>
+  <q-item v-for="game in games" :key="game.gameId">
+    <SpectateGames :pOne=game.playerOneName :pTwo=game.playerTwoName />
+  </q-item>
   <q-dialog v-model="GameOptions">
     <GameOptions/>
   </q-dialog>
@@ -47,13 +47,38 @@ export default defineComponent({
       InvitationFrom
     }
   },
+  mounted () {
+    this.$ws.listen('game-announcement', this.onGameAnnoucement)
+  },
+  created () {
+    this.fetchGames()
+  },
+  updated() {
+    this.fetchGames()
+  },
+  data () {
+    return {
+      games: [] as any,
+    }
+  },
   methods: {
     sendInvite() {
         this.InvitationFrom = true
         setTimeout(() => {
           this.InvitationFrom = false
         }, 30000)
-      }
+      },
+      onGameAnnoucement(running_games : any[]) {
+			  this.games = running_games
+		  },
+      fetchGames() {
+        this.$api.games()
+        .then((result) => {
+          console.log(result)
+          this.games = result.data
+        })
+        .catch((error) => { console.error('error:', error); })
+    },
   }
 });
 </script>
