@@ -14,7 +14,6 @@ const routes: RouteRecordRaw[] = [
         path: "/profile/:username",
         component: () => import("pages/Profile/Profile.vue"),
       },
-      { path: "/play", component: () => import("pages/GameLobbyTest.vue") },
       { path: "/game/:gameId", component: () => import("pages/Game/Game.vue") },
       { path: "/spectate/:gameId", component: () => import("pages/Game/Spectate.vue") },
     ],

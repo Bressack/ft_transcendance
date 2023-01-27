@@ -4,6 +4,7 @@
 - You must offer some customization options (for example, power-ups or different maps). However, the user should be able to select a default version of the game without any extra features if they want to
 - The user should be able to watch a live play between other users without interfering with it
 -->
+<!-- Unused file, could be deleted before the project is set as finished -->
 <template>
 <q-page>
   <q-list class="flex-center">
