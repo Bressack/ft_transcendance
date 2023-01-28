@@ -2,15 +2,17 @@
   <div class="main">
     <div class="q-px-xl r-py-md">
 			<q-item-label class="bigger">Finding an opponent ...</q-item-label>
-      <div>
+      <div class="q-p-md">
         <q-spinner-puff
-          color="primary"
-          size="2em"
+          color="orange"
+          size="8em"
         />
 
       </div>
 		</div>
-    <q-btn label="Cancel" color="red" v-close-popup />
+    <q-item class="flex-center q-py-xl">
+      <q-btn label="Cancel" color="red" v-close-popup />
+    </q-item>
   </div>
 </template>
 
