@@ -3,9 +3,10 @@
     <div class="q-px-xl r-py-md">
 			<q-item-label class="bigger">Finding an opponent ...</q-item-label>
       <div>
-        <q-inner-loading
-          :showing=true
-          label="Finding an opponent ..." />
+        <q-spinner-puff
+          color="primary"
+          size="2em"
+        />
 
       </div>
 		</div>
