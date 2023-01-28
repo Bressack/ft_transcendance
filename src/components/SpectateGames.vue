@@ -34,11 +34,11 @@ export default defineComponent({
   props: {
     pOne    : { type: String , required: true},
     pTwo    : { type: String , required: true },
-	gameId : { type: String, required: true },
+	  gameId : { type: String, required: true },
   },
   methods: {
     spectate (gameId: string) {
-		this.$router.push(`/spectate/${gameId}`)
+		  this.$router.push(`/spectate/${gameId}`)
     }
   }
 })

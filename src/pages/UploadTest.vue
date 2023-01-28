@@ -1,13 +1,13 @@
 <template>
-  <q-page>
-    <div class="q-pa-md">
-      <q-uploader
-        label="Auto Uploader"
-        url="/api/avatar/"
-        field-name="avatar"
-      />
-    </div>
-  </q-page>
+<q-page>
+  <div class="q-pa-md">
+    <q-uploader
+      label="Auto Uploader"
+      url="/api/avatar/"
+      field-name="avatar"
+    />
+  </div>
+</q-page>
 </template>
 
 <script lang="ts">

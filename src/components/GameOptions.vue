@@ -40,8 +40,6 @@
 			<GameInvitation :opponent="opponent" sent :map=map :difficulty=opt />
 		</q-dialog>
 	</div>
-	<div>
-	</div>
 </template>
 
 <script lang="ts">

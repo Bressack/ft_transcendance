@@ -6,7 +6,7 @@
     </q-item-label>
   </q-item>
   <q-item class="flex-center">
-    <q-btn color="orange" label="play matchmaking" @click=""/>
+    <q-btn color="orange" label="play matchmaking" @click="MatchMaking = true"/>
   </q-item>
   <div class="r-py-md q-px-md">
     <q-item>
@@ -20,11 +20,14 @@
       <SpectateGames :pOne=game.playerOneName :pTwo=game.playerTwoName :gameId=game.gameId />
     </div>
   </div>
+  <q-dialog persistent v-model="MatchMaking">
+		<WaitForPairing />
+	</q-dialog>
 </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { useMeStore } from 'src/stores/me';
 import SpectateGames from '../../components/SpectateGames.vue';
 import WaitForPairing from '../../components/WaitForPairing.vue'
@@ -33,6 +36,12 @@ export default defineComponent({
 	name: 'Index',
 	components: { SpectateGames, WaitForPairing },
 	props: {},
+  setup () {
+    const MatchMaking = ref(false)
+    return {
+      MatchMaking
+    }
+  },
 	data() {
 		return {
 			storeMe: useMeStore(),
