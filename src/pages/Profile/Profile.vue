@@ -6,6 +6,7 @@
     :avatar=avatar
     :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
     :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
+    :interact=true
     />
   </div>
   <q-item class="q-px-xl">
@@ -28,7 +29,7 @@
       <q-item>
         <q-item-section>
           <q-item-label v-if="games.total" class="bigger">Match History</q-item-label>
-          <q-item-label v-else-if="gameFetched" class="bigger">No game history</q-item-label>
+          <q-item-label v-else-if="gameFetched && userFetched" class="bigger">No game history</q-item-label>
         </q-item-section>
       </q-item>
     <div v-for="game in games.result" :key="game">
@@ -41,6 +42,11 @@
       />
     </div>
   </div>
+  <q-item class="flex-center" v-if="!userFetched">
+    <q-item-label class="bigger">
+      This profile does not exist
+    </q-item-label>
+  </q-item>
 </q-page>
 </template>
 
@@ -68,13 +74,11 @@ export default defineComponent({
   created () {
     this.avatar += `${this.username}/large`
     this.fetchUserProfile()
-    this.fetchGameHistory()
   },
   updated() {
     this.username = this.$route.params.username.toString()
     this.avatar = `/api/avatar/${this.username}/large`
     this.fetchUserProfile()
-    this.fetchGameHistory()
   },
   methods: {
     fetchUserProfile() {
@@ -82,6 +86,7 @@ export default defineComponent({
       .then((result) => {
         this.profile = result
         this.userFetched = true
+        this.fetchGameHistory()
       })
       .catch((error) => { console.error('error:', error); })
     },
