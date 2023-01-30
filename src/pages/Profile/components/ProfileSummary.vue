@@ -73,9 +73,11 @@ export default defineComponent({
   },
   methods: {
     ratio(v: number, d: number): string {
-      if (v + d === 0)
-        return '0.00'
-      return (v / (v + d) * 100).toPrecision(4)
+      if (v === 0)
+        return '0'
+      else if (d === 0)
+        return '100'
+      return (v / (v + d) * 100).toFixed(0)
     },
     isFriend () {
       console.log(typeof(this.storeMe.friends))
@@ -99,9 +101,6 @@ export default defineComponent({
 
 .wrap
   flex-wrap: wrap
-
-.interpolate-btn
-  @include r.interpolate(font-size, 320px, 2560px, 10px, 35px)
 
 .name
   @include r.interpolate(font-size, 320px, 2560px, 14px, 40px)

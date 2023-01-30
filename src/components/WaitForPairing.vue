@@ -2,7 +2,7 @@
   <div class="main">
     <div class="q-px-xl r-py-md">
 			<q-item-label class="bigger">Finding an opponent ...</q-item-label>
-      <div class="q-pt-md">
+      <div class="q-pt-xl">
         <q-spinner-puff
           color="orange"
           size="8em"

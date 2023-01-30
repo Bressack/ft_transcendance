@@ -1,23 +1,11 @@
 // app global css in Sass form
 @use "./interpolate" as r
 
-// input:-webkit-autofill,
-// input:-webkit-autofill:hover,
-// input:-webkit-autofill:focus,
-// textarea:-webkit-autofill,
-// textarea:-webkit-autofill:hover,
-// textarea:-webkit-autofill:focus,
-// select:-webkit-autofill,
-// select:-webkit-autofill:hover,
-// select:-webkit-autofill:focus
-//   -webkit-text-fill-color: black
-//   -webkit-box-shadow: 0 0 0 1000px $bg-primary inset !important
-//   transition: background-color 300ms ease-in-out 0s
-// .q-field--outlined .q-field__control:before
-//   z-index: 1
-
 .custom-input input
   color: white !important
+
+.interpolate-btn
+  @include r.interpolate(font-size, 320px, 2560px, 10px, 35px)
 
 .debug
   border: 1px solid red

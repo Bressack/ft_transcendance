@@ -6,7 +6,7 @@
     </q-item-label>
   </q-item>
   <q-item class="flex-center">
-    <q-btn color="orange" label="play matchmaking" @click="MatchMaking = true"/>
+    <q-btn class="interpolate-btn" color="orange" label="play matchmaking" @click="MatchMaking = true"/>
   </q-item>
   <div class="r-py-md q-px-md">
     <q-item>
