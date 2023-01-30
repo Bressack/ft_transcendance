@@ -34,7 +34,7 @@
 		<q-item class="justify-center centers bigger q-mb-lg">
 			<q-btn class="label" v-if="opponent" :label="`Play against ${opponent}`" color="orange"
 				@click="sendInviteAndOpen" />
-			<q-btn class="label" v-else label="Matchmaking" color="orange" @click="InviteNotif = true" />
+			<!-- <q-btn class="label" v-else label="matchmaking" color="orange" @click="InviteNotif = true" /> -->
 		</q-item>
 		<q-dialog persistent v-model="InviteNotif">
 			<GameInvitation :opponent="opponent" sent :map=map :difficulty=opt />

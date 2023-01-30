@@ -7,17 +7,20 @@
       </q-avatar>
     </q-item-section>
       <q-item-section>
-        <q-item-label class="label name">{{name}}</q-item-label>
+        <q-item-label class="label name">{{ name }}</q-item-label>
       </q-item-section>
       <q-item v-if="interact && name != storeMe.username">
         <q-item-section>
-          <q-btn label="play" class="q-mr-lg" size="1.5vw" color="orange"/>
+          <q-btn label="play" class="interpolate-btn q-mr-lg" color="orange" @click="goGameOptions" />
         </q-item-section>
-        <q-item-section>
-          <q-btn label="add friend" size="1.5vw" color="green"/>
-          <!-- <q-btn label="open conversation" size="1.5vw" color="green"/> -->
+        <q-item-section side>
+          <q-btn v-if="!isFriend()" class="interpolate-btn" label="add friend" color="green"/>
+          <q-btn v-else class="interpolate-btn" label="chat" color="green" @click="userSelected()" />
         </q-item-section>
       </q-item>
+      <q-dialog v-model="gameOptions">
+        <GameOptions :opponent="name" :closeFunction="closeGameOptions" />
+      </q-dialog>
     </q-item>
   </div>
   <q-item>
@@ -37,11 +40,13 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, ref } from 'vue'
+import GameOptions from '../../../components/GameOptions.vue'
 import { useMeStore } from 'src/stores/me'
-import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ProfileSummary',
+  components: { GameOptions },
   props: {
     name    : { type: String , default: undefined },
     avatar  : { type: String , required: true },
@@ -49,6 +54,18 @@ export default defineComponent({
     defeat  : { type: Number , default: 0 },
     interact : { type: Boolean, default: false }
   },
+	setup() {
+		const gameOptions = ref(false)
+		return {
+			gameOptions,
+			openGameOptions() {
+				gameOptions.value = true
+			},
+			closeGameOptions() {
+				gameOptions.value = false
+			},
+		}
+	},
   data () {
     return {
       storeMe: useMeStore()
@@ -59,7 +76,20 @@ export default defineComponent({
       if (v + d === 0)
         return '0.00'
       return (v / (v + d) * 100).toPrecision(4)
-    }
+    },
+    isFriend () {
+      console.log(typeof(this.storeMe.friends))
+      return (this.storeMe.friends?.find(element => element === this.name))
+    },
+    userSelected() {
+			const channelID = this.storeMe.getChannelIDByUsername(this.name as string)
+			this.$router.push({
+				path: `/conversation/${channelID}`,
+			})
+		},
+    goGameOptions() {
+      this.openGameOptions()
+		},
   }
 })
 </script>
@@ -69,6 +99,9 @@ export default defineComponent({
 
 .wrap
   flex-wrap: wrap
+
+.interpolate-btn
+  @include r.interpolate(font-size, 320px, 2560px, 10px, 35px)
 
 .name
   @include r.interpolate(font-size, 320px, 2560px, 14px, 40px)

@@ -14,26 +14,22 @@
 				You recieved a game invitation from <span style="color:orange;">{{ opponent }}</span>
 			</q-item-label>
 		</q-item>
-    <ProfileSummary v-if="userFetched"
-      :name=profile.username
-      :avatar=avatar
-      :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
-      :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
-    />
-    <q-item-section class="flex-center">
-      <Rank v-if="userFetched"
-        :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
-        :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
-      />
-    </q-item-section>
-    <q-item-section class="q-pt-md flex-center">
     <q-item>
-      <q-img class="image" :src="`/src/assets/maps/${map}.png`" />
+      <q-item-section class="q-pt-md flex-center">
+      <q-item>
+        <q-img class="image" :src="`/src/assets/maps/${map}.png`" />
+      </q-item>
+        <q-item-label class="q-pt-lg label">
+            Difficulty : {{ difficulty }}
+        </q-item-label>
+      </q-item-section>
+      <q-item-section class="flex-center">
+        <Rank v-if="userFetched"
+          :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
+          :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"
+        />
+      </q-item-section>
     </q-item>
-      <q-item-label class="label">
-          Difficulty : {{ difficulty }}
-      </q-item-label>
-    </q-item-section>
 			<!-- <q-inner-loading v-if="sent" size="50px" class="load" :showing="visible" color="orange" ref="load" />
       <q-item v-else> -->
 		<q-item class="q-py-xl flex-center">
@@ -54,10 +50,9 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import Rank from '../pages/Profile/components/Rank.vue'
-import ProfileSummary from '../pages/Profile/components/ProfileSummary.vue'
 
 export default defineComponent({
-	components: { ProfileSummary, Rank },
+	components: { Rank },
 	name: 'GameInvitation',
 	setup() {
 		const visible = ref(false)
