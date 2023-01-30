@@ -45,10 +45,13 @@ export default defineComponent({
       return (n < 10 ? '0' : '') + n
     },
     getRelativeDate(cdate: Date): string {
-      let diff : number = (Date.now() - cdate.getTime()) / 3600
-      if (diff < 24.)
+      const now = new Date()
+      // let diff : number = (Date.now() - cdate.getTime()) / 3600
+      console.log('debug: ', now.getDate() - cdate.getDate());
+
+      if (now.getDate() - cdate.getDate() == 0)
         return 'Today at ' + this.floorStr(cdate.getHours()) + ':' + this.floorStr(cdate.getMinutes())
-      else if (diff < 48.)
+      else if (now.getDate() - cdate.getDate() == 1)
         return 'Yesterday at ' + this.floorStr(cdate.getHours()) + ':' + this.floorStr(cdate.getMinutes())
       else
       {
@@ -86,6 +89,7 @@ export default defineComponent({
   color: white
   margin: 3px
   margin-right: 10px
+  margin-left: 19px
 
 .datas
   padding-left: 2vw
@@ -94,4 +98,5 @@ export default defineComponent({
 
 .body
   color: white
+  margin-left: 10px
 </style>
