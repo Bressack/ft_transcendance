@@ -1,7 +1,5 @@
 <template>
 	<div>
-
-		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 		<ul>
 			<div class="q-ml-md q-gutter-sm">
 				<q-btn color="blue" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
@@ -48,7 +46,10 @@ export default defineComponent({
 	{
 		draw() {
         	const elementsColor: string = this.game_paused && this.info_value ? "#202020" : "white";
+			console.log(this.canvas)
         	var context = <CanvasRenderingContext2D>this.canvas.getContext("2d");
+				console.log(context)
+			// console.log(<CanvasRenderingContext2D>this.canvas.getContext("2d"))
         	// Draw field
         	context.fillStyle = "black";
         	context.fillRect(0, 0, this.canvas.width, this.canvas.height);
@@ -85,7 +86,7 @@ export default defineComponent({
         	    false
         	);
         	context.fill();
-        	context.font = `${this.canvas.height * 0.07}px 'Press Start 2P'`;
+        	context.font = `${this.canvas.height * 0.07}px 'PressStart2P'`;
         	context.fillText(
         	    this.player1_score.toString(),
         	    this.canvas.width / 2 -
@@ -167,16 +168,14 @@ export default defineComponent({
 			setTimeout(() => {
 				this.$router.push("/profile/me")
 			}, 1000)
-		}
-	},
-	beforeMount() {
-		this.gameId = this.$route.params.gameId.toString() as string;
-	},
-	mounted() {
+		},
+		ft_mounted() {
 		this.canvas = <HTMLCanvasElement>document.getElementById('canvas')
+			
 		this.$ws.listen(`${this.gameId}___countdown`, this.handleCoundown);
 		this.$ws.listen(`${this.gameId}___game-end`, this.handleGameEnd);
 		this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
+		this.canvas.addEventListener('dblclick', this.toggle);
 		const onResizeThrottled = throttle(this.onResize, 200)
 		var fullscreenButton = <HTMLElement>document.getElementById('fullscreen-btn');
 		fullscreenButton.style.display = "none";
@@ -193,7 +192,15 @@ export default defineComponent({
 		})
 		this.onResize();
 	},
+	},
+	beforeMount() {
+		this.gameId = this.$route.params.gameId.toString() as string;
+	},
+	mounted() {
+		setTimeout(this.ft_mounted, 100)
+	},
 	beforeUnmount() {
+		this.canvas.removeEventListener('dblclick',this.onResize)
 		console.log('quit');
 		this.$ws.emit('quit', {})
 	}
@@ -208,6 +215,7 @@ main {
 
 h1,
 p,
+
 ul {
 	text-align: center;
 	list-style: none;

@@ -9,6 +9,7 @@
 					<!-- <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn> -->
 					<q-btn class="q-mr-sm" to="/" color="orange">Home</q-btn>
 					<q-btn class="q-mr-sm" to="/game" color="brown">TEST_GAME</q-btn>
+					<q-btn class="q-mr-sm" to="/game3d" color="brown">TEST_3D</q-btn>
 					<q-btn class="q-mr-sm" to="/spectate" color="brown">TEST_SPECTATE</q-btn>
 					<q-btn class="q-mr-sm" to="/profile/me" color="green">Profile</q-btn>
 					<q-btn class="q-mr-sm" to="/play" color="green">Play</q-btn>
@@ -107,20 +108,19 @@ export default defineComponent({
 			let that = this
 			this.$api.logout()
 				.then(function (status) {
-          that.$ws.disconnect()
-          that.storeMe.$reset()
-          that.storeChat.leaveCurrentRoom()
-          that.storeChat.$reset()
-          that.$router.push('/login')
+          			that.$ws.disconnect()
+          			that.storeMe.$reset()
+          			that.storeChat.leaveCurrentRoom()
+          			that.storeChat.$reset()
+          			that.$router.push('/login')
 				})
 		},
 		onGameInvite(data: any, callback: Function) {
 			const that = this
 			this.opponent = data.from
-      this.maps = data.map
-      this.difficulty = data.difficulty
+      		this.maps = data.map
+      		this.difficulty = data.difficulty
 			that.$ws.removeListener('game-invite')
-
 			this.$ws.socket.once('game-invite-canceled', (res: any) => {
 				that.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
@@ -135,15 +135,11 @@ export default defineComponent({
 					callback("OK")
 					console.log(gameId)
 					that.$router.push(`/game/${gameId}`)
-
 				})
-
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
 				that.$ws.removeListener('game-invite-canceled')
 				that.$ws.listen('game-invite', that.onGameInvite) //might need to remove this until the game is finished
-
-
 			}
 			const decline = function (res: any) {
 				console.log(res)
@@ -153,7 +149,6 @@ export default defineComponent({
 				document.removeEventListener('invite-response-decline', decline);
 				that.$ws.removeListener('game-invite-canceled')
 				that.$ws.listen('game-invite', that.onGameInvite)
-
 			}
 			console.log(data)
 			this.InvitationFrom = true

@@ -35,6 +35,7 @@ export default defineComponent({
 		getPlayerPosition(event: any): any {
 			const canvasLocation = this.canvas.getBoundingClientRect();
 			this.height_ratio = this.canvas.height / 720;
+			console.log(this.canvas.height)
 			this.true_player_height = this.player_height * this.height_ratio;
 			let mouseLocation = (event.type === "touchmove" ? event.changedTouches[0].clientY : event.clientY) - canvasLocation.y;
 			let y = 50
