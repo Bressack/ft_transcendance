@@ -84,6 +84,7 @@ export default defineComponent({
 		this.loader()
     this.fetchUserProfile(this.opponent)
     this.avatar += `${this.opponent}/medium`
+		document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
 	},
   created() {
   },

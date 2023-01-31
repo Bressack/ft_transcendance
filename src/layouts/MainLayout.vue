@@ -114,6 +114,9 @@ export default defineComponent({
           that.$router.push('/login')
 				})
 		},
+		onGameInviteBusy(data: any, callback:Function) {
+			callback('DECLINED')
+		},
 		onGameInvite(data: any, callback: Function) {
 			const that = this
 			this.opponent = data.from
@@ -163,6 +166,7 @@ export default defineComponent({
 		listenForGameInvite() {
 			if (!this.listening_for_game_invite)
 			{
+				this.$ws.removeListener('game-invite')
                 this.$ws.listen('game-invite', this.onGameInvite)
 				this.listening_for_game_invite = true;
 			}
@@ -171,6 +175,8 @@ export default defineComponent({
 			if (this.listening_for_game_invite)
 			{
                 this.$ws.removeListener('game-invite')
+				this.$ws.listen('game-invite', this.onGameInviteBusy)
+
 				this.listening_for_game_invite = false;
 			}
 		}

@@ -99,6 +99,8 @@ export default defineComponent({
 		},
 		async sendInviteAndOpen() {
 			this.InviteNotif = true
+			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
+
 			console.log('sendInviteAndOpen')
 			try {
 				await this.invite()
@@ -128,6 +130,9 @@ export default defineComponent({
 				this.closeFunction()
 			}
 		},
+		mounted(){
+			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
+		}
 	},
 })
 </script>

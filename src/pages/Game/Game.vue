@@ -55,6 +55,8 @@ export default defineComponent({
 		this.gameId = this.$route.params.gameId.toString() as string;
 		},
 		mounted() {
+			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
+
 			this.canvas = <HTMLCanvasElement> document.getElementById('canvas');
 			const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
 			this.canvas.addEventListener('mousemove', sendPositionThrottled); // player
@@ -63,6 +65,8 @@ export default defineComponent({
 		console.log('quit');
 		this.$ws.emit('quit', {})
 		this.canvas.removeEventListener('mousemove', this.sendPosition); // player
+		document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
+
 	}
 })
 </script>
