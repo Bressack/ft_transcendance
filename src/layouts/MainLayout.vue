@@ -90,7 +90,8 @@ export default defineComponent({
 			// invite_data: undefined
 			opponent: "",
       maps: "",
-      difficulty: ""
+      difficulty: "",
+			listening_for_game_invite : false
 		}
 	},
 	methods: {
@@ -116,10 +117,10 @@ export default defineComponent({
 		onGameInvite(data: any, callback: Function) {
 			const that = this
 			this.opponent = data.from
-      this.maps = data.map
-      this.difficulty = data.difficulty
+			this.maps = data.map
+			this.difficulty = data.difficulty
 			that.$ws.removeListener('game-invite')
-
+			
 			this.$ws.socket.once('game-invite-canceled', (res: any) => {
 				that.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
@@ -159,6 +160,20 @@ export default defineComponent({
 			document.addEventListener('invite-response-accept', accept)
 			document.addEventListener('invite-response-decline', decline)
 		},
+		listenForGameInvite() {
+			if (!this.listening_for_game_invite)
+			{
+                this.$ws.listen('game-invite', this.onGameInvite)
+				this.listening_for_game_invite = true;
+			}
+		},
+		stopListeningForGameInvite() {
+			if (this.listening_for_game_invite)
+			{
+                this.$ws.removeListener('game-invite')
+				this.listening_for_game_invite = false;
+			}
+		}
 
 
 	},
@@ -176,7 +191,9 @@ export default defineComponent({
 	mounted() {
 
 		// RECEPTION
-		this.$ws.listen('game-invite', this.onGameInvite)
+		this.listenForGameInvite()
+		document.addEventListener('can-listen-for-game-invite', this.listenForGameInvite)
+		document.addEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
 
 
 
@@ -185,6 +202,9 @@ export default defineComponent({
 	beforeUnMount() {
 		console.log("beforeunmount login page")
 		this.$ws.removeListener('game-invite')
+		document.removeEventListener('can-listen-for-game-invite', this.listenForGameInvite)
+		document.removeEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
+
 		this.$ws.disconnect()
 		// this.$ws.sendInvite({})
 		// this.$ws.removeListener('game-invitation-error') //  composant dialog

@@ -30,7 +30,6 @@ export default defineComponent({
 			// this.$router.beforeEach()
 			let that = this // parce que ta gueule le callback
 			this.$api.axiosInstance.interceptors.request.use(async (req) => {
-				// console.log(req)
 
 				if (req.url !== '/auth/login' && req.url !== '/auth/signup' && !Cookies.get('has_access') && Cookies.get('has_refresh')) {
 					return fetch('/api/auth/refresh')

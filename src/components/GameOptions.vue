@@ -74,7 +74,8 @@ export default defineComponent({
 	},
 	methods: {
 		async invite() {
-			this.$ws.removeListener('game-invite')
+			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
+
 			return new Promise((resolve, reject) => {
 				const that = this;
 				const cancel = () => {
@@ -123,6 +124,7 @@ export default defineComponent({
 					this.$q.notify({ type: 'warning', message: this.opponent + " is not connected" })
 				else if (err.status === "TIMEOUT")
 					this.$q.notify({ type: 'warning', message: this.opponent + " did not respond" })
+				document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
 				this.closeFunction()
 			}
 		},

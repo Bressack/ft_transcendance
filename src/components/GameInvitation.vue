@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onUnmounted, ref } from 'vue'
 import Rank from '../pages/Profile/components/Rank.vue'
 
 export default defineComponent({
@@ -93,17 +93,22 @@ export default defineComponent({
       if (this.progress < 1.0)
         setTimeout(this.recursiveProgress, 300)
     },
-		gameInviteResponse(res: string) {
-			console.log(res)
-			if (res === 'ACCEPTED')
-				document.dispatchEvent(new CustomEvent('invite-response-accept', { detail: { status: res } }));
-			else
-				document.dispatchEvent(new CustomEvent('invite-response-decline', { detail: { status: res } }));
-			// this.$emit('invite-response', res)
-		},
-		gameInviteCancel() {
-			document.dispatchEvent(new CustomEvent('invite-response-canceled'));
-		},
+	gameInviteResponse(res: string) {
+		console.log(res)
+		if (res === 'ACCEPTED')
+			document.dispatchEvent(new CustomEvent('invite-response-accept', { detail: { status: res } }));
+		else
+		{
+			document.dispatchEvent(new CustomEvent('invite-response-decline', { detail: { status: res } }));
+			document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
+		}
+		// this.$emit('invite-response', res)
+	},
+	gameInviteCancel() {
+		document.dispatchEvent(new CustomEvent('invite-response-canceled'));
+		document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
+
+	},
     fetchUserProfile(username : string) {
       this.$api.userProfile(username)
       .then((result) => {
@@ -113,6 +118,22 @@ export default defineComponent({
       .catch((error) => { console.error('error:', error); })
     },
 	},
+	beforeUnmount() {
+		console.log('before unmount')
+		document.dispatchEvent(new CustomEvent('invite-response-canceled'));
+		document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
+
+		// this.$ws.emit('quit', {})
+
+	},
+	unmounted() {
+		console.log(' unmounted')
+		document.dispatchEvent(new CustomEvent('invite-response-canceled'));
+		document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
+
+		// this.$ws.emit('quit', {})
+
+	}
 })
 </script>
 
