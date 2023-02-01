@@ -42,6 +42,7 @@ export default defineComponent({
 			let mouseLocation = (event.type === "touchmove" ? event.changedTouches[0].clientX : event.clientX) - canvasLocation.x;
 			let y = 50
 
+			/* // mouseposition p1 */
 			if (mouseLocation <= this.canvas.width / 4) {
 				y = 0;
 			} else if (mouseLocation >= (this.canvas.width * (3 / 4))) {
@@ -49,8 +50,16 @@ export default defineComponent({
 			} else {
 				y = ((mouseLocation - this.canvas.width / 4) * 620) / (this.canvas.width / 2);
 			}
-			// console.log(y);
 			return y
+			/* // mouseposition p2 */
+			// if (mouseLocation <= this.canvas.width / 4) {
+			// 	y = 620;
+			// } else if (mouseLocation >= (this.canvas.width * (3 / 4))) {
+			// 	y = 0;
+			// } else {
+			// 	y = 620 - ((mouseLocation - this.canvas.width / 4) * 620) / (this.canvas.width / 2);
+			// }
+			// return y
 		},
 		sendPosition(event: any) {
 			this.$ws.socket.volatile.emit(`${this.gameId}___mousemove`, this.getPlayerPosition(event))
@@ -65,7 +74,7 @@ export default defineComponent({
 			// this.test = document.getElementById("gameCanvas").getElementsByTagName("*")[0]
 			// console.log("--------", document.getElementById("gameCanvas"), "--------")
 			setTimeout(() => {
-				this.canvas = <HTMLCanvasElement> document.getElementById('testid');
+				this.canvas = <HTMLCanvasElement> document.getElementById('canvas_txt');
 				const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
 				// console.log(this.canvas)
 				this.canvas.addEventListener('mousemove', sendPositionThrottled); // player

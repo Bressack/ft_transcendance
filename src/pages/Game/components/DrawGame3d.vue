@@ -5,9 +5,10 @@
 				<q-btn color="blue" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
 				<p> {{ gameId }}</p>
 				<div id="bidule">
-					<div class="tarace">
+					<!-- <div class="tarace">
 						0
-					</div>
+					</div> -->
+					<canvas id="canvas_txt"></canvas>
 					<div id='gameCanvas'></div>
 					<q-btn id="fullscreen-btn" color="light-grey" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
 				</div>
@@ -20,6 +21,7 @@ import { ref, defineComponent, computed } from 'vue'
 import { watch } from 'vue'
 import { throttle } from 'lodash'
 import * as Three from 'three';
+import { truncateSync } from 'fs';
 
 
 var timeOutFunctionId = undefined as any;
@@ -31,12 +33,12 @@ var	camera = null as any
 var spotLight= null as any
 
 // field variables
-var fieldWidth = 1200, fieldHeight = 720;
+var fieldWidth = 1150, fieldHeight = 720;
 
 // paddle variables
-var paddleWidth = 10
-var paddleHeight = 10
-var paddleDepth = 10
+var paddleWidth = 10;
+var paddleHeight = 90;
+var paddleDepth = 10;
 // var paddleQuality = 10
 var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 3;
 
@@ -52,8 +54,8 @@ export default defineComponent({
 		return {
 			game_paused: true,
 			info_value: null,
-			canvas: <HTMLCanvasElement> document.getElementById('canvas'),
-			canvas_txt : <HTMLCanvasElement>document.getElementById('testid'),
+			canvas: <HTMLCanvasElement> document.getElementById('gameCanvas'),
+			canvas_txt : <HTMLCanvasElement>document.getElementById('canvas'),
 			gameId: "",
 			throttleValue: 15,
 			player_height: 90,
@@ -113,6 +115,7 @@ export default defineComponent({
 			var paddle2Material = new Three.MeshBasicMaterial({color: 0xFF0000});	
 			var planeMaterial = new Three.MeshBasicMaterial({color: 0x000000});
 			var tableMaterial = new Three.MeshBasicMaterial({color: 0x8c8c8c});
+			var tableMaterial = new Three.MeshBasicMaterial({color: 0xFFFF00});
 			var sphereMaterial = new Three.MeshBasicMaterial( {color: 0xFFFFFF} );
 			var plane = new Three.Mesh( new Three.PlaneGeometry(planeWidth, planeHeight ), planeMaterial);
 			scene.add(plane);
@@ -129,9 +132,6 @@ export default defineComponent({
 			ball.position.x = 0;
 			ball.position.y = 0;
 			ball.position.z = radius;	
-			paddleWidth = 20;
-			paddleHeight = 100;
-			paddleDepth = 20;
 			paddle1 = new Three.Mesh(
 			  new Three.BoxGeometry(
 				paddleWidth,
@@ -154,8 +154,8 @@ export default defineComponent({
 			scene.add(paddle2);
 			paddle2.receiveShadow = true;
     		paddle2.castShadow = true;	
-			paddle1.position.x = -fieldWidth/2 + paddleWidth;
-			paddle2.position.x = fieldWidth/2 - paddleWidth;
+			paddle1.position.x = -fieldWidth/2 + paddleWidth + 15;
+			paddle2.position.x = fieldWidth/2 - paddleWidth - 15;
 			paddle1.position.z = paddleDepth;
 			paddle2.position.z = paddleDepth;
     		spotLight = new Three.SpotLight(0xF8D898);
@@ -169,44 +169,56 @@ export default defineComponent({
 		{
 			// paddle1.position.y = 310
 			this.cameraPhysics();
-			// ball.position.x = 0 - 550;
-			// ball.position.y = 0+350
-			// var context = <CanvasRenderingContext2D>this.canvas_txt.getContext("2d");
-			renderer.render(scene, camera);
-			// context.fill();
-        	// context.font = `${this.canvas.height * 0.07}px 'PressStart2P'`;
-        	// context.fillText(
-        	//     this.player1_score.toString(),
-        	//     this.canvas.width / 2 -
-        	//         (this.canvas.width * 0.05 + context.measureText(this.player1_score.toString()).width),
-        	//     this.canvas.height * 0.1
-        	// );
-        	// context.fillText(
-        	//     this.player2_score.toString(),
-        	//     this.canvas.width / 2 + this.canvas.width * 0.05,
-        	//     this.canvas.height * 0.1
-        	// );
-        	// if (this.game_paused && this.info_value) {
-        	//     const textSize = context.measureText(this.info_value);
-        	//     context.fillStyle = "white";
-        	//     context.fillText(this.info_value, this.canvas.width / 2 - textSize.width / 2, this.canvas.height / 2);
-        	// }
+			const elementsColor: string =  this.game_paused && this.info_value ? "#8c8c8c" : "white";
+
 			// console.log(this.canvas)
+        	var context = <CanvasRenderingContext2D>this.canvas_txt.getContext("2d");
+				context.clearRect(0,0,this.canvas_txt.width,this.canvas_txt.height)
+			if (this.game_paused == true)
+			{
+				context.globalAlpha = 0.5;
+				context.fillStyle = "black";
+				context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+			}
+			{
+				context.globalAlpha = 1;
+			}
+        	context.fillStyle = elementsColor;
+        	context.fill();
+        	context.font = `${this.canvas_txt.height * 0.07}px 'PressStart2P'`;
+        	context.fillText(
+        	    this.player1_score.toString(),
+        	    this.canvas_txt.width / 2 -
+        	        (this.canvas_txt.width * 0.05 + context.measureText(this.player1_score.toString()).width),
+        	    this.canvas_txt.height * 0.1
+        	);
+        	context.fillText(
+        	    this.player2_score.toString(),
+        	    this.canvas_txt.width / 2 + this.canvas_txt.width * 0.05,
+        	    this.canvas_txt.height * 0.1
+        	);
+        	if (this.game_paused && this.info_value) {
+        	    const textSize = context.measureText(this.info_value);
+        	    context.fillStyle = "white";
+        	    context.fillText(this.info_value, this.canvas_txt.width / 2 - textSize.width / 2, this.canvas_txt.height / 2);
+        	}
+			renderer.render(scene, camera);
 		},
 		cameraPhysics()
 		{
-			// camera.position.x = paddle1.position.x - 300;
+			// p1 position
 			camera.position.y += (paddle1.position.y - camera.position.y) * 0.05;
-			// camera.position.z = paddle1.position.z + 800 + 0.04 * (-ball.position.x + paddle1.position.x);
-			// camera.rotation.x = -0.01 * (ball.position.y) * Math.PI/180;
-			// camera.rotation.y = -40 * Math.PI/180;
-			// camera.rotation.z = -90 * Math.PI/180;
-
 			camera.position.x = paddle1.position.x - 300;
 			camera.position.z = paddle1.position.z + 800;
-			camera.rotation.x = 0;
 			camera.rotation.y = -40 * Math.PI/180;
 			camera.rotation.z = -90 * Math.PI/180;
+
+			// p2 position
+			// camera.position.y += (paddle2.position.y - camera.position.y) * 0.05;
+			// camera.position.x = paddle2.position.x + 300;
+			// camera.position.z = paddle2.position.z + 800;
+			// camera.rotation.y = 40 * Math.PI/180;
+			// camera.rotation.z = 90 * Math.PI/180;
 		},
 		toggle(e: any) {
 			const target = <HTMLElement>document.getElementById('bidule')
@@ -231,18 +243,30 @@ export default defineComponent({
 					renderer.setSize(window.innerWidth, window.innerHeight / 1.6);
 					this.canvas.height = window.innerWidth / 1.6;
 					this.canvas.width = window.innerWidth;
+					this.canvas_txt.height = window.innerWidth / 1.6;
+					this.canvas_txt.width = window.innerWidth;
+					var VIEW_ANGLE = 50, ASPECT = this.canvas_txt.width / this.canvas_txt.height, NEAR = 0.1, FAR = 5000;
+					camera = new Three.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 					
 				}
 				else {
 					renderer.setSize(window.innerWidth, window.innerHeight * 0.90);
 					this.canvas.width = window.innerWidth;
 					this.canvas.height = window.innerHeight * 0.90;
+					this.canvas_txt.width = window.innerWidth;
+					this.canvas_txt.height = window.innerHeight * 0.90;
+					var VIEW_ANGLE = 50, ASPECT = this.canvas_txt.width / this.canvas_txt.height, NEAR = 0.1, FAR = 5000;
+					camera = new Three.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 				}
 			}
 			else {
 				renderer.setSize( window.innerWidth / 1.5, window.innerWidth / 1.5 / 1.6);
 				this.canvas.height = window.innerWidth / 1.5 / 1.6;
 				this.canvas.width = window.innerWidth / 1.5;
+				this.canvas_txt.height = window.innerWidth / 1.5 / 1.6;
+				this.canvas_txt.width = window.innerWidth / 1.5;
+				var VIEW_ANGLE = 50, ASPECT = this.canvas_txt.width / this.canvas_txt.height, NEAR = 0.1, FAR = 5000;
+				camera = new Three.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 			}
 			this.draw();
 		},
@@ -253,8 +277,6 @@ export default defineComponent({
 			this.player2_score = data.scorep2
 			ball.position.x =  data.ball.x - 550
 			ball.position.y = -1 * (data.ball.y) + 350
-			// this.ball_x =
-			// this.ball_y = 
 			this.draw();
 		},
 		handleCoundown(data: any) {
@@ -279,11 +301,12 @@ export default defineComponent({
 		},
 		ft_mounted() {
 			this.canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
-			// console.log(this.canvas)
+			this.canvas_txt = <HTMLCanvasElement>document.getElementById('canvas_txt');
+			// this.canvas_txt.left = 
 			this.$ws.listen(`${this.gameId}___countdown`, this.handleCoundown);
 			this.$ws.listen(`${this.gameId}___game-end`, this.handleGameEnd);
 			this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
-			this.canvas.addEventListener('dblclick', this.toggle);
+			this.canvas_txt.addEventListener('dblclick', this.toggle);
 			const onResizeThrottled = throttle(this.onResize, 200)
 			var fullscreenButton = <HTMLElement>document.getElementById('fullscreen-btn');
 			fullscreenButton.style.display = "none";
@@ -299,7 +322,7 @@ export default defineComponent({
 				}
 			})
 			this.setup();
-			// this.onResize()
+			this.onResize()
 		},
 	},
 	beforeMount() {
@@ -317,12 +340,20 @@ export default defineComponent({
 </script>
 
 <style scoped>
-.tarace{
-	font-family: 'PressStart2P';
-	font-size: 40px;
+#canvas_txt
+{
 	position: absolute;
-	margin: 5% 45%;
-
+	/* opacity: 0.5; */
+	left: 0;
+	top: 0;
+	z-index: 1;
+}
+#gameCanvas
+{
+	position: absolute;
+	left: 0;
+	top: 0;
+	z-index: 0;
 }
 body {
 	background-color: black;

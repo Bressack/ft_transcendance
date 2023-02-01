@@ -15,9 +15,9 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/Profile/Profile.vue"),
       },
       { path: "/play", component: () => import("pages/GameLobbyTest.vue") },
-      { path: "/game/:gameId", component: () => import("pages/Game/Game.vue") },
+      { path: "/game/:gameId", component: () => import("pages/Game/Game3d.vue") },
       { path: "/game3d/:gameId", component: () => import("src/pages/Game/Game3d.vue") },
-      { path: "/spectate/:gameId", component: () => import("pages/Game/Spectate.vue") },
+      { path: "/spectate/:gameId", component: () => import("pages/Game/Spectate3d.vue") },
     ],
   },
 
