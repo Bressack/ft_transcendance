@@ -1,5 +1,5 @@
 <template>
-	<div class="main">
+	<div class="dialog">
 		<div class="close-cross">
 			<q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup />
 		</div>
@@ -139,19 +139,8 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 @use "../css/interpolate" as r
-.main
-  background-color: #696969
-  text-align: center
 
 .image
   border: solid 1px black
   @include r.interpolate(width, 320px, 2560px, 30px, 60px)
-
-.close-cross
-  position: relative
-  cursor: pointer
-
-.cross
-  @include r.interpolate(font-size, 320px, 2560px, 10px, 35px)
-
 </style>

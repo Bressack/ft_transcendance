@@ -5,7 +5,7 @@
   - Matchmaking launch                      -> You will look for other player indefintely, you can cancel anytime. If you find an opponent, you will enter in the game (Aymeric's problem)
  -->
 <template>
-	<div class="main">
+	<div class="dialog">
 		<q-item class="r-pt-md flex-center">
 			<q-item-label v-if="sent" class="bigger">
 				Waiting <span style="color:orange;">{{ opponent }}</span> to accept your game invitation
@@ -48,7 +48,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onUnmounted, ref } from 'vue'
+import { defineComponent, ref } from 'vue'
 import Rank from '../pages/Profile/components/Rank.vue'
 
 export default defineComponent({
@@ -147,20 +147,10 @@ export default defineComponent({
 .relative
   position: relative
 
-.main
-  overflow: auto
-  background-color: #696969
-  text-align: center
-
 .image
   border: solid 1px black
   @include r.interpolate(width, 320px, 2560px, 45px, 75px)
 
-.close-cross
-  position: relative
-  cursor: pointer
 
-.cross
-  @include r.interpolate(font-size, 320px, 2560px, 10px, 35px)
 
 </style>
