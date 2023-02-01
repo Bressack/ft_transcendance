@@ -47,7 +47,7 @@ export default defineComponent({
     getRelativeDate(cdate: Date): string {
       const now = new Date()
       // let diff : number = (Date.now() - cdate.getTime()) / 3600
-      console.log('debug: ', now.getDate() - cdate.getDate());
+      // console.log('debug: ', now.getDate() - cdate.getDate());
 
       if (now.getDate() - cdate.getDate() == 0)
         return 'Today at ' + this.floorStr(cdate.getHours()) + ':' + this.floorStr(cdate.getMinutes())
