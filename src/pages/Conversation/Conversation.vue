@@ -5,12 +5,12 @@
 				@{{ storeChat.name }}
 			</div>
 			<div ref="chatList" class="list_messages">
-				<Message v-for="message in storeChat.messages" :key="message.id" :username=message?.username
+				<Message v-for="message in messages" :key="message.id" :username=message?.username
 					:avatar=avatarstr(message?.username) :content=message?.content
 					:timestamp="new Date(message?.CreatedAt)" />
 				<!-- :avatar=storeMe.getAvatar(message?.username).avatar -->
 			</div>
-			<q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
+			<q-input @keydown.enter.prevent="sendmessage" filled v-model="storeChat.text" placeholder="Enter text here"
 				class="absolute-bottom custom-input input" />
 		</div>
 	</q-page>
@@ -23,6 +23,12 @@ import Message from './components/Message.vue'
 import { useChatSocketStore } from 'src/stores/chatSocket';
 import { useMeStore } from 'src/stores/me';
 
+import {
+  IWSMessages,
+  IWSError,
+  IWSInfos,
+} from 'src/models/messages.ws';
+
 export default defineComponent({
 	name: 'Conversation',
 	components: { UserCard, Message },
@@ -30,14 +36,15 @@ export default defineComponent({
 	},
 	data() {
 		return {
-			text: '',
+			// text: '',
 			storeChat: useChatSocketStore(),
 			storeMe: useMeStore(),
+      messages: [] as Array<IWSMessages>,
 		}
 	},
 	methods: {
 		sendmessage() {
-			this.storeChat.sendMessage(this.text)
+			this.storeChat.sendMessage()
 		},
 		goProfilPage(user: string) {
 			this.$router.push({
@@ -47,11 +54,17 @@ export default defineComponent({
 		avatarstr(username: string) {
 			return `/api/avatar/${username}/medium`
 		},
-		async scrollBottom() {
+		async scrollBottom(messages: Array<IWSMessages>, toclean: boolean = false) {
+      if (toclean)
+        this.messages = []
+      this.messages = this.messages.concat(messages)
+      this.messages.sort((a: IWSMessages, b: IWSMessages) => {
+        return a.CreatedAt > b.CreatedAt ? 1 : -1
+      })
 			const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
-			console.log(this.storeChat.messages.length);
 
-			while (element.children.length != this.storeChat.messages.length)
+			// while (element.children.length != this.storeChat.messages.length)
+			while (element.children.length != this.messages.length)
 				await new Promise(r => setTimeout(r, 10));
 			element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
 		}

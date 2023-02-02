@@ -3,12 +3,9 @@ import { Cookies } from "quasar";
 
 class WsService {
   socket: any;
-  token: string;
-  constructor() {
-    this.token = Cookies.get("WsAuth");
-  }
+  constructor() {}
   getToken() {
-    return this.token || (this.token = Cookies.get("WsAuth"));
+    return Cookies.get("WsAuth");
   }
 
   emit(eventType: string, payload: object) {

@@ -49,20 +49,8 @@ import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import UserCard from '../components/common/UserCard.vue'
 import Settings from '../components/Settings.vue'
 import GameInvitation from '../components/GameInvitation.vue'
-import { IUserBasicInfo, OnlineStatus } from '../models/models'
-// import { randomDate } from '../models/fakedatas'
-// import api from 'src/services/api.service'
 import { useMeStore } from 'src/stores/me';
 import { useChatSocketStore } from 'src/stores/chatSocket';
-import { callbackify } from 'util';
-// import WsService from 'src/services/ws.service';
-
-let _me = {
-	name: 'tharchen',
-	avatar: 'https://cdn.intra.42.fr/users/d1ae701a3af5f3dd3070d5c8406e77fe/tharchen.jpg',
-	onlineStatus: OnlineStatus.ONLINE,
-} as IUserBasicInfo
-// const ws = WsService;
 
 export default defineComponent({
 	name: 'MainLayout',
@@ -84,14 +72,11 @@ export default defineComponent({
 	},
 	data: () => {
 		return {
-			// drawer: ref(false),
 			storeMe: useMeStore(),
 			storeChat: useChatSocketStore(),
-			// invite_cb: null,
-			// invite_data: undefined
 			opponent: "",
-      maps: "",
-      difficulty: "",
+			maps: "",
+			difficulty: "",
 			listening_for_game_invite : false
 		}
 	},
@@ -105,14 +90,14 @@ export default defineComponent({
 			this.openSettings()
 		},
 		logout() {
-			let that = this
+			this.$ws.socket.disconnect()
 			this.$api.logout()
-				.then(function (status) {
-          that.$ws.disconnect()
-          that.storeMe.$reset()
-          that.storeChat.leaveCurrentRoom()
-          that.storeChat.$reset()
-          that.$router.push('/login')
+				.then((status) => {
+					this.$ws.disconnect()
+					this.storeMe.$reset()
+					this.storeChat.leaveCurrentRoom()
+					this.storeChat.$reset()
+					this.$router.push('/login')
 				})
 		},
 		onGameInviteBusy(data: any, callback:Function) {
@@ -123,7 +108,7 @@ export default defineComponent({
 			this.opponent = data.from
 			this.maps = data.map
 			this.difficulty = data.difficulty
-			that.$ws.removeListener('game-invite')
+			this.$ws.removeListener('game-invite')
 
 			this.$ws.socket.once('game-invite-canceled', (res: any) => {
 				that.InvitationFrom = false
@@ -135,19 +120,21 @@ export default defineComponent({
 				console.log(res)
 				callback('ACCEPTED')
 				that.InvitationFrom = false
-				that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
+				that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
 					callback("OK")
-					console.log(gameId)
-					that.$router.push(`/game/${gameId}`)
+					// console.log(`/game/${gameOptions.gameId}?map=${gameOptions.map}`)
+					console.log(gameOptions)
 
+					if (gameOptions.map == "3D")
+						that.$router.push(`/game3d/${gameOptions.gameId}`)
+					else
+						that.$router.push(`/game/${gameOptions.gameId}`)
+					// that.$router.push(`/game/${gameOptions.gameId}`)
+					document.removeEventListener('invite-response-accept', accept);
 				})
-
-				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
 				that.$ws.removeListener('game-invite-canceled')
 				that.$ws.listen('game-invite', that.onGameInvite) //might need to remove this until the game is finished
-
-
 			}
 			const decline = function (res: any) {
 				console.log(res)
@@ -185,25 +172,20 @@ export default defineComponent({
 
 	},
 	created() {
-    // clean possibly old datas
-    this.storeMe.$reset()
-    this.storeChat.leaveCurrentRoom()
-    this.storeChat.$reset()
-    // connect and init WebSockets
-    this.$ws.connect()
-    this.storeChat.init_socket(this.$ws) // set socket in the store
-    // fetch datas
-    this.storeMe.fetch()
+		this.$ws.connect()
+		this.storeChat.init_socket(this.$ws) // set socket in the store
+		// clean possibly old datas
+		this.storeMe.$reset()
+		this.storeChat.leaveCurrentRoom()
+		this.storeChat.$reset()
+		// connect and init WebSockets
+		// fetch datas
+		this.storeMe.fetch()
 	},
 	mounted() {
-
-		// RECEPTION
 		this.listenForGameInvite()
 		document.addEventListener('can-listen-for-game-invite', this.listenForGameInvite)
 		document.addEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
-
-
-
 	},
 
 	beforeUnMount() {
@@ -211,12 +193,7 @@ export default defineComponent({
 		this.$ws.removeListener('game-invite')
 		document.removeEventListener('can-listen-for-game-invite', this.listenForGameInvite)
 		document.removeEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
-
 		this.$ws.disconnect()
-		// this.$ws.sendInvite({})
-		// this.$ws.removeListener('game-invitation-error') //  composant dialog
-		//  this.$ws.removeListener('game-invitation-accepted') // composant dialog
-
 	}
 
 });

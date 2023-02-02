@@ -1,12 +1,12 @@
 <template>
   <div class="fullscreen bg-blue-grey-14 text-white text-center q-pa-md flex flex-center">
     <div>
-	<div class="text-h2">
-		404
-	</div>
+      <div class="text-h2">
+        Oupsy
+      </div>
 
       <div class="text-h5" style="opacity:.4">
-        Oops. Nothing here...
+	  It seems that you are trying to access a game that is finished
       </div>
 
       <q-btn
@@ -26,6 +26,6 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'ErrorNotFound'
+  name: 'GameError'
 });
 </script>

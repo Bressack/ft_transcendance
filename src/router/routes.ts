@@ -30,7 +30,20 @@ const routes: RouteRecordRaw[] = [
           await fetch(`/api/games/play/${to.params.gameId}`).then((res) => {
             console.log(res.status);
             if (res.status == 404) {
-              next({ name: "404" });
+              next({ name: "GameError" });
+            } else next();
+          });
+        },
+      },
+      {
+        path: "/game3d/:gameId",
+        component: () => import("pages/Game/Game3d.vue"),
+        name: "game3d",
+        beforeEnter: async (to, from, next) => {
+          await fetch(`/api/games/play/${to.params.gameId}`).then((res) => {
+            console.log(res.status);
+            if (res.status == 404) {
+              next({ name: "GameError" });
             } else next();
           });
         },
@@ -40,13 +53,14 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/Game/Spectate.vue"),
         name: "spectate",
         beforeEnter: async (to, from, next) => {
+          console.log(to.params.gameId);
           await fetch(`/api/games/watch/${to.params.gameId}`).then((res) => {
             console.log(res.status);
             if (res.status == 404) {
               if (from.name === "game") {
-                next({ name: "404" });
+                next({ name: "GameError" });
               }
-              next({ name: "404" });
+              next({ name: "GameError" });
             } else next();
           });
         },
@@ -62,6 +76,11 @@ const routes: RouteRecordRaw[] = [
 
   // Always leave this as last one,
   // but you can also remove it
+  {
+    path: "/game-error",
+    name: "GameError",
+    component: () => import("pages/GameError.vue"),
+  },
   {
     path: "/:catchAll(.*)*",
     name: "404",
