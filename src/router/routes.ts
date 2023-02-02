@@ -26,7 +26,7 @@ const routes: RouteRecordRaw[] = [
           await fetch(`/api/games/play/${to.params.gameId}`).then((res) => {
             console.log(res.status);
             if (res.status == 404) {
-              next({ name: "404" });
+              next({ name: "GameError" });
             } else next();
           });
         },
@@ -40,9 +40,9 @@ const routes: RouteRecordRaw[] = [
             console.log(res.status);
             if (res.status == 404) {
               if (from.name === "game") {
-                next({ name: "404" });
+                next({ name: "GameError" });
               }
-              next({ name: "404" });
+              next({ name: "GameError" });
             } else next();
           });
         },
@@ -58,6 +58,11 @@ const routes: RouteRecordRaw[] = [
 
   // Always leave this as last one,
   // but you can also remove it
+  {
+    path: "/game-error",
+    name: "GameError",
+    component: () => import("pages/GameError.vue"),
+  },
   {
     path: "/:catchAll(.*)*",
     name: "404",
