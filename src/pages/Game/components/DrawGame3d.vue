@@ -1,5 +1,6 @@
 <template>
-	<q-page>
+	<div>
+		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 		<ul>
 			<div class="q-ml-md q-gutter-sm">
 				<q-btn color="blue" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
@@ -14,14 +15,16 @@
 				</div>
 			</div>
 		</ul>
-	</q-page>
+	</div>
 </template>
+
 <script lang="ts">
 import { ref, defineComponent, computed } from 'vue'
 import { watch } from 'vue'
 import { throttle } from 'lodash'
-import * as Three from 'three';
-import { truncateSync } from 'fs';
+import * as THREE from 'three';
+import { useMeStore } from '../../../stores/me';
+// import THREE from 'three';
 
 
 var timeOutFunctionId = undefined as any;
@@ -33,14 +36,14 @@ var	camera = null as any
 var spotLight= null as any
 
 // field variables
-var fieldWidth = 1150, fieldHeight = 720;
+var fieldWidth = 1150, fieldHeight = 725;
 
 // paddle variables
 var paddleWidth = 10;
 var paddleHeight = 90;
 var paddleDepth = 10;
 // var paddleQuality = 10
-var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 3;
+// var paddle1DirY = 0, paddle2DirY = 0, paddleSpeed = 3;
 
 // ball variables
 var ball = null as any
@@ -67,7 +70,14 @@ export default defineComponent({
 			player2_y: 310,
 			player1_score: 0,
 			player2_score: 0,
+			storeMe: useMeStore(),
+			playerOneName: "p1",
+			playerTwoName: "p2",
 		}
+	},
+	props: 
+	{
+		viewside: {type: Boolean, default: false}
 	},
 	methods:
 	{
@@ -81,10 +91,10 @@ export default defineComponent({
 			let HEIGHT = window.innerWidth / 1.5 / 1.6;
 			let WIDTH = window.innerWidth / 1.5;
 			var VIEW_ANGLE = 50, ASPECT = WIDTH / HEIGHT, NEAR = 0.1, FAR = 5000;
-			renderer = new Three.WebGLRenderer();
+			renderer = new THREE.WebGLRenderer();
 			
-			camera = new Three.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
-			scene = new Three.Scene();
+			camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+			scene = new THREE.Scene();
 			scene.add(camera);
 			camera.position.z = 320;
 			
@@ -111,29 +121,29 @@ export default defineComponent({
 			
 			var planeWidth = fieldWidth
 			var	planeHeight = fieldHeight		
-			var paddle1Material = new Three.MeshBasicMaterial({color: 0x00ffff});
-			var paddle2Material = new Three.MeshBasicMaterial({color: 0xFF0000});	
-			var planeMaterial = new Three.MeshBasicMaterial({color: 0x000000});
-			var tableMaterial = new Three.MeshBasicMaterial({color: 0x8c8c8c});
-			var tableMaterial = new Three.MeshBasicMaterial({color: 0xFFFF00});
-			var sphereMaterial = new Three.MeshBasicMaterial( {color: 0xFFFFFF} );
-			var plane = new Three.Mesh( new Three.PlaneGeometry(planeWidth, planeHeight ), planeMaterial);
+			var paddle1Material = new THREE.MeshBasicMaterial({color: 0x00ffff});
+			var paddle2Material = new THREE.MeshBasicMaterial({color: 0xFF0000});	
+			var planeMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
+			var tableMaterial = new THREE.MeshBasicMaterial({color: 0x8c8c8c});
+			var tableMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF});
+			var sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
+			var plane = new THREE.Mesh( new THREE.PlaneGeometry(planeWidth, planeHeight ), planeMaterial);
 			scene.add(plane);
-			var table = new Three.Mesh(
-			new Three.PlaneGeometry( planeWidth * 1.03, planeHeight * 1.03), tableMaterial);
+			var table = new THREE.Mesh(
+			new THREE.PlaneGeometry( planeWidth * 1.03, planeHeight * 1.03), tableMaterial);
 			table.position.z = -5;
 			scene.add(table);
 			var radius = 10;
 			var	segments = 6;
 			var	rings = 6;
-			ball = new Three.Mesh(new Three.SphereGeometry( radius, segments, rings), sphereMaterial);
+			ball = new THREE.Mesh(new THREE.SphereGeometry( radius, segments, rings), sphereMaterial);
 			scene.add(ball);
 
 			ball.position.x = 0;
 			ball.position.y = 0;
 			ball.position.z = radius;	
-			paddle1 = new Three.Mesh(
-			  new Three.BoxGeometry(
+			paddle1 = new THREE.Mesh(
+			  new THREE.BoxGeometry(
 				paddleWidth,
 				paddleHeight,
 				paddleDepth,
@@ -143,8 +153,8 @@ export default defineComponent({
 			scene.add(paddle1);
 			paddle1.receiveShadow = true;
     		paddle1.castShadow = true;
-			paddle2 = new Three.Mesh(
-			  new Three.BoxGeometry(
+			paddle2 = new THREE.Mesh(
+			  new THREE.BoxGeometry(
 				paddleWidth,
 				paddleHeight,
 				paddleDepth,
@@ -158,7 +168,7 @@ export default defineComponent({
 			paddle2.position.x = fieldWidth/2 - paddleWidth - 15;
 			paddle1.position.z = paddleDepth;
 			paddle2.position.z = paddleDepth;
-    		spotLight = new Three.SpotLight(0xF8D898);
+    		spotLight = new THREE.SpotLight(0xF8D898);
     		spotLight.position.set(0, 0, 460);
     		spotLight.intensity = 1.5;
     		spotLight.castShadow = true;
@@ -185,7 +195,7 @@ export default defineComponent({
 			}
         	context.fillStyle = elementsColor;
         	context.fill();
-        	context.font = `${this.canvas_txt.height * 0.07}px 'PressStart2P'`;
+        	context.font = `${this.canvas_txt.height * 0.07}px 'roboto'`;
         	context.fillText(
         	    this.player1_score.toString(),
         	    this.canvas_txt.width / 2 -
@@ -206,19 +216,25 @@ export default defineComponent({
 		},
 		cameraPhysics()
 		{
-			// p1 position
-			camera.position.y += (paddle1.position.y - camera.position.y) * 0.05;
-			camera.position.x = paddle1.position.x - 300;
-			camera.position.z = paddle1.position.z + 800;
-			camera.rotation.y = -40 * Math.PI/180;
-			camera.rotation.z = -90 * Math.PI/180;
-
-			// p2 position
-			// camera.position.y += (paddle2.position.y - camera.position.y) * 0.05;
-			// camera.position.x = paddle2.position.x + 300;
-			// camera.position.z = paddle2.position.z + 800;
-			// camera.rotation.y = 40 * Math.PI/180;
-			// camera.rotation.z = 90 * Math.PI/180;
+			if (this.storeMe.username == this.playerOneName || this.viewside)
+			{
+				// p1 position
+				camera.position.y += (paddle1.position.y - camera.position.y) * 0.001;
+				camera.position.x = paddle1.position.x - 300;
+				camera.position.z = paddle1.position.z + 800;
+				camera.rotation.y = -40 * Math.PI/180;
+				camera.rotation.z = -90 * Math.PI/180;
+			}
+			else
+			{
+				// p2 position
+				camera.position.y += (paddle2.position.y - camera.position.y) * 0.001;
+				camera.position.x = paddle2.position.x + 300;
+				camera.position.z = paddle2.position.z + 800;
+				camera.rotation.y = 40 * Math.PI/180;
+				camera.rotation.z = 90 * Math.PI/180;
+			}
+			
 		},
 		toggle(e: any) {
 			const target = <HTMLElement>document.getElementById('bidule')
@@ -246,7 +262,7 @@ export default defineComponent({
 					this.canvas_txt.height = window.innerWidth / 1.6;
 					this.canvas_txt.width = window.innerWidth;
 					var VIEW_ANGLE = 50, ASPECT = this.canvas_txt.width / this.canvas_txt.height, NEAR = 0.1, FAR = 5000;
-					camera = new Three.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+					camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 					
 				}
 				else {
@@ -256,7 +272,7 @@ export default defineComponent({
 					this.canvas_txt.width = window.innerWidth;
 					this.canvas_txt.height = window.innerHeight * 0.90;
 					var VIEW_ANGLE = 50, ASPECT = this.canvas_txt.width / this.canvas_txt.height, NEAR = 0.1, FAR = 5000;
-					camera = new Three.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+					camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 				}
 			}
 			else {
@@ -266,7 +282,7 @@ export default defineComponent({
 				this.canvas_txt.height = window.innerWidth / 1.5 / 1.6;
 				this.canvas_txt.width = window.innerWidth / 1.5;
 				var VIEW_ANGLE = 50, ASPECT = this.canvas_txt.width / this.canvas_txt.height, NEAR = 0.1, FAR = 5000;
-				camera = new Three.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+				camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 			}
 			this.draw();
 		},
@@ -276,7 +292,7 @@ export default defineComponent({
 			this.player1_score = data.scorep1
 			this.player2_score = data.scorep2
 			ball.position.x =  data.ball.x - 550
-			ball.position.y = -1 * (data.ball.y) + 350
+			ball.position.y = -1 * (data.ball.y) + 360
 			this.draw();
 		},
 		handleCoundown(data: any) {
@@ -325,8 +341,10 @@ export default defineComponent({
 			this.onResize()
 		},
 	},
-	beforeMount() {
+	created() {
 		this.gameId = this.$route.params.gameId.toString() as string;
+		this.playerOneName = this.$route.query.playerOneName as string;
+		this.playerTwoName = this.$route.query.playerTwoName as string;
 	},
 	mounted() {
 		setTimeout(this.ft_mounted, 10)

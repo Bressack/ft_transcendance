@@ -11,6 +11,7 @@ import { ref, defineComponent, computed } from 'vue'
 import DrawGame3d from './components/DrawGame3d.vue'
 // import { watch } from 'vue'
 import { throttle } from 'lodash'
+import { useMeStore } from '../../stores/me';
 
 var timeOutFunctionId = undefined as any;
 
@@ -29,8 +30,13 @@ export default defineComponent({
 			animResize: 0,
 			intdesesmort: 0,
 			throttleValue: 15,
+			playerOneName: "p1",
+			playerTwoName: "p2",
+			storeMe: useMeStore(),
+			playermod : false,
 		};
 	},
+	
 	methods:
 	{
 		getPlayerPosition(event: any): any {
@@ -43,23 +49,26 @@ export default defineComponent({
 			let y = 50
 
 			/* // mouseposition p1 */
+			if ((this.playerOneName == this.storeMe.username))
+			{
+				if (mouseLocation <= this.canvas.width / 4) {
+					y = 0;
+				} else if (mouseLocation >= (this.canvas.width * (3 / 4))) {
+					y = 620;
+				} else {
+					y = ((mouseLocation - this.canvas.width / 4) * 620) / (this.canvas.width / 2);
+				}
+				return y
+			}
+			/* // mouseposition p2 */
 			if (mouseLocation <= this.canvas.width / 4) {
-				y = 0;
-			} else if (mouseLocation >= (this.canvas.width * (3 / 4))) {
 				y = 620;
+			} else if (mouseLocation >= (this.canvas.width * (3 / 4))) {
+				y = 0;
 			} else {
-				y = ((mouseLocation - this.canvas.width / 4) * 620) / (this.canvas.width / 2);
+				y = 620 - ((mouseLocation - this.canvas.width / 4) * 620) / (this.canvas.width / 2);
 			}
 			return y
-			/* // mouseposition p2 */
-			// if (mouseLocation <= this.canvas.width / 4) {
-			// 	y = 620;
-			// } else if (mouseLocation >= (this.canvas.width * (3 / 4))) {
-			// 	y = 0;
-			// } else {
-			// 	y = 620 - ((mouseLocation - this.canvas.width / 4) * 620) / (this.canvas.width / 2);
-			// }
-			// return y
 		},
 		sendPosition(event: any) {
 			this.$ws.socket.volatile.emit(`${this.gameId}___mousemove`, this.getPlayerPosition(event))
@@ -67,24 +76,16 @@ export default defineComponent({
 	},
 	beforeMount() {
 		this.gameId = this.$route.params.gameId.toString() as string;
+		this.playerOneName = this.$route.query.playerOneName as string;
+		this.playerTwoName = this.$route.query.playerTwoName as string;
 		},
 		mounted() {
 
 			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
-			
-			// this.test = document.getElementById("gameCanvas").getElementsByTagName("*")[0]
-			// console.log("--------", document.getElementById("gameCanvas"), "--------")
-			setTimeout(() => {
-				this.canvas = <HTMLCanvasElement> document.getElementById('canvas_txt');
-				const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
-				// console.log(this.canvas)
-				this.canvas.addEventListener('mousemove', sendPositionThrottled); // player
-				// let azerty = document.getElementById("testid")
-				// console.log(this.canvas.height)
-			}, 100);
-			// let azerty = document.getElementById("testid")
-			
-			// console.log(document.getElementsByTagName("div"))
+			this.canvas = <HTMLCanvasElement> document.getElementById('canvas_txt');
+			const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
+			// console.log(this.canvas)
+			this.canvas.addEventListener('mousemove', sendPositionThrottled);
 			
 	},
 	beforeUnmount() {

@@ -18,6 +18,7 @@
 import { ref, defineComponent, computed } from 'vue'
 import { watch } from 'vue'
 import { throttle } from 'lodash'
+import { useMeStore } from '../../../stores/me';
 
 var timeOutFunctionId = undefined as any;
 
@@ -42,6 +43,9 @@ export default defineComponent({
 			player2_y: 310,
 			player1_score: 0,
 			player2_score: 0,
+			playerOneName: "p1",
+			playerTwoName: "p2",
+			storeMe: useMeStore(),
 		};
 	},
 	methods:
@@ -169,8 +173,10 @@ export default defineComponent({
 			}, 1000)
 		}
 	},
-	beforeMount() {
+	created() {
 		this.gameId = this.$route.params.gameId.toString() as string;
+		this.playerOneName = this.$route.query.playerOneName as string;
+		this.playerTwoName = this.$route.query.playerTwoName as string;
 	},
 	mounted() {
 		this.canvas = <HTMLCanvasElement>document.getElementById('canvas')
