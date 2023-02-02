@@ -88,7 +88,12 @@ module.exports = configure(function (/* ctx */) {
           pathRewrite: {
             '^/api': ''
           }
-        }
+        },
+        // 'ws://localhost:9000': {
+        //   target: 'ws://localhost:3000',
+        //   changeOrigin: true,
+		//   ws: true
+        // }
       }
     },
 

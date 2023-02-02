@@ -111,11 +111,10 @@ export default defineComponent({
 					callback("OK")
 					console.log(gameOptions)
 					if (gameOptions.map == "3D")
-						this.$router.push(`/game3d/${gameOptions.gameId}`)
+						this.$router.push(`/game3d/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
 					else
-						this.$router.push(`/game/${gameOptions.gameId}`)
+						this.$router.push(`/game/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
 				})
-
 			}
 			catch (err: any) {
 				console.error(err)

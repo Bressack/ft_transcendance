@@ -125,9 +125,9 @@ export default defineComponent({
 					console.log(gameOptions)
 
 					if (gameOptions.map == "3D")
-						that.$router.push(`/game3d/${gameOptions.gameId}`)
+						that.$router.push(`/game3d/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
 					else
-						that.$router.push(`/game/${gameOptions.gameId}`)
+						that.$router.push(`/game/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
 					// that.$router.push(`/game/${gameOptions.gameId}`)
 					document.removeEventListener('invite-response-accept', accept);
 				})

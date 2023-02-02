@@ -47,7 +47,7 @@ class WsService {
   // should only be called once access token has been received after initial REST request
   connect() {
     if (!this.socket)
-      this.socket = io(`ws://127.0.0.1:3000/?token=${this.getToken()}`, {
+      this.socket = io(`ws://localhost:3000/?token=${this.getToken()}`, {
         auth: (cb) => {
           cb({ token: this.getToken() });
         },
