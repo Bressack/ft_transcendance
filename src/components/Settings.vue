@@ -1,10 +1,13 @@
 <template>
-  <div class="main">
-    <q-item class="q-px-xl r-py-md">
+  <div class="dialog">
+    <div class="close-cross">
+			<q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup />
+		</div>
+    <div class="q-px-xl r-py-md">
       <q-item-section>
         <q-item-label class="bigger">Settings</q-item-label>
       </q-item-section>
-    </q-item>
+    </div>
   <q-item class="justify-center centers q-px-xl r-pt-md">
     <q-uploader
       auto-upload
@@ -41,9 +44,6 @@
     <q-toggle @update:model-value="onUpdate" v-model="twoFA">
       <q-item-label class="label">Two factor authentification</q-item-label>
     </q-toggle>
-  </q-item>
-  <q-item class="justify-center centers bigger q-mb-lg">
-    <q-btn color="orange" label="Close" v-close-popup/>
   </q-item>
 </div>
 </template>
@@ -144,9 +144,6 @@ export default defineComponent({
 </style>
 
 <style lang="sass" scoped>
-.main
-  background-color: #696969
-  text-align: center
 
 .avatar
   object-fit: cover

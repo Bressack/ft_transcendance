@@ -47,7 +47,6 @@ export default defineComponent({
 <style lang="sass" scoped>
 @use "../css/interpolate" as r
 
-
 .centered
   text-align: center
   overflow: auto

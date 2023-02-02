@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="dialog">
     <div class="q-px-xl r-py-md">
 			<q-item-label class="bigger">Finding an opponent ...</q-item-label>
       <div class="q-pt-xl">
@@ -7,7 +7,6 @@
           color="orange"
           size="8em"
         />
-
       </div>
 		</div>
     <q-item class="flex-center q-py-xl">
@@ -20,15 +19,6 @@
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-	components: { },
 	name: 'WaitForPairing'
 })
 </script>
-
-<style lang="sass" scoped>
-@use "../css/interpolate" as r
-.main
-  background-color: #696969
-  text-align: center
-
-</style>

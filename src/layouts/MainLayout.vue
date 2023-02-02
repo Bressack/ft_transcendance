@@ -11,6 +11,7 @@
 					<q-btn class="q-mr-sm" to="/game/1" color="brown">TEST_GAME</q-btn>
 					<q-btn class="q-mr-sm" to="/spectate/1" color="brown">TEST_SPECTATE</q-btn>
 					<q-btn class="q-mr-sm" to="/profile/me" color="green">Profile</q-btn>
+          <q-btn class="q-mr-sm" to="/sandbox" color="red">Sandbox</q-btn>
 					<div class="q-mr-lg logout">
 						<q-btn class="absolute-right" @click="logout()" color="red" label="LOGOUT" />
 					</div>
@@ -108,7 +109,7 @@ export default defineComponent({
 			this.maps = data.map
 			this.difficulty = data.difficulty
 			this.$ws.removeListener('game-invite')
-			
+
 			this.$ws.socket.once('game-invite-canceled', (res: any) => {
 				that.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
