@@ -70,6 +70,7 @@ export default defineComponent({
 		},
 		mounted() {
 
+			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
 			
 			// this.test = document.getElementById("gameCanvas").getElementsByTagName("*")[0]
 			// console.log("--------", document.getElementById("gameCanvas"), "--------")
@@ -90,6 +91,8 @@ export default defineComponent({
 		console.log('quit');
 		this.$ws.emit('quit', {})
 		this.canvas.removeEventListener('mousemove', this.sendPosition); // player
+		document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
+
 	}
 })
 </script>

@@ -119,13 +119,18 @@ export default defineComponent({
 				console.log(res)
 				callback('ACCEPTED')
 				that.InvitationFrom = false
-				that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
+				that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
 					callback("OK")
-					console.log(gameId)
-					that.$router.push(`/game/${gameId}`)
+					// console.log(`/game/${gameOptions.gameId}?map=${gameOptions.map}`)
+					console.log(gameOptions)
 
+					if (gameOptions.map == "3D")
+						that.$router.push(`/game3d/${gameOptions.gameId}`)
+					else
+						that.$router.push(`/game/${gameOptions.gameId}`)
+					// that.$router.push(`/game/${gameOptions.gameId}`)
+					document.removeEventListener('invite-response-accept', accept);
 				})
-				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
 				that.$ws.removeListener('game-invite-canceled')
 				that.$ws.listen('game-invite', that.onGameInvite) //might need to remove this until the game is finished

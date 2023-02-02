@@ -57,13 +57,13 @@ export default defineComponent({
 				{ label: 'Map 1', value: 'map1' },
 				{ label: 'Map 2', value: 'map2' },
 				{ label: 'Map 3', value: 'map3' },
-				{ label: 'Map 4', value: 'map4' }
+				{ label: '3D', value: '3D' }
 			],
 			opt: ref('1'),
 			opts: [
-				{ label: '1', value: '1' },
-				{ label: '2', value: '2' },
-				{ label: '3', value: '3' },
+				{ label: 'EASY', value: '1' },
+				{ label: 'INTERMEDIATE', value: '2' },
+				{ label: 'HARD', value: '3' },
 			],
 			InviteNotif
 		}
@@ -107,11 +107,13 @@ export default defineComponent({
 				this.InviteNotif = false
 				this.$ws.removeListener('game-invite-accepted')
 				this.$ws.removeListener('game-invite-declined')
-				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameId: string, callback: Function) => {
+				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
 					callback("OK")
-					console.log(gameId)
-					this.$router.push(`/game/${gameId}`)
-
+					console.log(gameOptions)
+					if (gameOptions.map == "3D")
+						this.$router.push(`/game3d/${gameOptions.gameId}`)
+					else
+						this.$router.push(`/game/${gameOptions.gameId}`)
 				})
 
 			}

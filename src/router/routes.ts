@@ -32,10 +32,24 @@ const routes: RouteRecordRaw[] = [
         },
       },
       {
+        path: "/game3d/:gameId",
+        component: () => import("pages/Game/Game3d.vue"),
+        name: "game3d",
+        beforeEnter: async (to, from, next) => {
+          await fetch(`/api/games/play/${to.params.gameId}`).then((res) => {
+            console.log(res.status);
+            if (res.status == 404) {
+              next({ name: "GameError" });
+            } else next();
+          });
+        },
+      },
+      {
         path: "/spectate/:gameId",
         component: () => import("pages/Game/Spectate.vue"),
         name: "spectate",
         beforeEnter: async (to, from, next) => {
+          console.log(to.params.gameId);
           await fetch(`/api/games/watch/${to.params.gameId}`).then((res) => {
             console.log(res.status);
             if (res.status == 404) {
