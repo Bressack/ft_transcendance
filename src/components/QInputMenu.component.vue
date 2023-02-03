@@ -1,20 +1,23 @@
 <template>
-  <q-input v-model="stringToFind" :label="inputLabel" @focus="markAsTouched">
+  <q-input v-model="stringToFind" :label="inputLabel" @focus="markAsTouched" class="iinput">
     <q-menu v-model="showMenuList" no-focus anchor="top right" self="top left" square>
 
       <q-list v-if="menuList && menuList.length" class="listuser">
-        <q-item v-for="elem in menuList" clickable :key="elem">
+        <q-item v-for="elem in menuList" clickable :key="elem?.username">
 
           <q-item-section style="max-width: 50px;">
             <q-avatar class="avatar">
               <img size="20px" :src="`/api/avatar/${elem?.username}/thumbnail`">
             </q-avatar>
           </q-item-section>
+
           <q-item-section>
             <q-item-label>
               {{ elem?.username }}
             </q-item-label>
           </q-item-section>
+
+          <!-- icon add to friend -->
           <q-item-section side>
             <q-icon name="add" color="green" @click="selectElement(elem?.username)" />
           </q-item-section>
@@ -109,5 +112,8 @@ export default defineComponent({
 .listuser
   background-color: $bg-secondary
   width: 300px
+
+.iinput
+  padding-left: 10px
 </style>
 
