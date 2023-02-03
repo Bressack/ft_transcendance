@@ -59,6 +59,7 @@
         <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
           <q-avatar class="avatar">
             <img size="20px" :src="`/api/avatar/${friend}/thumbnail`">
+            <div :class="getLoginStatus(friend)" class="loginstatus"/>
           </q-avatar>
         </q-item-section>
         <q-item-section @click="userSelected(friend)">
@@ -102,6 +103,7 @@ import { ISearchQuery } from 'src/services/api.models'
 import { useMeStore } from 'src/stores/me';
 import { store } from 'quasar/wrappers';
 import QInputMenu from 'src/components/QInputMenu.component.vue';
+import { useChatSocketStore } from 'src/stores/chatSocket';
 
 interface IResult {
   total: number,
@@ -135,6 +137,7 @@ export default defineComponent({
   data() {
     return {
       storeMe: useMeStore(),
+      storeChat: useChatSocketStore(),
       conversationList: fake_IConvList(15) as IConvList,
       searchInput: '',
       searchResult: {} as IResult,
@@ -142,6 +145,11 @@ export default defineComponent({
     }
   },
   methods: {
+    getLoginStatus(username: string) {
+      if (this.storeChat.connectedUsers.includes(username))
+        return 'ONLINE-status'
+      return 'OFFLINE-status'
+    },
     goProfilPage(username: string) {
       this.$router.push({
         path: '/profile/' + username,
@@ -234,4 +242,17 @@ export default defineComponent({
 
 .overall
   z-index: 2
+
+.loginstatus
+  width: 12px
+  height: 12px
+  border-radius: 100px
+  position: absolute
+  margin-top: 20px
+  margin-left: 20px
+
+.ONLINE-status
+  background-color: green
+.OFFLINE-status
+  background-color: red
 </style>

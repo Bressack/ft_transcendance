@@ -1,9 +1,17 @@
 import { io } from "socket.io-client";
 import { Cookies } from "quasar";
+import { useChatSocketStore } from 'src/stores/chatSocket';
+
+var that: any = null
 
 class WsService {
   socket: any;
-  constructor() {}
+  storeChat: any;
+  constructor() {
+    this.storeChat = useChatSocketStore()
+    console.log('debug constru: ', this.storeChat.connectedUsers);
+    that = this
+  }
   getToken() {
     return Cookies.get("WsAuth");
   }
@@ -84,11 +92,19 @@ class WsService {
     }
   }
 
-  handleUserConnectedEvent(username: string) {
+  handleUserConnectedEvent(username: Array<string>) {
     console.log(`${username} connected`); // should update an array of connected users
+    username.forEach(user => {
+      if (that.storeChat.connectedUsers.includes(user) == false)
+        that.storeChat.connectedUsers.push(user);
+    })
+    // that.storeChat.connectedUsers = that.storeChat.connectedUsers.concat(username)
+    console.log('that.storeChat.connectedUsers:', that.storeChat.connectedUsers);
   }
   handleUserDisconnectedEvent(username: string) {
     console.log(`${username} disconnected`); // should update an array of connected users
+    that.storeChat.connectedUsers = that.storeChat.connectedUsers.filter((elem: any) => { return elem !== username })
+    console.log('that.storeChat.connectedUsers:', that.storeChat.connectedUsers);
   }
 
   // sendInvite(obj: any) {

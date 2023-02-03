@@ -13,11 +13,11 @@ export const useChatSocketStore = defineStore('chatSocket', {
   state: () => ({
     init           : false as boolean,
     socket         : {} as ws,
-    // messages       : [] as Array<IWSMessages>,
     currentChannel : '' as string,
     password       : '' as string,
     name           : '' as string,
     text: '',
+    connectedUsers : [] as Array<string> // TODO type
   }),
 
   getters: {
