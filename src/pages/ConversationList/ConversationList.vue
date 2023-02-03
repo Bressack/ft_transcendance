@@ -36,7 +36,7 @@
 
 		</q-form>
 
-		<q-expansion-item icon="perm_identity" label="Friend Requests Recevied" header-class="text-orange-3">
+		<q-expansion-item default-opened icon="perm_identity" label="Friend Requests Recevied" header-class="text-orange-3">
 			<q-item clickable v-ripple v-for="rrecv in storeMe.friendRequestRecevied" :key="rrecv">
 				<q-item-section style="max-width: 50px;">
 					<q-avatar class="avatar">
@@ -53,7 +53,7 @@
 		</q-expansion-item>
 		<q-separator />
 
-		<q-expansion-item icon="perm_identity" label="Friend Requests Sent" header-class="text-orange-3">
+		<q-expansion-item default-opened icon="perm_identity" label="Friend Requests Sent" header-class="text-orange-3">
 			<q-item clickable v-ripple v-for="rsent in storeMe.friendRequestSent" :key="rsent">
 				<q-item-section style="max-width: 50px;">
 					<q-avatar class="avatar">
@@ -70,8 +70,7 @@
 		</q-expansion-item>
 
 		<q-separator />
-		<q-expansion-item icon="perm_identity" label="Publics Channels" header-class="text-orange text-bold text-h6"
-			default-opened>
+		<q-expansion-item default-opened icon="perm_identity" label="Publics Channels" header-class="text-orange text-bold text-h6">
 			<q-item clickable v-ripple v-for="channel in storeMe.getPublicPrivateChannels()" :key="channel.channelId"
 				@click="chanSelected(String(channel.channelId))">
 				<q-item-section>
@@ -86,8 +85,7 @@
 		</q-expansion-item>
 		<q-separator />
 
-		<q-expansion-item icon="perm_identity" label="Friends" header-class="text-orange text-bold text-h6"
-			default-opened>
+		<q-expansion-item default-opened icon="perm_identity" label="Friends" header-class="text-orange text-bold text-h6">
 			<!-- <q-item-label header class="header">Friends</q-item-label> -->
 			<q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="usermenu">
 				<q-item-section style="max-width: 50px;" @click="userSelected(friend)">
