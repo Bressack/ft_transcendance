@@ -18,7 +18,7 @@
      </q-item>
      <q-item class="col">
       <q-item-section>
-        <q-btn color="orange" @click="spectate(gameId)">Spectate</q-btn>
+        <q-btn color="orange" @click="spectate(gameId, map)">Spectate</q-btn>
       </q-item-section>
      </q-item>
   </div>
@@ -35,10 +35,12 @@ export default defineComponent({
     pOne    : { type: String , required: true},
     pTwo    : { type: String , required: true },
 	  gameId : { type: String, required: true },
+	  map : { type : String , required : true }
   },
   methods: {
-    spectate (gameId: string) {
-		  this.$router.push(`/spectate/${gameId}`)
+    spectate (gameId: string, map : string) {
+		console.log(map)
+		  this.$router.push(`/spectate${map == '3D' ? '3d' : ''}/${gameId}`)
     }
   }
 })

@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "/sandbox",
-        component: () => import("pages/Sandbox.vue")
+        component: () => import("pages/Sandbox.vue"),
       },
       {
         path: "/game/:gameId",
@@ -60,6 +60,19 @@ const routes: RouteRecordRaw[] = [
               if (from.name === "game") {
                 next({ name: "GameError" });
               }
+              next({ name: "GameError" });
+            } else next();
+          });
+        },
+      },
+      {
+        path: "/spectate3d/:gameId",
+        component: () => import("pages/Game/Spectate3d.vue"),
+        name: "spectate3d",
+        beforeEnter: async (to, from, next) => {
+          await fetch(`/api/games/watch/${to.params.gameId}`).then((res) => {
+            console.log(res.status);
+            if (res.status == 404) {
               next({ name: "GameError" });
             } else next();
           });

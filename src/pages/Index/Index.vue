@@ -17,7 +17,7 @@
       <q-item-label class="label">No game is currently running</q-item-label>
     </q-item>
     <div v-for="game in games" :key="game.gameId">
-      <SpectateGames :pOne=game.playerOneName :pTwo=game.playerTwoName :gameId=game.gameId />
+      <SpectateGames :pOne=game.playerOneName :pTwo=game.playerTwoName :gameId=game.gameId :map=game.map />
     </div>
   </div>
   <q-dialog persistent v-model="MatchMaking">

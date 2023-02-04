@@ -26,8 +26,7 @@ export default defineComponent({
 			true_player_height: 100,
 			gameId: "",
 			animResize: 0,
-			intdesesmort: 0,
-			throttleValue: 15,
+			throttleValue: 10,
 		};
 	},
 	methods:
