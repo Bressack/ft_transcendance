@@ -4,11 +4,11 @@
 		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 		<ul>
 			<div class="q-ml-md q-gutter-sm">
-				<q-btn color="blue" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
-				<p> {{ gameId }}</p>
-				<div id="bidule">
+				<!-- <q-btn color="blue" @click="toggle" icon="fullscreen" padding="xs"></q-btn> -->
+				<!-- <p> {{ gameId }}</p> -->
+				<div id="2ddiv">
 					<canvas id="canvas"></canvas>
-					<q-btn id="fullscreen-btn" color="light-grey" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
+					<!-- <q-btn id="fullscreen-btn" color="light-grey" @click="toggle" icon="fullscreen" padding="xs"></q-btn> -->
 				</div>
 			</div>
 		</ul>
@@ -120,7 +120,7 @@ export default defineComponent({
 				}
 				else {
 					this.canvas.width = window.innerWidth;
-					this.canvas.height = window.innerHeight * 0.90;
+					this.canvas.height = window.innerHeight;
 				}
 			}
 			else {
@@ -132,7 +132,7 @@ export default defineComponent({
 			this.draw();
 		},
 		toggle(e: any) {
-			const target = <HTMLElement>document.getElementById('bidule')
+			const target = <HTMLElement>document.getElementById('2ddiv')
 			console.log("toggle 1", this.$q.fullscreen.isActive)
 			this.$q.fullscreen.toggle(target)
 				.then(() => {
@@ -183,19 +183,12 @@ export default defineComponent({
 		this.$ws.listen(`${this.gameId}___countdown`, this.handleCoundown);
 		this.$ws.listen(`${this.gameId}___game-end`, this.handleGameEnd);
 		this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
+		this.canvas.addEventListener('dblclick', this.toggle);
 		const onResizeThrottled = throttle(this.onResize, 200)
-		var fullscreenButton = <HTMLElement>document.getElementById('fullscreen-btn');
-		fullscreenButton.style.display = "none";
 		window.addEventListener('resize', onResizeThrottled);
 		watch(() => this.$q.fullscreen.isActive, val => {
 			console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
 			onResizeThrottled();
-			if (this.$q.fullscreen.isActive == true) {
-				fullscreenButton.style.display = "block";
-			}
-			else {
-				fullscreenButton.style.display = "none";
-			}
 		})
 		this.onResize();
 	},
@@ -210,6 +203,13 @@ export default defineComponent({
 main {
 	display: flex;
 	flex-direction: column;
+}
+#canvas {
+	/* opacity: 0.5; */
+	position:absolute;
+	top:0;
+	left:0;
+	z-index: 0;
 }
 
 h1,

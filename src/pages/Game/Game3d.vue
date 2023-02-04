@@ -84,7 +84,6 @@ export default defineComponent({
 			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
 			this.canvas = <HTMLCanvasElement> document.getElementById('canvas_txt');
 			const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
-			// console.log(this.canvas)
 			this.canvas.addEventListener('mousemove', sendPositionThrottled);
 			
 	},

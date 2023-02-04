@@ -2,18 +2,11 @@
 	<div>
 		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 		<ul>
-			<div class="q-ml-md q-gutter-sm">
-				<q-btn color="blue" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
-				<p> {{ gameId }}</p>
-				<div id="bidule">
-					<!-- <div class="tarace">
-						0
-					</div> -->
+				<div id="div3d">
 					<canvas id="canvas_txt"></canvas>
 					<div id='gameCanvas'></div>
-					<q-btn id="fullscreen-btn" color="light-grey" @click="toggle" icon="fullscreen" padding="xs"></q-btn>
+					<!-- <q-btn id="fullscreen-btn" color="light-grey" @click="toggle" icon="fullscreen" padding="xs"></q-btn> -->
 				</div>
-			</div>
 		</ul>
 	</div>
 </template>
@@ -73,6 +66,7 @@ export default defineComponent({
 			storeMe: useMeStore(),
 			playerOneName: "p1",
 			playerTwoName: "p2",
+			prevviewside: false,
 		}
 	},
 	props: 
@@ -195,7 +189,7 @@ export default defineComponent({
 			}
         	context.fillStyle = elementsColor;
         	context.fill();
-        	context.font = `${this.canvas_txt.height * 0.07}px 'roboto'`;
+        	context.font = `${this.canvas_txt.height * 0.07}px 'Press Start 2P'`;
         	context.fillText(
         	    this.player1_score.toString(),
         	    this.canvas_txt.width / 2 -
@@ -216,7 +210,9 @@ export default defineComponent({
 		},
 		cameraPhysics()
 		{
-			if (this.storeMe.username == this.playerOneName || this.viewside)
+			if (this.prevviewside != this.viewside)
+				this.travelingdesesmort()
+			else if (this.storeMe.username == this.playerOneName || this.viewside)
 			{
 				// p1 position
 				camera.position.y += (paddle1.position.y - camera.position.y) * 0.001;
@@ -236,8 +232,38 @@ export default defineComponent({
 			}
 			
 		},
+		travelingdesesmort()
+		{
+			
+
+			if (!this.viewside)
+			{
+				console.log("adwwadawdawdawdawd")
+				if (camera.position.x < (paddle2.position.x + 300))
+				{
+					camera.position.x += ((paddle2.position.x + 300) - (paddle1.position.x - 300)) * 0.01
+					camera.rotation.y += ((40 * Math.PI/180)  - (-40 * Math.PI/180)) * 0.01;
+					camera.rotation.z += ((90 * Math.PI/180) - (-90 * Math.PI/180)) * 0.01;
+				}
+				else
+					this.prevviewside = this.viewside
+
+			}
+			else
+			{
+				if (camera.position.x > (paddle1.position.x - 300))
+				{
+					camera.position.x -= ((paddle2.position.x + 300) - (paddle1.position.x - 300)) * 0.01
+					camera.rotation.y -= ((40 * Math.PI/180)  - (-40 * Math.PI/180)) * 0.01;
+					camera.rotation.z -= ((90 * Math.PI/180) - (-90 * Math.PI/180)) * 0.01;
+				}
+				else
+					this.prevviewside = this.viewside
+			}
+			// this.prevviewside = this.viewside
+		},
 		toggle(e: any) {
-			const target = <HTMLElement>document.getElementById('bidule')
+			const target = <HTMLElement>document.getElementById('div3d')
 			console.log("toggle 1", this.$q.fullscreen.isActive)
 			this.$q.fullscreen.toggle(target)
 				.then(() => {
@@ -266,11 +292,11 @@ export default defineComponent({
 					
 				}
 				else {
-					renderer.setSize(window.innerWidth, window.innerHeight * 0.90);
+					renderer.setSize(window.innerWidth, window.innerHeight);
 					this.canvas.width = window.innerWidth;
-					this.canvas.height = window.innerHeight * 0.90;
+					this.canvas.height = window.innerHeight;
 					this.canvas_txt.width = window.innerWidth;
-					this.canvas_txt.height = window.innerHeight * 0.90;
+					this.canvas_txt.height = window.innerHeight;
 					var VIEW_ANGLE = 50, ASPECT = this.canvas_txt.width / this.canvas_txt.height, NEAR = 0.1, FAR = 5000;
 					camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 				}
@@ -318,24 +344,15 @@ export default defineComponent({
 		ft_mounted() {
 			this.canvas = <HTMLCanvasElement>document.getElementById('gameCanvas');
 			this.canvas_txt = <HTMLCanvasElement>document.getElementById('canvas_txt');
-			// this.canvas_txt.left = 
 			this.$ws.listen(`${this.gameId}___countdown`, this.handleCoundown);
 			this.$ws.listen(`${this.gameId}___game-end`, this.handleGameEnd);
 			this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
 			this.canvas_txt.addEventListener('dblclick', this.toggle);
 			const onResizeThrottled = throttle(this.onResize, 200)
-			var fullscreenButton = <HTMLElement>document.getElementById('fullscreen-btn');
-			fullscreenButton.style.display = "none";
 			window.addEventListener('resize', onResizeThrottled);
 			watch(() => this.$q.fullscreen.isActive, val => {
 				console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
 				onResizeThrottled();
-				if (this.$q.fullscreen.isActive == true) {
-					fullscreenButton.style.display = "block";
-				}
-				else {
-					fullscreenButton.style.display = "none";
-				}
 			})
 			this.setup();
 			this.onResize()
@@ -347,6 +364,8 @@ export default defineComponent({
 		this.playerTwoName = this.$route.query.playerTwoName as string;
 	},
 	mounted() {
+		this.prevviewside = this.viewside;
+		console.log("aled")
 		setTimeout(this.ft_mounted, 10)
 		
 	},
@@ -358,20 +377,18 @@ export default defineComponent({
 </script>
 
 <style scoped>
-#canvas_txt
-{
-	position: absolute;
-	/* opacity: 0.5; */
-	left: 0;
-	top: 0;
+#canvas_txt {
+	opacity: 0.5;
+	position:absolute;
+	top:0;
+	left:0;
 	z-index: 1;
 }
-#gameCanvas
-{
-	position: absolute;
-	left: 0;
-	top: 0;
-	z-index: 0;
+#gameCanvas {
+  position:absolute;
+  top:0;
+  left:0; 
+  z-index: 0;
 }
 body {
 	background-color: black;
