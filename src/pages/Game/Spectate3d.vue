@@ -1,10 +1,7 @@
 <template>
 	<q-page>
-			<DrawGame3d :viewside="viewside">
-			</DrawGame3d>
-			<q-btn id="test" color="red" @click="changeViewSide" icon="fullscreen" padding="xs"></q-btn>
-			<q-btn id="test_2" color="purple" @click="to2d" icon="fullscreen" padding="xs"></q-btn>
-			
+		<q-btn id="viewsidebtn" color="red" @click="changeViewSide" :label="viewside ? 'p1' : 'p2'" padding="xs"></q-btn>
+		<DrawGame3d :viewside="viewside"></DrawGame3d>		
 	</q-page>
 </template>
 
@@ -22,17 +19,14 @@ export default defineComponent({
 	},
 	methods:
 	{
-		to2d()
-		{
-			this.$router.push(`/spectate/${this.$route.params.gameId}`)
-		},
 		changeViewSide()
 		{
+			console.log(this.viewside);
 			if (this.viewside)
 				this.viewside = false;
 			else
 				this.viewside = true;
-		}
+		},
 	},
 	mounted() {
 		this.$ws.socket.emit("watch-game", this.$route.params.gameId, (response : string) => {
@@ -48,18 +42,8 @@ export default defineComponent({
 </script>
 
 <style>
-#test
+#viewsidebtn
 {
-	position: absolute;
-	left: 70%;
-	top: 70%;
-	z-index: 0;
-}
-#test_2
-{
-	position: absolute;
-	left: 60%;
-	top: 70%;
-	z-index: 0;
+	z-index: 3;
 }
 </style>
