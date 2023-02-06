@@ -6,9 +6,17 @@
 
         <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
           <q-menu persistent class="menuusers">
-            <q-list v-for="user in $storeChat.SubscribedUsers" :key="user.username" class="userlist">
-              <div style="display: none">{{ user.mute = true }}{{ user.ban = true }}</div>
-              <q-item tag="label" class="q-bg">
+            <q-list class="userlist">
+              <q-item class="q-bg">
+                <q-item-section side class="card">
+                  <q-item-label class="menuusers-username">User count:</q-item-label>
+                </q-item-section>
+                <q-item-section side class="card">
+                  <q-item-label>{{ $storeChat.SubscribedUsers.length }}</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item v-for="user in $storeChat.SubscribedUsers" :key="user.username" class="q-bg">
+                <div style="display: none">{{ user.mute = true }}{{ user.ban = true }}</div>
                 <q-item-section side class="card">
                   <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
                 </q-item-section>
@@ -148,6 +156,8 @@ export default defineComponent({
 
 .menuusers-username
   width: 200px
+  font-size: 17px
+  word-break: break-word
 
 .menuusers
   height: 500px
