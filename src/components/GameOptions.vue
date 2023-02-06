@@ -11,7 +11,7 @@
 			<q-option-group inline v-model="map" :options="maps" color="white" keep-color>
 				<template v-slot:label="map">
 					<div class="row items-center">
-						<q-item-label class="label">{{ map.label }}</q-item-label>
+						<!-- <q-item-label class="label">{{ map.label }}</q-item-label> -->
 						<q-img class="image q-ma-md" :src="`/src/assets/maps/${map.value}.png`" />
 					</div>
 				</template>
@@ -52,18 +52,16 @@ export default defineComponent({
 	setup() {
 		const InviteNotif = ref(false)
 		return {
-			map: ref('map1'),
+			map: ref('2D'),
 			maps: [
-				{ label: 'Map 1', value: 'map1' },
-				{ label: 'Map 2', value: 'map2' },
-				{ label: 'Map 3', value: 'map3' },
+				{ label: '2D', value: '2D' },
 				{ label: '3D', value: '3D' }
 			],
-			opt: ref('1'),
+			opt: ref('EASY'),
 			opts: [
-				{ label: 'EASY', value: '1' },
-				{ label: 'INTERMEDIATE', value: '2' },
-				{ label: 'HARD', value: '3' },
+				{ label: 'EASY', value: 'EASY' },
+				{ label: 'INTERMEDIATE', value: 'INTERMEDIATE' },
+				{ label: 'HARD', value: 'HARD' },
 			],
 			InviteNotif
 		}
@@ -142,6 +140,5 @@ export default defineComponent({
 @use "../css/interpolate" as r
 
 .image
-  border: solid 1px black
   @include r.interpolate(width, 320px, 2560px, 30px, 60px)
 </style>

@@ -20,7 +20,7 @@
         <q-img class="image" :src="`/src/assets/maps/${map}.png`" />
       </q-item>
         <q-item-label class="q-pt-lg label">
-            Difficulty : {{ difficulty }}
+            Difficulty : <span class="bigger">{{ difficulty }}</span>
         </q-item-label>
       </q-item-section>
       <q-item-section class="flex-center">
@@ -148,7 +148,6 @@ export default defineComponent({
   position: relative
 
 .image
-  border: solid 1px black
   @include r.interpolate(width, 320px, 2560px, 45px, 75px)
 
 
