@@ -48,7 +48,7 @@ export default defineComponent({
   name: 'ProfileSummary',
   components: { GameOptions },
   props: {
-    name    : { type: String , default: undefined },
+    name    : { type: String , default: '' },
     avatar  : { type: String , required: true },
     victory : { type: Number , default: 0 },
     defeat  : { type: Number , default: 0 },

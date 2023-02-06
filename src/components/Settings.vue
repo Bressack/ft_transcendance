@@ -45,8 +45,8 @@
         <q-btn color="green" type="submit" label="Ok" @click="changeUsername"/>
       </q-input>
     </q-item>
-    <q-item class="justify-center">
-    <q-toggle @update:model-value="onUpdate" v-model="twoFA">
+    <q-item class="justify-center q-pb-md">
+    <q-toggle color="orange" @update:model-value="onUpdate" v-model="twoFA">
       <q-item-label class="label">Two factor authentification</q-item-label>
     </q-toggle>
   </q-item>
@@ -56,6 +56,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { QRejectedEntry } from 'quasar'
+import { useMeStore } from 'src/stores/me'
 // import api from '../services/api.service'
 
 interface UploadObject {
@@ -71,6 +72,7 @@ export default defineComponent({
         twoFA : false as Boolean,
         refresh : 0 as number,
         username : '' as string,
+        storeMe: useMeStore(),
         $refs : undefined as any,
       }
   },
@@ -116,6 +118,7 @@ export default defineComponent({
           type: 'positive',
           message: 'Username successfully changed'
         })
+        this.profile.username = this.username
       })
       .catch((error) => {
         console.log(error.response.data)

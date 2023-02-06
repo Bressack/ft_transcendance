@@ -63,6 +63,13 @@ export default defineComponent({
 				else return req;
 
 			})
+
+      this.$api.axiosInstance.interceptors.response.use((resp) => {
+        console.log('interceptor', resp)
+        if (resp.status === 205)
+          this.storeMe.fetch()
+        return resp
+      }, undefined)
 			// this.$api.axiosInstance.interceptors.response.use(undefined, async function (error) {
 
 			// 	if (error?.response?.status === 404 || error?.response?.status === 400) {

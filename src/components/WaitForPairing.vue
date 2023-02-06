@@ -9,7 +9,7 @@
         />
       </div>
 		</div>
-    <q-item class="flex-center q-py-xl">
+    <q-item class="flex-center q-pt-xl q-pb-md">
       <q-btn label="Cancel" color="red" v-close-popup />
     </q-item>
   </div>

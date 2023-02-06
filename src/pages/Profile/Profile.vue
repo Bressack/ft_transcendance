@@ -2,7 +2,7 @@
 <q-page>
   <div class="q-px-xl">
     <ProfileSummary v-if="userFetched"
-    :name=profile.username
+    :name=storeMe.username
     :avatar=avatar
     :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
     :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
@@ -57,6 +57,7 @@ import ProfileSummary from './components/ProfileSummary.vue'
 import MatchHistory from './components/MatchHistory.vue'
 import LevelProgress from './components/LevelProgress.vue'
 import Rank from './components/Rank.vue'
+import { useMeStore } from 'src/stores/me'
 
 export default defineComponent({
   name: 'Profile',
@@ -66,6 +67,7 @@ export default defineComponent({
       username: this.$route.params.username.toString() as string,
       avatar: '/api/avatar/' as string,
       profile: [] as any,
+      storeMe: useMeStore(),
       games: [] as any,
       userFetched: false as boolean,
       gameFetched : false as boolean

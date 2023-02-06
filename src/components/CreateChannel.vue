@@ -11,7 +11,7 @@
   <!-- <q-option-group inline class="label q-mx-xl" left-label v-model="access" :options="options" color="white" keep-color /> -->
   <q-item>
     <q-input
-     v-model="name"
+      v-model="name"
       label="Channel name"
       lazy-rules
       color="orange"
@@ -72,7 +72,7 @@
 
 
 
-  <q-item class="flex-center">
+  <q-item class="flex-center q-pb-md">
     <q-btn color="orange" label="Create" @click="create()"/>
   </q-item>
 </div>
