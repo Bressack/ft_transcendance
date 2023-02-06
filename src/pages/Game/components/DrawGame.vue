@@ -51,10 +51,10 @@ export default defineComponent({
 	methods:
 	{
 		draw() {
-        	const elementsColor: string = this.game_paused && this.info_value ? "#202020" : "white";
+			const elementsColor: string = this.game_paused && this.info_value ? "#242729" : "white";
         	var context = <CanvasRenderingContext2D>this.canvas.getContext("2d");
         	// Draw field
-        	context.fillStyle = "black";
+			context.fillStyle = "#242729";
         	context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         	// Draw middle line
         	context.strokeStyle = elementsColor;
@@ -207,9 +207,11 @@ main {
 #canvas {
 	/* opacity: 0.5; */
 	position:absolute;
-	top:0;
-	left:0;
+	/* top:5%; */
+	left:50%;
+    transform: translateX(-50%);
 	z-index: 0;
+	border: 5px solid white;
 }
 
 h1,

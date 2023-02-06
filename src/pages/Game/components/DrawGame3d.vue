@@ -117,7 +117,7 @@ export default defineComponent({
 			var	planeHeight = fieldHeight		
 			var paddle1Material = new THREE.MeshBasicMaterial({color: 0x00ffff});
 			var paddle2Material = new THREE.MeshBasicMaterial({color: 0xFF0000});	
-			var planeMaterial = new THREE.MeshBasicMaterial({color: 0x000000});
+			var planeMaterial = new THREE.MeshBasicMaterial({ color: 0x242729 });
 			var tableMaterial = new THREE.MeshBasicMaterial({color: 0x8c8c8c});
 			var tableMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF});
 			var sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
@@ -173,7 +173,7 @@ export default defineComponent({
 		{
 			// paddle1.position.y = 310
 			this.cameraPhysics();
-			const elementsColor: string =  this.game_paused && this.info_value ? "#8c8c8c" : "white";
+			const elementsColor: string = this.game_paused && this.info_value ? "#242729" : "white";
 
 			// console.log(this.canvas)
         	var context = <CanvasRenderingContext2D>this.canvas_txt.getContext("2d");
@@ -181,7 +181,7 @@ export default defineComponent({
 			if (this.game_paused == true)
 			{
 				context.globalAlpha = 0.5;
-				context.fillStyle = "black";
+				context.fillStyle = "#242729";
 				context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 			}
 			{
@@ -381,17 +381,23 @@ export default defineComponent({
 	opacity: 0.5;
 	position:absolute;
 	top:0;
-	left:0;
+	/* left:0; */
+		left: 50%;
+			transform: translateX(-50%);
 	z-index: 1;
+	border: 5px solid white;
 }
 #gameCanvas {
   position:absolute;
   top:0;
-  left:0; 
+  /* left:0;  */
+	left: 50%;
+		transform: translateX(-50%);
   z-index: 0;
+	border: 5px solid white;
 }
 body {
-	background-color: black;
+	background-color: #242729;
 }
 main {
 	display: flex;
