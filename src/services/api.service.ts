@@ -106,6 +106,11 @@ export default {
     return response.data;
   },
 
+  async changeUsername(username: String) {
+    const response = await this.axiosInstance.patch(`/users/username`, { username: username });
+    return response.data;
+  },
+
   /**
    **   general
    **/

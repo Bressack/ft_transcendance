@@ -11,16 +11,33 @@
   <!-- <q-option-group inline class="label q-mx-xl" left-label v-model="access" :options="options" color="white" keep-color /> -->
   <q-item>
     <q-input
-    v-model="name"
-    label="Channel name"
+     v-model="name"
+      label="Channel name"
       lazy-rules
       color="orange"
       />
     </q-item>
 
+    <q-item>
+      <q-input
+      class="input"
+      filled
+      v-model="password"
+      label="Password"
+      lazy-rules
+      type="password"
+    />
+  </q-item>
 
 
-<q-form class="q-pa-sm" style="max-width: 300px" @submit="search()">
+    <q-item class="label">
+      <!-- <q-checkbox v-model="public" label="public" /> -->
+      <q-checkbox v-model="private" color="white" label="Private" />
+    </q-item>
+
+
+
+<q-form v-if="private" class="q-pa-sm" style="max-width: 300px" @submit="search()">
 
   <q-item>
     <q-item-section>
@@ -54,20 +71,7 @@
 </q-form>
 
 
-    <q-item class="label">
-      <!-- <q-checkbox v-model="public" label="public" /> -->
-      <q-checkbox v-model="private" color="white" label="Private" />
-    </q-item>
-    <q-item v-if="private">
-      <q-input
-      class="input"
-      filled
-      v-model="password"
-      label="Password"
-      lazy-rules
-      type="password"
-    />
-  </q-item>
+
   <q-item class="flex-center">
     <q-btn color="orange" label="Create" @click="create()"/>
   </q-item>

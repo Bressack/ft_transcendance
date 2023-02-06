@@ -31,7 +31,7 @@
         </template>
       </q-uploader>
     </q-item>
-    <q-item class="justify-center centers q-px-xl">
+    <q-item class="justify-center">
       <q-btn
       color="white"
       label="Remove Avatar"
@@ -40,7 +40,12 @@
       @click="removeAvatar()"
       />
     </q-item>
-    <q-item class="justify-center centers q-pa-xl">
+    <q-item class="justify-center">
+      <q-input dark color="orange" label="Change username" v-model="username">
+        <q-btn color="green" type="submit" label="Ok" @click="changeUsername"/>
+      </q-input>
+    </q-item>
+    <q-item class="justify-center">
     <q-toggle @update:model-value="onUpdate" v-model="twoFA">
       <q-item-label class="label">Two factor authentification</q-item-label>
     </q-toggle>
@@ -65,6 +70,7 @@ export default defineComponent({
         avatar : '' as string,
         twoFA : false as Boolean,
         refresh : 0 as number,
+        username : '' as string,
         $refs : undefined as any,
       }
   },
@@ -76,6 +82,7 @@ export default defineComponent({
       this.$api.me()
       .then((result) => {
         this.profile = result
+        this.username = result.username
         this.avatar = `/api/avatar/${result.username}/large?refresh?refresh=${this.refresh++}`
         this.twoFA = result.TwoFA
       })
@@ -100,6 +107,24 @@ export default defineComponent({
           this.avatar = `/api/avatar/${this.profile.username}/large?refresh=${this.refresh++}`
         }
         this.$refs.uploader.reset()
+      })
+    },
+    changeUsername () {
+      this.$api.changeUsername(this.username)
+      .then(() => {
+        this.$q.notify({
+          type: 'positive',
+          message: 'Username successfully changed'
+        })
+      })
+      .catch((error) => {
+        console.log(error.response.data)
+        for (let i = 0; i < error.response.data.message.length; i++) {
+          this.$q.notify({
+              type: 'negative',
+              message: error.response.data.message[i]
+            })
+        }
       })
     },
     imgOnly (files : readonly any [] | FileList) : readonly any [] {
