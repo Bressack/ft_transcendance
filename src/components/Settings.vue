@@ -40,11 +40,11 @@
       @click="removeAvatar()"
       />
     </q-item>
-    <q-item class="justify-center">
-      <q-input dark color="orange" label="Change username" v-model="username">
-        <q-btn color="green" type="submit" label="Ok" @click="changeUsername"/>
+    <div class="q-pa-md">
+      <q-input dark color="white" label="Change username" v-model="username">
+        <q-btn color="orange" type="submit" label="Ok" @click="changeUsername"/>
       </q-input>
-    </q-item>
+    </div>
     <q-item class="justify-center q-pb-md">
     <q-toggle color="orange" @update:model-value="onUpdate" v-model="twoFA">
       <q-item-label class="label">Two factor authentification</q-item-label>
@@ -112,23 +112,25 @@ export default defineComponent({
       })
     },
     changeUsername () {
-      this.$api.changeUsername(this.username)
-      .then(() => {
-        this.$q.notify({
-          type: 'positive',
-          message: 'Username successfully changed'
-        })
-        this.profile.username = this.username
-      })
-      .catch((error) => {
-        console.log(error.response.data)
-        for (let i = 0; i < error.response.data.message.length; i++) {
+      if (this.username !== this.profile.username) {
+        this.$api.changeUsername(this.username)
+        .then(() => {
           this.$q.notify({
-              type: 'negative',
-              message: error.response.data.message[i]
-            })
-        }
-      })
+            type: 'positive',
+            message: 'Username successfully changed'
+          })
+          this.profile.username = this.username
+        })
+        .catch((error) => {
+          console.log(error.response.data)
+          for (let i = 0; i < error.response.data.message.length; i++) {
+            this.$q.notify({
+                type: 'negative',
+                message: error.response.data.message[i]
+              })
+          }
+        })
+      }
     },
     imgOnly (files : readonly any [] | FileList) : readonly any [] {
       if (files[0].type === 'image/png' || files[0].type === 'image/jpg' || files[0].type === 'image/jpeg')
