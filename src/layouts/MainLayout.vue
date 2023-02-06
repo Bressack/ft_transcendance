@@ -73,7 +73,7 @@ export default defineComponent({
 	data: () => {
 		return {
 			storeMe: useMeStore(),
-			storeChat: useChatSocketStore(),
+			// storeChat: useChatSocketStore(),
 			opponent: "",
 			maps: "",
 			difficulty: "",
@@ -95,8 +95,8 @@ export default defineComponent({
 				.then((status) => {
 					this.$ws.disconnect()
 					this.storeMe.$reset()
-					this.storeChat.leaveCurrentRoom()
-					this.storeChat.$reset()
+					this.$storeChat.leaveCurrentRoom()
+					this.$storeChat.$reset()
 					this.$router.push('/login')
 				})
 		},
@@ -173,11 +173,12 @@ export default defineComponent({
 	},
 	created() {
 		this.$ws.connect()
-		this.storeChat.init_socket(this.$ws) // set socket in the store
+    this.$storeChat.$reset()
+		this.$storeChat.init_socket(this.$ws) // set socket in the store
 		// clean possibly old datas
 		this.storeMe.$reset()
-		this.storeChat.leaveCurrentRoom()
-		this.storeChat.$reset()
+		this.$storeChat.leaveCurrentRoom()
+
 		// connect and init WebSockets
 		// fetch datas
 		this.storeMe.fetch()

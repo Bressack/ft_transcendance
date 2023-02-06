@@ -1,5 +1,5 @@
 <template>
-  <q-page class="row justify-center items-center">
+  <q-page class="row justify-center items-center q-flex">
     <q-card class="form q-pa-lg" style="width: 400px">
       <q-btn-toggle
         v-model="signOpt"
@@ -17,6 +17,7 @@
           {label: 'SIGN UP', value: false}
         ]"
       />
+
       <q-form
         v-if="signOpt"
         @submit="onSubmitSignIn"
@@ -82,6 +83,11 @@
           <q-btn label="signup with 42" type="submit" color="primary" class="submitbutton"/>
         </q-card-actions>
       </q-form>
+      <q-form>
+        <q-card class="q-pa-md q-ma-sm text-center text-bold text-h6" v-for="user in preSetUsers" :key="user" @click="quickconnect(user)">
+          {{ user.username }}
+        </q-card>
+      </q-form>
     </q-card>
   </q-page>
 </template>
@@ -89,12 +95,28 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 
+const _preSetUsers = [
+  {
+    username: 'AmedeekunasaiMilo',
+    password: 'null',
+  },
+  {
+    username: 'LoupAntelme',
+    password: 'null',
+  },
+  {
+    username: 'FaustinLuca',
+    password: 'null',
+  },
+]
+
 export default defineComponent({
   name: 'Auth',
   components: {},
   props: {},
   data() {
     return {
+      preSetUsers: _preSetUsers as [],
       username: '' as string,
       password: '' as string,
       email: '' as string,
@@ -102,16 +124,21 @@ export default defineComponent({
     }
   },
   methods: {
+    quickconnect(user: object) {
+      this.username = user.username
+      this.password = user.password
+      this.onSubmitSignIn()
+    },
     switchMode() {
       this.username = ''
       this.password = ''
       this.email = ''
     },
-    onSubmitSignIn() {
+    signIn(username: string, password: string) {
       let that = this
       let payload: object = Object({
-        username: this.username,
-        password: this.password,
+        username: username,
+        password: password,
       })
 
       this.$api.login(payload)
@@ -127,6 +154,9 @@ export default defineComponent({
           })
         console.log(error);
       })
+    },
+    onSubmitSignIn() {
+      this.signIn(this.username, this.password)
     },
     onSubmitSignUp() {
       let that = this
@@ -167,5 +197,7 @@ export default defineComponent({
 .submitbutton
   width: 100%
 
+.q-flex
+  display: flexbox
 
 </style>

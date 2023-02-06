@@ -18,8 +18,16 @@
           </q-item-section>
 
           <!-- icon add to friend -->
-          <q-item-section side>
-            <q-icon name="add" color="green" @click="selectElement(elem?.username)" />
+          <q-item-section side v-if="statusUnknown(elem?.status)">
+            <q-icon name="add" color="green" @click="selectElement(elem?.username, 'add')" />
+          </q-item-section>
+
+          <q-item-section side v-else-if="statusFriend(elem?.status)">
+            <q-icon name="cancel" color="red" @click="selectElement(elem?.username, 'remove')" />
+          </q-item-section>
+
+          <q-item-section side v-else-if="statusPending(elem?.status)">
+            <q-icon name="cancel" color="green" @click="selectElement(elem?.username, 'remove')" />
           </q-item-section>
 
         </q-item>
@@ -38,6 +46,12 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+
+enum EUserStatus {
+  UNKNOWN,
+  FRIEND,
+  PENDING,
+}
 
 export default defineComponent({
   name: 'QInputMenu',
@@ -90,8 +104,17 @@ export default defineComponent({
     }
   },
   methods: {
-    selectElement(elem: any) {
-      this.$emit('selectElement', elem)
+    statusUnknown(s: EUserStatus) {
+      return (s == EUserStatus.UNKNOWN)
+    },
+    statusFriend(s: EUserStatus) {
+      return (s == EUserStatus.FRIEND)
+    },
+    statusPending(s: EUserStatus) {
+      return (s == EUserStatus.PENDING)
+    },
+    selectElement(elem: any, mode: string) {
+      this.$emit('selectElement', elem, mode)
     },
     createElement() {
       this.$emit('createElement')

@@ -2,7 +2,7 @@
 	<q-page>
 		<div>
 			<div class="titlename">
-				@{{ storeChat.name }}
+				@{{ $storeChat.name }}
 			</div>
 			<div ref="chatList" class="list_messages">
 				<Message v-for="message in messages" :key="message.id" :username=message?.username
@@ -10,7 +10,7 @@
 					:timestamp="new Date(message?.CreatedAt)" />
 				<!-- :avatar=storeMe.getAvatar(message?.username).avatar -->
 			</div>
-			<q-input @keydown.enter.prevent="sendmessage" filled v-model="storeChat.text" placeholder="Enter text here"
+			<q-input @keydown.enter.prevent="sendmessage" filled v-model="$storeChat.text" placeholder="Enter text here"
 				class="absolute-bottom custom-input input" />
 		</div>
 	</q-page>
@@ -20,7 +20,7 @@
 import { defineComponent, PropType, ref } from 'vue';
 import UserCard from 'src/components/common/UserCard.vue'
 import Message from './components/Message.vue'
-import { useChatSocketStore } from 'src/stores/chatSocket';
+// import { useChatSocketStore } from 'src/stores/chatSocket';
 import { useMeStore } from 'src/stores/me';
 
 import {
@@ -37,14 +37,14 @@ export default defineComponent({
 	data() {
 		return {
 			// text: '',
-			storeChat: useChatSocketStore(),
+			// storeChat: useChatSocketStore(),
 			storeMe: useMeStore(),
       messages: [] as Array<IWSMessages>,
 		}
 	},
 	methods: {
 		sendmessage() {
-			this.storeChat.sendMessage()
+			this.$storeChat.sendMessage()
 		},
 		goProfilPage(user: string) {
 			this.$router.push({
@@ -63,7 +63,7 @@ export default defineComponent({
       })
 			const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
 
-			// while (element.children.length != this.storeChat.messages.length)
+			// while (element.children.length != this.$storeChat.messages.length)
 			while (element.children.length != this.messages.length)
 				await new Promise(r => setTimeout(r, 10));
 			element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
@@ -77,13 +77,18 @@ export default defineComponent({
 		}
 	},
 	beforeMount() {
-		this.storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.password, this.scrollBottom)
+    console.log('beforeMount');
+
+    console.log(this.$storeChat);
+		this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.password, this.scrollBottom)
 	},
 	beforeUpdate() {
-		this.storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.password, this.scrollBottom)
+    console.log('beforeUpdate');
+
+		this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.password, this.scrollBottom)
 	},
 	beforeUnmount() {
-		this.storeChat.leaveCurrentRoom()
+		this.$storeChat.leaveCurrentRoom()
 	}
 });
 </script>

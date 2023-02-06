@@ -1,42 +1,39 @@
 <template>
-  <div class="absolute-top bg"/>
+  <div class="absolute-top bg" />
   <div class="socialheader absolute-top">
     <QInputMenu :menuList="searchResult?.result" @findListWithString="search" @selectElement="follow" />
 
-    <q-btn-toggle
-      class="socialmenu"
-      v-model="socialtoggle"
-      push
-      flat
-      toggle-color="orange-7"
-      :options="[
-        { value: '1', slot: 'one'   },
-        { value: '2', slot: 'two'   },
-        { value: '3', slot: 'three' },
-        { value: '4', slot: 'four'  },
-      ]"
-    >
+    <q-btn-toggle class="socialmenu" v-model="socialtoggle" push flat toggle-color="orange-7" :options="[
+      { value: '1', slot: 'one' },
+      { value: '2', slot: 'two' },
+      { value: '3', slot: 'three' },
+      { value: '4', slot: 'four' },
+    ]">
       <template v-slot:one>
         <div class="row items-center no-wrap" style="width: 42px;">
-          <q-icon right name="group"/>
+          <q-icon right name="group" />
         </div>
       </template>
 
       <template v-slot:two>
         <div class="row items-center no-wrap" style="width: 42px;">
-          <q-icon right name="chat"/>
+          <q-icon right name="chat" />
         </div>
       </template>
 
       <template v-slot:three>
-        <div class="row items-center no-wrap" style="width: 42px;">
-          <q-icon right name="hourglass_bottom"/>
+        <div class="row items-center no-wrap" style="width: 42px;" v-if="storeMe.friendRequestRecevied !== undefined">
+          <q-icon right name="hourglass_bottom" />
+          <div class="notif justify-center items-center circle" v-if="storeMe.friendRequestRecevied?.length > 0"/>
+          <div class="notif justify-center items-center" v-if="storeMe.friendRequestRecevied?.length > 0">{{ storeMe.friendRequestRecevied?.length < 99 ? storeMe.friendRequestRecevied?.length : '99+' }}</div>
         </div>
       </template>
 
       <template v-slot:four>
-        <div class="row items-center no-wrap" style="width: 42px;">
-          <q-icon right name="notifications"/>
+        <div class="row items-center no-wrap" style="width: 42px;" v-if="storeMe.friendRequestRecevied !== undefined">
+          <q-icon right name="notifications" />
+          <div class="notif justify-center items-center circle" v-if="storeMe.friendRequestSent?.length > 0"/>
+          <div class="notif justify-center items-center" v-if="storeMe.friendRequestSent?.length > 0">{{ storeMe.friendRequestSent?.length < 99 ? storeMe.friendRequestSent?.length : '99+' }}</div>
         </div>
       </template>
     </q-btn-toggle>
@@ -44,26 +41,70 @@
 
   <q-list bordered class="list">
 
-    <!-- <q-expansion-item default-opened icon="perm_identity" label="Friend Requests Recevied" header-class="text-orange-3"> -->
-      <div v-if="socialtoggle == '3'">
-        <q-item clickable v-ripple v-for="rrecv in storeMe.friendRequestRecevied" :key="rrecv">
-          <q-item-section style="max-width: 50px;">
-            <q-avatar class="avatar">
-              <img size="20px" :src="`/api/avatar/${rrecv}/thumbnail`">
-            </q-avatar>
-          </q-item-section>
-          <q-item-section>
-            {{ rrecv }}
-          </q-item-section>
-          <q-item-section side>
-            <q-icon name="done" color="green" @click="follow(rrecv)" />
-          </q-item-section>
-        </q-item>
-      </div>
-    <!-- </q-expansion-item> -->
-    <!-- <q-separator /> -->
+    <div v-if="socialtoggle == '1'">
+      <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="usermenu">
+        <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
+          <q-avatar class="avatar">
+            <img size="20px" :src="`/api/avatar/${friend}/thumbnail`">
+            <div :class="getLoginStatus(friend)" class="loginstatus" />
+          </q-avatar>
+        </q-item-section>
+        <q-item-section @click="userSelected(friend)">
+          {{ friend }}
+        </q-item-section>
+        <q-item-section side class="toto">
+          <q-icon name="more_vert" color="white" class="toto">
+            <q-menu class="bg-grey-9 text-white" auto-close>
 
-    <!-- <q-expansion-item default-opened icon="perm_identity" label="Friend Requests Sent" header-class="text-orange-3"> -->
+              <q-list style="min-width: 100px">
+                <q-item clickable @click="goGameOptions(friend)">
+                  <q-item-section>Invite to play</q-item-section>
+                </q-item>
+                <q-item clickable @click="goProfilPage(friend)">
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+                <q-separator dark />
+                <q-item clickable class="text-red-7" @click="unfollow(friend)">
+                  <q-item-section>Remove friend</q-item-section>
+                </q-item>
+              </q-list>
+
+            </q-menu>
+          </q-icon>
+        </q-item-section>
+      </q-item>
+    </div>
+
+    <div v-if="socialtoggle == '2'">
+      <q-item clickable v-ripple v-for="channel in storeMe.getPublicPrivateChannels()" :key="channel.channelId"
+        @click="chanSelected(String(channel.channelId))">
+        <q-item-section>
+          <span class="text-bold text-h6 pubchan" @click="chanSelected(channel.channelId)">{{
+            channel.channel.name
+          }}</span>
+        </q-item-section>
+        <q-item-section side v-if="channel.channel.channel_type === 'PRIVATE'">
+          <q-icon name="lock" color="grey-7" />
+        </q-item-section>
+      </q-item>
+    </div>
+
+    <div v-if="socialtoggle == '3'">
+      <q-item clickable v-ripple v-for="rrecv in storeMe.friendRequestRecevied" :key="rrecv">
+        <q-item-section style="max-width: 50px;">
+          <q-avatar class="avatar">
+            <img size="20px" :src="`/api/avatar/${rrecv}/thumbnail`">
+          </q-avatar>
+        </q-item-section>
+        <q-item-section>
+          {{ rrecv }}
+        </q-item-section>
+        <q-item-section side>
+          <q-icon name="done" color="green" @click="follow(rrecv)" />
+        </q-item-section>
+      </q-item>
+    </div>
+
     <div v-if="socialtoggle == '4'">
       <q-item clickable v-ripple v-for="rsent in storeMe.friendRequestSent" :key="rsent">
         <q-item-section style="max-width: 50px;">
@@ -79,61 +120,7 @@
         </q-item-section>
       </q-item>
     </div>
-    <!-- </q-expansion-item>
-    <q-separator /> -->
 
-    <!-- <q-expansion-item default-opened icon="perm_identity" label="Publics Channels" header-class="text-orange text-bold text-h6"> -->
-    <div v-if="socialtoggle == '2'">
-      <q-item clickable v-ripple v-for="channel in storeMe.getPublicPrivateChannels()" :key="channel.channelId"
-        @click="chanSelected(String(channel.channelId))">
-        <q-item-section>
-          <span class="text-bold text-h6 pubchan" @click="chanSelected(channel.channelId)">{{
-            channel.channel.name
-          }}</span>
-        </q-item-section>
-        <q-item-section side v-if="channel.channel.channel_type === 'PRIVATE'">
-          <q-icon name="lock" color="grey-7" />
-        </q-item-section>
-      </q-item>
-    </div>
-    <!-- </q-expansion-item>
-    <q-separator /> -->
-
-    <!-- <q-expansion-item default-opened icon="perm_identity" label="Friends" header-class="text-orange text-bold text-h6"> -->
-      <!-- <q-item-label header class="header">Friends</q-item-label> -->
-    <div v-if="socialtoggle == '1'">
-      <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="usermenu">
-        <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
-          <q-avatar class="avatar">
-            <img size="20px" :src="`/api/avatar/${friend}/thumbnail`">
-            <div :class="getLoginStatus(friend)" class="loginstatus"/>
-          </q-avatar>
-        </q-item-section>
-        <q-item-section @click="userSelected(friend)">
-          {{ friend }}
-        </q-item-section>
-        <q-item-section side class="toto">
-          <q-icon name="more_vert" color="white" class="toto">
-            <q-menu class="bg-grey-9 text-white" auto-close>
-              <q-list style="min-width: 100px">
-                <q-item clickable @click="goGameOptions(friend)">
-                  <q-item-section>Invite to play</q-item-section>
-                </q-item>
-                <q-item clickable @click="goProfilPage(friend)">
-                  <q-item-section>Profile</q-item-section>
-                </q-item>
-                <q-separator dark />
-                <q-item clickable class="text-red-7" @click="unfollow(friend)">
-                  <q-item-section>Remove friend</q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
-          </q-icon>
-          <!-- <q-icon name="cancel" color="red" @click="unfollow(friend)"/> -->
-        </q-item-section>
-      </q-item>
-    </div>
-    <!-- </q-expansion-item> -->
   </q-list>
   <q-dialog v-model="gameOptions">
     <GameOptions :opponent="opponent" :closeFunction="closeGameOptions" />
@@ -149,9 +136,14 @@ import GameOptions from '../../components/GameOptions.vue'
 // import api from 'src/services/api.service'
 import { ISearchQuery } from 'src/services/api.models'
 import { useMeStore } from 'src/stores/me';
-import { store } from 'quasar/wrappers';
 import QInputMenu from 'src/components/QInputMenu.component.vue';
 import { useChatSocketStore } from 'src/stores/chatSocket';
+
+enum EUserStatus {
+  UNKNOWN,
+  FRIEND,
+  PENDING,
+}
 
 interface IResult {
   total: number,
@@ -160,6 +152,7 @@ interface IResult {
 
 interface IUserName {
   username: String
+  status: EUserStatus
 }
 
 interface IUserSelected {
@@ -181,6 +174,18 @@ export default defineComponent({
         gameOptions.value = false
       },
     }
+  },
+  computed: {
+    friendRequestRecevied(): number {
+      if (this.storeMe.friendRequestRecevied)
+        return this.storeMe.friendRequestRecevied.length
+      return 0
+    },
+    friendRequestSent(): number {
+      if (this.storeMe.friendRequestSent)
+        return this.storeMe.friendRequestSent.length
+      return 0
+    },
   },
   data() {
     return {
@@ -223,7 +228,27 @@ export default defineComponent({
       const searchQuery: ISearchQuery = { key: text }
       this.$api.search(searchQuery)
         .then(function (result) {
-          that.searchResult = result
+          let ret: IResult = {
+            total: 0,
+            result: []
+          }
+
+          for (let elem of result.result) {
+            let stat: EUserStatus = EUserStatus.UNKNOWN
+            if (that.storeMe.friends?.includes(elem.username))
+              stat = EUserStatus.FRIEND
+            else if (that.storeMe.friendRequestRecevied?.includes(elem.username) || that.storeMe.friendRequestSent?.includes(elem.username))
+              stat = EUserStatus.PENDING
+            ret.result.push({
+              username: elem.username,
+              status: stat
+            })
+          }
+          ret.total = ret.result?.length
+          console.log(ret);
+          console.log(result);
+
+          that.searchResult = ret
         })
         .catch(function (error) {
           that.searchResult = {} as IResult
@@ -234,6 +259,7 @@ export default defineComponent({
     },
     userSelected(username: string) {
       const channelID = this.storeMe.getChannelIDByUsername(username)
+      console.log('toto:', channelID);
       this.$router.push({
         path: `/conversation/${channelID}`,
       })
@@ -320,5 +346,19 @@ export default defineComponent({
   z-index: 2
   background-color: $bg-secondary
   position: fixed
+
+.notif
+  width: 16px
+  height: 16px
+  position: absolute
+  margin-bottom: 27px
+  margin-left: 23px
+  font-size: 11px
+  color: white
+
+.circle
+  background-color: red
+  border-radius: 100px
+  margin-bottom: 20px
 
 </style>
