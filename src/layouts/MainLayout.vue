@@ -36,6 +36,7 @@
 				<GameInvitation :opponent="opponent" :map=maps :difficulty=difficulty />
 			</q-dialog>
 		</q-drawer>
+
 		<q-page-container>
 			<router-view />
 		</q-page-container>

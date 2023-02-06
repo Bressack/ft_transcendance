@@ -4,6 +4,8 @@ import {
   IWSMessages,
   IWSError,
   IWSInfos,
+  IUserInfos,
+  IJoinChannelPayload,
 } from 'src/models/messages.ws';
 import ws from 'src/services/ws.service';
 
@@ -14,10 +16,12 @@ export const useChatSocketStore = defineStore('chatSocket', {
     init           : false as boolean,
     socket         : {} as ws,
     currentChannel : '' as string,
+    channelType    : '' as '',
     password       : '' as string,
     name           : '' as string,
     text           : '' as string,
-    connectedUsers : [] as Array<string> // TODO type
+    connectedUsers : [] as Array<string>,
+    SubscribedUsers: [] as Array<IUserInfos>,
   }),
 
   getters: {
@@ -36,7 +40,9 @@ export const useChatSocketStore = defineStore('chatSocket', {
       if (this.currentChannel !== '')
         this.leaveCurrentRoom()
       this.currentChannel = channelId;
-      this.socket.emitcb('join-channel', { channelId: channelId, password: this.password }, (res: any) => {
+      this.socket.emitcb('join-channel', { channelId: channelId, password: this.password }, (res: IJoinChannelPayload) => {
+        this.SubscribedUsers = res.data.SubscribedUsers
+        this.channelType = res.data.channel_type
         if (res.data.channel_type == 'ONE_TO_ONE')
           this.name = res.data.name
         else
