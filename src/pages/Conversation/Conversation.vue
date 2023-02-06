@@ -80,12 +80,12 @@ export default defineComponent({
     console.log('beforeMount');
 
     console.log(this.$storeChat);
-		this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.password, this.scrollBottom)
+		this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
 	},
 	beforeUpdate() {
     console.log('beforeUpdate');
 
-		this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.password, this.scrollBottom)
+		this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
 	},
 	beforeUnmount() {
 		this.$storeChat.leaveCurrentRoom()

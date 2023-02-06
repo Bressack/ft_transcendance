@@ -19,22 +19,26 @@
 
           <!-- icon add to friend -->
           <q-item-section side v-if="statusUnknown(elem?.status)">
-            <q-icon name="add" color="green" @click="selectElement(elem?.username, 'add')" />
+            <q-icon name="add" color="green" @click="selectElement(elem?.username, 'follow')" />
           </q-item-section>
 
           <q-item-section side v-else-if="statusFriend(elem?.status)">
-            <q-icon name="cancel" color="red" @click="selectElement(elem?.username, 'remove')" />
+            <q-icon name="cancel" color="red" @click="selectElement(elem?.username, 'unfollow')" />
           </q-item-section>
 
-          <q-item-section side v-else-if="statusPending(elem?.status)">
-            <q-icon name="cancel" color="green" @click="selectElement(elem?.username, 'remove')" />
+          <q-item-section side v-else-if="statusPendingto(elem?.status)">
+            <q-icon name="cancel" color="green" @click="selectElement(elem?.username, 'unfollow')" />
+          </q-item-section>
+
+          <q-item-section side v-else-if="statusPendingfrom(elem?.status)">
+            <q-icon name="add" color="green" @click="selectElement(elem?.username, 'follow')" />
           </q-item-section>
 
         </q-item>
       </q-list>
 
       <q-list v-else-if="menuList && !menuList.length && stringToFind.length" style="min-width: 100px" class="listuser">
-        <q-item clickable @click="createElement">
+        <q-item clickable>
           <q-item-section>{{ defaultLabel }}</q-item-section>
         </q-item>
       </q-list>
@@ -50,7 +54,8 @@ import { defineComponent, ref } from 'vue';
 enum EUserStatus {
   UNKNOWN,
   FRIEND,
-  PENDING,
+  PENDINGFROM,
+  PENDINGTO,
 }
 
 export default defineComponent({
@@ -110,11 +115,15 @@ export default defineComponent({
     statusFriend(s: EUserStatus) {
       return (s == EUserStatus.FRIEND)
     },
-    statusPending(s: EUserStatus) {
-      return (s == EUserStatus.PENDING)
+    statusPendingfrom(s: EUserStatus) {
+      return (s == EUserStatus.PENDINGFROM)
+    },
+    statusPendingto(s: EUserStatus) {
+      return (s == EUserStatus.PENDINGTO)
     },
     selectElement(elem: any, mode: string) {
       this.$emit('selectElement', elem, mode)
+      setTimeout(() => { this.$emit('findListWithString', this.stringToFind) }, 100)
     },
     createElement() {
       this.$emit('createElement')

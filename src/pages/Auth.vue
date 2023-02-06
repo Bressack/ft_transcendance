@@ -108,6 +108,10 @@ const _preSetUsers = [
     username: 'FaustinLuca',
     password: 'null',
   },
+  {
+    username: 'toto',
+    password: 'totototo',
+  },
 ]
 
 export default defineComponent({

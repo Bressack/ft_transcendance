@@ -1,7 +1,7 @@
 <template>
   <div class="absolute-top bg" />
   <div class="socialheader absolute-top">
-    <QInputMenu :menuList="searchResult?.result" @findListWithString="search" @selectElement="follow" />
+    <QInputMenu :menuList="searchResult?.result" @findListWithString="search" @selectElement="followorunfollow" />
 
     <q-btn-toggle class="socialmenu" v-model="socialtoggle" push flat toggle-color="orange-7" :options="[
       { value: '1', slot: 'one' },
@@ -22,18 +22,18 @@
       </template>
 
       <template v-slot:three>
-        <div class="row items-center no-wrap" style="width: 42px;" v-if="storeMe.friendRequestRecevied !== undefined">
-          <q-icon right name="hourglass_bottom" />
-          <div class="notif justify-center items-center circle" v-if="storeMe.friendRequestRecevied?.length > 0"/>
-          <div class="notif justify-center items-center" v-if="storeMe.friendRequestRecevied?.length > 0">{{ storeMe.friendRequestRecevied?.length < 99 ? storeMe.friendRequestRecevied?.length : '99+' }}</div>
+        <div class="row items-center no-wrap" style="width: 42px;" v-if="$storeMe.friendRequestRecevied !== undefined">
+          <q-icon right name="hourglass_bottom"/>
+          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestRecevied?.length > 0"/>
+          <div class="notif justify-center items-center" v-if="$storeMe.friendRequestRecevied?.length > 0">{{ $storeMe.friendRequestRecevied?.length < 99 ? $storeMe.friendRequestRecevied?.length : '99+' }}</div>
         </div>
       </template>
 
       <template v-slot:four>
-        <div class="row items-center no-wrap" style="width: 42px;" v-if="storeMe.friendRequestRecevied !== undefined">
-          <q-icon right name="notifications" />
-          <div class="notif justify-center items-center circle" v-if="storeMe.friendRequestSent?.length > 0"/>
-          <div class="notif justify-center items-center" v-if="storeMe.friendRequestSent?.length > 0">{{ storeMe.friendRequestSent?.length < 99 ? storeMe.friendRequestSent?.length : '99+' }}</div>
+        <div class="row items-center no-wrap" style="width: 42px;" v-if="$storeMe.friendRequestRecevied !== undefined">
+          <q-icon right name="notifications"/>
+          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestSent?.length > 0"/>
+          <div class="notif justify-center items-center" v-if="$storeMe.friendRequestSent?.length > 0">{{ $storeMe.friendRequestSent?.length < 99 ? $storeMe.friendRequestSent?.length : '99+' }}</div>
         </div>
       </template>
     </q-btn-toggle>
@@ -42,7 +42,7 @@
   <q-list bordered class="list">
 
     <div v-if="socialtoggle == '1'">
-      <q-item clickable v-ripple v-for="friend in storeMe.friends" :key="friend" class="usermenu">
+      <q-item clickable v-ripple v-for="friend in $storeMe.friends" :key="friend" class="usermenu">
         <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
           <q-avatar class="avatar">
             <img size="20px" :src="`/api/avatar/${friend}/thumbnail`">
@@ -76,7 +76,7 @@
     </div>
 
     <div v-if="socialtoggle == '2'">
-      <q-item clickable v-ripple v-for="channel in storeMe.getPublicPrivateChannels()" :key="channel.channelId"
+      <q-item clickable v-ripple v-for="channel in $storeMe.getPublicPrivateChannels()" :key="channel.channelId"
         @click="chanSelected(String(channel.channelId))">
         <q-item-section>
           <span class="text-bold text-h6 pubchan" @click="chanSelected(channel.channelId)">{{
@@ -90,7 +90,7 @@
     </div>
 
     <div v-if="socialtoggle == '3'">
-      <q-item clickable v-ripple v-for="rrecv in storeMe.friendRequestRecevied" :key="rrecv">
+      <q-item clickable v-ripple v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv">
         <q-item-section style="max-width: 50px;">
           <q-avatar class="avatar">
             <img size="20px" :src="`/api/avatar/${rrecv}/thumbnail`">
@@ -106,7 +106,7 @@
     </div>
 
     <div v-if="socialtoggle == '4'">
-      <q-item clickable v-ripple v-for="rsent in storeMe.friendRequestSent" :key="rsent">
+      <q-item clickable v-ripple v-for="rsent in $storeMe.friendRequestSent" :key="rsent">
         <q-item-section style="max-width: 50px;">
           <q-avatar class="avatar">
             <img size="20px" :src="`/api/avatar/${rsent}/thumbnail`">
@@ -135,14 +135,13 @@ import { fake_IConvList } from '../../models/fakedatas'
 import GameOptions from '../../components/GameOptions.vue'
 // import api from 'src/services/api.service'
 import { ISearchQuery } from 'src/services/api.models'
-import { useMeStore } from 'src/stores/me';
 import QInputMenu from 'src/components/QInputMenu.component.vue';
-import { useChatSocketStore } from 'src/stores/chatSocket';
 
 enum EUserStatus {
   UNKNOWN,
   FRIEND,
-  PENDING,
+  PENDINGFROM,
+  PENDINGTO,
 }
 
 interface IResult {
@@ -177,20 +176,18 @@ export default defineComponent({
   },
   computed: {
     friendRequestRecevied(): number {
-      if (this.storeMe.friendRequestRecevied)
-        return this.storeMe.friendRequestRecevied.length
+      if (this.$storeMe.friendRequestRecevied)
+        return this.$storeMe.friendRequestRecevied.length
       return 0
     },
     friendRequestSent(): number {
-      if (this.storeMe.friendRequestSent)
-        return this.storeMe.friendRequestSent.length
+      if (this.$storeMe.friendRequestSent)
+        return this.$storeMe.friendRequestSent.length
       return 0
     },
   },
   data() {
     return {
-      storeMe: useMeStore(),
-      storeChat: useChatSocketStore(),
       conversationList: fake_IConvList(15) as IConvList,
       searchInput: '',
       searchResult: {} as IResult,
@@ -200,7 +197,7 @@ export default defineComponent({
   },
   methods: {
     getLoginStatus(username: string) {
-      if (this.storeChat.connectedUsers.includes(username))
+      if (this.$storeChat.connectedUsers.includes(username))
         return 'ONLINE-status'
       return 'OFFLINE-status'
     },
@@ -235,10 +232,12 @@ export default defineComponent({
 
           for (let elem of result.result) {
             let stat: EUserStatus = EUserStatus.UNKNOWN
-            if (that.storeMe.friends?.includes(elem.username))
+            if (that.$storeMe.friends?.includes(elem.username))
               stat = EUserStatus.FRIEND
-            else if (that.storeMe.friendRequestRecevied?.includes(elem.username) || that.storeMe.friendRequestSent?.includes(elem.username))
-              stat = EUserStatus.PENDING
+            else if (that.$storeMe.friendRequestRecevied?.includes(elem.username))
+              stat = EUserStatus.PENDINGFROM
+            else if (that.$storeMe.friendRequestSent?.includes(elem.username))
+              stat = EUserStatus.PENDINGTO
             ret.result.push({
               username: elem.username,
               status: stat
@@ -258,7 +257,7 @@ export default defineComponent({
       return item.scope == Scope.PRIVATE
     },
     userSelected(username: string) {
-      const channelID = this.storeMe.getChannelIDByUsername(username)
+      const channelID = this.$storeMe.getChannelIDByUsername(username)
       console.log('toto:', channelID);
       this.$router.push({
         path: `/conversation/${channelID}`,
@@ -269,16 +268,22 @@ export default defineComponent({
         path: `/conversation/${id}`,
       })
     },
+    followorunfollow(username: string, mode: string) {
+      if (mode == "unfollow")
+        this.unfollow(username)
+      else if (mode == "follow")
+        this.follow(username)
+    },
     follow(username: string) {
       let that = this
       this.$api.follow(username)
-        .then(function () { that.storeMe.fetch() })
+        .then(function () { that.$storeMe.fetch(), that.search() })
         .catch(function () { })
     },
     unfollow(username: string) {
       let that = this
       this.$api.unfollow(username)
-        .then(function () { that.storeMe.fetch() })
+        .then(function () { that.$storeMe.fetch(), that.search() })
         .catch(function () { })
     },
   },

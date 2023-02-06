@@ -27,7 +27,7 @@ export const useChatSocketStore = defineStore('chatSocket', {
   },
 
   actions: {
-    joinRoom(channelId: string, password: string, onFinishCallback: Function) {
+    joinRoom(channelId: string, onFinishCallback: Function) {
       if (this.init == false)
         return
 

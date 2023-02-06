@@ -1,3 +1,4 @@
+import { useMeStore } from './../stores/me';
 import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
 import WsService from 'src/services/ws.service';
@@ -10,6 +11,7 @@ declare module '@vue/runtime-core' {
     $ws: typeof ws;
     $api: typeof api;
     $storeChat: any;
+    $storeMe: any;
   }
 }
 
@@ -27,6 +29,7 @@ declare module 'vue' {
     $ws: typeof ws
     $api: typeof api
     $storeChat: any
+    $storeMe: any
   }
 }
 export default boot(({ app }) => {
@@ -38,6 +41,7 @@ export default boot(({ app }) => {
   app.config.globalProperties.$ws = ws;
   app.config.globalProperties.$api = api;
   app.config.globalProperties.$storeChat = useChatSocketStore();
+  app.config.globalProperties.$storeMe = useMeStore();
 });
 
 // export { api };
