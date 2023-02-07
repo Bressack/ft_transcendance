@@ -17,11 +17,11 @@
 <script lang="ts">
 import { ref, defineComponent, computed } from 'vue'
 import { watch } from 'vue'
-import { throttle } from 'lodash'
+import { throttle, uniqueId } from 'lodash'
 import { useMeStore } from '../../../stores/me';
 
 var timeOutFunctionId = undefined as any;
-
+let test = undefined as any
 
 export default defineComponent({
 	name: 'DrawGame',
@@ -184,15 +184,19 @@ export default defineComponent({
 		this.$ws.listen(`${this.gameId}___game-end`, this.handleGameEnd);
 		this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
 		this.canvas.addEventListener('dblclick', this.toggle);
-		const onResizeThrottled = throttle(this.onResize, 200)
-		window.addEventListener('resize', onResizeThrottled);
+		window.addEventListener('resize', this.onResize);
 		watch(() => this.$q.fullscreen.isActive, val => {
 			console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
-			onResizeThrottled();
+			this.onResize();
 		})
 		this.onResize();
 	},
 	beforeUnmount() {
+		this.$ws.removeListener(`${this.gameId}___countdown`)
+		this.$ws.removeListener(`${this.gameId}___game-end`)
+		this.$ws.removeListener(`${this.gameId}___frame-update`)
+		this.canvas.removeEventListener('dblclick',this.toggle )
+		window.removeEventListener('resize', this.onResize);
 		console.log('quit');
 		this.$ws.emit('quit', {})
 	}
