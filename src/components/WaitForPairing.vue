@@ -1,11 +1,11 @@
 <template>
   <div class="dialog">
-    <div class="q-px-xl r-py-md">
-			<q-item-label class="bigger">Finding an opponent ...</q-item-label>
+    <div class="q-px-xl r-pt-md">
+			<q-item-label class="bigger">Looking for an opponent ...</q-item-label>
       <div class="q-pt-xl">
         <q-spinner-puff
           color="orange"
-          size="8em"
+          size="7em"
         />
       </div>
 		</div>
