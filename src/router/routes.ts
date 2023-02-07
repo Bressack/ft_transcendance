@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from "vue-router";
+import api from '../services/api.service'
 
 const routes: RouteRecordRaw[] = [
   {
@@ -27,7 +28,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/Game/Game.vue"),
         name: "game",
         beforeEnter: async (to, from, next) => {
-          await fetch(`/api/games/play/${to.params.gameId}`).then((res) => {
+          await api.axiosInstance.get(`/games/play/${to.params.gameId}`).then((res) => {
             console.log(res.status);
             if (res.status == 404) {
               next({ name: "GameError" });
@@ -40,7 +41,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/Game/Game3d.vue"),
         name: "game3d",
         beforeEnter: async (to, from, next) => {
-          await fetch(`/api/games/play/${to.params.gameId}`).then((res) => {
+          await api.axiosInstance.get(`/games/play/${to.params.gameId}`).then((res) => {
             console.log(res.status);
             if (res.status == 404) {
               next({ name: "GameError" });
@@ -54,7 +55,7 @@ const routes: RouteRecordRaw[] = [
         name: "spectate",
         beforeEnter: async (to, from, next) => {
           console.log(to.params.gameId);
-          await fetch(`/api/games/watch/${to.params.gameId}`).then((res) => {
+          await api.axiosInstance.get(`/games/watch/${to.params.gameId}`).then((res) => {
             console.log(res.status);
             if (res.status == 404) {
               if (from.name === "game") {
@@ -70,7 +71,7 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/Game/Spectate3d.vue"),
         name: "spectate3d",
         beforeEnter: async (to, from, next) => {
-          await fetch(`/api/games/watch/${to.params.gameId}`).then((res) => {
+          await api.axiosInstance.get(`/games/watch/${to.params.gameId}`).then((res) => {
             console.log(res.status);
             if (res.status == 404) {
               next({ name: "GameError" });

@@ -42,7 +42,7 @@ var paddleDepth = 10;
 var ball = null as any
 var paddle1= null as any
 var paddle2 = null as any
-
+ 
 
 export default defineComponent({
 	name: 'DrawGame',
@@ -91,33 +91,19 @@ export default defineComponent({
 			scene = new THREE.Scene();
 			scene.add(camera);
 			camera.position.z = 320;
-			
-			// var c = <HTMLCanvasElement>document.getElementById("gameCanvas");
 			renderer.setSize(WIDTH, HEIGHT);
 			renderer.domElement.id = 'testid';
+			const loader = new THREE.TextureLoader();
+			// scene.background = 
+			scene.background = loader.load( 'https://cdn.sortiraparis.com/images/1001/94880/721017-espace-un-objet-mysterieux.jpg' );
 			this.canvas.appendChild(renderer.domElement);
-
-			// 	setTimeout(() =>
-			// 	{
-			// 		this.canvas_txt = <HTMLCanvasElement>document.getElementById('testid');
-			// 		console.log(renderer.getContext('2d'));
-			// 		console.log(this.canvas_txt.getContext('2d'));
-			// 		var context = renderer.getContext('2d');
-			// 		context.fillText(
-        	//     this.player1_score.toString(),
-        	//     this.canvas.width / 2 -
-        	//         (this.canvas.width * 0.05 + 100),
-        	//     this.canvas.height * 0.1
-        	// );
-				// }
-					// ,100);
-
-			
 			var planeWidth = fieldWidth
 			var	planeHeight = fieldHeight		
 			var paddle1Material = new THREE.MeshBasicMaterial({color: 0x00ffff});
-			var paddle2Material = new THREE.MeshBasicMaterial({color: 0xFF0000});	
-			var planeMaterial = new THREE.MeshBasicMaterial({ color: 0x242729 });
+			var paddle2Material = new THREE.MeshBasicMaterial({color: 0xFF0000});
+
+			var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://upload.wikimedia.org/wikipedia/commons/3/38/Xavier_Niel004.jpg' )});
+			
 			var tableMaterial = new THREE.MeshBasicMaterial({color: 0x8c8c8c});
 			var tableMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF});
 			var sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
@@ -218,6 +204,7 @@ export default defineComponent({
 				camera.position.y += (paddle1.position.y - camera.position.y) * 0.001;
 				camera.position.x = paddle1.position.x - 300;
 				camera.position.z = paddle1.position.z + 800;
+				camera.rotation.x = 0;
 				camera.rotation.y = -40 * Math.PI/180;
 				camera.rotation.z = -90 * Math.PI/180;
 			}
@@ -227,40 +214,41 @@ export default defineComponent({
 				camera.position.y += (paddle2.position.y - camera.position.y) * 0.001;
 				camera.position.x = paddle2.position.x + 300;
 				camera.position.z = paddle2.position.z + 800;
+				camera.rotation.x = 0;
 				camera.rotation.y = 40 * Math.PI/180;
 				camera.rotation.z = 90 * Math.PI/180;
 			}
-			
 		},
 		travelingdesesmort()
 		{
-			
-
 			if (!this.viewside)
 			{
-				console.log("adwwadawdawdawdawd")
 				if (camera.position.x < (paddle2.position.x + 300))
 				{
 					camera.position.x += ((paddle2.position.x + 300) - (paddle1.position.x - 300)) * 0.01
-					camera.rotation.y += ((40 * Math.PI/180)  - (-40 * Math.PI/180)) * 0.01;
-					camera.rotation.z += ((90 * Math.PI/180) - (-90 * Math.PI/180)) * 0.01;
+					var anglecam = (camera.position.x >= 0 ) ? 90 * Math.PI/180 : -90 * Math.PI/180
+					camera.position.y = Math.sqrt(Math.pow(paddle1.position.x - 300, 2) - Math.pow(camera.position.x, 2))
+					camera.rotation.z = anglecam + Math.atan(camera.position.y / camera.position.x)
+					camera.rotation.y = -40 * Math.PI/180 * Math.sin(-camera.rotation.z)
+					camera.rotation.x = 40 * Math.PI/180 * Math.cos(-camera.rotation.z)
 				}
 				else
 					this.prevviewside = this.viewside
-
 			}
 			else
 			{
 				if (camera.position.x > (paddle1.position.x - 300))
 				{
 					camera.position.x -= ((paddle2.position.x + 300) - (paddle1.position.x - 300)) * 0.01
-					camera.rotation.y -= ((40 * Math.PI/180)  - (-40 * Math.PI/180)) * 0.01;
-					camera.rotation.z -= ((90 * Math.PI/180) - (-90 * Math.PI/180)) * 0.01;
+					var anglecam = (camera.position.x >= 0 ) ? 90 * Math.PI/180 : -90 * Math.PI/180
+					camera.position.y = -Math.sqrt(Math.pow(paddle1.position.x - 300, 2) - Math.pow(camera.position.x, 2))
+					camera.rotation.z = anglecam + Math.atan(camera.position.y / camera.position.x)
+					camera.rotation.y = -40 * Math.PI/180 * Math.sin(-camera.rotation.z)
+					camera.rotation.x = 40 * Math.PI/180 * Math.cos(-camera.rotation.z)
 				}
 				else
 					this.prevviewside = this.viewside
 			}
-			// this.prevviewside = this.viewside
 		},
 		toggle(e: any) {
 			const target = <HTMLElement>document.getElementById('div3d')
@@ -279,6 +267,7 @@ export default defineComponent({
 			timeOutFunctionId = setTimeout(this.onResize, 200);
 		},
 		onResize() {
+			console.log("onresize")
 			if (this.$q.fullscreen.isActive == true) {
 
 				if (window.screen.orientation.type == "portrait-primary") {
@@ -348,11 +337,9 @@ export default defineComponent({
 			this.$ws.listen(`${this.gameId}___game-end`, this.handleGameEnd);
 			this.$ws.listen(`${this.gameId}___frame-update`, this.update_and_draw);
 			this.canvas_txt.addEventListener('dblclick', this.toggle);
-			const onResizeThrottled = throttle(this.onResize, 200)
-			window.addEventListener('resize', onResizeThrottled);
+			window.addEventListener('resize', this.waitEndResize);
 			watch(() => this.$q.fullscreen.isActive, val => {
-				console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
-				onResizeThrottled();
+				this.waitEndResize();
 			})
 			this.setup();
 			this.onResize()
@@ -370,6 +357,11 @@ export default defineComponent({
 		
 	},
 	beforeUnmount() {
+		this.$ws.removeListener(`${this.gameId}___countdown`)
+		this.$ws.removeListener(`${this.gameId}___game-end`)
+		this.$ws.removeListener(`${this.gameId}___frame-update`)
+		this.canvas_txt.removeEventListener('dblclick',this.toggle )
+		window.removeEventListener('resize', this.waitEndResize);
 		console.log('quit');
 		this.$ws.emit('quit', {})
 	}
