@@ -91,9 +91,9 @@ module.exports = configure(function (/* ctx */) {
 		      // ws: true
         },
         '/api/ws': {
-          target: 'ws://localhost:3000/api/ws',
-          changeOrigin: true,
-		      ws: true
+        	target: 'ws://localhost:3000/api/ws',
+        	changeOrigin: true,
+			ws: true
         },
         // 'ws://localhost:9000': {
         //   target: 'ws://localhost:3000',
