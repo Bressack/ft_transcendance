@@ -110,6 +110,9 @@ export default defineComponent({
       }
     })
   },
+  props: {
+    closeFn : { type: Function, default: null }
+  },
   methods: {
     create() {
       const payload = {
@@ -121,11 +124,11 @@ export default defineComponent({
       console.log(payload)
       this.$api.createChannel(payload)
       .then((res) => {
-        console.log(res)
         this.$q.notify({
             type: 'positive',
             message: 'Channel successfully created'
           })
+          this.closeFn()
       })
       .catch((error) => {
         for (let i = 0; i < error.response.data.message.length; i++) {

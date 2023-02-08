@@ -10,7 +10,7 @@
     <q-btn label="Create channel" color="orange" @click="dialog = true"/>
   </q-item>
   <q-dialog v-model="dialog">
-    <CreateChannel />
+    <CreateChannel :closeFn=closeDialog />
   </q-dialog>
 </q-page>
 </template>
@@ -26,8 +26,11 @@ export default defineComponent({
   setup () {
     const dialog = ref(false)
     return {
+      closeDialog() {
+        dialog.value = false
+      },
       dialog
     }
-  }
+  },
 });
 </script>
