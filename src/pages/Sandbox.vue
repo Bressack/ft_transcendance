@@ -9,10 +9,10 @@
   <q-item class="flex-center">
     <q-btn label="Create channel" color="orange" @click="dialog = true"/>
   </q-item>
+  <q-dialog v-model="dialog">
+    <CreateChannel />
+  </q-dialog>
 </q-page>
-<q-dialog v-model="dialog">
-  <CreateChannel />
-</q-dialog>
 </template>
 
 

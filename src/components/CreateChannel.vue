@@ -9,13 +9,11 @@
       </q-item-label>
     </div>
 
-    <q-form class="q-pa-lg">
       <q-input
         v-model="name"
         dark
         label="Channel name"
         color="orange"
-        @submit="create"
       />
       <div class="q-py-md label checkbox">
         <q-checkbox v-model="access" color="orange" label="Private channel" />
@@ -50,19 +48,19 @@
     </div>
     <div class="q-pb-md" v-else>
       <q-input
-        class="input"
+        class="key"
         dark
         v-model="password"
         color="orange"
         filled
-        :type="isPwd ? 'password' : 'text'"
+        :type="isPwd ? 'text' : 'password'"
         hint="Optional: Leave blank if you wont proctect the channel"
         label="Password"
         stack-label
       >
         <template v-slot:append>
           <q-icon
-            :name="isPwd ? 'visibility_off' : 'visibility'"
+            :name="!isPwd ? 'visibility' : 'visibility_off'"
             class="cursor-pointer"
             @click="isPwd = !isPwd"
           />
@@ -73,7 +71,6 @@
     <q-item class="flex-center q-pb-md">
       <q-btn color="orange" type="submit" label="Create" @click="create()"/>
     </q-item>
-  </q-form>
 </div>
 
 
@@ -82,7 +79,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 
-// POST /users/channel
 
 
 export default defineComponent({
@@ -115,10 +111,33 @@ export default defineComponent({
   },
   methods: {
     create() {
-      console.log(this.usernames)
+      const payload = {
+        usernames: this.usernames,
+        name: this.name,
+        channel_type: this.access ? 'PRIVATE' : 'PUBLIC',
+        password: this.password
+      }
+      console.log(payload)
+      this.$api.createChannel(payload)
+      .then((res) => {
+        console.log(res)
+        this.$q.notify({
+            type: 'positive',
+            message: 'Channel successfully created'
+          })
+      })
+      .catch((error) => {
+        for (let i = 0; i < error.response.data.message.length; i++) {
+          this.$q.notify({
+              type: 'negative',
+              message: error.response.data.message[i]
+            })
+        }
+      })
     },
     filterFn (val : String, update : Function) {
         // call abort() at any time if you can't retrieve data somehow
+        // import { abort } from 'process'
 
         update(() => {
           if (val === '') {
@@ -137,7 +156,6 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 @use "../css/interpolate" as r
-
 .checkbox
   text-align: left !important
 

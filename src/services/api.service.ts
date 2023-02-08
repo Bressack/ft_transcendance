@@ -107,9 +107,16 @@ export default {
   },
 
   async changeUsername(username: String) {
-    const response = await this.axiosInstance.patch(`/users/username`, { username: username });
+    const response = await this.axiosInstance.patch('/users/username', { username: username });
     return response.data;
   },
+
+  async createChannel(payload: object) {
+    const response = await this.axiosInstance.post('/chat/channel', payload)
+    return response.data
+  },
+
+
 
   /**
    **   general

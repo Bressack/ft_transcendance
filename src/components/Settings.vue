@@ -131,6 +131,11 @@ export default defineComponent({
           }
         })
       }
+      else {
+        this.$q.notify({
+          type: 'warning',
+          message: `Your username is already "${this.username}"`})
+      }
     },
     imgOnly (files : readonly any [] | FileList) : readonly any [] {
       if (files[0].type === 'image/png' || files[0].type === 'image/jpg' || files[0].type === 'image/jpeg')
