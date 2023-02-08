@@ -16,7 +16,6 @@
                 </q-item-section>
               </q-item>
               <q-item v-for="user in $storeChat.SubscribedUsers" :key="user.username" class="q-bg">
-                <div style="display: none">{{ user.mute = true }}{{ user.ban = true }}</div>
                 <q-item-section side class="card">
                   <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
                 </q-item-section>
@@ -25,8 +24,32 @@
                   <q-item-label>{{ user.role }}</q-item-label>
                 </q-item-section>
                 <q-item-section side class="card">
-                  <q-toggle label="MUTE" dense color="purple" v-model="user.mute" />
-                  <q-toggle label="BAN" dense color="blue" v-model="user.ban" />
+                  <q-item-label>BAN<q-toggle v-model="value.ban.lever"/></q-item-label>
+                  <q-slider
+                    v-if="value.ban.lever"
+                    class="slider"
+                    v-model="value.ban.timer"
+                    :min="0"
+                    :max="60"
+                    :step="1"
+                    label
+                    :label-value="value.ban.timer + ' min(s)'"
+                    color="purple"
+                  />
+                </q-item-section>
+                <q-item-section side class="card">
+                  <q-item-label>MUTE<q-toggle v-model="value.mute.lever"/></q-item-label>
+                  <q-slider
+                    v-if="value.mute.lever"
+                    class="slider"
+                    v-model="value.mute.timer"
+                    :min="0"
+                    :max="60"
+                    :step="1"
+                    label
+                    :label-value="value.mute.timer + ' min(s)'"
+                    color="cyan"
+                  />
                 </q-item-section>
               </q-item>
 
@@ -74,6 +97,16 @@ export default defineComponent({
       minidrawerStatus: false as boolean,
       notif1: false as boolean,
       notif2: false as boolean,
+      value: {
+        ban: {
+          lever: false as boolean,
+          timer: 0 as number,
+        },
+        mute: {
+          lever: false as boolean,
+          timer: 0 as number
+        },
+      }
     }
   },
   methods: {
@@ -175,6 +208,10 @@ export default defineComponent({
   margin-right: 5px
   margin-top: 0
 
+
 .userlist
   height: 100%
+
+.slider
+  width: 100px
 </style>
