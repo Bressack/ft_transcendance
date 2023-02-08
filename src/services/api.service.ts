@@ -135,6 +135,11 @@ export default {
     return response;
   },
 
+  async users() {
+    const response = await this.axiosInstance.get('/users')
+    return (response)
+  },
+
   logIt(message: string) {
     let stack = new Error().stack as string;
     let caller = stack
