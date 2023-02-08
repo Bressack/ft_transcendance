@@ -38,10 +38,20 @@ export default route(function (/* { store, ssrContext } */) {
 
   // Navigation navigation guard
   Router.beforeEach((to : RouteLocationNormalized, from : RouteLocationNormalized, next : NavigationGuardNext) => {
-    if (!Cookies.get('has_access') && to.path !== '/login')
-      next('/login')
-    else
+    api.auth() // Delete this later
+    .then(() => {
       next()
+    })
+    .catch (() => {
+      if (to.path !== '/login')
+        next('/login')
+      else
+        next()
+    })
+    // if (!Cookies.get('has_access') && to.path !== '/login')
+    //   next('/login')
+    // else
+    //   next()
   })
 
   return Router;

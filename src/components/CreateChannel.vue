@@ -9,18 +9,41 @@
       </q-item-label>
     </div>
 
+    <div class="q-pa-md">
       <q-input
         v-model="name"
         dark
         label="Channel name"
         color="orange"
       />
+    </div>
+
+      <div class="q-pa-md">
+        <q-input
+        class="key"
+        dark
+        v-model="password"
+        color="orange"
+        :type="isPwd ? 'text' : 'password'"
+        hint="Optional: Leave blank if you wont proctect the channel"
+        label="Password"
+        stack-label
+        >
+        <template v-slot:append>
+          <q-icon
+          :name="!isPwd ? 'visibility' : 'visibility_off'"
+            class="cursor-pointer"
+            @click="isPwd = !isPwd"
+            />
+          </template>
+        </q-input>
+      </div>
+
       <div class="q-py-md label checkbox">
         <q-checkbox v-model="access" color="orange" label="Private channel" />
       </div>
 
-
-    <div class="q-pb-md" v-if="access">
+      <div class="q-pb-md" v-if="access">
       <q-select
         class="input"
         color="orange"
@@ -33,7 +56,6 @@
         input-debounce="0"
         stack-label
         label="Add users"
-        hint=""
         @filter="filterFn"
         :options="filterOptions"
       >
@@ -46,33 +68,12 @@
         </template>
       </q-select>
     </div>
-    <div class="q-pb-md" v-else>
-      <q-input
-        class="key"
-        dark
-        v-model="password"
-        color="orange"
-        filled
-        :type="isPwd ? 'text' : 'password'"
-        hint="Optional: Leave blank if you wont proctect the channel"
-        label="Password"
-        stack-label
-      >
-        <template v-slot:append>
-          <q-icon
-            :name="!isPwd ? 'visibility' : 'visibility_off'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-          />
-        </template>
-      </q-input>
+
+      <q-item class="flex-center q-pb-md">
+        <q-btn color="orange" type="submit" label="Create" @click="create()"/>
+      </q-item>
+
     </div>
-
-    <q-item class="flex-center q-pb-md">
-      <q-btn color="orange" type="submit" label="Create" @click="create()"/>
-    </q-item>
-</div>
-
 
 </template>
 
