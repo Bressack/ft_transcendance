@@ -54,12 +54,13 @@ export default route(function (/* { store, ssrContext } */) {
       //       next()
       //   })
       if (
-        !Cookies.get("has_access") &&
+        !Cookies.get("has_refresh") &&
         to.path !== "/login" &&
         from.path !== "/login"
       )
         next("/login");
       else next();
+      // next()
     }
   );
 

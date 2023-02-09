@@ -100,6 +100,13 @@ export default defineComponent({
 					this.$storeChat.$reset()
 					this.$router.push('/login')
 				})
+        .catch (() => {
+					this.$ws.disconnect()
+					this.storeMe.$reset()
+					this.$storeChat.leaveCurrentRoom()
+					this.$storeChat.$reset()
+					this.$router.push('/login')
+        })
 		},
 		onGameInviteBusy(data: any, callback:Function) {
 			callback('DECLINED')

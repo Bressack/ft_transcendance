@@ -54,40 +54,22 @@ export default defineComponent({
 				{
 					if (!Cookies.get('has_access') && Cookies.get('has_refresh')){
 						return await fetch('/api/auth/refresh')
-                            .then(() => req)
-                            .catch(async (err) => {
-								return await fetch('/api/auth/clear-cookies').then(() => {
-									that.$router.push('/login')
-									that.$ws.disconnect()
-									that.storeMe.$reset()
-									that.storeChat.$reset()
-									throw new Error(err)
-								})
-                            });
-                    }
-					else if (Cookies.get('has_access') && Cookies.get('has_refresh')){
-						return await fetch('/api/auth/logout')
-							.then(() => {
-								that.$router.push('/login')
-								that.$ws.disconnect()
-								that.storeMe.$reset()
-								that.storeChat.$reset()
-							}).catch(async (err) => {
-								return await fetch('/api/auth/clear-cookies').then(() => {
-									that.$router.push('/login')
-									that.$ws.disconnect()
-									that.storeMe.$reset()
-									that.storeChat.$reset()
-									throw new Error(err)
-								})
-						});
+            .then(() => req)
+            .catch(async (err) => {
+							return await fetch('/api/auth/clear-cookies').then(() => {
+								throw new Error(err)
+							})
+            });
+          }
+					else if (Cookies.get('has_access') && Cookies.get('has_refresh')) {
+            return req
 					}
+          else if (Cookies.get('has_access') && !Cookies.get('has_refresh')) {
+            throw new Error()
+          }
 					else {
 						return await fetch('/api/auth/clear-cookies').then(() => {
-							that.$router.push('/login')
-							that.$ws.disconnect()
-							that.storeMe.$reset()
-							that.storeChat.$reset()
+              throw new Error()
 						})
 					}
 				}
