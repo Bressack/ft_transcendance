@@ -147,6 +147,11 @@ export default {
     return (response)
   },
 
+  async setState(payload: any) {
+    const response = await this.axiosInstance.post('/users/state', payload)
+    return response;
+  },
+
   logIt(message: string) {
     let stack = new Error().stack as string;
     let caller = stack

@@ -2,7 +2,7 @@
   <q-page>
     <div class="q-flex">
       <div class="top-panel row items-center">
-        <span class="titlename">@{{ $storeChat.name }}</span>
+        <span class="titlename">{{ $storeChat.name }}</span>
 
         <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
           <q-menu persistent class="menuusers">
@@ -16,41 +16,20 @@
                 </q-item-section>
               </q-item>
               <q-item v-for="user in $storeChat.SubscribedUsers" :key="user.username" class="q-bg">
-                <q-item-section side class="card">
+                <q-item-section class="avatar">
+                  <img :src="avatarstr(user?.username)" class="image"/>
+                  <div :class="getLoginStatus(user?.username)" class="loginstatus" />
+                </q-item-section>
+                <q-item-section side class="">
                   <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
                 </q-item-section>
-                <q-item-section side class="card">
+                <q-item-section side class="card role">
                   <q-item-label>Role</q-item-label>
                   <q-item-label>{{ user.role }}</q-item-label>
                 </q-item-section>
-                <q-item-section side class="card">
-                  <q-item-label>BAN<q-toggle v-model="value.ban.lever"/></q-item-label>
-                  <q-slider
-                    v-if="value.ban.lever"
-                    class="slider"
-                    v-model="value.ban.timer"
-                    :min="0"
-                    :max="60"
-                    :step="1"
-                    label
-                    :label-value="value.ban.timer + ' min(s)'"
-                    color="purple"
-                  />
-                </q-item-section>
-                <q-item-section side class="card">
-                  <q-item-label>MUTE<q-toggle v-model="value.mute.lever"/></q-item-label>
-                  <q-slider
-                    v-if="value.mute.lever"
-                    class="slider"
-                    v-model="value.mute.timer"
-                    :min="0"
-                    :max="60"
-                    :step="1"
-                    label
-                    :label-value="value.mute.timer + ' min(s)'"
-                    color="cyan"
-                  />
-                </q-item-section>
+              <q-item-section>
+                <BanMute/>
+              </q-item-section>
               </q-item>
 
             </q-list>
@@ -74,6 +53,7 @@
 import { defineComponent, PropType, ref } from 'vue';
 import UserCard from 'src/components/common/UserCard.vue'
 import Message from './components/Message.vue'
+import BanMute from './components/BanMute.vue'
 // import { useChatSocketStore } from 'src/stores/chatSocket';
 import { useMeStore } from 'src/stores/me';
 
@@ -85,7 +65,7 @@ import {
 
 export default defineComponent({
   name: 'Conversation',
-  components: { UserCard, Message },
+  components: { UserCard, Message, BanMute },
   props: {
   },
   data() {
@@ -110,6 +90,11 @@ export default defineComponent({
     }
   },
   methods: {
+    getLoginStatus(username: string) {
+      if (this.$storeChat.connectedUsers.includes(username))
+        return 'ONLINE-status'
+      return 'OFFLINE-status'
+    },
     sendmessage() {
       this.$storeChat.sendMessage()
     },
@@ -161,6 +146,11 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+.image
+  width: 42px
+  height: 42px
+  border-radius: 250px
+
 .top-panel
   display: flexbox
   justify-content: space-between
@@ -198,7 +188,7 @@ export default defineComponent({
   justify-content: space-between
 
 .q-bg
-  background-color: #303030 !important
+  background-color: $bg-primary !important
 
 .card
   background-color: #424242
@@ -214,4 +204,26 @@ export default defineComponent({
 
 .slider
   width: 100px
+
+.role
+  min-width: 80px
+
+.avatar
+  max-width: 42px !important
+  // margin-top: 10px
+  margin-left: 10px
+  margin-right: 10px
+
+.loginstatus
+  width: 15px
+  height: 15px
+  border-radius: 100px
+  position: absolute
+  margin-top: 27px
+  margin-left: 27px
+
+.ONLINE-status
+  background-color: green
+.OFFLINE-status
+  background-color: #707070
 </style>

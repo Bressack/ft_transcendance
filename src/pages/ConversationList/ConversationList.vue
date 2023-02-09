@@ -94,6 +94,7 @@
         <q-item-section style="max-width: 50px;">
           <q-avatar class="avatar">
             <img size="20px" :src="`/api/avatar/${rrecv}/thumbnail`">
+            <div :class="getLoginStatus(rrecv)" class="loginstatus" />
           </q-avatar>
         </q-item-section>
         <q-item-section>
@@ -110,6 +111,7 @@
         <q-item-section style="max-width: 50px;">
           <q-avatar class="avatar">
             <img size="20px" :src="`/api/avatar/${rsent}/thumbnail`">
+            <div :class="getLoginStatus(rsent)" class="loginstatus" />
           </q-avatar>
         </q-item-section>
         <q-item-section>
@@ -133,7 +135,6 @@ import { IConvList, IConvItem, Scope } from '../../models/models';
 import UserCard from '../../components/common/UserCard.vue'
 import { fake_IConvList } from '../../models/fakedatas'
 import GameOptions from '../../components/GameOptions.vue'
-// import api from 'src/services/api.service'
 import { ISearchQuery } from 'src/services/api.models'
 import QInputMenu from 'src/components/QInputMenu.component.vue';
 

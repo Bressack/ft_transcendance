@@ -8,7 +8,7 @@
       <q-item-section class="datas">
 
         <q-item-section class="layer_1">
-          <span class="name">{{ username }}</span>
+          <span class="name" @click="goProfilPage">{{ username }}</span>
           <span class="date">{{ getRelativeDate(timestamp) }}</span>
         </q-item-section>
 
@@ -41,27 +41,33 @@ export default defineComponent({
   mounted() {
   },
   methods: {
-    floorStr(n: number) {
-      return (n < 10 ? '0' : '') + n
+    goProfilPage() {
+      this.$router.push({
+        path: `/profile/${this.username}`
+      })
     },
     getRelativeDate(cdate: Date): string {
+      function floorStr(n: number) {
+        return (n < 10 ? '0' : '') + n
+      }
+
       const now = new Date()
-      // let diff : number = (Date.now() - cdate.getTime()) / 3600
-      // console.log('debug: ', now.getDate() - cdate.getDate());
 
       if (now.getDate() - cdate.getDate() == 0)
-        return 'Today at ' + this.floorStr(cdate.getHours()) + ':' + this.floorStr(cdate.getMinutes())
+        return 'Today at ' + floorStr(cdate.getHours()) + ':' + floorStr(cdate.getMinutes())
       else if (now.getDate() - cdate.getDate() == 1)
-        return 'Yesterday at ' + this.floorStr(cdate.getHours()) + ':' + this.floorStr(cdate.getMinutes())
+        return 'Yesterday at ' + floorStr(cdate.getHours()) + ':' + floorStr(cdate.getMinutes())
+      else if (now.getDate() - cdate.getDate() == -1)
+        return 'Tomorrow at ' + floorStr(cdate.getHours()) + ':' + floorStr(cdate.getMinutes())
       else
       {
         const d = cdate.getDate()
         const m = (cdate.getMonth() + 1)
-        return this.floorStr(d) + '/'
-             + this.floorStr(m) + '/'
+        return floorStr(d) + '/'
+             + floorStr(m) + '/'
              + cdate.getFullYear() + ' '
-             + this.floorStr(cdate.getHours()) + ':'
-             + this.floorStr(cdate.getMinutes())
+             + floorStr(cdate.getHours()) + ':'
+             + floorStr(cdate.getMinutes())
       }
     },
   },
@@ -89,12 +95,15 @@ export default defineComponent({
   color: white
   margin: 3px
   margin-right: 10px
-  margin-left: 19px
+  margin-left: 13px
+  padding: 5px
+
+.name:hover
+  background-color: #505050
+  border-radius: 200px
 
 .datas
   padding-left: 2vw
-
-// .date
 
 .body
   color: white
