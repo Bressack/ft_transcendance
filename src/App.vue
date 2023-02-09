@@ -32,7 +32,7 @@ export default defineComponent({
 			this.$api.axiosInstance.interceptors.request.use(async (req) => {
 
 				if (req.url !== '/auth/login' && req.url !== '/auth/signup' && req.url !== '/auth/logout' && !Cookies.get('has_access') && Cookies.get('has_refresh')) {
-					return fetch('/api/auth/refresh')
+					return await fetch('/api/auth/refresh')
 						.then(() => req)
 						.catch((err) => {
 							that.$router.push('/login')
@@ -52,20 +52,50 @@ export default defineComponent({
 				}
 				else if (req.url == '/auth/logout')
 				{
-					return fetch('/api/auth/logout')
-						.then(() => {
+					if (!Cookies.get('has_access') && Cookies.get('has_refresh')){
+						return await fetch('/api/auth/refresh')
+                            .then(() => req)
+                            .catch(async (err) => {
+								return await fetch('/api/auth/clear-cookies').then(() => {
+									that.$router.push('/login')
+									that.$ws.disconnect()
+									that.storeMe.$reset()
+									that.storeChat.$reset()
+									throw new Error(err)
+								})
+                            });
+                    }
+					else if (Cookies.get('has_access') && Cookies.get('has_refresh')){
+						return await fetch('/api/auth/logout')
+							.then(() => {
+								that.$router.push('/login')
+								that.$ws.disconnect()
+								that.storeMe.$reset()
+								that.storeChat.$reset()
+							}).catch(async (err) => {
+								return await fetch('/api/auth/clear-cookies').then(() => {
+									that.$router.push('/login')
+									that.$ws.disconnect()
+									that.storeMe.$reset()
+									that.storeChat.$reset()
+									throw new Error(err)
+								})
+						});
+					}
+					else {
+						return await fetch('/api/auth/clear-cookies').then(() => {
 							that.$router.push('/login')
 							that.$ws.disconnect()
 							that.storeMe.$reset()
 							that.storeChat.$reset()
-						});
+						})
+					}
 				}
-				else return req;
-
+				return req;
 			})
 
       this.$api.axiosInstance.interceptors.response.use((resp) => {
-        console.log('interceptor', resp)
+        // console.log('interceptor', resp)
         if (resp.status === 205)
           this.storeMe.fetch()
         return resp

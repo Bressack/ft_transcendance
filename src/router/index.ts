@@ -1,4 +1,4 @@
-import { route } from 'quasar/wrappers';
+import { route } from "quasar/wrappers";
 import {
   createMemoryHistory,
   createRouter,
@@ -6,10 +6,10 @@ import {
   createWebHistory,
   NavigationGuardNext,
   RouteLocationNormalized,
-} from 'vue-router';
-import routes from './routes';
-import { Cookies } from 'quasar'
-import api from '../services/api.service'
+} from "vue-router";
+import routes from "./routes";
+import { Cookies } from "quasar";
+import api from "../services/api.service";
 
 /*
  * If not building with SSR mode, you can
@@ -24,7 +24,7 @@ export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
     : createWebHistory; // remove the '#' in the URI
-    // : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
+  // : (process.env.VUE_ROUTER_MODE === 'history' ? createWebHistory : createWebHashHistory);
 
   const Router = createRouter({
     scrollBehavior: () => ({ left: 0, top: 0 }),
@@ -37,22 +37,31 @@ export default route(function (/* { store, ssrContext } */) {
   });
 
   // Navigation navigation guard
-  Router.beforeEach((to : RouteLocationNormalized, from : RouteLocationNormalized, next : NavigationGuardNext) => {
-    api.auth() // Delete this later
-    .then(() => {
-      next()
-    })
-    .catch (() => {
-      if (to.path !== '/login')
-        next('/login')
-      else
-        next()
-    })
-    // if (!Cookies.get('has_access') && to.path !== '/login')
-    //   next('/login')
-    // else
-    //   next()
-  })
+  Router.beforeEach(
+    (
+      to: RouteLocationNormalized,
+      from: RouteLocationNormalized,
+      next: NavigationGuardNext
+    ) => {
+      //   api.auth() // Delete this later
+      //   .then(() => {
+      //     next()
+      //   })
+      //   .catch (() => {
+      //     if (to.path !== '/login')
+      //       next('/login')
+      //     else
+      //       next()
+      //   })
+      if (
+        !Cookies.get("has_access") &&
+        to.path !== "/login" &&
+        from.path !== "/login"
+      )
+        next("/login");
+      else next();
+    }
+  );
 
   return Router;
 });
