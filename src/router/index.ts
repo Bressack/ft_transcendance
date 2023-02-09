@@ -2,14 +2,9 @@ import { route } from "quasar/wrappers";
 import {
   createMemoryHistory,
   createRouter,
-  createWebHashHistory,
   createWebHistory,
-  NavigationGuardNext,
-  RouteLocationNormalized,
 } from "vue-router";
 import routes from "./routes";
-import { Cookies } from "quasar";
-import api from "../services/api.service";
 
 /*
  * If not building with SSR mode, you can
@@ -36,33 +31,6 @@ export default route(function (/* { store, ssrContext } */) {
     history: createHistory(process.env.VUE_ROUTER_BASE),
   });
 
-  // Navigation navigation guard
-  Router.beforeEach(
-    (
-      to: RouteLocationNormalized,
-      from: RouteLocationNormalized,
-      next: NavigationGuardNext
-    ) => {
-      //   api.auth() // Delete this later
-      //   .then(() => {
-      //     next()
-      //   })
-      //   .catch (() => {
-      //     if (to.path !== '/login')
-      //       next('/login')
-      //     else
-      //       next()
-      //   })
-      if (
-        !Cookies.get("has_refresh") &&
-        to.path !== "/login" &&
-        from.path !== "/login"
-      )
-        next("/login");
-      else next();
-      // next()
-    }
-  );
 
   return Router;
 });

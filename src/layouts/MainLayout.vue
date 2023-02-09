@@ -93,7 +93,7 @@ export default defineComponent({
 		logout() {
 			this.$ws.socket.disconnect()
 			this.$api.logout()
-				.then((status) => {
+				.then(() => {
 					this.$ws.disconnect()
 					this.storeMe.$reset()
 					this.$storeChat.leaveCurrentRoom()
