@@ -41,13 +41,13 @@ export default defineComponent({
       lever: 0 as number,
       options: [
         { // BAN
-          state: 'BAN',
+          state: 'BANNED',
           currentServerTime: 0 as number, // in minutes
           time: '00:00',
           proxyTime: '00:00',
         },
         { // MUTE
-          state: 'MUTE',
+          state: 'MUTED',
           currentServerTime: 0 as number, // in minutes
           time: '00:00',
           proxyTime: '00:00',
@@ -61,10 +61,7 @@ export default defineComponent({
       return (parseInt(s[0]) * 60 + parseInt(s[1]))
     },
     sendNewState() {
-      this.$api.setState({
-        channelId: this.channelId,
-        userFrom: this.$storeMe.username,
-        userTo: this.username,
+      this.$api.setState(this.channelId, this.username, {
         stateTo: this.options[this.lever].state,
         duration: this.timeToMin(),
       })

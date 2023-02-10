@@ -28,7 +28,10 @@
                   <q-item-label>{{ user.role }}</q-item-label>
                 </q-item-section>
               <q-item-section>
-                <BanMute/>
+                <BanMute
+                  :channelId="$storeChat?.currentChannel"
+                  :username="user?.username"
+                />
               </q-item-section>
               </q-item>
 

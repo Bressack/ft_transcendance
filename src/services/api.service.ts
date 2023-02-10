@@ -147,8 +147,11 @@ export default {
     return (response)
   },
 
-  async setState(payload: any) {
-    const response = await this.axiosInstance.post('/users/state', payload)
+  async setState(channelId: string, username: string, payload: any) {
+    console.log('setState 1:', channelId, username);
+    console.log('setState 2:', payload);
+
+    const response = await this.axiosInstance.post(`/users/${channelId}/${username}/state`, payload)
     return response;
   },
 
