@@ -228,5 +228,6 @@ body
   height: calc(100% - 90px)
   margin-top: 90px
   background-color: $bg-secondary
+  overflow-x: hidden
 
 </style>
