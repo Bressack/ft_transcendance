@@ -167,7 +167,7 @@ export default defineComponent({
 	created() {
 		this.$ws.connect()
     this.$storeChat.$reset()
-		this.$storeChat.init_socket(this.$ws) // set socket in the store
+		this.$storeChat.init_socket(this.$ws, this) // set socket in the store
 		// clean possibly old datas
 		this.storeMe.$reset()
 		this.$storeChat.leaveCurrentRoom()

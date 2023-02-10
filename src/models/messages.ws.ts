@@ -1,5 +1,19 @@
+import {
+  User,
+  Follows,
+  Blocks,
+  Message,
+  Channel,
+  Subscription,
+  Game,
+  Avatar,
+  eSubscriptionState,
+  eRole,
+  eChannelType,
+} from 'src/services/api.models'
 
 export type Role = "USER" | "ADMIN" | "OWNER";
+export type MessageStatus = "OK" | "INVALID_PASSWORD" | "UNAUTHORIZED" | "MESSAGE_TOO_LONG" | "MESSAGE_TOO_SHORT" | "INVALID_TIMESTAMP" | "DATABASE_ERROR" | "INVALID_CHANNEL";
 
 export interface IWSMessages {
   id: string;
@@ -7,19 +21,25 @@ export interface IWSMessages {
   ReceivedAt: Date;
   content: string;
   username: string;
-  channelId: string;
+  channel_id: string;
 }
 
-export interface IWSError {
-  status: number;
+export interface Message_Aknowledgement_output {
+  status: MessageStatus;
   channelId: string;
-  content: string;
+  comment?: string;
+};
+
+export interface IWSError {
+  data: Object
+  message: string
+  status: string
 }
 
 export interface IWSInfos {
-  status: number;
-  channelId: string;
-  content: string;
+  data: Object
+  message: string
+  status: string
 }
 
 export interface IUserInfos {
@@ -38,7 +58,7 @@ export interface IJoinChannelPayload {
       stateActiveUntil?: Date;
       messages?: Message[];
       role?: eRole;
-      SubscribedUsers?: UserInfo[];
+      SubscribedUsers?: Subscription[];
       username?: string;
   };
 }

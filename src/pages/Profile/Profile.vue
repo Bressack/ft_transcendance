@@ -107,7 +107,7 @@ export default defineComponent({
     },
     gameStatus(game : any) : string {
       if (game.score_playerOne === game.score_playerTwo)
-        return ('Tie')
+        return ('Draw')
       else if (game.score_playerOne > game.score_playerTwo && game.playerOneName === this.profile.username)
         return ('Victory')
       else if (game.score_playerOne < game.score_playerTwo && game.playerTwoName === this.profile.username)

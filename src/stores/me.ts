@@ -68,6 +68,9 @@ export const useMeStore = defineStore('me', {
   },
 
   actions: {
+    async getUser(username: string) {
+      return await api.user(username)
+    },
     async fetch() {
       let that = this
       api.me()

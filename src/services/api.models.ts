@@ -32,30 +32,37 @@ export function SearchQueryBuilder(query: ISearchQuery) {
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-enum eSubscriptionState {
-  BLACKLISTED,
-  WHITELISTED,
+export enum eSubscriptionState {
+  BANNED,
+  MUTED,
+  OK,
 }
 
-enum eRole {
+export enum eRole {
   OWNER,
   ADMIN,
   USER,
+}
+
+export enum eChannelType {
+  PUBLIC,
+  PRIVATE,
+  ONE_TO_ONE,
 }
 
 /*
 ** User
 */
 export class User implements IUser {
-  username                      : String;
-  email                         : String;
-  createdAt                     : String;
-  updatedAt                     : String;
-  TwoFA                         : Boolean;
-  password                      : String;
-  salt                          : String;
-  identification_token          : String;
-  refresh_token                 : String;
+  username                      : string;
+  email                         : string;
+  createdAt                     : string;
+  updatedAt                     : string;
+  TwoFA                         : boolean;
+  password                      : string;
+  salt                          : string;
+  identification_token          : string;
+  refresh_token                 : string;
   channelSubscriptions          : Subscription[];
   messages                      : Message[];
   gameHistoryPOne               : Game[];
@@ -65,21 +72,21 @@ export class User implements IUser {
   blockedBy                     : Blocks[];
   blocking                      : Blocks[];
   avatars                       : Avatar;
-  victoriesAsPOne               : Number;
-  victoriesAsPTwo               : Number;
-  defeatsAsPOne                 : Number;
-  defeatsAsPTwo                 : Number;
+  victoriesAsPOne               : number;
+  victoriesAsPTwo               : number;
+  defeatsAsPOne                 : number;
+  defeatsAsPTwo                 : number;
 
   constructor(
-    username                      : String,
-    email                         : String,
-    createdAt                     : String,
-    updatedAt                     : String,
-    TwoFA                         : Boolean,
-    password                      : String,
-    salt                          : String,
-    identification_token          : String,
-    refresh_token                 : String,
+    username                      : string,
+    email                         : string,
+    createdAt                     : string,
+    updatedAt                     : string,
+    TwoFA                         : boolean,
+    password                      : string,
+    salt                          : string,
+    identification_token          : string,
+    refresh_token                 : string,
     channelSubscriptions          : Subscription[],
     messages                      : Message[],
     gameHistoryPOne               : Game[],
@@ -89,10 +96,10 @@ export class User implements IUser {
     blockedBy                     : Blocks[],
     blocking                      : Blocks[],
     avatars                       : Avatar,
-    victoriesAsPOne               : Number,
-    victoriesAsPTwo               : Number,
-    defeatsAsPOne                 : Number,
-    defeatsAsPTwo                 : Number,
+    victoriesAsPOne               : number,
+    victoriesAsPTwo               : number,
+    defeatsAsPOne                 : number,
+    defeatsAsPTwo                 : number,
   ) {
     this.username                       = username;
     this.email                          = email;
@@ -119,15 +126,15 @@ export class User implements IUser {
   }
 }
 interface IUser {
-  username                      : String;
-  email                         : String;
-  createdAt                     : String;
-  updatedAt                     : String;
-  TwoFA                         : Boolean;
-  password                      : String;
-  salt                          : String;
-  identification_token          : String;
-  refresh_token                 : String;
+  username                      : string;
+  email                         : string;
+  createdAt                     : string;
+  updatedAt                     : string;
+  TwoFA                         : boolean;
+  password                      : string;
+  salt                          : string;
+  identification_token          : string;
+  refresh_token                 : string;
   channelSubscriptions          : Subscription[];
   messages                      : Message[];
   gameHistoryPOne               : Game[];
@@ -137,10 +144,10 @@ interface IUser {
   blockedBy                     : Blocks[];
   blocking                      : Blocks[];
   avatars                       : Avatar;
-  victoriesAsPOne               : Number;
-  victoriesAsPTwo               : Number;
-  defeatsAsPOne                 : Number;
-  defeatsAsPTwo                 : Number;
+  victoriesAsPOne               : number;
+  victoriesAsPTwo               : number;
+  defeatsAsPOne                 : number;
+  defeatsAsPTwo                 : number;
 }
 
 /*
@@ -148,17 +155,17 @@ interface IUser {
 */
 export class Follows implements IFollows {
   follower                      : User;
-  followerId                    : String;
+  followerId                    : string;
   following                     : User;
-  followingId                   : String;
-  id                            : String;
+  followingId                   : string;
+  id                            : string;
 
   constructor(
     follower                      : User,
-    followerId                    : String,
+    followerId                    : string,
     following                     : User,
-    followingId                   : String,
-    id                            : String,
+    followingId                   : string,
+    id                            : string,
   ) {
     this.follower                       = follower;
     this.followerId                     = followerId;
@@ -169,10 +176,10 @@ export class Follows implements IFollows {
 }
 interface IFollows {
   follower                      : User;
-  followerId                    : String;
+  followerId                    : string;
   following                     : User;
-  followingId                   : String;
-  id                            : String;
+  followingId                   : string;
+  id                            : string;
 }
 
 /*
@@ -180,17 +187,17 @@ interface IFollows {
 */
 export class Blocks implements IBlocks {
   blocker                       : User;
-  blockerId                     : String;
+  blockerId                     : string;
   blocking                      : User;
-  blockingId                    : String;
-  id                            : String;
+  blockingId                    : string;
+  id                            : string;
 
   constructor(
     blocker                       : User,
-    blockerId                     : String,
+    blockerId                     : string,
     blocking                      : User,
-    blockingId                    : String,
-    id                            : String,
+    blockingId                    : string,
+    id                            : string,
   ) {
     this.blocker                        = blocker;
     this.blockerId                      = blockerId;
@@ -201,34 +208,34 @@ export class Blocks implements IBlocks {
 }
 interface IBlocks {
   blocker                       : User;
-  blockerId                     : String;
+  blockerId                     : string;
   blocking                      : User;
-  blockingId                    : String;
-  id                            : String;
+  blockingId                    : string;
+  id                            : string;
 }
 
 /*
 ** Message
 */
 export class Message implements IMessage {
-  id                            : String;
-  CreatedAt                     : String;
-  ReceivedAt                    : String;
-  content                       : String;
+  id                            : string;
+  CreatedAt                     : string;
+  ReceivedAt                    : string;
+  content                       : string;
   user                          : User;
-  username                      : String;
+  username                      : string;
   channel                       : Channel;
-  channelId                     : String;
+  channelId                     : string;
 
   constructor(
-    id                            : String,
-    CreatedAt                     : String,
-    ReceivedAt                    : String,
-    content                       : String,
+    id                            : string,
+    CreatedAt                     : string,
+    ReceivedAt                    : string,
+    content                       : string,
     user                          : User,
-    username                      : String,
+    username                      : string,
     channel                       : Channel,
-    channelId                     : String,
+    channelId                     : string,
   ) {
     this.id                             = id;
     this.CreatedAt                      = CreatedAt;
@@ -241,40 +248,40 @@ export class Message implements IMessage {
   }
 }
 interface IMessage {
-  id                            : String;
-  CreatedAt                     : String;
-  ReceivedAt                    : String;
-  content                       : String;
+  id                            : string;
+  CreatedAt                     : string;
+  ReceivedAt                    : string;
+  content                       : string;
   user                          : User;
-  username                      : String;
+  username                      : string;
   channel                       : Channel;
-  channelId                     : String;
+  channelId                     : string;
 }
 
 /*
 ** Channel
 */
 export class Channel implements IChannel {
-  id                            : String;
-  name                          : String;
-  createdAt                     : String;
-  updated                       : String;
-  ispublic                      : Boolean;
+  id                            : string;
+  name                          : string;
+  createdAt                     : string;
+  updated                       : string;
+  ispublic                      : boolean;
   SubscribedUsers               : Subscription[];
   Message                       : Message[];
-  hash                          : String;
-  salt                          : String;
+  hash                          : string;
+  salt                          : string;
 
   constructor(
-    id                            : String,
-    name                          : String,
-    createdAt                     : String,
-    updated                       : String,
-    ispublic                      : Boolean,
+    id                            : string,
+    name                          : string,
+    createdAt                     : string,
+    updated                       : string,
+    ispublic                      : boolean,
     SubscribedUsers               : Subscription[],
     Message                       : Message[],
-    hash                          : String,
-    salt                          : String,
+    hash                          : string,
+    salt                          : string,
   ) {
     this.id                             = id;
     this.name                           = name;
@@ -288,85 +295,85 @@ export class Channel implements IChannel {
   }
 }
 interface IChannel {
-  id                            : String;
-  name                          : String;
-  createdAt                     : String;
-  updated                       : String;
-  ispublic                      : Boolean;
+  id                            : string;
+  name                          : string;
+  createdAt                     : string;
+  updated                       : string;
+  ispublic                      : boolean;
   SubscribedUsers               : Subscription[];
   Message                       : Message[];
-  hash                          : String;
-  salt                          : String;
+  hash                          : string;
+  salt                          : string;
 }
 
 /*
 ** Subscription
 */
 export class Subscription implements ISubscription {
-  id                            : String;
-  role                          : eRole;
-  channel                       : Channel;
-  user                          : User;
-  username                      : String;
-  channelId                     : String;
-  state                         : eSubscriptionState;
-  blockedUntil                  : String;
+  id                : string
+  role              : eRole
+  channel           : Channel
+  user              : User
+  username          : string
+  channelId         : string
+  state             : eSubscriptionState
+  stateActiveUntil  : string
 
   constructor(
-    id                            : String,
-    role                          : eRole,
-    channel                       : Channel,
-    user                          : User,
-    username                      : String,
-    channelId                     : String,
-    state                         : eSubscriptionState,
-    blockedUntil                  : String,
+    id                    : string,
+    role                  : eRole,
+    channel               : Channel,
+    user                  : User,
+    username              : string,
+    channelId             : string,
+    state                 : eSubscriptionState,
+    stateActiveUntil      : string,
   ) {
-    this.id                             = id;
-    this.role                           = role;
-    this.channel                        = channel;
-    this.user                           = user;
-    this.username                       = username;
-    this.channelId                      = channelId;
-    this.state                          = state;
-    this.blockedUntil                   = blockedUntil;
+    this.id                  = id;
+    this.role                = role;
+    this.channel             = channel;
+    this.user                = user;
+    this.username            = username;
+    this.channelId           = channelId;
+    this.state               = state;
+    this.stateActiveUntil    = stateActiveUntil;
   }
 }
 interface ISubscription {
-  id                            : String;
-  role                          : eRole;
-  channel                       : Channel;
-  user                          : User;
-  username                      : String;
-  channelId                     : String;
-  state                         : eSubscriptionState;
-  blockedUntil                  : String;
+  id                : string;
+  channel           : Channel;
+  user              : User;
+  channelId         : string;
+  username          : string;
+  role              : eRole;
+  state             : eSubscriptionState;
+  stateActiveUntil  : string
 }
 
 /*
 ** Game
 */
 export class Game implements IGame {
-  id                            : String;
-  finishedAt                    : String;
-  startedAt                     : String;
-  score_playerOne               : Number;
-  score_playerTwo               : Number;
+  id                            : string;
+  finishedAt                    : string;
+  startedAt                     : string;
+  score_playerOne               : number;
+  score_playerTwo               : number;
   playerOne                     : User;
-  playerOneName                 : String;
+  playerOneName                 : string;
   playerTwo                     : User;
-  playerTwoName                 : String;
+  playerTwoName                 : string;
 
   constructor(
-    id                            : String,
-    finishedAt                    : String,
-    startedAt                     : String,
-    score_playerOne               : Number,
-    score_playerTwo               : Number,
+    id                            : string,
+    finishedAt                    : string,
+    startedAt                     : string,
+    score_playerOne               : number,
+    score_playerTwo               : number,
     playerOne                     : User,
-    playerOneName                 : String,
+    playerOneName                 : string,
     playerTwo                     : User,
-    playerTwoName                 : String,
+    playerTwoName                 : string,
   ) {
     this.id                             = id;
     this.finishedAt                     = finishedAt;
@@ -380,41 +387,41 @@ export class Game implements IGame {
   }
 }
 interface IGame {
-  id                            : String;
-  finishedAt                    : String;
-  startedAt                     : String;
-  score_playerOne               : Number;
-  score_playerTwo               : Number;
+  id                            : string;
+  finishedAt                    : string;
+  startedAt                     : string;
+  score_playerOne               : number;
+  score_playerTwo               : number;
   playerOne                     : User;
-  playerOneName                 : String;
+  playerOneName                 : string;
   playerTwo                     : User;
-  playerTwoName                 : String;
+  playerTwoName                 : string;
 }
 
 /*
 ** Avatar
 */
 export class Avatar implements IAvatar {
-  id                            : String;
-  updatedAt                     : String;
-  createdAt                     : String;
+  id                            : string;
+  updatedAt                     : string;
+  createdAt                     : string;
   user                          : User;
-  username                      : String;
-  linkOriginal                  : String;
-  linkThumbnail                 : String;
-  linkMedium                    : String;
-  linkLarge                     : String;
+  username                      : string;
+  linkOriginal                  : string;
+  linkThumbnail                 : string;
+  linkMedium                    : string;
+  linkLarge                     : string;
 
   constructor(
-    id                            : String,
-    updatedAt                     : String,
-    createdAt                     : String,
+    id                            : string,
+    updatedAt                     : string,
+    createdAt                     : string,
     user                          : User,
-    username                      : String,
-    linkOriginal                  : String,
-    linkThumbnail                 : String,
-    linkMedium                    : String,
-    linkLarge                     : String,
+    username                      : string,
+    linkOriginal                  : string,
+    linkThumbnail                 : string,
+    linkMedium                    : string,
+    linkLarge                     : string,
   ) {
     this.id                             = id;
     this.updatedAt                      = updatedAt;
@@ -428,13 +435,13 @@ export class Avatar implements IAvatar {
   }
 }
 interface IAvatar {
-  id                            : String;
-  updatedAt                     : String;
-  createdAt                     : String;
+  id                            : string;
+  updatedAt                     : string;
+  createdAt                     : string;
   user                          : User;
-  username                      : String;
-  linkOriginal                  : String;
-  linkThumbnail                 : String;
-  linkMedium                    : String;
-  linkLarge                     : String;
+  username                      : string;
+  linkOriginal                  : string;
+  linkThumbnail                 : string;
+  linkMedium                    : string;
+  linkLarge                     : string;
 }

@@ -1,11 +1,25 @@
 import { defineStore } from 'pinia';
 import io from 'socket.io-client';
 import {
+  User,
+  Follows,
+  Blocks,
+  Message,
+  Channel,
+  Subscription,
+  Game,
+  Avatar,
+  eSubscriptionState,
+  eRole,
+  eChannelType,
+} from 'src/services/api.models'
+import {
   IWSMessages,
   IWSError,
   IWSInfos,
   IUserInfos,
   IJoinChannelPayload,
+  Message_Aknowledgement_output,
 } from 'src/models/messages.ws';
 import ws from 'src/services/ws.service';
 
@@ -13,6 +27,7 @@ let scrollBack = null
 
 export const useChatSocketStore = defineStore('chatSocket', {
   state: () => ({
+    vue            : null as any,
     init           : false as boolean,
     socket         : {} as ws,
     currentChannel : '' as string,
@@ -21,7 +36,7 @@ export const useChatSocketStore = defineStore('chatSocket', {
     name           : '' as string,
     text           : '' as string,
     connectedUsers : [] as Array<string>,
-    SubscribedUsers: [] as Array<IUserInfos>,
+    SubscribedUsers: [] as Array<Subscription>,
   }),
 
   getters: {
@@ -48,7 +63,12 @@ export const useChatSocketStore = defineStore('chatSocket', {
         else
           this.name = res.data.name
         this.scrollBack(res.data.messages, true)
-      }, (err: any) => {
+      }, (err: IWSError) => {
+        this.vue.$q.notify({
+          type: 'negative',
+          message: err.message
+        })
+        this.vue.$router.go(-1) // reviens sur la page precedente pour degager le user de la conv ou il est ban
       })
     },
     leaveCurrentRoom() {
@@ -70,23 +90,38 @@ export const useChatSocketStore = defineStore('chatSocket', {
         password: this.password
       }
       this.text = ''
-      this.socket.emit('message', payload);
+      this.socket.emitcb('message', payload, (res: Message_Aknowledgement_output) => {},
+      (err: IWSError) => {
+        this.vue.$q.notify({
+          type: 'negative',
+          message: err.message
+        })
+      });
     },
-    init_socket(socket: ws) { // used in MainLayout in created()
+    init_socket(socket: ws, vue: any) { // used in MainLayout in created()
 
       this.socket = socket
       this.init = true
+      this.vue = vue
 
       this.socket.listen('message', ((payload: IWSMessages) => {
+        console.log('ws message:', payload)
         if (payload.channel_id == this.currentChannel)
           this.scrollBack([payload])
-          // this.messages.push(payload) // TODO wait the good type, here the type is wrong
       }));
       this.socket.listen('error', ((payload: IWSError) => {
         console.log('ws error:', payload)
+        this.$q.notify({
+          type: 'warning',
+          message: payload.message
+        })
       }));
       this.socket.listen('infos', ((payload: IWSInfos) => {
         console.log('ws infos:', payload)
+        this.$q.notify({
+          type: 'info',
+          message: payload.status
+        })
       }));
     },
   }

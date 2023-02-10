@@ -68,7 +68,7 @@ export default defineComponent({
 .score
   text-align: center
 
-.Tie
+.Draw
   color: $orange
 
 .Victory

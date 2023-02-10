@@ -53,6 +53,11 @@ export default {
     return response.data;
   },
 
+  async user(username: String) { // get user object
+    const response = await this.axiosInstance.get(`/users/${username}`);
+    return response.data;
+  },
+
   async userProfile(username: String) {
     const response = await this.axiosInstance.get(`/users/${username}/profile`);
     return response.data;
@@ -151,7 +156,7 @@ export default {
     console.log('setState 1:', channelId, username);
     console.log('setState 2:', payload);
 
-    const response = await this.axiosInstance.post(`/users/${channelId}/${username}/state`, payload)
+    const response = await this.axiosInstance.post(`/chat/${channelId}/${username}/state`, payload)
     return response;
   },
 

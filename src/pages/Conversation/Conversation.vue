@@ -29,8 +29,7 @@
                 </q-item-section>
               <q-item-section>
                 <BanMute
-                  :channelId="$storeChat?.currentChannel"
-                  :username="user?.username"
+                  :subscription="getUserSubscription(user.username)"
                 />
               </q-item-section>
               </q-item>
@@ -93,6 +92,9 @@ export default defineComponent({
     }
   },
   methods: {
+    getUserSubscription(username: string) {
+      return this.$storeChat.SubscribedUsers.find((s: any) => { return s.username === username } )
+    },
     getLoginStatus(username: string) {
       if (this.$storeChat.connectedUsers.includes(username))
         return 'ONLINE-status'
