@@ -333,9 +333,14 @@ export default defineComponent({
   margin-left: 20px
 
 .ONLINE-status
-  background-color: green
+  background-color: $onlineStatus-online
+  box-shadow: 0px 0px 5px $onlineStatus-online
 .OFFLINE-status
-  background-color: red
+  background-color: $onlineStatus-offline
+  box-shadow: 0px 0px 5px $onlineStatus-offline
+.INGAME-status
+  background-color: $onlineStatus-ingame
+  box-shadow: 0px 0px 5px $onlineStatus-ingame
 
 .socialheader
   position: fixed
