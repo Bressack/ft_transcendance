@@ -78,26 +78,23 @@ methods: {
         this.$router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
 			if (to.meta.requiresAuth && this.is_fully_logged())
 				return next();
-			else if (to.meta.requiresAuth && this.must_refresh()) 
+			else if (to.meta.requiresAuth && this.must_refresh())
 				return await this._fRefresh().then(() => next()).catch(() => next('/logout'));
 			else if (to.meta.requiresAuth && this.must_logout())
 				return next('/logout');
-			else if (from.meta.requiresAuth && to.path === "/login" && this.must_logout()) {
+			else if (from.meta.requiresAuth && to.path === "/login" && this.must_logout())
 				return next();
-			}
-			else if (from.meta.requiresAuth && to.path === "/login" && this.is_fully_logged()) {
+			else if (from.path === "/" && to.path === "/login" && this.is_fully_logged()) {
 				this.notifyAlreadyConnected()
-				return next(from.path);
+				return next("/");
 			}
-			else if (from.meta.requiresAuth && to.path === "/login" && this.must_refresh()) {
+			else if (from.path === "/" && to.path === "/login" && this.must_refresh()) {
 				await this._fRefresh().catch(() => next('/logout'));
-				console.log("already logged but redfreshed")
 				this.notifyAlreadyConnected()
-				return next(from.path);
+				return next("/");
 			}
-			else if (to.path === "/logout") {
+			else if (to.path === "/logout")
 				return this.disconnect(next)
-			}
 			else
                 return next();
 		})
