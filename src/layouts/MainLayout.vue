@@ -91,22 +91,7 @@ export default defineComponent({
 			this.openSettings()
 		},
 		logout() {
-			this.$ws.socket.disconnect()
-			this.$api.logout()
-				.then(() => {
-					this.$ws.disconnect()
-					this.storeMe.$reset()
-					this.$storeChat.leaveCurrentRoom()
-					this.$storeChat.$reset()
-					this.$router.push('/login')
-				})
-        .catch (() => {
-					this.$ws.disconnect()
-					this.storeMe.$reset()
-					this.$storeChat.leaveCurrentRoom()
-					this.$storeChat.$reset()
-					this.$router.push('/login')
-        })
+			this.$router.push('/logout')
 		},
 		onGameInviteBusy(data: any, callback:Function) {
 			callback('DECLINED')
