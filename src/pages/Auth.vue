@@ -146,10 +146,11 @@ export default defineComponent({
       })
 
       this.$api.login(payload)
-      .then(function (/* data */) {
-        that.$router.replace('/')
+      .then( (/* data */) => {
+		console.log('success')
+        this.$router.push('/')
       })
-      .catch(function (error) {
+      .catch((error) =>  {
         that.$q.notify({
             // position: 'center',
             // multiLine: true,

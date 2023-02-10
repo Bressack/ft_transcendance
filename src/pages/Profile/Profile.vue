@@ -90,7 +90,7 @@ export default defineComponent({
         this.userFetched = true
         this.fetchGameHistory()
       })
-      .catch((error) => { console.error('error:', error); })
+      .catch((error) => {  })
     },
     fetchGameHistory() {
       const searchQuery : IGameQuery = {
