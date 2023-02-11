@@ -153,10 +153,12 @@ export default {
   },
 
   async setState(channelId: string, username: string, payload: any) {
-    console.log('setState 1:', channelId, username);
-    console.log('setState 2:', payload);
-
     const response = await this.axiosInstance.post(`/chat/${channelId}/${username}/state`, payload)
+    return response;
+  },
+
+  async resetState(channelId: string, username: string) {
+    const response = await this.axiosInstance.get(`/chat/${channelId}/${username}/state/reset`)
     return response;
   },
 

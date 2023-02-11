@@ -17,12 +17,14 @@
             </q-time>
           </q-popup-proxy>
         </q-btn>
-        <q-btn v-if="options[lever].currentServerTime != null" class="q-mx-md" @click="sendNewState">abort</q-btn>
-        <q-btn v-else-if="options[lever].time != '00:00'" class="q-mx-md" @click="sendNewState">apply</q-btn>
+        <q-btn if="options[lever].time != '00:00'" class="q-mx-md" @click="sendNewState">apply</q-btn>
       </div>
-      <q-card v-else class="currentServer q-pa-sm">
-        {{ options[lever].currentServerTime + '' }}
-      </q-card>
+      <div v-else class="row">
+        <q-card class="currentServer q-pa-sm">
+          {{ options[lever].currentServerTime + '' }}
+        </q-card>
+        <q-btn class="q-mx-md" @click="returnStateToOK">abort</q-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -38,15 +40,8 @@ export default defineComponent({
     subscription: { type: Subscription, required: true },
   },
   data() {
-    console.log('this.subscription.state: ',
-        typeof(eSubscriptionState.BANNED),
-        typeof(this.subscription.state),
-        this.subscription.state,
-        this.serverStateTime(eSubscriptionState.BANNED),
-        this.serverStateTime(eSubscriptionState.MUTED),
-    )
     return {
-      lever: 0 as number,
+      lever: this.serverStateTime('BANNED') ? 0 : 1 as number,
       options: [
         { // BAN
           state: 'BANNED',
@@ -66,7 +61,6 @@ export default defineComponent({
   methods: {
     serverStateTime(es: eSubscriptionState) {
       var s = null
-      console.log(String(es));
       if (String(this.subscription.state) == String(es))
         return 'until ' + this.getRelativeDate(this.subscription.stateActiveUntil)
       return null
@@ -74,6 +68,9 @@ export default defineComponent({
     timeToMin() {
       const s: Array<string> = this.options[this.lever].time.split(':')
       return (parseInt(s[0]) * 60 + parseInt(s[1]))
+    },
+    returnStateToOK() {
+      this.$api.resetState(this.subscription.channelId, this.subscription.username)
     },
     sendNewState() {
       this.$api.setState(this.subscription.channelId, this.subscription.username, {
@@ -131,7 +128,7 @@ export default defineComponent({
 <style lang="sass" scoped>
 .main
   display: flexbox
-  width: 300px
+  width: 410px
   height: 80px
 
   background-color: #424242
