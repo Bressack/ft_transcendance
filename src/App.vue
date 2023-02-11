@@ -118,9 +118,10 @@ methods: {
 			if (resp.status === 205)
 				this.storeMe.fetch()
 			return resp
-		}, async (error) => {
-			this.$router.push("/logout")
-		})
+		}, undefined)
+		// }, async (error) => {
+		// 	this.$router.push("/logout")
+		// })
   },
 //   disconnect () {
 //     this.$router.push('/login')
