@@ -5,7 +5,8 @@
     </div>
     <div class="q-px-xl r-py-md">
       <q-item-label class="bigger">
-        Create channel
+        <span v-if="settings">Channel settings</span>
+        <span v-else>Create channel</span>
       </q-item-label>
     </div>
 
@@ -25,7 +26,7 @@
         v-model="password"
         color="orange"
         :type="isPwd ? 'text' : 'password'"
-        hint="Optional: Leave blank if you wont proctect the channel"
+        :hint="settings ? `Optional: Leave blank if you don't want to change the protection status of the channel` : `Optional: Leave blank if you wont proctect the channel`"
         label="Password"
         stack-label
         >
@@ -70,7 +71,8 @@
     </div>
 
       <q-item class="flex-center q-pb-md">
-        <q-btn color="orange" type="submit" label="Create" @click="create()"/>
+        <q-btn v-if="settings" color="orange" type="submit" label="Apply" @click="modify()"/>
+        <q-btn v-else color="orange" type="submit" label="Create" @click="create()"/>
       </q-item>
 
     </div>
@@ -79,8 +81,6 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-
-
 
 export default defineComponent({
 	name: 'CreateChannel',
@@ -96,7 +96,7 @@ export default defineComponent({
   },
   data() {
     return {
-      name: '' as string,
+      name: this.oldname as string,
       password: '' as string,
       usernames: [] as string[],
     }
@@ -111,10 +111,16 @@ export default defineComponent({
     })
   },
   props: {
+    oldname : { type: String, default: '' },
+    settings : { type: Boolean, default: false },
     closeFn : { type: Function, default: null }
   },
   methods: {
+    modify() {
+      // Call POST/PATCH api
+    },
     create() {
+      console.log('this.name', this.name)
       const payload = {
         usernames: this.usernames,
         name: this.name,

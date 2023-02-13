@@ -16,7 +16,13 @@
                 </q-item-section>
                 <q-space/>
                 <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
-                  <q-btn color="red" label="leave" @click="dialog = true"/>
+                  <q-btn color="red" label="leave" @click="confirm = true" />
+                </q-item-section>
+                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
+                  <q-btn color="orange" label="settings" @click="settings = true" />
+                </q-item-section>
+                <q-item-section side>
+                  <q-btn color="pink" label="debug" @click="debug" />
                 </q-item-section>
               </q-item>
               <q-item v-for="user in $storeChat.SubscribedUsers" :key="user.username" class="q-bg">
@@ -52,12 +58,18 @@
       <q-input @keydown.enter.prevent="sendmessage" filled v-model="$storeChat.text" placeholder="Enter text here"
         class="absolute-bottom custom-input input" />
     </div>
+
+    <q-dialog v-model="settings">
+      <CreateChannel settings :oldname=$storeChat.name :closeFn=closeSettings />
+    </q-dialog>
+
   </q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent, PropType, ref } from 'vue';
 import UserCard from 'src/components/common/UserCard.vue'
+import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
 import BanMute from './components/BanMute.vue'
 // import { useChatSocketStore } from 'src/stores/chatSocket';
@@ -71,8 +83,22 @@ import {
 
 export default defineComponent({
   name: 'Conversation',
-  components: { UserCard, Message, BanMute },
+  components: { UserCard, Message, BanMute, CreateChannel },
   props: {
+  },
+  setup () {
+    const confirm = ref(false)
+    const settings = ref(false)
+    return {
+      closeConfirm() {
+        confirm.value = false
+      },
+      closeSettings() {
+        settings.value = false
+      },
+      confirm,
+      settings
+    }
   },
   data() {
     return {
@@ -129,6 +155,9 @@ export default defineComponent({
       while (element.children.length != this.messages.length)
         await new Promise(r => setTimeout(r, 10));
       element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
+    },
+    debug () {
+      console.log('StoreChat', this.$storeChat)
     }
   },
   computed: {
