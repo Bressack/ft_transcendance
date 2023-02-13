@@ -14,6 +14,10 @@
                 <q-item-section side class="card">
                   <q-item-label>{{ $storeChat.SubscribedUsers.length }}</q-item-label>
                 </q-item-section>
+                <q-space/>
+                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
+                  <q-btn color="red" label="leave" @click="dialog = true"/>
+                </q-item-section>
               </q-item>
               <q-item v-for="user in $storeChat.SubscribedUsers" :key="user.username" class="q-bg">
                 <q-item-section class="avatar">
@@ -88,7 +92,8 @@ export default defineComponent({
           lever: false as boolean,
           timer: 0 as number
         },
-      }
+      },
+      dialog: false as boolean
     }
   },
   methods: {
