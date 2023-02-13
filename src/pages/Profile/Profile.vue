@@ -2,7 +2,7 @@
 <q-page>
   <div class="q-px-xl">
     <ProfileSummary v-if="userFetched"
-    :name=storeMe.username
+    :name="username == 'me' ? storeMe.username : username"
     :avatar=avatar
     :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
     :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
