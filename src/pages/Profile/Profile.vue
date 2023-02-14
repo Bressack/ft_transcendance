@@ -2,11 +2,11 @@
 <q-page>
   <div class="q-px-xl">
     <ProfileSummary v-if="userFetched"
-    :name=profile.username
-    :avatar=avatar
-    :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
-    :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
-    :interact=true
+      :name=profile.username
+      :avatar=avatar
+      :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
+      :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
+      interact
     />
   </div>
   <q-item class="q-px-xl">
@@ -53,6 +53,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { IGameQuery } from '../../services/api.models'
+import { useMeStore } from 'src/stores/me';
 import ProfileSummary from './components/ProfileSummary.vue'
 import MatchHistory from './components/MatchHistory.vue'
 import LevelProgress from './components/LevelProgress.vue'
@@ -65,6 +66,7 @@ export default defineComponent({
     return {
       username: this.$route.params.username.toString() as string,
       avatar: '/api/avatar/' as string,
+      storeMe : useMeStore(),
       profile: [] as any,
       games: [] as any,
       userFetched: false as boolean,

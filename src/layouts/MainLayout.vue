@@ -2,20 +2,7 @@
 	<q-layout view="lHh Lpr lFf">
 		<q-header elevated>
 			<q-toolbar class="toolbar">
-
 				<q-btn flat @click="storeMe.drawerStatus = !storeMe.drawerStatus" round dense icon="menu" />
-				<q-toolbar-title>
-					<!-- <span class="q-pr-lg">PONG ARENA</span> -->
-					<!-- <q-btn class="q-mr-sm" to="/login"       color="blue">Login</q-btn> -->
-					<q-btn class="q-mr-sm" to="/" color="orange">Home</q-btn>
-					<!-- <q-btn class="q-mr-sm" to="/game/1" color="brown">TEST_GAME</q-btn>
-					<q-btn class="q-mr-sm" to="/spectate/1" color="brown">TEST_SPECTATE</q-btn> -->
-					<q-btn class="q-mr-sm" to="/profile/me" color="green">Profile</q-btn>
-          <q-btn class="q-mr-sm" to="/sandbox" color="red">Sandbox</q-btn>
-					<div class="q-mr-lg logout">
-						<q-btn class="absolute-right" @click="logout()" color="red" label="LOGOUT" />
-					</div>
-				</q-toolbar-title>
 			</q-toolbar>
 		</q-header>
 
@@ -25,9 +12,17 @@
 			</q-scroll-area>
 
 			<q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
-				<UserCard v-if="(storeMe.username)" :iconfun="goSettingsNotif" :profilefun="goProfilePage"
-					class="absolute-top" :name="storeMe.username" avatar="/api/avatar/me/medium" icon="settings"
-					size="large" nameColor="orange" :ratio="0.42" />
+        <q-item class="usercard">
+          <q-item-section @click="goHome">
+            <q-img src="/api/avatar/me/thumbnail" width="60px" height="60px" img-class="usercard-image"/>
+          </q-item-section>
+          <q-item-section class="usercard-name" @click="goProfilePage">
+            <q-item-label class="usercard-name-label">{{ storeMe.username }}</q-item-label>
+          </q-item-section>
+          <q-item-section class="usercard-settings" @click="goSettingsNotif">
+            <q-icon name="settings" size="md"/>
+          </q-item-section>
+        </q-item>
 			</q-img>
 			<q-dialog v-model="settings">
 				<settings />
@@ -47,7 +42,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import ConversationList from '../pages/ConversationList/ConversationList.vue'
-import UserCard from '../components/common/UserCard.vue'
 import Settings from '../components/Settings.vue'
 import GameInvitation from '../components/GameInvitation.vue'
 import { useMeStore } from 'src/stores/me';
@@ -57,7 +51,6 @@ export default defineComponent({
 	name: 'MainLayout',
 	components: {
 		ConversationList,
-		UserCard,
 		Settings,
 		GameInvitation
 	},
@@ -92,6 +85,9 @@ export default defineComponent({
 		},
 		logout() {
 			this.$router.push("/logout")
+		},
+    goHome() {
+			this.$router.push("/")
 		},
 		onGameInviteBusy(data: any, callback:Function) {
 			callback('DECLINED')
@@ -214,5 +210,33 @@ body
   margin-top: 90px
   background-color: $bg-secondary
   overflow-x: hidden
+
+
+.usercard
+  display: flex
+  height: 90px
+  width: 300px
+
+.usercard-name
+  flex-basis: 100px
+  // add '...' to the end of name if it overflow the container
+  overflow: hidden
+  white-space: nowrap
+  text-overflow: ellipsis
+  font-size: 1.35em
+  font-weight: bold
+  color: $orange-7
+
+.usercard-name-label
+  padding: 5px
+
+.usercard-name-label:hover
+  border-radius: 15px
+  background-color: $grey-7
+
+.usercard-settings
+  max-width: 35px
+  display: flex
+  flex-direction: column
 
 </style>

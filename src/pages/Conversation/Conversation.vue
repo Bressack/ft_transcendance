@@ -15,10 +15,10 @@
                   <q-item-label>{{ $storeChat.SubscribedUsers.length }}</q-item-label>
                 </q-item-section>
                 <q-space/>
-                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
-                  <q-btn color="red" label="leave" @click="confirm = true" />
+                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role !== 'OWNER'" side>
+                  <q-btn color="red" label="quit" @click="confirm = true" />
                 </q-item-section>
-                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
+                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
                   <q-btn color="orange" label="settings" @click="settings = true" />
                 </q-item-section>
                 <q-item-section side>
@@ -59,7 +59,7 @@
         class="absolute-bottom custom-input input" />
     </div>
 
-    <q-dialog v-model="settings">
+    <q-dialog persistent v-model="settings">
       <CreateChannel settings :oldname=$storeChat.name :closeFn=closeSettings />
     </q-dialog>
 
@@ -72,6 +72,7 @@ import UserCard from 'src/components/common/UserCard.vue'
 import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
 import BanMute from './components/BanMute.vue'
+import { Subscription } from 'src/services/api.models'
 // import { useChatSocketStore } from 'src/stores/chatSocket';
 import { useMeStore } from 'src/stores/me';
 
@@ -140,7 +141,7 @@ export default defineComponent({
       })
     },
     avatarstr(username: string) {
-      return `/api/avatar/${username}/medium`
+      return `/api/avatar/${username}/thumbnail`
     },
     async scrollBottom(messages: Array<IWSMessages>, toclean: boolean = false) {
       if (toclean)
@@ -157,7 +158,7 @@ export default defineComponent({
       element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
     },
     debug () {
-      console.log('StoreChat', this.$storeChat)
+      console.log('ICI', this.$storeChat.channelType)
     }
   },
   computed: {

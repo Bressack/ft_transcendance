@@ -13,26 +13,30 @@
     <div class="q-pa-md">
       <q-input
         v-model="name"
+        :disable="settings ? true : false"
         dark
         label="Channel name"
         color="orange"
+        label-color="white"
       />
     </div>
 
       <div class="q-pa-md">
         <q-input
-        class="key"
-        dark
-        v-model="password"
-        color="orange"
-        :type="isPwd ? 'text' : 'password'"
-        :hint="settings ? `Optional: Leave blank if you don't want to change the protection status of the channel` : `Optional: Leave blank if you wont proctect the channel`"
-        label="Password"
-        stack-label
+          class="key"
+          dark
+          v-model="password"
+          color="orange"
+          label-color="white"
+          :type="isPwd ? 'text' : 'password'"
+          :hint="settings ? `Optional: Leave blank if you don't want to change the protection status of the channel` : `Optional: Leave blank if you wont proctect the channel`"
+          label="Password"
+          stack-label
+          lazy-rules
         >
         <template v-slot:append>
           <q-icon
-          :name="!isPwd ? 'visibility' : 'visibility_off'"
+            :name="!isPwd ? 'visibility' : 'visibility_off'"
             class="cursor-pointer"
             @click="isPwd = !isPwd"
             />
@@ -40,33 +44,34 @@
         </q-input>
       </div>
 
-      <div class="q-py-md label checkbox">
+      <div class="q-px-sm q-pb-cs label checkbox" v-if="!settings">
         <q-checkbox v-model="access" color="orange" label="Private channel" />
       </div>
 
-      <div class="q-pb-md" v-if="access">
-      <q-select
-        class="input"
-        color="orange"
-        filled
-        dark
-        v-model="userList"
-        multiple
-        use-input
-        use-chips
-        input-debounce="0"
-        stack-label
-        label="Add users"
-        @filter="filterFn"
-        :options="filterOptions"
-      >
-      <template v-slot:no-option>
-          <q-item>
-            <q-item-section class="text-grey">
-              No results
-            </q-item-section>
-          </q-item>
-        </template>
+      <div class="q-pa-md" v-if="access">
+        <q-select
+          class="input"
+          color="black"
+          filled
+
+          v-model="userList"
+          multiple
+          use-input
+          use-chips
+          input-debounce="0"
+          stack-label
+          label="Manage users"
+          label-color="white"
+          @filter="filterFn"
+          :options="filterOptions"
+        >
+          <template v-slot:no-option>
+            <q-item>
+              <q-item-section class="text-grey">
+                No results
+              </q-item-section>
+            </q-item>
+          </template>
       </q-select>
     </div>
 
@@ -87,21 +92,23 @@ export default defineComponent({
   setup () {
     const stringOptions = [] as String[]
     return {
-      stringOptions: [] as String[],
-      access : ref(false),
       userList : ref([]),
+      stringOptions: [] as String[],
       isPwd: ref(true),
       filterOptions: ref<String[]>(stringOptions)
     }
   },
   data() {
     return {
+      access : ref(false),
       name: this.oldname as string,
       password: '' as string,
       usernames: [] as string[],
     }
   },
   created () {
+    if (this.settings && this.$storeChat.channelType === 'PRIVATE')
+      this.access = true
     this.$api.users()
     .then((res) => {
       console.log(res)
@@ -113,16 +120,18 @@ export default defineComponent({
   props: {
     oldname : { type: String, default: '' },
     settings : { type: Boolean, default: false },
-    closeFn : { type: Function, default: null }
+    closeFn : { type: Function, default: null },
   },
   methods: {
     modify() {
       // Call POST/PATCH api
     },
     create() {
-      console.log('this.name', this.name)
+      const usernames = []
+      for (let i = 0; i < this.userList.length; i++)
+        usernames.push({username: this.userList[i]})
       const payload = {
-        usernames: this.usernames,
+        usernames: usernames,
         name: this.name,
         channel_type: this.access ? 'PRIVATE' : 'PUBLIC',
         password: this.password
@@ -166,6 +175,10 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 @use "../css/interpolate" as r
+
+input.pw
+    -webkit-text-security: disc
+    text-security: disc
 .checkbox
   text-align: left !important
 

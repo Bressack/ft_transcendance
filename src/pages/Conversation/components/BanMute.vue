@@ -37,7 +37,7 @@ export default defineComponent({
   name: 'BanMute',
   components: {},
   props: {
-    subscription: { type: Subscription, required: true },
+    subscription: { type: Object, required: true }, // Deso theo, type: Object pour enlever l'erreur console avec type: Subscription
   },
   data() {
     return {

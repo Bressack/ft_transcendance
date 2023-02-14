@@ -76,6 +76,12 @@
     </div>
 
     <div v-if="socialtoggle == '2'">
+      <q-item class="flex-center">
+        <q-btn class="createChannelButton" label="Create channel" color="orange" @click="dialog = true"/>
+      </q-item>
+      <q-dialog persistent v-model="dialog">
+        <CreateChannel :closeFn=closeDialog />
+      </q-dialog>
       <q-item clickable v-ripple v-for="channel in $storeMe.getPublicPrivateChannels()" :key="channel.channelId"
         @click="chanSelected(String(channel.channelId))">
         <q-item-section>
@@ -137,6 +143,7 @@ import { fake_IConvList } from '../../models/fakedatas'
 import GameOptions from '../../components/GameOptions.vue'
 import { ISearchQuery } from 'src/services/api.models'
 import QInputMenu from 'src/components/QInputMenu.component.vue';
+import CreateChannel from 'src/components/CreateChannel.vue'
 
 enum EUserStatus {
   UNKNOWN,
@@ -161,10 +168,11 @@ interface IUserSelected {
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { UserCard, GameOptions, QInputMenu },
+  components: { UserCard, GameOptions, QInputMenu, CreateChannel },
   props: {},
   setup() {
     const gameOptions = ref(false)
+    const dialog = ref(false)
     return {
       gameOptions,
       openGameOptions() {
@@ -173,6 +181,10 @@ export default defineComponent({
       closeGameOptions() {
         gameOptions.value = false
       },
+      closeDialog() {
+        dialog.value = false
+      },
+      dialog
     }
   },
   computed: {
@@ -372,4 +384,6 @@ export default defineComponent({
   border-radius: 100px
   margin-bottom: 20px
 
+.createChannelButton
+  width: 100%
 </style>

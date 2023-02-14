@@ -37,6 +37,7 @@ export const useChatSocketStore = defineStore('chatSocket', {
     text           : '' as string,
     connectedUsers : [] as Array<string>,
     SubscribedUsers: [] as Array<Subscription>,
+    password_protected : false as Boolean,
   }),
 
   getters: {
@@ -58,11 +59,13 @@ export const useChatSocketStore = defineStore('chatSocket', {
       this.socket.emitcb('join-channel', { channelId: channelId, password: this.password }, (res: IJoinChannelPayload) => {
         this.SubscribedUsers = res.data.SubscribedUsers
         this.channelType = res.data.channel_type
-        if (res.data.channel_type == 'ONE_TO_ONE')
-          this.name = res.data.name
-        else
+        // if (res.data.channel_type == 'ONE_TO_ONE')
+        //   this.name = res.data.name
+        // else
           this.name = res.data.name
         this.scrollBack(res.data.messages, true)
+        this.role = res.data.role
+        this.password_protected = res.data.password_protected as boolean
       }, (err: IWSError) => {
         this.vue.$q.notify({
           type: 'negative',
