@@ -30,7 +30,7 @@
           label-color="white"
           type='text'
           :disable="!protect ? true : false"
-          :hint="!protect ? `Optional: click the lock if you want to set a password` : `Set or modify your channel password`"
+          :hint="!protect ? accessLabelOne : accessLabelTwo"
           label="Password"
           stack-label
           lazy-rules
@@ -50,7 +50,6 @@
           class="input"
           color="black"
           filled
-
           v-model="userList"
           multiple
           use-input
@@ -90,22 +89,33 @@ export default defineComponent({
     const stringOptions = [] as String[]
     return {
       protect: ref(false),
-      userList : ref([]),
       stringOptions: [] as String[],
       filterOptions: ref<String[]>(stringOptions)
     }
   },
   data() {
     return {
-      access : ref(false),
+      userList : ref<string[]>([]),
+      accessLabelOne: 'Click the lock if you want to define your channel password',
+      accessLabelTwo: 'Define your password',
+      access: ref(false),
       name: this.oldname as string,
       password: '' as string,
       usernames: [] as string[],
     }
   },
   created () {
-    if (this.settings && this.$storeChat.channelType === 'PRIVATE')
-      this.access = true
+    if (this.settings) {
+      if (this.$storeChat.channelType === 'PRIVATE') {
+        this.access = true
+        this.fillUserList()
+      }
+      if (this.$storeChat.password_protected) {
+        this.protect = true
+        this.accessLabelOne = 'Your password will be removed'
+        this.accessLabelTwo = `Leave this field blank if you don't want to modify your password or click the lock if you want to remove it`
+      }
+    }
     this.$api.users()
     .then((res) => {
       console.log(res)
@@ -154,6 +164,13 @@ export default defineComponent({
     clearPwd () {
       if (!this.protect)
         this.password = ''
+    },
+    fillUserList () {
+      for (let i = 0; i < this.$storeChat.SubscribedUsers.length; i++) {
+        if (this.$storeChat.SubscribedUsers[i].role !== 'OWNER')
+          this.userList.push(this.$storeChat.SubscribedUsers[i].username)
+      }
+
     },
     filterFn (val : String, update : Function) {
         // call abort() at any time if you can't retrieve data somehow

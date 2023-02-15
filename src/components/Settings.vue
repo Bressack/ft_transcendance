@@ -12,8 +12,8 @@
       <q-uploader
         auto-upload         url="/api/avatar/"     ref="uploader"
         hide-upload-btn     field-name="avatar"    label="Change avatar"
-        max-files=1         color="black"          uploaded="onUploaded"
-        class="uploader"    filter="imgOnly"       rejected="onRejected"
+        max-files=1         color="black"          @uploaded="onUploaded"
+        class="uploader"    :filter="imgOnly"      @rejected="onRejected"
         >
         <template v-slot:list="scope">
           <img v-if="avatar" class="avatar" :src=avatar>

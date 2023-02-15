@@ -15,8 +15,9 @@
                   <q-item-label>{{ $storeChat.SubscribedUsers.length }}</q-item-label>
                 </q-item-section>
                 <q-space/>
-                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role !== 'OWNER'" side>
-                  <q-btn color="red" label="quit" @click="confirm = true" />
+                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
+                  <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" @click="confirm = true" />
+                  <q-btn v-else color="red" label="delete" @click="confirm = true" />
                 </q-item-section>
                 <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
                   <q-btn color="orange" label="settings" @click="settings = true" />
@@ -158,7 +159,7 @@ export default defineComponent({
       element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
     },
     debug () {
-      console.log('ICI', this.$storeChat.channelType)
+      console.log('ICI', this.$storeChat.SubscribedUsers)
     }
   },
   computed: {
