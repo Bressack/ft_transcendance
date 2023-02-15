@@ -28,19 +28,16 @@
           v-model="password"
           color="orange"
           label-color="white"
-          :type="isPwd ? 'text' : 'password'"
-          :hint="settings ? `Optional: Leave blank if you don't want to change the protection status of the channel` : `Optional: Leave blank if you wont proctect the channel`"
+          type='text'
+          :disable="!protect ? true : false"
+          :hint="!protect ? `Optional: click the lock if you want to set a password` : `Set or modify your channel password`"
           label="Password"
           stack-label
           lazy-rules
         >
-        <template v-slot:append>
-          <q-icon
-            :name="!isPwd ? 'visibility' : 'visibility_off'"
-            class="cursor-pointer"
-            @click="isPwd = !isPwd"
-            />
-          </template>
+        <template v-slot:before>
+          <q-checkbox v-model="protect" unchecked-icon="lock" checked-icon="lock" color="orange" @click="clearPwd" />
+        </template>
         </q-input>
       </div>
 
@@ -76,8 +73,8 @@
     </div>
 
       <q-item class="flex-center q-pb-md">
-        <q-btn v-if="settings" color="orange" type="submit" label="Apply" @click="modify()"/>
-        <q-btn v-else color="orange" type="submit" label="Create" @click="create()"/>
+        <q-btn v-if="settings" color="orange" type="submit" label="Apply" @click="modify"/>
+        <q-btn v-else color="orange" type="submit" label="Create" @click="create"/>
       </q-item>
 
     </div>
@@ -92,9 +89,9 @@ export default defineComponent({
   setup () {
     const stringOptions = [] as String[]
     return {
+      protect: ref(false),
       userList : ref([]),
       stringOptions: [] as String[],
-      isPwd: ref(true),
       filterOptions: ref<String[]>(stringOptions)
     }
   },
@@ -154,6 +151,10 @@ export default defineComponent({
         }
       })
     },
+    clearPwd () {
+      if (!this.protect)
+        this.password = ''
+    },
     filterFn (val : String, update : Function) {
         // call abort() at any time if you can't retrieve data somehow
         // import { abort } from 'process'
@@ -175,15 +176,10 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 @use "../css/interpolate" as r
-
-input.pw
-    -webkit-text-security: disc
-    text-security: disc
 .checkbox
   text-align: left !important
 
 .dialog
   width: 560px
-
 
 </style>
