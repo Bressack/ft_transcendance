@@ -56,18 +56,14 @@ export interface IUserInfos {
 }
 
 export interface IJoinChannelPayload {
-  status: "OK" | "error";
-  message?: string;
-  data: {
-    channelId?: string;
-    name?: string;
-    channel_type?: eChannelType;
-    state?: eSubscriptionState;
-    stateActiveUntil?: Date;
-    messages?: Message[];
-    role?: eRole;
-    SubscribedUsers?: Subscription[];
-    username?: string;
-    password_protected?: Boolean;
-  };
+  channelId?: string;
+  name?: string;
+  channel_type?: eChannelType;
+  state?: eSubscriptionState;
+  stateActiveUntil?: Date;
+  messages?: Message[];
+  role?: eRole;
+  SubscribedUsers?: Subscription[];
+  username?: string;
+  password_protected?: Boolean;
 }

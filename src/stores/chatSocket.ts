@@ -24,7 +24,7 @@ import {
 import ws from "src/services/ws.service";
 import api from "src/services/api.service";
 import { useMeStore } from "./me";
-import { AxiosError } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 
 let scrollBack = null;
 
@@ -66,37 +66,56 @@ export const useChatSocketStore = defineStore("chatSocket", {
         while (!this.password)
           this.password = window.prompt("Enter channel password: ");
       }
-      this.socket.emitcb(
-        "join-channel",
-        { channelId: channelId, password: this.password },
-        (res: IJoinChannelPayload) => {
-          console.log("joinroom status", res.status);
+      api.axiosInstance
+        .post("/chat/" + this.currentChannel + "/join", {
+          password: this.password,
+        })
+        .then((res: AxiosResponse<IJoinChannelPayload>) => {
           this.SubscribedUsers = res.data.SubscribedUsers;
           this.channelType = res.data.channel_type;
-          // if (res.data.channel_type == 'ONE_TO_ONE')
-          //   this.name = res.data.name
-          // else
           this.name = res.data.name;
           this.scrollBack(res.data.messages, true);
           this.role = res.data.role;
           this.password_protected = res.data.password_protected as boolean;
-        },
-        (err: IWSError) => {
+        })
+        .catch((err: AxiosError) => {
           this.vue.$q.notify({
             type: "negative",
             message: err.message,
           });
-          this.vue.$router.push("/"); // reviens sur la page precedente pour degager le user de la conv ou il est ban
-          // THEO -> prcke quand ya eu une erreur et que tu fais ca joinroom n'est pas relance donc ca laisse les meme messages quavant
+          this.vue.$router.push("/");
+        });
+      //   this.socket.emitcb(
+      // "join-channel",
+      // { channelId: channelId, password: this.password },
+      // (res: IJoinChannelPayload) => {
+      //   console.log("joinroom status", res.status);
+      //   this.SubscribedUsers = res.data.SubscribedUsers;
+      //   this.channelType = res.data.channel_type;
+      //   // if (res.data.channel_type == 'ONE_TO_ONE')
+      //   //   this.name = res.data.name
+      //   // else
+      //   this.name = res.data.name;
+      //   this.scrollBack(res.data.messages, true);
+      //   this.role = res.data.role;
+      //   this.password_protected = res.data.password_protected as boolean;
+      // },
+      // (err: IWSError) => {
+      //   this.vue.$q.notify({
+      //     type: "negative",
+      //     message: err.message,
+      //   });
+      //   this.vue.$router.push("/"); // reviens sur la page precedente pour degager le user de la conv ou il est ban
+      // THEO -> prcke quand ya eu une erreur et que tu fais ca joinroom n'est pas relance donc ca laisse les meme messages quavant
 
-          //   this.vue.$router.go(-1); // reviens sur la page precedente pour degager le user de la conv ou il est ban
-        }
-      );
+      //   this.vue.$router.go(-1); // reviens sur la page precedente pour degager le user de la conv ou il est ban
+      // }
+      //   );
     },
     leaveCurrentRoom() {
       if (this.init == false || this.currentChannel === "") return;
 
-      this.socket.emit("leave-channel", { channelId: this.currentChannel });
+      //   this.socket.emit("leave-channel", { channelId: this.currentChannel });
       this.currentChannel = "";
       this.messages = [];
       this.password = "";
