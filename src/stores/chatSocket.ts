@@ -22,7 +22,9 @@ import {
   Message_Aknowledgement_output,
 } from "src/models/messages.ws";
 import ws from "src/services/ws.service";
+import api from "src/services/api.service";
 import { useMeStore } from "./me";
+import { AxiosError } from "axios";
 
 let scrollBack = null;
 
@@ -62,7 +64,7 @@ export const useChatSocketStore = defineStore("chatSocket", {
       console.log("channel info:", sub?.channel);
       if (sub?.channel.hash === "yes") {
         while (!this.password)
-          this.password = window.prompt("Enter channel password: ")
+          this.password = window.prompt("Enter channel password: ");
       }
       this.socket.emitcb(
         "join-channel",
@@ -97,7 +99,7 @@ export const useChatSocketStore = defineStore("chatSocket", {
       this.socket.emit("leave-channel", { channelId: this.currentChannel });
       this.currentChannel = "";
       this.messages = [];
-      this.password = ''
+      this.password = "";
     },
     sendMessage() {
       if (
@@ -108,23 +110,32 @@ export const useChatSocketStore = defineStore("chatSocket", {
         return;
 
       let payload = {
-        channelId: this.currentChannel,
-        timestamp: new Date(),
+        // channelId: this.currentChannel,
+        // timestamp: new Date(),
         content: this.text,
         password: this.password,
       };
       this.text = "";
-      this.socket.emitcb(
-        "message",
-        payload,
-        (res: Message_Aknowledgement_output) => {},
-        (err: IWSError) => {
+      api.axiosInstance
+        .post("/chat/" + this.currentChannel + "/message", payload)
+        .then(() => {})
+        .catch((err: AxiosError) => {
           this.vue.$q.notify({
             type: "negative",
             message: err.message,
           });
-        }
-      );
+        });
+      //   this.socket.emitcb(
+      //     "message",
+      //     payload,
+      //     (res: Message_Aknowledgement_output) => {},
+      //     (err: IWSError) => {
+      //       this.vue.$q.notify({
+      //         type: "negative",
+      //         message: err.message,
+      //       });
+      //     }
+      //   );
     },
     init_socket(socket: ws, vue: any) {
       // used in MainLayout in created()
@@ -135,7 +146,7 @@ export const useChatSocketStore = defineStore("chatSocket", {
 
       this.socket.listen("message", (payload: IWSMessages) => {
         console.log("ws message:", payload);
-        if (payload.channel_id == this.currentChannel)
+        if (payload.channelId == this.currentChannel)
           this.scrollBack([payload]);
       });
       this.socket.listen("error", (payload: IWSError) => {
