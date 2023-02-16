@@ -110,7 +110,7 @@ export default defineComponent({
         this.access = true
         this.fillUserList()
       }
-      if (this.$storeChat.password_protected) {
+      if (this.$storeChat.hash === 'yes') {
         this.protect = true
         this.accessLabelOne = 'Your password will be removed'
         this.accessLabelTwo = `Leave this field blank if you don't want to modify your password or click the lock if you want to remove it`
@@ -135,8 +135,14 @@ export default defineComponent({
       const payload = {
         usernames: this.userList,
         password: this.password,
-        change_password: !this.protect,
+        change_password: this.passwordState(),
       }
+      console.log(payload)
+      // Si j'ai un mdp, je veux l'enlever -> true et j'envoie password = ''
+      // Si j'ai un mdp, je veux le modifier -> true et j'envoie password = '********'
+      // Si j'ai un mdp, je veux rien changer -> false et j'envoie password = ''
+      // Si j'ai pas de mdp, je veux en set un -> true et j'envoie password = '********'
+      // Si j'ai pas de mdp, et que je veux rien changer -> false et j'envoie password = ''
       this.$api.channelSettings(this.$storeChat.currentChannel, payload)
       .then(() => {
         this.$q.notify({
@@ -181,6 +187,13 @@ export default defineComponent({
             })
         }
       })
+    },
+    passwordState () : boolean {
+      if (this.$storeChat.password_protected && this.protect && this.password === '')
+        return false
+      else if (!this.$storeChat.password_protected && !this.protect)
+        return false
+      return true
     },
     clearPwd () {
       if (!this.protect)
