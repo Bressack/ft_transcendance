@@ -1,58 +1,10 @@
 <template>
   <q-page>
     <div class="q-flex">
-      <div class="top-panel row items-center">
-        <span class="titlename">{{ $storeChat.name }}</span>
-
-        <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
-          <q-menu persistent class="menuusers">
-            <q-list class="userlist">
-              <q-item class="q-bg">
-                <q-item-section side class="card">
-                  <q-item-label class="menuusers-username">User count:</q-item-label>
-                </q-item-section>
-                <q-item-section side class="card">
-                  <q-item-label>{{ $storeChat.SubscribedUsers.length }}</q-item-label>
-                </q-item-section>
-                <q-space/>
-                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
-                  <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" @click="confirm = true" />
-                  <q-btn v-else color="red" label="delete" @click="confirm = true" />
-                </q-item-section>
-                <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
-                  <q-btn color="orange" label="settings" @click="settings = true" />
-                </q-item-section>
-                <q-item-section side>
-                  <q-btn color="pink" label="debug" @click="debug" />
-                </q-item-section>
-              </q-item>
-              <q-item v-for="user in $storeChat.SubscribedUsers" :key="user.username" class="q-bg">
-                <q-item-section class="avatar">
-                  <img :src="avatarstr(user?.username)" class="image"/>
-                  <div :class="getLoginStatus(user?.username)" class="loginstatus" />
-                </q-item-section>
-                <q-item-section side class="">
-                  <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
-                </q-item-section>
-                <q-item-section side class="card role">
-                  <q-item-label>Role</q-item-label>
-                  <q-item-label>{{ user.role }}</q-item-label>
-                </q-item-section>
-              <q-item-section>
-                <BanMute
-                  :subscription="getUserSubscription(user.username)"
-                />
-              </q-item-section>
-              </q-item>
-
-            </q-list>
-          </q-menu>
-        </q-btn>
-
-      </div>
+      <ChatUsersList/>
       <div class="row">
         <div ref="chatList" class="list_messages">
-          <Message v-for="message in messages" :key="message.id" :username=message?.username
+          <Message v-for="message in $storeChat.getMessagesToDisplay" :key="message.id" :username=message?.username
             :avatar=avatarstr(message?.username) :content=message?.content :timestamp="new Date(message?.CreatedAt)" />
         </div>
       </div>
@@ -60,79 +12,31 @@
         class="absolute-bottom custom-input input" />
     </div>
 
-    <q-dialog persistent v-model="settings">
-      <CreateChannel settings :oldname=$storeChat.name :closeFn=closeSettings />
-    </q-dialog>
-
   </q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref } from 'vue';
-import UserCard from 'src/components/common/UserCard.vue'
+import { defineComponent, PropType, ref, computed } from 'vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
-import BanMute from './components/BanMute.vue'
-import { Subscription } from 'src/services/api.models'
-// import { useChatSocketStore } from 'src/stores/chatSocket';
+import ChatUsersList from './components/ChatUsersList.vue'
 import { useMeStore } from 'src/stores/me';
-
-import {
-  IWSMessages,
-  IWSError,
-  IWSInfos,
-} from 'src/models/messages.ws';
 
 export default defineComponent({
   name: 'Conversation',
-  components: { UserCard, Message, BanMute, CreateChannel },
+  components: { Message, CreateChannel, ChatUsersList },
   props: {
-  },
-  setup () {
-    const confirm = ref(false)
-    const settings = ref(false)
-    return {
-      closeConfirm() {
-        confirm.value = false
-      },
-      closeSettings() {
-        settings.value = false
-      },
-      confirm,
-      settings
-    }
   },
   data() {
     return {
-      // text: '',
-      // storeChat: useChatSocketStore(),
+      subs: computed(() => this.$storeChat.SubscribedUsers),
       storeMe: useMeStore(),
-      messages: [] as Array<IWSMessages>,
-      minidrawerStatus: false as boolean,
       notif1: false as boolean,
       notif2: false as boolean,
-      value: {
-        ban: {
-          lever: false as boolean,
-          timer: 0 as number,
-        },
-        mute: {
-          lever: false as boolean,
-          timer: 0 as number
-        },
-      },
       dialog: false as boolean
     }
   },
   methods: {
-    getUserSubscription(username: string) {
-      return this.$storeChat.SubscribedUsers.find((s: any) => { return s.username === username } )
-    },
-    getLoginStatus(username: string) {
-      if (this.$storeChat.connectedUsers.includes(username))
-        return 'ONLINE-status'
-      return 'OFFLINE-status'
-    },
     sendmessage() {
       this.$storeChat.sendMessage()
     },
@@ -144,17 +48,10 @@ export default defineComponent({
     avatarstr(username: string) {
       return `/api/avatar/${username}/thumbnail`
     },
-    async scrollBottom(messages: Array<IWSMessages>, toclean: boolean = false) {
-      if (toclean)
-        this.messages = []
-      this.messages = this.messages.concat(messages)
-      this.messages.sort((a: IWSMessages, b: IWSMessages) => {
-        return a.CreatedAt > b.CreatedAt ? 1 : -1
-      })
+    async scrollBottom() {
       const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
-
-      // while (element.children.length != this.$storeChat.messages.length)
-      while (element.children.length != this.messages.length)
+      // while (!element || !element.children || element.children.length != this.$storeChat.messages.length)
+      while (!element || !element.children || element.children.length != this.$storeChat.getMessagesToDisplay.length)
         await new Promise(r => setTimeout(r, 10));
       element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
     },
@@ -171,13 +68,10 @@ export default defineComponent({
   },
   beforeMount() {
     console.log('beforeMount');
-
-    console.log(this.$storeChat);
     this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
   },
   beforeUpdate() {
     console.log('beforeUpdate');
-
     this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
   },
   beforeUnmount() {

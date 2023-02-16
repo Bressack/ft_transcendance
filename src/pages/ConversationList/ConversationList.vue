@@ -8,21 +8,22 @@
       { value: '2', slot: 'two' },
       { value: '3', slot: 'three' },
       { value: '4', slot: 'four' },
+      { value: '5', slot: 'five' },
     ]">
       <template v-slot:one>
-        <div class="row items-center no-wrap" style="width: 42px;">
+        <div class="row justify-center items-center no-wrap" style="width: 26px;">
           <q-icon right name="group" />
         </div>
       </template>
 
       <template v-slot:two>
-        <div class="row items-center no-wrap" style="width: 42px;">
+        <div class="row justify-center items-center no-wrap" style="width: 26px;">
           <q-icon right name="chat" />
         </div>
       </template>
 
       <template v-slot:three>
-        <div class="row items-center no-wrap" style="width: 42px;" v-if="$storeMe.friendRequestRecevied !== undefined">
+        <div class="row justify-center items-center no-wrap" style="width: 26px;" v-if="$storeMe.friendRequestRecevied !== undefined">
           <q-icon right name="hourglass_bottom"/>
           <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestRecevied?.length > 0"/>
           <div class="notif justify-center items-center" v-if="$storeMe.friendRequestRecevied?.length > 0">{{ $storeMe.friendRequestRecevied?.length < 99 ? $storeMe.friendRequestRecevied?.length : '99+' }}</div>
@@ -30,10 +31,16 @@
       </template>
 
       <template v-slot:four>
-        <div class="row items-center no-wrap" style="width: 42px;" v-if="$storeMe.friendRequestRecevied !== undefined">
+        <div class="row justify-center items-center no-wrap" style="width: 26px;" v-if="$storeMe.friendRequestRecevied !== undefined">
           <q-icon right name="notifications"/>
           <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestSent?.length > 0"/>
-          <div class="notif justify-center items-center" v-if="$storeMe.friendRequestSent?.length > 0">{{ $storeMe.friendRequestSent?.length < 99 ? $storeMe.friendRequestSent?.length : '99+' }}</div>
+          <div class="notif justify-center items-center" v-if="$storeMe?.friendRequestSent?.length > 0">{{ $storeMe.friendRequestSent?.length < 99 ? $storeMe.friendRequestSent?.length : '99+' }}</div>
+        </div>
+      </template>
+
+      <template v-slot:five>
+        <div class="row justify-center items-center no-wrap" style="width: 26px;" v-if="$storeMe.blocking !== undefined">
+          <q-icon right name="cancel"/>
         </div>
       </template>
     </q-btn-toggle>
@@ -41,6 +48,7 @@
 
   <q-list bordered class="list">
 
+    <!-- list des amis -->
     <div v-if="socialtoggle == '1'">
       <q-item clickable v-ripple v-for="friend in $storeMe.friends" :key="friend" class="usermenu">
         <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
@@ -67,6 +75,9 @@
                 <q-item clickable class="text-red-7" @click="unfollow(friend)">
                   <q-item-section>Remove friend</q-item-section>
                 </q-item>
+                <q-item clickable class="text-red-7" @click="block(friend)">
+                  <q-item-section>Block</q-item-section>
+                </q-item>
               </q-list>
 
             </q-menu>
@@ -75,6 +86,7 @@
       </q-item>
     </div>
 
+    <!-- list des channels -->
     <div v-if="socialtoggle == '2'">
       <q-item class="flex-center">
         <q-btn class="createChannelButton" label="Create channel" color="orange" @click="dialog = true"/>
@@ -95,8 +107,9 @@
       </q-item>
     </div>
 
+    <!-- list des requestes envoyées-->
     <div v-if="socialtoggle == '3'">
-      <q-item clickable v-ripple v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv">
+      <q-item clickable v-ripple v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv" class="usermenu">
         <q-item-section style="max-width: 50px;">
           <q-avatar class="avatar">
             <img size="20px" :src="`/api/avatar/${rrecv}/thumbnail`">
@@ -109,11 +122,29 @@
         <q-item-section side>
           <q-icon name="done" color="green" @click="follow(rrecv)" />
         </q-item-section>
+        <q-item-section side class="toto">
+          <q-icon name="more_vert" color="white" class="toto">
+            <q-menu class="bg-grey-9 text-white" auto-close>
+
+              <q-list style="min-width: 100px">
+                <q-item clickable @click="goProfilPage(rrecv)">
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+                <q-separator dark />
+                <q-item clickable class="text-red-7" @click="block(rrecv)">
+                  <q-item-section>Block</q-item-section>
+                </q-item>
+              </q-list>
+
+            </q-menu>
+          </q-icon>
+        </q-item-section>
       </q-item>
     </div>
 
+    <!-- list des requestes reçus -->
     <div v-if="socialtoggle == '4'">
-      <q-item clickable v-ripple v-for="rsent in $storeMe.friendRequestSent" :key="rsent">
+      <q-item clickable v-ripple v-for="rsent in $storeMe.friendRequestSent" :key="rsent" class="usermenu">
         <q-item-section style="max-width: 50px;">
           <q-avatar class="avatar">
             <img size="20px" :src="`/api/avatar/${rsent}/thumbnail`">
@@ -125,6 +156,92 @@
         </q-item-section>
         <q-item-section side>
           <q-icon name="cancel" color="red" @click="unfollow(rsent)" />
+        </q-item-section>
+        <q-item-section side class="toto">
+          <q-icon name="more_vert" color="white" class="toto">
+            <q-menu class="bg-grey-9 text-white" auto-close>
+
+              <q-list style="min-width: 100px">
+                <q-item clickable @click="goProfilPage(rsent)">
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+                <q-separator dark />
+                <q-item clickable class="text-red-7" @click="block(rsent)">
+                  <q-item-section>Block</q-item-section>
+                </q-item>
+              </q-list>
+
+            </q-menu>
+          </q-icon>
+        </q-item-section>
+      </q-item>
+    </div>
+
+    <div v-if="socialtoggle == '5'">
+      <div class="q-pa-sm subtitle">
+        Blocked users
+      </div>
+      <q-item clickable v-ripple v-for="tblocking in $storeMe.getBlocking" :key="tblocking" class="usermenu">
+        <q-item-section style="max-width: 50px;">
+          <q-avatar class="avatar">
+            <img size="20px" :src="`/api/avatar/${tblocking}/thumbnail`">
+            <div :class="getLoginStatus(tblocking)" class="loginstatus" />
+          </q-avatar>
+        </q-item-section>
+        <q-item-section>
+          {{ tblocking }}
+        </q-item-section>
+        <q-item-section side>
+          <q-icon name="cancel" color="red" @click="unblock(tblocking)" />
+        </q-item-section>
+        <q-item-section side class="toto">
+          <q-icon name="more_vert" color="white" class="toto">
+            <q-menu class="bg-grey-9 text-white" auto-close>
+
+              <q-list style="min-width: 100px">
+                <q-item clickable @click="goProfilPage(tblocking)">
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+                <q-separator dark />
+                <q-item clickable class="text-red-7" @click="block(tblocking)">
+                  <q-item-section>Block</q-item-section>
+                </q-item>
+              </q-list>
+
+            </q-menu>
+          </q-icon>
+        </q-item-section>
+      </q-item>
+
+      <div class="q-pa-sm subtitle">
+        Users who blocked you
+      </div>
+      <q-item clickable v-ripple v-for="tblocked in $storeMe.getBlockedBy" :key="tblocked" class="usermenu">
+        <q-item-section style="max-width: 50px;">
+          <q-avatar class="avatar">
+            <img size="20px" :src="`/api/avatar/${tblocked}/thumbnail`">
+            <div :class="getLoginStatus(tblocked)" class="loginstatus" />
+          </q-avatar>
+        </q-item-section>
+        <q-item-section>
+          {{ tblocked }}
+        </q-item-section>
+        <q-item-section side class="toto">
+          <q-icon name="more_vert" color="white" class="toto">
+            <q-menu class="bg-grey-9 text-white" auto-close>
+
+              <q-list style="min-width: 100px">
+                <q-item clickable @click="goProfilPage(tblocked)">
+                  <q-item-section>Profile</q-item-section>
+                </q-item>
+                <q-separator dark />
+                <q-item clickable class="text-red-7" @click="block(tblocked)">
+                  <q-item-section>Block</q-item-section>
+                </q-item>
+              </q-list>
+
+            </q-menu>
+          </q-icon>
         </q-item-section>
       </q-item>
     </div>
@@ -138,7 +255,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { IConvList, IConvItem, Scope } from '../../models/models';
-import UserCard from '../../components/common/UserCard.vue'
 import { fake_IConvList } from '../../models/fakedatas'
 import GameOptions from '../../components/GameOptions.vue'
 import { ISearchQuery } from 'src/services/api.models'
@@ -168,7 +284,7 @@ interface IUserSelected {
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { UserCard, GameOptions, QInputMenu, CreateChannel },
+  components: { GameOptions, QInputMenu, CreateChannel },
   props: {},
   setup() {
     const gameOptions = ref(false)
@@ -290,13 +406,25 @@ export default defineComponent({
     follow(username: string) {
       let that = this
       this.$api.follow(username)
-        .then(function () { that.$storeMe.fetch(), that.search() })
+        .then(function () { that.$storeMe.fetch() })
         .catch(function () { })
     },
     unfollow(username: string) {
       let that = this
       this.$api.unfollow(username)
-        .then(function () { that.$storeMe.fetch(), that.search() })
+        .then(function () { that.$storeMe.fetch() })
+        .catch(function () { })
+    },
+    block(username: string) {
+      let that = this
+      this.$api.block(username)
+        .then(function () { that.$storeMe.fetch() })
+        .catch(function () { })
+    },
+    unblock(username: string) {
+      let that = this
+      this.$api.unblock(username)
+        .then(function () { that.$storeMe.fetch() })
         .catch(function () { })
     },
   },
@@ -386,4 +514,9 @@ export default defineComponent({
 
 .createChannelButton
   width: 100%
+
+.subtitle
+  font-size: 17px
+  font-weight: bold
+  color: $orange-7
 </style>

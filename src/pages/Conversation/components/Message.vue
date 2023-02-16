@@ -22,11 +22,10 @@
 
 <script lang="ts">
 import { defineComponent, PropType } from 'vue'
-import UserCard from '../../../components/common/UserCard.vue'
 
 export default defineComponent({
   name: 'Message',
-  components: { UserCard },
+  components: { },
   props: {
     username:  { type: String, required: true },
     avatar:    { type: String, required: true },

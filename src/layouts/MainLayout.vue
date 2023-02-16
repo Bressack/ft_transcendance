@@ -18,8 +18,8 @@
 
 			<q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
         <q-item class="usercard">
-          <q-item-section @click="goHome">
-            <q-img :src="`/api/avatar/${storeMe.username}/thumbnail`" width="60px" height="60px" img-class="usercard-image"/>
+          <q-item-section @click="goHome" v-if="$storeMe.username">
+            <q-img :src="`/api/avatar/${$storeMe.username}/thumbnail`" width="60px" height="60px" img-class="usercard-image"/>
           </q-item-section>
           <q-item-section class="usercard-name" @click="goProfilePage">
             <q-item-label class="usercard-name-label">{{ storeMe.username }}</q-item-label>

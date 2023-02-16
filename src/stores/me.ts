@@ -1,3 +1,4 @@
+import { Blocks } from './../services/api.models';
 import { defineStore } from 'pinia';
 import * as models from 'src/services/api.models'
 import api from 'src/services/api.service'
@@ -5,26 +6,17 @@ import ld from 'lodash'
 
 export const useMeStore = defineStore('me', {
   state: () => ({
-    // me: {} as models.User,
-
     username                      :  ''    as String,
     email                         :  ''    as String,
     createdAt                     :  ''    as String,
     updatedAt                     :  ''    as String,
-    TwoFA                         :  false as Boolean,
-    password                      :  ''    as String,
-    salt                          :  ''    as String,
-    identification_token          :  ''    as String,
-    refresh_token                 :  ''    as String,
     channelSubscriptions          :  []    as Array<models.Subscription>,
-    messages                      :  []    as Array<models.Message>,
     gameHistoryPOne               :  []    as Array<models.Game>,
     gameHistoryPTwo               :  []    as Array<models.Game>,
     followedBy                    :  []    as Array<models.Follows>,
     following                     :  []    as Array<models.Follows>,
     blockedBy                     :  []    as Array<models.Blocks>,
     blocking                      :  []    as Array<models.Blocks>,
-    avatars                       :  {}    as models.Avatar,
     victoriesAsPOne               :  0     as Number,
     victoriesAsPTwo               :  0     as Number,
     defeatsAsPOne                 :  0     as Number,
@@ -35,31 +27,37 @@ export const useMeStore = defineStore('me', {
   }),
 
   getters: {
-    friends: (state) => {
+    // getBlockedBy(state: any) {
+    //   return state.blockedBy.map((e: Blocks) => e.blockerId)
+    // },
+    // getBlocking(state: any) {
+    //   return state.blocking.map((e: Blocks) => e.blockingId)
+    // },
+    friends(state: any) {
       if (state?.followedBy)
       {
-        let followedBy = [] ; for (let f of state.followedBy) { followedBy.push(f.followerId) }
-        let following = [] ; for (let f of state.following) { following.push(f.followingId) }
+        let followedBy = state.followedBy.map(e => e.followerId)
+        let following = state.following.map(e => e.followingId)
         return ld.intersection(followedBy, following)
       }
       else
         return undefined
     },
-    friendRequestSent: (state) => {
+    friendRequestSent(state: any) { // keep only request without follow back
       if (state?.followedBy)
       {
-        let followedBy = [] ; for (let f of state.followedBy) { followedBy.push(f.followerId) }
-        let following = [] ; for (let f of state.following) { following.push(f.followingId) }
+        let followedBy = state.followedBy.map(e => e.followerId)
+        let following = state.following.map(e => e.followingId)
         return ld.difference(following, followedBy)
       }
       else
         return undefined
     },
-    friendRequestRecevied: (state) => {
+    friendRequestRecevied(state: any) { // keep only request without follow back
       if (state?.followedBy)
       {
-        let followedBy = [] ; for (let f of state.followedBy) { followedBy.push(f.followerId) }
-        let following = [] ; for (let f of state.following) { following.push(f.followingId) }
+        let followedBy = state.followedBy.map(e => e.followerId)
+        let following = state.following.map(e => e.followingId)
         return ld.difference(followedBy, following)
       }
       else
@@ -68,6 +66,12 @@ export const useMeStore = defineStore('me', {
   },
 
   actions: {
+    getBlockedBy() {
+      return this.blockedBy.map((e: Blocks) => e.blockerId)
+    },
+    getBlocking() {
+      return this.blocking.map((e: Blocks) => e.blockingId)
+    },
     async getUser(username: string) {
       return await api.user(username)
     },
@@ -79,20 +83,13 @@ export const useMeStore = defineStore('me', {
         that.email                = me.email
         that.createdAt            = me.createdAt
         that.updatedAt            = me.updatedAt
-        that.TwoFA                = me.TwoFA
-        that.password             = me.password
-        that.salt                 = me.salt
-        that.identification_token = me.identification_token
-        that.refresh_token        = me.refresh_token
         that.channelSubscriptions = me.channelSubscriptions
-        that.messages             = me.messages
         that.gameHistoryPOne      = me.gameHistoryPOne
         that.gameHistoryPTwo      = me.gameHistoryPTwo
         that.followedBy           = me.followedBy
         that.following            = me.following
         that.blockedBy            = me.blockedBy
         that.blocking             = me.blocking
-        that.avatars              = me.avatars
         that.victoriesAsPOne      = me.victoriesAsPOne
         that.victoriesAsPTwo      = me.victoriesAsPTwo
         that.defeatsAsPOne        = me.defeatsAsPOne

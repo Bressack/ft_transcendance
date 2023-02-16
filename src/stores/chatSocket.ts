@@ -1,5 +1,6 @@
-import { defineStore } from "pinia";
-import io from "socket.io-client";
+
+import { defineStore } from 'pinia';
+import io from 'socket.io-client';
 import {
   User,
   Follows,
@@ -30,23 +31,29 @@ let scrollBack = null;
 
 export const useChatSocketStore = defineStore("chatSocket", {
   state: () => ({
-    vue: null as any,
-    init: false as boolean,
-    socket: {} as ws,
-    currentChannel: "" as string,
-    channelType: "" as "",
-    password: "" as string,
-    name: "" as string,
-    text: "" as string,
-    connectedUsers: [] as Array<string>,
-    SubscribedUsers: [] as Array<Subscription>,
-    password_protected: false as Boolean,
+    vue                : null as any,
+    init               : false as boolean,
+    socket             : {} as ws,
+    currentChannel     : '' as string,
+    channelType        : '' as string,
+    password           : '' as string,
+    role               : '' as string,
+    name               : '' as string,
+    text               : '' as string,
+    messages           : [] as Array<IWSMessages>,
+    connectedUsers     : [] as Array<string>,
+    SubscribedUsers    : new Map<string, Subscription>() as Map<string, Subscription>,
+    password_protected : false as Boolean,
   }),
 
   getters: {
     getMessage(state: any) {
-      return state.messages;
+      return state.messages
     },
+    getMessagesToDisplay(state: any) {
+      const b = state.vue.$storeMe.getBlocking()
+      return state.messages.filter((msg: IWSMessages) => { return !b.includes(msg.username) })
+    }
   },
 
   actions: {
@@ -113,12 +120,14 @@ export const useChatSocketStore = defineStore("chatSocket", {
       //   );
     },
     leaveCurrentRoom() {
-      if (this.init == false || this.currentChannel === "") return;
+      if (this.init == false || this.currentChannel === "")
+        return;
 
       //   this.socket.emit("leave-channel", { channelId: this.currentChannel });
       this.currentChannel = "";
       this.messages = [];
       this.password = "";
+      this.SubscribedUsers.clear()
     },
     sendMessage() {
       if (
@@ -163,13 +172,28 @@ export const useChatSocketStore = defineStore("chatSocket", {
       this.init = true;
       this.vue = vue;
 
-      this.socket.listen("message", (payload: IWSMessages) => {
-        console.log("ws message:", payload);
-        if (payload.channelId == this.currentChannel)
-          this.scrollBack([payload]);
-      });
-      this.socket.listen("error", (payload: IWSError) => {
-        console.log("ws error:", payload);
+      this.socket.listen('fetch_me', ((payload: Subscription) => {
+        this.vue.$storeMe.fetch()
+      }));
+      this.socket.listen('altered_subscription', ((payload: Subscription) => {
+        this.SubscribedUsers.set(payload.username, payload)
+        console.log('altered_subscription:', payload);
+        if (this.vue.$storeMe.username == payload.username)
+          this.vue.$storeMe.fetch()
+      }));
+      this.socket.listen('message', ((payload: IWSMessages) => {
+        console.log('ws message:', payload)
+        if (payload.channel_id == this.currentChannel)
+        {
+          this.messages.push(payload)
+          this.messages.sort((a: IWSMessages, b: IWSMessages) => {
+            return a.CreatedAt > b.CreatedAt ? 1 : -1
+          })
+          this.scrollBack()
+        }
+      }));
+      this.socket.listen('error', ((payload: IWSError) => {
+        console.log('ws error:', payload)
         this.$q.notify({
           type: "warning",
           message: payload.message,
@@ -185,3 +209,5 @@ export const useChatSocketStore = defineStore("chatSocket", {
     },
   },
 });
+
+

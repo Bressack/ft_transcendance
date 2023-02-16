@@ -1,14 +1,15 @@
 <template>
-  <div class="main row items-center justify-left q-pl-md">
+  <div class="main row items-center justify-left q-pl-md" v-if="String($storeChat.role) != 'USER' && String(subscription.role) != 'OWNER' ">
     <div class="toggle">
-      <div :class="selected(0)" @click="swap(0)">BAN</div>
-      <div :class="selected(1)" @click="swap(1)">MUTE</div>
+      <div :class="state == 'BANNED' ? 'on' : 'off' " @click="swap('BANNED')">BAN</div>
+      <div :class="state == 'MUTED'  ? 'on' : 'off' " @click="swap('MUTED')">MUTE</div>
     </div>
     <div class="q-pa-md">
-      <div v-if="options[lever].currentServerTime == null">
+
+      <div v-if="!serverStateTime">
         <q-btn icon="access_time" round color="primary">
           <q-popup-proxy @before-show="updateProxy" cover transition-show="scale" transition-hide="scale">
-            <q-time v-model="options[lever].proxyTime" format24h>
+            <q-time v-model="proxyTime" format24h>
               <div class="row items-center justify-center q-gutter-sm">
                 <span class="text-h6">Select the duration (hh:mm)</span>
                 <q-btn label="Cancel" color="primary" flat v-close-popup />
@@ -17,56 +18,54 @@
             </q-time>
           </q-popup-proxy>
         </q-btn>
-        <q-btn if="options[lever].time != '00:00'" class="q-mx-md" @click="sendNewState">apply</q-btn>
+        <q-btn v-if="time != '00:00'" class="q-mx-md" @click="sendNewState">apply</q-btn>
       </div>
+
       <div v-else class="row">
         <q-card class="currentServer q-pa-sm">
-          {{ options[lever].currentServerTime + '' }}
+          {{ String(serverStateTime) }}
         </q-card>
         <q-btn class="q-mx-md" @click="returnStateToOK">abort</q-btn>
       </div>
+
+    </div>
+  </div>
+  <div class="mainuser row items-center justify-left q-pl-md" v-else>
+    <div v-if="serverStateTime">
+      <q-card class="currentServer q-pa-sm">
+        User {{ String(subscription.state) == 'BANNED' ? 'banned' : 'muted' }} {{ String(serverStateTime) }}
+      </q-card>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { Subscription, eSubscriptionState } from 'src/services/api.models'
+import { Subscription } from 'src/services/api.models'
 
 export default defineComponent({
   name: 'BanMute',
   components: {},
   props: {
-    subscription: { type: Object, required: true }, // Deso theo, type: Object pour enlever l'erreur console avec type: Subscription
+    subscription: { type: Subscription, required: true }, // Deso theo, type: Object pour enlever l'erreur console avec type: Subscription
   },
   data() {
     return {
-      lever: this.serverStateTime('BANNED') ? 0 : 1 as number,
-      options: [
-        { // BAN
-          state: 'BANNED',
-          currentServerTime: this.serverStateTime('BANNED') as any, // in minutes
-          time: '00:00',
-          proxyTime: '00:00',
-        },
-        { // MUTE
-          state: 'MUTED',
-          currentServerTime: this.serverStateTime('MUTED') as any, // in minutes
-          time: '00:00',
-          proxyTime: '00:00',
-        }
-      ]
+      state: this.subscription.state == 'OK' ? 'BANNED' : this.subscription.state as string,
+      time: '00:00',
+      proxyTime: '00:00',
     }
   },
-  methods: {
-    serverStateTime(es: eSubscriptionState) {
-      var s = null
-      if (String(this.subscription.state) == String(es))
+  computed: {
+    serverStateTime() {
+      if (this.subscription.state == this.state)
         return 'until ' + this.getRelativeDate(this.subscription.stateActiveUntil)
       return null
     },
+  },
+  methods: {
     timeToMin() {
-      const s: Array<string> = this.options[this.lever].time.split(':')
+      const s: Array<string> = this.time.split(':')
       return (parseInt(s[0]) * 60 + parseInt(s[1]))
     },
     returnStateToOK() {
@@ -74,24 +73,19 @@ export default defineComponent({
     },
     sendNewState() {
       this.$api.setState(this.subscription.channelId, this.subscription.username, {
-        stateTo: this.options[this.lever].state,
+        stateTo: this.state,
         duration: this.timeToMin(),
       })
     },
     updateProxy () {
-      this.options[this.lever].proxyTime = this.options[this.lever].time
+      this.proxyTime = this.time
     },
     save () {
-      this.options[this.lever].time = this.options[this.lever].proxyTime
+      this.time = this.proxyTime
     },
 
-    swap(n: number) {
-      this.lever = n
-    },
-    selected(n: number) {
-      if (n == this.lever)
-        return "on"
-      return "off"
+    swap(s: string) {
+      this.state = s
     },
 
     getRelativeDate(date: string): string {
@@ -120,8 +114,6 @@ export default defineComponent({
       }
     },
   },
-  mounted() {
-  }
 });
 </script>
 
@@ -129,6 +121,15 @@ export default defineComponent({
 .main
   display: flexbox
   width: 410px
+  height: 80px
+
+  background-color: #424242
+  color: orange
+  border-radius: 10px
+
+.mainuser
+  display: flexbox
+  width: 220px
   height: 80px
 
   background-color: #424242

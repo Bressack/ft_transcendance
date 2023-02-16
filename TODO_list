@@ -1,3 +1,8 @@
-- Blocking users -> TODO
-- 
 
+ - Blocking users:
+    . faire pleins de test sur block user
+    . plus de test
+    . toujours plus de test
+ - notify un peu partout
+ - essayer d'import la police Press start 2p dans quasar
+ - clean le front (gros boulot)

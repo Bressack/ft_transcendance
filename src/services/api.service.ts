@@ -101,6 +101,14 @@ export default {
     return response;
   },
 
+  async block(username: String) {
+    const response = await this.axiosInstance.patch(
+      `/users/${username}/block`
+    );
+    console.log(response);
+    return response;
+  },
+
   async auth() {
     const response = await this.axiosInstance.get("auth");
     return response;

@@ -10,8 +10,8 @@ declare module '@vue/runtime-core' {
     $axios: AxiosInstance;
     $ws: typeof ws;
     $api: typeof api;
-    $storeChat: any;
-    $storeMe: any;
+    $storeChat: typeof storeChat;
+    $storeMe: typeof storeMe;
   }
 }
 
@@ -24,12 +24,14 @@ declare module '@vue/runtime-core' {
 // const api = axios.create({ baseURL: 'https://api.example.com' });
 const api = API
 const ws = new WsService();
+const storeChat = useChatSocketStore();
+const storeMe = useMeStore();
 declare module 'vue' {
   interface ComponentCustomProperties {
     $ws: typeof ws
     $api: typeof api
-    $storeChat: any
-    $storeMe: any
+    $storeChat: typeof storeChat
+    $storeMe: typeof storeMe
   }
 }
 export default boot(({ app }) => {
@@ -40,8 +42,7 @@ export default boot(({ app }) => {
   //       so you won't necessarily have to import axios in each vue file
   app.config.globalProperties.$ws = ws;
   app.config.globalProperties.$api = api;
-  app.config.globalProperties.$storeChat = useChatSocketStore();
-  app.config.globalProperties.$storeMe = useMeStore();
+  app.config.globalProperties.$storeChat = storeChat;
+  app.config.globalProperties.$storeMe = storeMe;
 });
 
-// export { api };

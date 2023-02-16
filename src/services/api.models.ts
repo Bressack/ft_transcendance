@@ -32,11 +32,12 @@ export function SearchQueryBuilder(query: ISearchQuery) {
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-export enum eSubscriptionState {
-  BANNED,
-  MUTED,
-  OK,
-}
+export type eSubscriptionState = 'BANNED' | 'MUTED' | 'OK'
+// export enum eSubscriptionState {
+//   'BANNED',
+//   'MUTED',
+//   'OK',
+// }
 
 export enum eRole {
   OWNER,
