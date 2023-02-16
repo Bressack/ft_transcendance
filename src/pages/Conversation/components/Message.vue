@@ -33,11 +33,7 @@ export default defineComponent({
     timestamp: { type: Date  , required: true },
   },
   data() {
-    return {
-
-    }
-  },
-  mounted() {
+    return {}
   },
   methods: {
     goProfilPage() {

@@ -2,7 +2,7 @@
 	<q-layout view="lHh Lpr lFf">
 		<q-header elevated>
 			<q-toolbar class="toolbar">
-				<q-btn flat @click="storeMe.drawerStatus = !storeMe.drawerStatus" round dense icon="menu" />
+				<q-btn flat @click="$storeMe.drawerStatus = !$storeMe.drawerStatus" round dense icon="menu" />
         <q-item class="label q-px-md" clickable @click="goHome">ft_transcendence</q-item>
         <q-space/>
         <q-item class="usercard-settings" clickable @click="goSettingsNotif">
@@ -11,7 +11,7 @@
 			</q-toolbar>
 		</q-header>
 
-		<q-drawer v-model="storeMe.drawerStatus" show-if-above :breakpoint="500" :width="300">
+		<q-drawer v-model="$storeMe.drawerStatus" show-if-above :breakpoint="500" :width="300">
 			<q-scroll-area class="scroll">
 				<ConversationList />
 			</q-scroll-area>
@@ -22,7 +22,7 @@
             <q-img :src="`/api/avatar/${$storeMe.username}/thumbnail`" width="60px" height="60px" img-class="usercard-image"/>
           </q-item-section>
           <q-item-section class="usercard-name" @click="goProfilePage">
-            <q-item-label class="usercard-name-label">{{ storeMe.username }}</q-item-label>
+            <q-item-label class="usercard-name-label">{{ $storeMe.username }}</q-item-label>
           </q-item-section>
         </q-item>
 			</q-img>
@@ -46,8 +46,6 @@ import { defineComponent, ref } from 'vue';
 import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import Settings from '../components/Settings.vue'
 import GameInvitation from '../components/GameInvitation.vue'
-import { useMeStore } from 'src/stores/me';
-import { useChatSocketStore } from 'src/stores/chatSocket';
 
 export default defineComponent({
 	name: 'MainLayout',
@@ -69,8 +67,6 @@ export default defineComponent({
 	},
 	data: () => {
 		return {
-			storeMe: useMeStore(),
-			// storeChat: useChatSocketStore(),
 			opponent: "",
 			maps: "",
 			difficulty: "",
@@ -168,12 +164,12 @@ export default defineComponent({
     this.$storeChat.$reset()
 		this.$storeChat.init_socket(this.$ws, this) // set socket in the store
 		// clean possibly old datas
-		this.storeMe.$reset()
+		this.$storeMe.$reset()
 		this.$storeChat.leaveCurrentRoom()
 
 		// connect and init WebSockets
 		// fetch datas
-		this.storeMe.fetch()
+		this.$storeMe.fetch()
 	},
 	mounted() {
 		this.listenForGameInvite()

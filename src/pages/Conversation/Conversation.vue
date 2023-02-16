@@ -16,11 +16,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, ref, computed } from 'vue';
+import { defineComponent, computed } from 'vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
 import ChatUsersList from './components/ChatUsersList.vue'
-import { useMeStore } from 'src/stores/me';
 
 export default defineComponent({
   name: 'Conversation',
@@ -30,7 +29,6 @@ export default defineComponent({
   data() {
     return {
       subs: computed(() => this.$storeChat.SubscribedUsers),
-      storeMe: useMeStore(),
       notif1: false as boolean,
       notif2: false as boolean,
       dialog: false as boolean
@@ -61,7 +59,7 @@ export default defineComponent({
   },
   computed: {
     margin_input() {
-      if (this.storeMe.drawerStatus)
+      if (this.$storeMe.drawerStatus)
         return "300px"
       return "0px"
     }

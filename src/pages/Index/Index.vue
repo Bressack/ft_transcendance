@@ -2,7 +2,7 @@
 <q-page>
   <q-item class="flex-center">
     <q-item-label class="bigger q-ma-lg">
-      Welcome {{ storeMe.username }} !
+      Welcome {{ $storeMe.username }} !
     </q-item-label>
   </q-item>
   <q-item class="flex-center">
@@ -28,7 +28,6 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { useMeStore } from 'src/stores/me';
 import SpectateGames from '../../components/SpectateGames.vue';
 import WaitForPairing from '../../components/WaitForPairing.vue'
 
@@ -44,7 +43,6 @@ export default defineComponent({
   },
 	data() {
 		return {
-			storeMe: useMeStore(),
       games: [] as any,
 		}
 	},

@@ -12,12 +12,9 @@
 </template>
 
 <script lang="ts">
-import { ref, defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import { watch } from 'vue'
-import { throttle } from 'lodash'
 import * as THREE from 'three';
-import { useMeStore } from '../../../stores/me';
-// import THREE from 'three';
 
 
 var timeOutFunctionId = undefined as any;
@@ -42,7 +39,7 @@ var paddleDepth = 10;
 var ball = null as any
 var paddle1= null as any
 var paddle2 = null as any
- 
+
 
 export default defineComponent({
 	name: 'DrawGame',
@@ -63,20 +60,19 @@ export default defineComponent({
 			player2_y: 310,
 			player1_score: 0,
 			player2_score: 0,
-			storeMe: useMeStore(),
 			playerOneName: "p1",
 			playerTwoName: "p2",
 			prevviewside: false,
 		}
 	},
-	props: 
+	props:
 	{
 		viewside: {type: Boolean, default: false}
 	},
 	methods:
 	{
 		setup()
-		{	
+		{
 			this.createScene();
 			this.draw();
 		},
@@ -86,7 +82,7 @@ export default defineComponent({
 			let WIDTH = window.innerWidth / 1.5;
 			var VIEW_ANGLE = 50, ASPECT = WIDTH / HEIGHT, NEAR = 0.1, FAR = 5000;
 			renderer = new THREE.WebGLRenderer();
-			
+
 			camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
 			scene = new THREE.Scene();
 			scene.add(camera);
@@ -94,16 +90,16 @@ export default defineComponent({
 			renderer.setSize(WIDTH, HEIGHT);
 			renderer.domElement.id = 'testid';
 			const loader = new THREE.TextureLoader();
-			// scene.background = 
+			// scene.background =
 			scene.background = loader.load( 'https://cdn.sortiraparis.com/images/1001/94880/721017-espace-un-objet-mysterieux.jpg' );
 			this.canvas.appendChild(renderer.domElement);
 			var planeWidth = fieldWidth
-			var	planeHeight = fieldHeight		
+			var	planeHeight = fieldHeight
 			var paddle1Material = new THREE.MeshBasicMaterial({color: 0x00ffff});
 			var paddle2Material = new THREE.MeshBasicMaterial({color: 0xFF0000});
 
 			var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://upload.wikimedia.org/wikipedia/commons/3/38/Xavier_Niel004.jpg' )});
-			
+
 			var tableMaterial = new THREE.MeshBasicMaterial({color: 0x8c8c8c});
 			var tableMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF});
 			var sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
@@ -121,7 +117,7 @@ export default defineComponent({
 
 			ball.position.x = 0;
 			ball.position.y = 0;
-			ball.position.z = radius;	
+			ball.position.z = radius;
 			paddle1 = new THREE.Mesh(
 			  new THREE.BoxGeometry(
 				paddleWidth,
@@ -143,7 +139,7 @@ export default defineComponent({
 			  paddle2Material);
 			scene.add(paddle2);
 			paddle2.receiveShadow = true;
-    		paddle2.castShadow = true;	
+    		paddle2.castShadow = true;
 			paddle1.position.x = -fieldWidth/2 + paddleWidth + 15;
 			paddle2.position.x = fieldWidth/2 - paddleWidth - 15;
 			paddle1.position.z = paddleDepth;
@@ -153,7 +149,7 @@ export default defineComponent({
     		spotLight.intensity = 1.5;
     		spotLight.castShadow = true;
     		scene.add(spotLight);
-			this.cameraPhysics()	
+			this.cameraPhysics()
 		},
 		draw()
 		{
@@ -198,7 +194,7 @@ export default defineComponent({
 		{
 			if (this.prevviewside != this.viewside)
 				this.travelingdesesmort()
-			else if (this.storeMe.username == this.playerOneName || this.viewside)
+			else if (this.$storeMe.username == this.playerOneName || this.viewside)
 			{
 				// p1 position
 				camera.position.y += (paddle1.position.y - camera.position.y) * 0.001;
@@ -278,7 +274,7 @@ export default defineComponent({
 					this.canvas_txt.width = window.innerWidth;
 					var VIEW_ANGLE = 50, ASPECT = this.canvas_txt.width / this.canvas_txt.height, NEAR = 0.1, FAR = 5000;
 					camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
-					
+
 				}
 				else {
 					renderer.setSize(window.innerWidth, window.innerHeight);
@@ -354,7 +350,7 @@ export default defineComponent({
 		this.prevviewside = this.viewside;
 		console.log("aled")
 		setTimeout(this.ft_mounted, 10)
-		
+
 	},
 	beforeUnmount() {
 		this.$ws.removeListener(`${this.gameId}___countdown`)

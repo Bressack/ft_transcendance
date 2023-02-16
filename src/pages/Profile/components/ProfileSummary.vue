@@ -9,7 +9,7 @@
       <q-item-section>
         <q-item-label class="label name">{{ name }}</q-item-label>
       </q-item-section>
-      <q-item v-if="interact && name != storeMe.username">
+      <q-item v-if="interact && name != $storeMe.username">
         <q-item-section>
           <q-btn label="play" class="interpolate-btn q-mr-xs" color="orange" @click="goGameOptions" />
         </q-item-section>
@@ -42,7 +42,6 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import GameOptions from '../../../components/GameOptions.vue'
-import { useMeStore } from 'src/stores/me'
 
 export default defineComponent({
   name: 'ProfileSummary',
@@ -73,7 +72,6 @@ export default defineComponent({
     return {
       friendLabel: 'add friend' as string,
       friendColor: 'green' as string,
-      storeMe: useMeStore()
     }
   },
   created () {
@@ -91,7 +89,7 @@ export default defineComponent({
       return (v / (v + d) * 100).toFixed(0)
     },
     isFriend () {
-      return (this.storeMe.friends?.find(element => element === this.name))
+      return (this.$storeMe.friends?.find((element: any) => element === this.name))
     },
     friendStatus () {
       if (this.$storeMe.friendRequestRecevied?.includes(this.name)) {
@@ -127,7 +125,7 @@ export default defineComponent({
         .catch()
     },
     userSelected() {
-			const channelID = this.storeMe.getChannelIDByUsername(this.name as string)
+			const channelID = this.$storeMe.getChannelIDByUsername(this.name as string)
 			this.$router.push({
 				path: `/conversation/${channelID}`,
 			})

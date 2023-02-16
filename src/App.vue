@@ -5,23 +5,15 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import { Cookies } from 'quasar'
-import { useMeStore } from 'src/stores/me';
-import { useChatSocketStore } from 'src/stores/chatSocket';
 import {
   NavigationGuardNext,
   RouteLocationNormalized,
 } from "vue-router";
 
-// import api from './services/api.service'
-// import wsService from './services/ws.service';
-
 export default defineComponent({
 name: 'App',
 data() {
-  return {
-    storeMe: useMeStore(),
-    storeChat: useChatSocketStore(),
-  }
+  return {}
 },
 methods: {
 	has_refresh(): boolean {
@@ -66,7 +58,7 @@ methods: {
 		}catch (e) {}
 		await this._fClearCookies()
 		this.$ws.disconnect()
-		this.storeMe.$reset()
+		this.$storeMe.$reset()
 		this.$storeChat.leaveCurrentRoom()
 		this.$storeChat.$reset()
 		if (next)
@@ -116,7 +108,7 @@ methods: {
 
 		this.$api.axiosInstance.interceptors.response.use((resp) => {
 			if (resp.status === 205)
-				this.storeMe.fetch()
+				this.$storeMe.fetch()
 			return resp
 		}, undefined)
 		// }, async (error) => {
@@ -126,7 +118,7 @@ methods: {
 //   disconnect () {
 //     this.$router.push('/login')
 //     this.$ws.disconnect()
-//     this.storeMe.$reset()
+//     this.$storeMe.$reset()
 //     this.$storeChat.leaveCurrentRoom()
 //     this.storeChat.$reset()
 //   }

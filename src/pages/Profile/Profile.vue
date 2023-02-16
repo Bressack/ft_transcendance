@@ -53,7 +53,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { IGameQuery } from '../../services/api.models'
-import { useMeStore } from 'src/stores/me';
 import ProfileSummary from './components/ProfileSummary.vue'
 import MatchHistory from './components/MatchHistory.vue'
 import LevelProgress from './components/LevelProgress.vue'
@@ -66,7 +65,6 @@ export default defineComponent({
     return {
       username: this.$route.params.username.toString() as string,
       avatar: '' as string,
-      storeMe : useMeStore(),
       profile: [] as any,
       games: [] as any,
       userFetched: false as boolean,

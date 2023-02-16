@@ -15,13 +15,10 @@
 	</div>
 </template>
 <script lang="ts">
-import { ref, defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import { watch } from 'vue'
-import { throttle, uniqueId } from 'lodash'
-import { useMeStore } from '../../../stores/me';
 
 var timeOutFunctionId = undefined as any;
-let test = undefined as any
 
 export default defineComponent({
 	name: 'DrawGame',
@@ -45,7 +42,6 @@ export default defineComponent({
 			player2_score: 0,
 			playerOneName: "p1",
 			playerTwoName: "p2",
-			storeMe: useMeStore(),
 		};
 	},
 	methods:

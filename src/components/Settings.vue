@@ -43,8 +43,6 @@
 <script lang="ts">
 import { defineComponent } from 'vue'
 import { QRejectedEntry } from 'quasar'
-import { useMeStore } from 'src/stores/me'
-// import api from '../services/api.service'
 
 interface UploadObject {
   files: readonly any[]
@@ -59,7 +57,6 @@ export default defineComponent({
       twoFA: false as Boolean,
       refresh: 0 as number,
       username: '' as string,
-      storeMe: useMeStore(),
       $refs: undefined as any,
     }
   },

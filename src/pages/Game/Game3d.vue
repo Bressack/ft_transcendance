@@ -7,14 +7,9 @@
 
 <!-- window.innerHeight -->
 <script lang="ts">
-import { ref, defineComponent, computed } from 'vue'
+import { defineComponent } from 'vue'
 import DrawGame3d from './components/DrawGame3d.vue'
-// import { watch } from 'vue'
 import { throttle } from 'lodash'
-import { useMeStore } from '../../stores/me';
-
-var timeOutFunctionId = undefined as any;
-
 
 export default defineComponent({
 	name: 'Game',
@@ -31,11 +26,10 @@ export default defineComponent({
 			throttleValue: 10,
 			playerOneName: "p1",
 			playerTwoName: "p2",
-			storeMe: useMeStore(),
 			playermod : false,
 		};
 	},
-	
+
 	methods:
 	{
 		getPlayerPosition(event: any): any {
@@ -48,7 +42,7 @@ export default defineComponent({
 			let y = 50
 
 			/* // mouseposition p1 */
-			if ((this.playerOneName == this.storeMe.username))
+			if ((this.playerOneName == this.$storeMe.username))
 			{
 				if (mouseLocation <= this.canvas.width / 4) {
 					y = 0;
@@ -84,7 +78,7 @@ export default defineComponent({
 			this.canvas = <HTMLCanvasElement> document.getElementById('canvas_txt');
 			const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
 			this.canvas.addEventListener('mousemove', sendPositionThrottled);
-			
+
 	},
 	beforeUnmount() {
 		console.log('quit');
