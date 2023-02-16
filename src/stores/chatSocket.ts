@@ -8,8 +8,6 @@ import {
   Message,
   Channel,
   Subscription,
-  Game,
-  Avatar,
   eSubscriptionState,
   eRole,
   eChannelType,
@@ -29,7 +27,12 @@ import { AxiosError, AxiosResponse } from "axios";
 
 let scrollBack = null;
 
-export const useChatSocketStore = defineStore("chatSocket", {
+interface SavedPassword {
+  channelId: string,
+  password: string
+}
+
+export const useChatSocketStore = defineStore('chatSocket', {
   state: () => ({
     vue                : null as any,
     init               : false as boolean,
@@ -37,6 +40,7 @@ export const useChatSocketStore = defineStore("chatSocket", {
     currentChannel     : '' as string,
     channelType        : '' as string,
     password           : '' as string,
+    savedPasswords     : [] as SavedPassword[],
     role               : '' as string,
     name               : '' as string,
     text               : '' as string,

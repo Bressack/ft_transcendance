@@ -192,5 +192,44 @@ export default {
     );
   },
 
+  /**
+   **   chat
+   **/
+
+  async joinChannel(channelId: string, password: string) {
+    try {
+      const response = await this.axiosInstance.patch(`/chat/${channelId}/join`, {
+        password: password
+      })
+      return response;
+    } catch(err: any) {
+      throw err
+    }
+  },
+
+  async leaveChannel(channelId: string) {
+    try
+    {
+      const response = await this.axiosInstance.patch(`/chat/${channelId}/leave`)
+      return response;
+    } catch(err: any) {
+      throw err
+    }
+  },
+
+  async sendMessage(channelId: string, password: string, text: string) {
+    try {
+      const response = await this.axiosInstance.post(`/chat/${channelId}/sendmessage`, {
+        channelId: channelId,
+        timestamp: new Date(),
+        content: text,
+        password: password,
+      })
+      return response;
+    } catch(err: any) {
+      throw err
+    }
+  },
+
 };
 

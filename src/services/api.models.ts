@@ -32,24 +32,9 @@ export function SearchQueryBuilder(query: ISearchQuery) {
 }
 ///////////////////////////////////////////////////////////////////////////////
 
-export type eSubscriptionState = 'BANNED' | 'MUTED' | 'OK'
-// export enum eSubscriptionState {
-//   'BANNED',
-//   'MUTED',
-//   'OK',
-// }
-
-export enum eRole {
-  OWNER,
-  ADMIN,
-  USER,
-}
-
-export enum eChannelType {
-  PUBLIC,
-  PRIVATE,
-  ONE_TO_ONE,
-}
+export type eSubscriptionState = 'BANNED' | 'MUTED'   | 'OK'
+export type eRole              = 'OWNER'  | 'ADMIN'   | 'USER'
+export type eChannelType       = 'PUBLIC' | 'PRIVATE' | 'ONE_TO_ONE'
 
 /*
 ** User
@@ -187,32 +172,32 @@ interface IFollows {
 ** Blocks
 */
 export class Blocks implements IBlocks {
-  blocker                       : User;
-  blockerId                     : string;
-  blocking                      : User;
-  blockingId                    : string;
-  id                            : string;
+  blocker            : User;
+  blockerId          : string;
+  blocking           : User;
+  blockingId         : string;
+  id                 : string;
 
   constructor(
-    blocker                       : User,
-    blockerId                     : string,
-    blocking                      : User,
-    blockingId                    : string,
-    id                            : string,
+    blocker          : User,
+    blockerId        : string,
+    blocking         : User,
+    blockingId       : string,
+    id               : string,
   ) {
-    this.blocker                        = blocker;
-    this.blockerId                      = blockerId;
-    this.blocking                       = blocking;
-    this.blockingId                     = blockingId;
-    this.id                             = id;
+    this.blocker     = blocker;
+    this.blockerId   = blockerId;
+    this.blocking    = blocking;
+    this.blockingId  = blockingId;
+    this.id          = id;
   }
 }
 interface IBlocks {
-  blocker                       : User;
-  blockerId                     : string;
-  blocking                      : User;
-  blockingId                    : string;
-  id                            : string;
+  blocker            : User;
+  blockerId          : string;
+  blocking           : User;
+  blockingId         : string;
+  id                 : string;
 }
 
 /*
