@@ -159,7 +159,7 @@ export default defineComponent({
       element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
     },
     debug () {
-      console.log('ICI', this.$storeChat.SubscribedUsers)
+      console.log('ICI', this.$storeChat.currentChannel)
     }
   },
   computed: {

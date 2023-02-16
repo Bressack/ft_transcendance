@@ -131,7 +131,28 @@ export default defineComponent({
   },
   methods: {
     modify() {
-      // Call POST/PATCH api
+      console.log(this.password)
+      const payload = {
+        usernames: this.userList,
+        password: this.password,
+        change_password: !this.protect,
+      }
+      this.$api.channelSettings(this.$storeChat.currentChannel, payload)
+      .then(() => {
+        this.$q.notify({
+            type: 'positive',
+            message: 'Channel successfully modified'
+          })
+          this.closeFn()
+      })
+      .catch((error) => {
+        for (let i = 0; i < error.response.data.message.length; i++) {
+          this.$q.notify({
+              type: 'negative',
+              message: error.response.data.message[i]
+            })
+        }
+      })
     },
     create() {
       const usernames = []
@@ -145,7 +166,7 @@ export default defineComponent({
       }
       console.log(payload)
       this.$api.createChannel(payload)
-      .then((res) => {
+      .then(() => {
         this.$q.notify({
             type: 'positive',
             message: 'Channel successfully created'

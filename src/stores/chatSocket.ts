@@ -62,7 +62,7 @@ export const useChatSocketStore = defineStore("chatSocket", {
       console.log("channel info:", sub?.channel);
       if (sub?.channel.hash === "yes") {
         while (!this.password)
-          this.password = window.prompt("Enter channel password: ");
+          this.password = window.prompt("Enter channel password: ")
       }
       this.socket.emitcb(
         "join-channel",
@@ -97,6 +97,7 @@ export const useChatSocketStore = defineStore("chatSocket", {
       this.socket.emit("leave-channel", { channelId: this.currentChannel });
       this.currentChannel = "";
       this.messages = [];
+      this.password = ''
     },
     sendMessage() {
       if (

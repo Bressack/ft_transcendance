@@ -121,6 +121,12 @@ export default {
     return response.data
   },
 
+  async channelSettings(channelId: string, payload: object) {
+    const response = await this.axiosInstance.patch(`/chat/settings/${channelId}`, payload)
+    return response.data
+  },
+
+
 
 
   /**
@@ -177,4 +183,6 @@ export default {
       "[ DEBUG MESSAGE ] " + caller + " at " + lines + ": " + message
     );
   },
+
 };
+
