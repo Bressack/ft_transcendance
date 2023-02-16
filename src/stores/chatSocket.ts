@@ -68,6 +68,7 @@ export const useChatSocketStore = defineStore("chatSocket", {
         "join-channel",
         { channelId: channelId, password: this.password },
         (res: IJoinChannelPayload) => {
+          console.log("joinroom status", res.status);
           this.SubscribedUsers = res.data.SubscribedUsers;
           this.channelType = res.data.channel_type;
           // if (res.data.channel_type == 'ONE_TO_ONE')
@@ -83,7 +84,10 @@ export const useChatSocketStore = defineStore("chatSocket", {
             type: "negative",
             message: err.message,
           });
-          this.vue.$router.go(-1); // reviens sur la page precedente pour degager le user de la conv ou il est ban
+          this.vue.$router.push("/"); // reviens sur la page precedente pour degager le user de la conv ou il est ban
+          // THEO -> prcke quand ya eu une erreur et que tu fais ca joinroom n'est pas relance donc ca laisse les meme messages quavant
+
+          //   this.vue.$router.go(-1); // reviens sur la page precedente pour degager le user de la conv ou il est ban
         }
       );
     },
