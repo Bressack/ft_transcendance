@@ -1,8 +1,11 @@
 
+import api from 'src/services/api.service'
+
 import {
   eSubscriptionState,
   eRole,
   eChannelType,
+  Subscription,
 } from "src/services/api.models";
 
 type Message = {
@@ -19,6 +22,9 @@ export interface UserInfo {
   role: eRole;
 };
 
+export interface join_channel_output_payload {
+    data: join_channel_output
+}
 export interface join_channel_output {
     channelId           : string;
     name                : string;
@@ -27,7 +33,7 @@ export interface join_channel_output {
     stateActiveUntil    : Date | null;
     messages            : Message[];
     role                : eRole;
-    SubscribedUsers     : UserInfo[];
+    SubscribedUsers     : Map<string, Subscription>;
     username            : string;
     password_protected  : boolean;
 };
@@ -36,9 +42,8 @@ type ChannelInstanceState = 'CONNECTED' | 'DISCONNECTED'
 
 export class Channel implements join_channel_output {
 
-  vue                 : any;
-  password            : string;
-  instanceState       : ChannelInstanceState;
+  password            : string | null;
+  instanceState       : ChannelInstanceState | null;
 
   channelId           : string;
   name                : string;
@@ -47,14 +52,13 @@ export class Channel implements join_channel_output {
   stateActiveUntil    : Date | null;
   messages            : Message[];
   role                : eRole;
-  SubscribedUsers     : UserInfo[];
+  SubscribedUsers     : Map<string, Subscription>;
   username            : string;
   password_protected  : boolean;
 
-  constructor(vue: any, channelId: string, password: string) {
+  constructor(channelId: string) {
     // local variables
-    this.vue                 = vue
-    this.password            = password
+    this.password            = null
     this.instanceState       = 'DISCONNECTED'
 
     // from server
@@ -65,56 +69,112 @@ export class Channel implements join_channel_output {
     this.stateActiveUntil    = null
     this.messages            = []
     this.role                = 'USER'
-    this.SubscribedUsers     = []
+    this.SubscribedUsers     = new Map<string, Subscription>() as Map<string, Subscription>,
     this.username            = ''
     this.password_protected  = false
   }
 
-  assign(payload: join_channel_output) {
-    this.channelId          = payload.channelId;
-    this.name               = payload.name;
-    this.channel_type       = payload.channel_type;
-    this.state              = payload.state;
-    this.stateActiveUntil   = payload.stateActiveUntil;
-    this.messages           = payload.messages;
-    this.role               = payload.role;
-    this.SubscribedUsers    = payload.SubscribedUsers;
-    this.username           = payload.username;
-    this.password_protected = payload.password_protected;
+  assign(p: join_channel_output) {
+    this.channelId          = p.channelId;
+    this.name               = p.name;
+    this.channel_type       = p.channel_type;
+    this.state              = p.state;
+    this.stateActiveUntil   = p.stateActiveUntil;
+    this.messages           = p.messages;
+    this.role               = p.role;
+    this.username           = p.username;
+    this.password_protected = p.password_protected;
+
+    this.SubscribedUsers.clear()
+    p.SubscribedUsers.forEach((e) => {
+      this.SubscribedUsers.set(e.username, e)
+    })
   }
 
-  isConnected () {
+  debug() {
+    console.log(
+      {
+        password            : this.password,
+        instanceState       : this.instanceState,
+        channelId           : this.channelId,
+        name                : this.name,
+        channel_type        : this.channel_type,
+        state               : this.state,
+        stateActiveUntil    : this.stateActiveUntil,
+        messages            : this.messages,
+        role                : this.role,
+        SubscribedUsers     : this.SubscribedUsers,
+        username            : this.username,
+        password_protected  : this.password_protected,
+      }
+    )
+  }
+
+  isConnected ()
+  : boolean {
+    console.log(`[ channel.ts ] isConnected`);
     return this.instanceState === 'CONNECTED'
   }
 
-  async join () {
+  close()
+  : void {
+    console.log(`[ channel.ts ] close`);
+    this.instanceState = 'DISCONNECTED'
+  }
+
+  async join ()
+  : Promise<void> {
+    this.debug()
     if (this.isConnected())
       throw 'already connected'
-    var channelDTO = null
+
+    var password : string | null = null
+    if (this.password_protected && !this.password) {
+      password = window.prompt("Enter channel password: ")
+      if (!password) // if user click cancel, just abort
+        return ;
+      this.password = password as string
+    }
+    else
+      password = this.password
+
+    var channelDTO : join_channel_output_payload | null = null
     // try to join channel from api
     try {
-      channelDTO = await this.vue.$api.joinChannel(this.channelId, this.password)
+      channelDTO = await api.joinChannel(this.channelId, password as string)
     } catch (error) {
-      throw 'unable to join channel: ' + error
+      throw 'Unable to join the channel: ' + error
     }
     // assign datas to instance
-    this.assign(channelDTO)
+    this.assign(channelDTO.data)
+    this.debug()
+    this.password = password as string
     this.instanceState = 'CONNECTED'
   }
 
-  async leave() {
+  async leave()
+  : Promise<void> {
     if (!this.isConnected())
       throw 'already disconnected'
     // try to join channel from api
     try {
-      await this.vue.$api.leaveChannel(this.channelId)
+      await api.leaveChannel()
     } catch (error) {
       throw 'unable to leave channel: ' + error
     }
-    this.instanceState = 'DISCONNECTED'
+    this.close()
   }
 
-  async sendMessage() {
+  async sendMessage(text: string)
+  : Promise<void> {
+    if (!this.isConnected())
+      throw 'you are not connected to this channel'
+
+    try {
+      await api.sendMessage(this.channelId, this.password as string, text)
+    } catch (error) {
+      throw 'unable send message: ' + error
+    }
   }
 
 }

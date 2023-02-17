@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import { join_channel_output, join_channel_output_payload } from 'src/services/channel'
 import {
   IGameQuery,
   ISearchQuery,
@@ -151,11 +151,6 @@ export default {
     return response;
   },
 
-  async post(target: string) {
-    const response = await this.axiosInstance.post(target);
-    return response;
-  },
-
   async games() {
     const response = await this.axiosInstance.get('/games/running')
     return response;
@@ -176,7 +171,7 @@ export default {
     return response;
   },
 
-  logIt(message: string) {
+  logIt(message: string): void  {
     let stack = new Error().stack as string;
     let caller = stack
       .split("\n")[2]
@@ -196,36 +191,38 @@ export default {
    **   chat
    **/
 
-  async joinChannel(channelId: string, password: string) {
+  async joinChannel(channelId: string, password: string)
+  : Promise<join_channel_output_payload> {
     try {
-      const response = await this.axiosInstance.patch(`/chat/${channelId}/join`, {
+      if (!password)
+        password = ''
+      return await this.axiosInstance.post(`/chat/${channelId}/join`, {
         password: password
-      })
-      return response;
+      }) as join_channel_output_payload
     } catch(err: any) {
       throw err
     }
   },
 
-  async leaveChannel(channelId: string) {
+  async leaveChannel()
+  : Promise<void> {
     try
     {
-      const response = await this.axiosInstance.patch(`/chat/${channelId}/leave`)
-      return response;
+      await this.axiosInstance.patch(`/chat/leave`)
     } catch(err: any) {
       throw err
     }
   },
 
-  async sendMessage(channelId: string, password: string, text: string) {
+  async sendMessage(channelId: string, password: string, text: string)
+  : Promise<void> {
+    if (!password)
+      password = ''
     try {
-      const response = await this.axiosInstance.post(`/chat/${channelId}/sendmessage`, {
-        channelId: channelId,
-        timestamp: new Date(),
+      await this.axiosInstance.post(`/chat/${channelId}/message`, {
         content: text,
         password: password,
       })
-      return response;
     } catch(err: any) {
       throw err
     }

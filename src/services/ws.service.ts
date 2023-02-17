@@ -6,12 +6,17 @@ var that: any = null;
 
 class WsService {
   socket: any;
+  vue: any;
   storeChat: any;
   constructor() {
     this.storeChat = useChatSocketStore();
     console.log("debug constru: ", this.storeChat.connectedUsers);
     that = this;
   }
+  init(vue: any) {
+    this.vue = vue
+  }
+
   getToken() {
     return Cookies.get("WsAuth");
   }
@@ -106,6 +111,7 @@ class WsService {
       "that.storeChat.connectedUsers:",
       that.storeChat.connectedUsers
     );
+    this.vue.$q.notify({ type: 'info', message: `${username} connected !` })
   }
   handleUserDisconnectedEvent(username: string) {
     console.log(`${username} disconnected`); // should update an array of connected users
@@ -118,6 +124,7 @@ class WsService {
       "that.storeChat.connectedUsers:",
       that.storeChat.connectedUsers
     );
+    this.vue.$q.notify({ type: 'info', message: `${username} connected !` })
   }
 
   // sendInvite(obj: any) {

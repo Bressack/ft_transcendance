@@ -1,6 +1,6 @@
 
 import { defineStore } from 'pinia';
-import io from 'socket.io-client';
+
 import {
   User,
   Follows,
@@ -176,16 +176,18 @@ export const useChatSocketStore = defineStore('chatSocket', {
       this.init = true;
       this.vue = vue;
 
-      this.socket.listen('fetch_me', ((payload: Subscription) => {
+      this.socket.listen('fetch_me', (payload: Subscription) => {
         this.vue.$storeMe.fetch()
-      }));
-      this.socket.listen('altered_subscription', ((payload: Subscription) => {
+      });
+
+      this.socket.listen('altered_subscription', (payload: Subscription) => {
         this.SubscribedUsers.set(payload.username, payload)
         console.log('altered_subscription:', payload);
         if (this.vue.$storeMe.username == payload.username)
           this.vue.$storeMe.fetch()
-      }));
-      this.socket.listen('message', ((payload: IWSMessages) => {
+      });
+
+      this.socket.listen('message', (payload: IWSMessages) => {
         console.log('ws message:', payload)
         if (payload.channel_id == this.currentChannel)
         {
@@ -195,14 +197,16 @@ export const useChatSocketStore = defineStore('chatSocket', {
           })
           this.scrollBack()
         }
-      }));
-      this.socket.listen('error', ((payload: IWSError) => {
+      });
+
+      this.socket.listen('error', (payload: IWSError) => {
         console.log('ws error:', payload)
         this.$q.notify({
           type: "warning",
           message: payload.message,
         });
       });
+
       this.socket.listen("infos", (payload: IWSInfos) => {
         console.log("ws infos:", payload);
         this.$q.notify({

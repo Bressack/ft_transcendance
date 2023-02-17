@@ -41,49 +41,28 @@
       <template v-slot:five>
         <div class="row justify-center items-center no-wrap" style="width: 26px;" v-if="$storeMe.blocking !== undefined">
           <q-icon right name="cancel"/>
+          <div class="notif justify-center items-center circle" v-if="$storeMe.blocking?.length > 0"/>
+          <div class="notif justify-center items-center" v-if="$storeMe?.blocking?.length > 0">{{ $storeMe.blocking?.length < 99 ? $storeMe.blocking?.length : '99+' }}</div>
         </div>
       </template>
     </q-btn-toggle>
   </div>
 
+
   <q-list bordered class="list">
 
     <!-- list des amis -->
     <div v-if="socialtoggle == '1'">
-      <q-item clickable v-ripple v-for="friend in $storeMe.friends" :key="friend" class="usermenu">
-        <q-item-section style="max-width: 50px;" @click="userSelected(friend)">
-          <q-avatar class="avatar">
-            <img size="20px" :src="`/api/avatar/${friend}/thumbnail`">
-            <div :class="getLoginStatus(friend)" class="loginstatus" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section @click="userSelected(friend)">
-          {{ friend }}
-        </q-item-section>
-        <q-item-section side class="toto">
-          <q-icon name="more_vert" color="white" class="toto">
-            <q-menu class="bg-grey-9 text-white" auto-close>
+      <UserCard v-for="friend in $storeMe.friends" :key="friend"
+        @goGameOptions="goGameOptions"
+        :username="friend"
 
-              <q-list style="min-width: 100px">
-                <q-item clickable @click="goGameOptions(friend)">
-                  <q-item-section>Invite to play</q-item-section>
-                </q-item>
-                <q-item clickable @click="goProfilPage(friend)">
-                  <q-item-section>Profile</q-item-section>
-                </q-item>
-                <q-separator dark />
-                <q-item clickable class="text-red-7" @click="unfollow(friend)">
-                  <q-item-section>Remove friend</q-item-section>
-                </q-item>
-                <q-item clickable class="text-red-7" @click="block(friend)">
-                  <q-item-section>Block</q-item-section>
-                </q-item>
-              </q-list>
-
-            </q-menu>
-          </q-icon>
-        </q-item-section>
-      </q-item>
+        menu_profile
+        menu_block
+        menu_play
+        menu_chat
+        menu_unfollow
+      />
     </div>
 
     <!-- list des channels -->
@@ -109,141 +88,42 @@
 
     <!-- list des requestes envoyées-->
     <div v-if="socialtoggle == '3'">
-      <q-item clickable v-ripple v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv" class="usermenu">
-        <q-item-section style="max-width: 50px;">
-          <q-avatar class="avatar">
-            <img size="20px" :src="`/api/avatar/${rrecv}/thumbnail`">
-            <div :class="getLoginStatus(rrecv)" class="loginstatus" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          {{ rrecv }}
-        </q-item-section>
-        <q-item-section side>
-          <q-icon name="done" color="green" @click="follow(rrecv)" />
-        </q-item-section>
-        <q-item-section side class="toto">
-          <q-icon name="more_vert" color="white" class="toto">
-            <q-menu class="bg-grey-9 text-white" auto-close>
+      <UserCard v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv"
+        icon_name="done" icon_color="green"
+        @goGameOptions="goGameOptions"
+        :username="rrecv"
+        shortcut_follow
 
-              <q-list style="min-width: 100px">
-                <q-item clickable @click="goProfilPage(rrecv)">
-                  <q-item-section>Profile</q-item-section>
-                </q-item>
-                <q-separator dark />
-                <q-item clickable class="text-red-7" @click="block(rrecv)">
-                  <q-item-section>Block</q-item-section>
-                </q-item>
-              </q-list>
-
-            </q-menu>
-          </q-icon>
-        </q-item-section>
-      </q-item>
+        menu_profile
+        menu_follow
+        menu_block
+      />
     </div>
 
     <!-- list des requestes reçus -->
     <div v-if="socialtoggle == '4'">
-      <q-item clickable v-ripple v-for="rsent in $storeMe.friendRequestSent" :key="rsent" class="usermenu">
-        <q-item-section style="max-width: 50px;">
-          <q-avatar class="avatar">
-            <img size="20px" :src="`/api/avatar/${rsent}/thumbnail`">
-            <div :class="getLoginStatus(rsent)" class="loginstatus" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          {{ rsent }}
-        </q-item-section>
-        <q-item-section side>
-          <q-icon name="cancel" color="red" @click="unfollow(rsent)" />
-        </q-item-section>
-        <q-item-section side class="toto">
-          <q-icon name="more_vert" color="white" class="toto">
-            <q-menu class="bg-grey-9 text-white" auto-close>
+      <UserCard v-for="rsent in $storeMe.friendRequestSent" :key="rsent"
+        icon_name="cancel" icon_color="red"
+        @goGameOptions="goGameOptions"
+        :username="rsent"
+        shortcut_unfollow
 
-              <q-list style="min-width: 100px">
-                <q-item clickable @click="goProfilPage(rsent)">
-                  <q-item-section>Profile</q-item-section>
-                </q-item>
-                <q-separator dark />
-                <q-item clickable class="text-red-7" @click="block(rsent)">
-                  <q-item-section>Block</q-item-section>
-                </q-item>
-              </q-list>
-
-            </q-menu>
-          </q-icon>
-        </q-item-section>
-      </q-item>
+        menu_profile
+        menu_unfollow
+        menu_block
+      />
     </div>
 
+    <!-- list des users bloqués -->
     <div v-if="socialtoggle == '5'">
-      <div class="q-pa-sm subtitle">
-        Blocked users
-      </div>
-      <q-item clickable v-ripple v-for="tblocking in $storeMe.getBlocking" :key="tblocking" class="usermenu">
-        <q-item-section style="max-width: 50px;">
-          <q-avatar class="avatar">
-            <img size="20px" :src="`/api/avatar/${tblocking}/thumbnail`">
-            <div :class="getLoginStatus(tblocking)" class="loginstatus" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          {{ tblocking }}
-        </q-item-section>
-        <q-item-section side>
-          <q-icon name="cancel" color="red" @click="unblock(tblocking)" />
-        </q-item-section>
-        <q-item-section side class="toto">
-          <q-icon name="more_vert" color="white" class="toto">
-            <q-menu class="bg-grey-9 text-white" auto-close>
+      <UserCard v-for="tblocking in $storeMe.blocking" :key="tblocking"
+        icon_name="cancel" icon_color="red"
+        @goGameOptions="goGameOptions"
+        :username="tblocking"
+        shortcut_unblock
 
-              <q-list style="min-width: 100px">
-                <q-item clickable @click="goProfilPage(tblocking)">
-                  <q-item-section>Profile</q-item-section>
-                </q-item>
-                <q-separator dark />
-                <q-item clickable class="text-red-7" @click="block(tblocking)">
-                  <q-item-section>Block</q-item-section>
-                </q-item>
-              </q-list>
-
-            </q-menu>
-          </q-icon>
-        </q-item-section>
-      </q-item>
-
-      <div class="q-pa-sm subtitle">
-        Users who blocked you
-      </div>
-      <q-item clickable v-ripple v-for="tblocked in $storeMe.getBlockedBy" :key="tblocked" class="usermenu">
-        <q-item-section style="max-width: 50px;">
-          <q-avatar class="avatar">
-            <img size="20px" :src="`/api/avatar/${tblocked}/thumbnail`">
-            <div :class="getLoginStatus(tblocked)" class="loginstatus" />
-          </q-avatar>
-        </q-item-section>
-        <q-item-section>
-          {{ tblocked }}
-        </q-item-section>
-        <q-item-section side class="toto">
-          <q-icon name="more_vert" color="white" class="toto">
-            <q-menu class="bg-grey-9 text-white" auto-close>
-
-              <q-list style="min-width: 100px">
-                <q-item clickable @click="goProfilPage(tblocked)">
-                  <q-item-section>Profile</q-item-section>
-                </q-item>
-                <q-separator dark />
-                <q-item clickable class="text-red-7" @click="block(tblocked)">
-                  <q-item-section>Block</q-item-section>
-                </q-item>
-              </q-list>
-
-            </q-menu>
-          </q-icon>
-        </q-item-section>
-      </q-item>
+        menu_profile
+      />
     </div>
 
   </q-list>
@@ -260,6 +140,7 @@ import GameOptions from '../../components/GameOptions.vue'
 import { ISearchQuery } from 'src/services/api.models'
 import QInputMenu from 'src/components/QInputMenu.component.vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
+import UserCard from './components/UserCard.vue'
 
 enum EUserStatus {
   UNKNOWN,
@@ -284,7 +165,7 @@ interface IUserSelected {
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { GameOptions, QInputMenu, CreateChannel },
+  components: { GameOptions, QInputMenu, CreateChannel, UserCard },
   props: {},
   setup() {
     const gameOptions = ref(false)
@@ -325,16 +206,6 @@ export default defineComponent({
     }
   },
   methods: {
-    getLoginStatus(username: string) {
-      if (this.$storeChat.connectedUsers.includes(username))
-        return 'ONLINE-status'
-      return 'OFFLINE-status'
-    },
-    goProfilPage(username: string) {
-      this.$router.push({
-        path: '/profile/' + username,
-      })
-    },
     goGameOptions(username: string) {
       this.opponent = username
       this.openGameOptions()
@@ -385,13 +256,6 @@ export default defineComponent({
     isPrivate(item: IConvItem) {
       return item.scope == Scope.PRIVATE
     },
-    userSelected(username: string) {
-      const channelID = this.$storeMe.getChannelIDByUsername(username)
-      console.log('toto:', channelID);
-      this.$router.push({
-        path: `/conversation/${channelID}`,
-      })
-    },
     chanSelected(id: string) {
       this.$router.push({
         path: `/conversation/${id}`,
@@ -415,73 +279,18 @@ export default defineComponent({
         .then(function () { that.$storeMe.fetch() })
         .catch(function () { })
     },
-    block(username: string) {
-      let that = this
-      this.$api.block(username)
-        .then(function () { that.$storeMe.fetch() })
-        .catch(function () { })
-    },
-    unblock(username: string) {
-      let that = this
-      this.$api.unblock(username)
-        .then(function () { that.$storeMe.fetch() })
-        .catch(function () { })
-    },
   },
 });
 </script>
 
 <style lang="sass" scoped>
-.item
-  background-color: $bg-secondary
-  // margin-bottom: 2px
-  width: 100%
-  height: 1em
-
 .list
   background-color: $bg-secondary !important
   width: 100%
   margin-top: 100px
 
-.header
-  font-size: 16px
-  font-weight: bold
-  color: orange
-
-.avatar
-  width: 30px
-  height: 30px
-  border-radius: 50%
-
-.usermenu .toto
-  visibility: hidden
-
-.usermenu:hover .toto
-  visibility: visible
-
 .pubchan
   word-break: break-all
-
-.overall
-  z-index: 2
-
-.loginstatus
-  width: 12px
-  height: 12px
-  border-radius: 100px
-  position: absolute
-  margin-top: 20px
-  margin-left: 20px
-
-.ONLINE-status
-  background-color: $onlineStatus-online
-  box-shadow: 0px 0px 5px $onlineStatus-online
-.OFFLINE-status
-  background-color: $onlineStatus-offline
-  box-shadow: 0px 0px 5px $onlineStatus-offline
-.INGAME-status
-  background-color: $onlineStatus-ingame
-  box-shadow: 0px 0px 5px $onlineStatus-ingame
 
 .socialheader
   position: fixed
@@ -515,8 +324,4 @@ export default defineComponent({
 .createChannelButton
   width: 100%
 
-.subtitle
-  font-size: 17px
-  font-weight: bold
-  color: $orange-7
 </style>

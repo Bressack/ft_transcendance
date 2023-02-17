@@ -42,22 +42,13 @@ export type eChannelType       = 'PUBLIC' | 'PRIVATE' | 'ONE_TO_ONE'
 export class User implements IUser {
   username                      : string;
   email                         : string;
-  createdAt                     : string;
-  updatedAt                     : string;
   TwoFA                         : boolean;
-  password                      : string;
-  salt                          : string;
-  identification_token          : string;
-  refresh_token                 : string;
   channelSubscriptions          : Subscription[];
-  messages                      : Message[];
   gameHistoryPOne               : Game[];
   gameHistoryPTwo               : Game[];
   followedBy                    : Follows[];
   following                     : Follows[];
-  blockedBy                     : Blocks[];
   blocking                      : Blocks[];
-  avatars                       : Avatar;
   victoriesAsPOne               : number;
   victoriesAsPTwo               : number;
   defeatsAsPOne                 : number;
@@ -66,22 +57,13 @@ export class User implements IUser {
   constructor(
     username                      : string,
     email                         : string,
-    createdAt                     : string,
-    updatedAt                     : string,
     TwoFA                         : boolean,
-    password                      : string,
-    salt                          : string,
-    identification_token          : string,
-    refresh_token                 : string,
     channelSubscriptions          : Subscription[],
-    messages                      : Message[],
     gameHistoryPOne               : Game[],
     gameHistoryPTwo               : Game[],
     followedBy                    : Follows[],
     following                     : Follows[],
-    blockedBy                     : Blocks[],
     blocking                      : Blocks[],
-    avatars                       : Avatar,
     victoriesAsPOne               : number,
     victoriesAsPTwo               : number,
     defeatsAsPOne                 : number,
@@ -89,22 +71,13 @@ export class User implements IUser {
   ) {
     this.username                       = username;
     this.email                          = email;
-    this.createdAt                      = createdAt;
-    this.updatedAt                      = updatedAt;
     this.TwoFA                          = TwoFA;
-    this.password                       = password;
-    this.salt                           = salt;
-    this.identification_token           = identification_token;
-    this.refresh_token                  = refresh_token;
     this.channelSubscriptions           = channelSubscriptions;
-    this.messages                       = messages;
     this.gameHistoryPOne                = gameHistoryPOne;
     this.gameHistoryPTwo                = gameHistoryPTwo;
     this.followedBy                     = followedBy;
     this.following                      = following;
-    this.blockedBy                      = blockedBy;
     this.blocking                       = blocking;
-    this.avatars                        = avatars;
     this.victoriesAsPOne                = victoriesAsPOne;
     this.victoriesAsPTwo                = victoriesAsPTwo;
     this.defeatsAsPOne                  = defeatsAsPOne;
@@ -114,22 +87,13 @@ export class User implements IUser {
 interface IUser {
   username                      : string;
   email                         : string;
-  createdAt                     : string;
-  updatedAt                     : string;
   TwoFA                         : boolean;
-  password                      : string;
-  salt                          : string;
-  identification_token          : string;
-  refresh_token                 : string;
   channelSubscriptions          : Subscription[];
-  messages                      : Message[];
   gameHistoryPOne               : Game[];
   gameHistoryPTwo               : Game[];
   followedBy                    : Follows[];
   following                     : Follows[];
-  blockedBy                     : Blocks[];
   blocking                      : Blocks[];
-  avatars                       : Avatar;
   victoriesAsPOne               : number;
   victoriesAsPTwo               : number;
   defeatsAsPOne                 : number;

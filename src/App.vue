@@ -57,7 +57,7 @@ export default defineComponent({
       await this._fClearCookies()
       this.$ws.disconnect()
       this.$storeMe.$reset()
-      this.$storeChat.leaveCurrentRoom()
+      this.$storeChat.leave()
       this.$storeChat.$reset()
       if (next)
         return next('/login')

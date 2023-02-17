@@ -29,7 +29,7 @@ export interface IWSMessages {
   ReceivedAt: Date;
   content: string;
   username: string;
-  channelId: string;
+  channel_id: string;
 }
 
 export interface Message_Aknowledgement_output {

@@ -81,6 +81,9 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
+import {
+  Subscription,
+} from "src/services/api.models";
 
 export default defineComponent({
 	name: 'CreateChannel',
@@ -199,11 +202,13 @@ export default defineComponent({
         this.password = ''
     },
     fillUserList () {
-      for (let i = 0; i < this.$storeChat.SubscribedUsers.length; i++) {
-        if (this.$storeChat.SubscribedUsers[i].role !== 'OWNER')
-          this.userList.push(this.$storeChat.SubscribedUsers[i].username)
-      }
-
+      this.$storeChat.SubscribedUsers.values().forEach((e: Subscription) => {
+        this.userList.push(e.username)
+      });
+      // for (let i = 0; i < this.$storeChat.SubscribedUsers.length; i++) {
+      //   if (this.$storeChat.SubscribedUsers[i].role !== 'OWNER')
+      //     this.userList.push(this.$storeChat.SubscribedUsers[i].username)
+      // }
     },
     filterFn (val : String, update : Function) {
         // call abort() at any time if you can't retrieve data somehow

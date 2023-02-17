@@ -160,12 +160,13 @@ export default defineComponent({
 
 	},
 	created() {
+    this.$ws.init(this)
 		this.$ws.connect()
     this.$storeChat.$reset()
-		this.$storeChat.init_socket(this.$ws, this) // set socket in the store
+		this.$storeChat.init(this.$ws, this) // set socket in the store
 		// clean possibly old datas
 		this.$storeMe.$reset()
-		this.$storeChat.leaveCurrentRoom()
+		this.$storeChat.leave()
 
 		// connect and init WebSockets
 		// fetch datas

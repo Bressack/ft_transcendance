@@ -4,12 +4,16 @@
       <ChatUsersList/>
       <div class="row">
         <div ref="chatList" class="list_messages">
-          <Message v-for="message in $storeChat.getMessagesToDisplay" :key="message.id" :username=message?.username
+          <Message v-for="message in $storeChat.messages" :key="message.id" :username=message?.username
             :avatar=avatarstr(message?.username) :content=message?.content :timestamp="new Date(message?.CreatedAt)" />
         </div>
       </div>
       <q-input @keydown.enter.prevent="sendmessage" filled v-model="$storeChat.text" placeholder="Enter text here"
-        class="absolute-bottom custom-input input" />
+        class="absolute-bottom custom-input input">
+        <template v-slot:append>
+          <q-icon name="send" @click="sendmessage" class="cursor-pointer" />
+        </template>
+      </q-input>
     </div>
 
   </q-page>
@@ -48,8 +52,7 @@ export default defineComponent({
     },
     async scrollBottom() {
       const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
-      // while (!element || !element.children || element.children.length != this.$storeChat.messages.length)
-      while (!element || !element.children || element.children.length != this.$storeChat.getMessagesToDisplay.length)
+      while (element?.children?.length != this.$storeChat.messages.length)
         await new Promise(r => setTimeout(r, 10));
       element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
     },
@@ -64,16 +67,18 @@ export default defineComponent({
       return "0px"
     }
   },
-  beforeMount() {
+  async beforeMount() {
     console.log('beforeMount');
-    this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
+    await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
+    console.log('FINI ICI');
+
   },
-  beforeUpdate() {
+  async beforeUpdate() {
     console.log('beforeUpdate');
-    this.$storeChat.joinRoom(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
+    await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
   },
-  beforeUnmount() {
-    this.$storeChat.leaveCurrentRoom()
+  async beforeUnmount() {
+    await this.$storeChat.leave()
   }
 });
 </script>
