@@ -1,12 +1,12 @@
 <template>
-    <q-item clickable v-ripple class="usermenu" @click="goProfilPage">
-      <q-item-section style="max-width: 50px;">
+    <q-item clickable v-ripple class="usermenu">
+      <q-item-section style="max-width: 50px;" @click="goProfilPage">
         <q-avatar class="avatar">
           <img size="20px" :src="`/api/avatar/${username}/thumbnail`">
           <div :class="getLoginStatus" class="loginstatus" />
         </q-avatar>
       </q-item-section>
-      <q-item-section>
+      <q-item-section class="name" @click="goProfilPage">
         {{ username }}
       </q-item-section>
       <q-item-section side v-if="shortcut_profile">
@@ -59,8 +59,12 @@
                 <q-item-section>Block</q-item-section>
               </q-item>
 
+              <q-item v-if="menu_follow" clickable class="text-red-7" @click="follow">
+                <q-item-section>Unfriend</q-item-section>
+              </q-item>
+
               <q-item v-if="menu_unfollow" clickable class="text-red-7" @click="unfollow">
-                <q-item-section>Remove username</q-item-section>
+                <q-item-section>Unfriend</q-item-section>
               </q-item>
             </q-list>
 
@@ -147,13 +151,19 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 
+.name
+  margin-left: 0
 .avatar
   width: 30px
   height: 30px
   border-radius: 50%
+  margin-right: 0
 
 .usermenu .toto
   visibility: hidden
+  width: 25px !important
+  padding: 0
+  padding-left: 5px
 
 .usermenu:hover .toto
   visibility: visible
