@@ -46,6 +46,7 @@ import { defineComponent, ref } from 'vue';
 import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import Settings from '../components/Settings.vue'
 import GameInvitation from '../components/GameInvitation.vue'
+import ld from 'lodash'
 
 export default defineComponent({
 	name: 'MainLayout',
@@ -155,12 +156,50 @@ export default defineComponent({
 
 				this.listening_for_game_invite = false;
 			}
-		}
+		},
+
+    handleUserConnectedEvent(users: Array<string>) {
+      console.log(`${users} connected`); // should update an array of connected users
+
+      let nlogin = [] as Array<string>
+      users.forEach((user) => {
+        if (this.$storeChat.connectedUsers.includes(user) == false)
+          nlogin.push(user);
+      });
+
+      users.forEach((user) => {
+        if (this.$storeChat.connectedUsers.includes(user) == false)
+          this.$storeChat.connectedUsers.push(user);
+      });
+
+      nlogin.forEach(e => {
+        this.$q.notify({
+          message: `${e} is connected !`,
+          color: 'cyan',
+          avatar: `/api/avatar/${e}/thumbnail`,
+          progress: true,
+        })
+      });
+    },
+    handleUserDisconnectedEvent(username: string) {
+      console.log(`${username} disconnected`); // should update an array of connected users
+      this.$storeChat.connectedUsers = this.$storeChat.connectedUsers.filter(
+        (elem: any) => {
+          return elem !== username;
+        }
+      );
+      this.$q.notify({
+        message: `${username} disconnected !`,
+        color: 'cyan',
+        avatar: `/api/avatar/${username}/thumbnail`,
+        progress: true,
+      })
+    }
 
 
 	},
 	created() {
-    this.$ws.init(this)
+    this.$ws.init(this.$q)
 		this.$ws.connect()
     this.$storeChat.$reset()
 		this.$storeChat.init(this.$ws, this) // set socket in the store
@@ -171,6 +210,9 @@ export default defineComponent({
 		// connect and init WebSockets
 		// fetch datas
 		this.$storeMe.fetch()
+
+    this.$ws.listen("user-connected", this.handleUserConnectedEvent);
+    this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
 	},
 	mounted() {
 		this.listenForGameInvite()

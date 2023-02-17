@@ -1,6 +1,6 @@
 <template>
   <q-input dark color="orange" v-model="stringToFind" :label="inputLabel" @focus="markAsTouched" class="iinput">
-    <q-menu v-model="showMenuList" no-focus anchor="top right" self="top left" square>
+    <q-menu v-model="showMenuList" no-focus anchor="bottom left" self="top left" square>
 
       <q-list v-if="menuList && menuList.length" class="listuser">
         <q-item v-for="elem in menuList" clickable :key="elem?.username">
@@ -27,7 +27,7 @@
           </q-item-section>
 
           <q-item-section side v-else-if="statusPendingto(elem?.status)">
-            <q-icon name="cancel" color="green" @click="selectElement(elem?.username, 'unfollow')" />
+            <q-icon name="cancel" color="red" @click="selectElement(elem?.username, 'unfollow')" />
           </q-item-section>
 
           <q-item-section side v-else-if="statusPendingfrom(elem?.status)">

@@ -6,7 +6,6 @@ var that: any = null;
 
 class WsService {
   socket: any;
-  vue: any;
   storeChat: any;
   constructor() {
     this.storeChat = useChatSocketStore();
@@ -14,7 +13,7 @@ class WsService {
     that = this;
   }
   init(vue: any) {
-    this.vue = vue
+    console.log('init ws.service');
   }
 
   getToken() {
@@ -75,8 +74,8 @@ class WsService {
     this.socket.on("disconnect", () => {
       console.log("DISCONNECTED CACA ALED");
     });
-    this.listen("user-connected", this.handleUserConnectedEvent);
-    this.listen("user-disconnected", this.handleUserDisconnectedEvent);
+    // this.listen("user-connected", this.handleUserConnectedEvent);
+    // this.listen("user-disconnected", this.handleUserDisconnectedEvent);
     // this.socket.on('game-invite', (d: any, callback: any) => {
     // 	console.log('Game invite received', d)
     // 	setTimeout(() => {callback("ACCEPTED")}, 31000)
@@ -98,33 +97,6 @@ class WsService {
       this.socket.disconnect();
       console.log("Socket disconnected"); // should invalidate certain routes and what not, like the chat and games
     }
-  }
-
-  handleUserConnectedEvent(username: Array<string>) {
-    console.log(`${username} connected`); // should update an array of connected users
-    username.forEach((user) => {
-      if (that.storeChat.connectedUsers.includes(user) == false)
-        that.storeChat.connectedUsers.push(user);
-    });
-    // that.storeChat.connectedUsers = that.storeChat.connectedUsers.concat(username)
-    console.log(
-      "that.storeChat.connectedUsers:",
-      that.storeChat.connectedUsers
-    );
-    this.vue.$q.notify({ type: 'info', message: `${username} connected !` })
-  }
-  handleUserDisconnectedEvent(username: string) {
-    console.log(`${username} disconnected`); // should update an array of connected users
-    that.storeChat.connectedUsers = that.storeChat.connectedUsers.filter(
-      (elem: any) => {
-        return elem !== username;
-      }
-    );
-    console.log(
-      "that.storeChat.connectedUsers:",
-      that.storeChat.connectedUsers
-    );
-    this.vue.$q.notify({ type: 'info', message: `${username} connected !` })
   }
 
   // sendInvite(obj: any) {
