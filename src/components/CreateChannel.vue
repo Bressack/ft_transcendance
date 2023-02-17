@@ -71,11 +71,10 @@
       </q-select>
     </div>
 
-      <q-item class="flex-center q-pb-md">
-        <q-btn v-if="settings" color="orange" type="submit" label="Apply" @click="modify"/>
-        <q-btn v-else color="orange" type="submit" label="Create" @click="create"/>
-      </q-item>
-
+    <q-item class="flex-center q-pb-md">
+      <q-btn v-if="settings" color="orange" type="submit" label="Apply" @click="modify"/>
+      <q-btn v-else color="orange" type="submit" label="Create" @click="create"/>
+    </q-item>
     </div>
 
 </template>
@@ -110,7 +109,7 @@ export default defineComponent({
         this.access = true
         this.fillUserList()
       }
-      if (this.$storeChat.hash === 'yes') {
+      if (this.$storeChat.password_protected) {
         this.protect = true
         this.accessLabelOne = 'Your password will be removed'
         this.accessLabelTwo = `Leave this field blank if you don't want to modify your password or click the lock if you want to remove it`
