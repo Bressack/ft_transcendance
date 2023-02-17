@@ -122,7 +122,7 @@ export default {
   },
 
   async channelSettings(channelId: string, payload: object) {
-    const response = await this.axiosInstance.patch(`/chat/settings/${channelId}`, payload)
+    const response = await this.axiosInstance.patch(`/chat/${channelId}/settings`, payload)
     return response.data
   },
 
