@@ -11,10 +11,10 @@
       </q-item-section>
       <q-item v-if="interact && name != storeMe.username">
         <q-item-section>
-          <q-btn label="play" class="interpolate-btn q-mr-lg" color="orange" @click="goGameOptions" />
+          <q-btn label="play" class="interpolate-btn q-mr-xs" color="orange" @click="goGameOptions" />
         </q-item-section>
         <q-item-section side>
-          <q-btn v-if="!isFriend()" class="interpolate-btn" label="add friend" color="green"/>
+          <q-btn v-if="!isFriend()" class="interpolate-btn" :label=friendLabel :color=friendColor @click="followOrUnfollow()"/>
           <q-btn v-else class="interpolate-btn" label="chat" color="green" @click="userSelected()" />
         </q-item-section>
       </q-item>
@@ -54,6 +54,9 @@ export default defineComponent({
     defeat  : { type: Number , default: 0 },
     interact : { type: Boolean, default: false }
   },
+  mounted () {
+    this.friendStatus()
+  },
 	setup() {
 		const gameOptions = ref(false)
 		return {
@@ -68,8 +71,16 @@ export default defineComponent({
 	},
   data () {
     return {
+      friendLabel: 'add friend' as string,
+      friendColor: 'green' as string,
       storeMe: useMeStore()
     }
+  },
+  created () {
+    this.friendStatus()
+  },
+  updated () {
+    this.friendStatus()
   },
   methods: {
     ratio(v: number, d: number): string {
@@ -80,8 +91,40 @@ export default defineComponent({
       return (v / (v + d) * 100).toFixed(0)
     },
     isFriend () {
-      console.log(typeof(this.storeMe.friends))
       return (this.storeMe.friends?.find(element => element === this.name))
+    },
+    friendStatus () {
+      if (this.$storeMe.friendRequestRecevied?.includes(this.name)) {
+        this.friendLabel = 'add friend'
+        this.friendColor = 'green'
+      }
+      else if (this.$storeMe.friendRequestSent?.includes(this.name)) {
+        this.friendLabel = 'cancel friend'
+        this.friendColor = 'red'
+      }
+    },
+    followOrUnfollow() {
+      if (this.friendLabel === 'add friend')
+        this.follow()
+      else if (this.friendLabel === 'cancel friend')
+        this.unfollow()
+    },
+    async follow() {
+      this.$api.follow(this.name)
+        .then(() => {
+          this.$storeMe.fetch()
+          this.friendLabel = 'cancel friend'
+          this.friendColor = 'red'
+        })
+        .catch()
+    },
+    async unfollow() {
+      this.$api.unfollow(this.name)
+        .then(() => {
+          this.friendLabel = 'add friend'
+          this.friendColor = 'green'
+        })
+        .catch()
     },
     userSelected() {
 			const channelID = this.storeMe.getChannelIDByUsername(this.name as string)

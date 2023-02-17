@@ -34,11 +34,11 @@
       </q-item>
     <div v-for="game in games.result" :key="game">
       <MatchHistory
-      :status="gameStatus(game)"
-      :pOne=game.playerOneName
-      :pTwo=game.playerTwoName
-      :scoreOne=game.score_playerOne
-      :scoreTwo=game.score_playerTwo
+        :status="gameStatus(game)"
+        :pOne=game.playerOneName
+        :pTwo=game.playerTwoName
+        :scoreOne=game.score_playerOne
+        :scoreTwo=game.score_playerTwo
       />
     </div>
   </div>
@@ -65,7 +65,7 @@ export default defineComponent({
   data() {
     return {
       username: this.$route.params.username.toString() as string,
-      avatar: '/api/avatar/' as string,
+      avatar: '' as string,
       storeMe : useMeStore(),
       profile: [] as any,
       games: [] as any,
@@ -74,12 +74,10 @@ export default defineComponent({
     }
   },
   created () {
-    this.avatar += `${this.username}/large`
     this.fetchUserProfile()
   },
   updated() {
     this.username = this.$route.params.username.toString()
-    this.avatar = `/api/avatar/${this.username}/large`
     this.fetchUserProfile()
   },
   methods: {
@@ -87,6 +85,7 @@ export default defineComponent({
       this.$api.userProfile(this.username)
       .then((result) => {
         this.profile = result
+        this.avatar = `/api/avatar/${result.username}/large`
         this.userFetched = true
         this.fetchGameHistory()
       })

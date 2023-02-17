@@ -3,6 +3,11 @@
 		<q-header elevated>
 			<q-toolbar class="toolbar">
 				<q-btn flat @click="storeMe.drawerStatus = !storeMe.drawerStatus" round dense icon="menu" />
+        <q-item class="label q-px-md" clickable @click="goHome">ft_transcendence</q-item>
+        <q-space/>
+        <q-item class="usercard-settings" clickable @click="goSettingsNotif">
+          <q-icon name="settings" size="md"/>
+        </q-item>
 			</q-toolbar>
 		</q-header>
 
@@ -14,13 +19,10 @@
 			<q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
         <q-item class="usercard">
           <q-item-section @click="goHome">
-            <q-img src="/api/avatar/me/thumbnail" width="60px" height="60px" img-class="usercard-image"/>
+            <q-img :src="`/api/avatar/${storeMe.username}/thumbnail`" width="60px" height="60px" img-class="usercard-image"/>
           </q-item-section>
           <q-item-section class="usercard-name" @click="goProfilePage">
             <q-item-label class="usercard-name-label">{{ storeMe.username }}</q-item-label>
-          </q-item-section>
-          <q-item-section class="usercard-settings" @click="goSettingsNotif">
-            <q-icon name="settings" size="md"/>
           </q-item-section>
         </q-item>
 			</q-img>
@@ -59,6 +61,7 @@ export default defineComponent({
 		let InvitationFrom = ref(false)
 		const settings = ref(false)
 		return {
+      storeMe: useMeStore(),
 			settings,
 			openSettings() { settings.value = true },
 			InvitationFrom
@@ -233,10 +236,5 @@ body
 .usercard-name-label:hover
   border-radius: 15px
   background-color: $grey-7
-
-.usercard-settings
-  max-width: 35px
-  display: flex
-  flex-direction: column
 
 </style>
