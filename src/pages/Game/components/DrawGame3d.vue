@@ -20,12 +20,12 @@ import { useMeStore } from '../../../stores/me';
 
 var	paddle1Material = new THREE.MeshBasicMaterial({color: 0x00ffff});
 var	paddle2Material = new THREE.MeshBasicMaterial({color: 0xFF0000});
-var	planeMaterial = new THREE.MeshBasicMaterial({color: 0x242729});
-// var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://cdn.intra.42.fr/users/d0f4dd0d898a9e9cdb2df466d0e5c944/aribesni.jpg' )});
-// var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://upload.wikimedia.org/wikipedia/commons/3/38/Xavier_Niel004.jpg' )});
-var	tableMaterial = new THREE.MeshBasicMaterial({color: 0xFFFFFF}); 
-var	sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
 var	loader = new THREE.TextureLoader();
+// var	planeMaterial = new THREE.MeshBasicMaterial({color: 0x242729});
+// var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://cdn.intra.42.fr/users/d0f4dd0d898a9e9cdb2df466d0e5c944/aribesni.jpg' )});
+var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://upload.wikimedia.org/wikipedia/commons/3/38/Xavier_Niel004.jpg' )});
+var	tableMaterial = new THREE.MeshBasicMaterial({color: 0x9f9f9f}); 
+var	sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
 
 var		timeOutFunctionId = undefined as any;
 // scene object variables
@@ -68,7 +68,8 @@ export default defineComponent({
 			playerOneName: "p1",
 			playerTwoName: "p2",
 			prevviewside: false,
-			context: null as any
+			context: null as any,
+			namedisplay : "",
 		}
 	},
 	props: 
@@ -116,7 +117,7 @@ export default defineComponent({
 		{
 			// paddle1.position.y = 310
 			this.cameraPhysics();
-			const elementsColor: string = this.game_paused && this.info_value ? "#242729" : "white";
+			const elementsColor: string = "white";
         	this.context = <CanvasRenderingContext2D>this.canvas_txt.getContext("2d");
 				this.context.clearRect(0,0,this.canvas_txt.width,this.canvas_txt.height)
 			if (this.game_paused == true)
@@ -128,6 +129,21 @@ export default defineComponent({
 			{
 				this.context.globalAlpha = 1;
 			}
+
+			this.context.font = `${this.canvas.height * 0.03}px 'Press Start 2P'`;
+			this.context.fillStyle = elementsColor;
+			this.context.strokeStyle = 'black';
+			this.context.fillText(
+				this.playerOneName,
+        	    this.canvas_txt.width / 2 -
+        	        (this.canvas_txt.width * 0.2 + this.context.measureText(this.playerOneName).width),
+        	    this.canvas_txt.height * 0.08
+        	);
+			this.context.fillText(
+				this.playerTwoName,
+        	    this.canvas_txt.width / 2 + this.canvas_txt.width * 0.2,
+        	    this.canvas_txt.height * 0.08
+        	);
         	this.context.fillStyle = elementsColor;
         	this.context.fill();
         	this.context.font = `${this.canvas_txt.height * 0.07}px 'Press Start 2P'`;
@@ -144,8 +160,10 @@ export default defineComponent({
         	);
         	if (this.game_paused && this.info_value) {
         	    const textSize = this.context.measureText(this.info_value);
+				const textSize_name = this.context.measureText(this.namedisplay);
         	    this.context.fillStyle = "white";
         	    this.context.fillText(this.info_value, this.canvas_txt.width / 2 - textSize.width / 2, this.canvas_txt.height / 2);
+				this.context.fillText(this.namedisplay, this.canvas_txt.width / 2 - textSize_name.width / 2, this.canvas_txt.height * 0.60);
         	}
 			renderer.render(scene, camera);
 		},
@@ -262,14 +280,17 @@ export default defineComponent({
 			this.draw();
 		},
 		handleCoundown(data: any) {
+			console.log(data);
 			if (data.status == 'done') {
 				this.game_paused = false;
 				this.info_value = null;
+				this.namedisplay = "";
 
 			}
 			else if (data.status == 'pending') {
 				this.game_paused = true;
 				this.info_value = data.value;
+				this.namedisplay = (data.name == undefined) ? "": data.name;
 			}
 			this.draw()
 		},
@@ -321,7 +342,7 @@ export default defineComponent({
 
 <style scoped>
 #canvas_txt {
-	opacity: 0.5;
+	opacity: 1;
 	position:absolute;
 	top:0;
 	/* left:0; */

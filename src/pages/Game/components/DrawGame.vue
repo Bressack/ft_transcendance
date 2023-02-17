@@ -15,9 +15,9 @@
 	</div>
 </template>
 <script lang="ts">
-import { ref, defineComponent, computed } from 'vue'
+import {defineComponent} from 'vue'
 import { watch } from 'vue'
-import { throttle, uniqueId } from 'lodash'
+// import { throttle, uniqueId } from 'lodash'
 import { useMeStore } from '../../../stores/me';
 
 var timeOutFunctionId = undefined as any;
@@ -46,12 +46,13 @@ export default defineComponent({
 			playerOneName: "p1",
 			playerTwoName: "p2",
 			storeMe: useMeStore(),
+			namedisplay : ""
 		};
 	},
 	methods:
 	{
 		draw() {
-			const elementsColor: string = this.game_paused && this.info_value ? "#242729" : "white";
+			const elementsColor: string = this.game_paused && this.info_value ? "white" : "white";
         	var context = <CanvasRenderingContext2D>this.canvas.getContext("2d");
         	// Draw field
 			context.fillStyle = "#242729";
@@ -62,6 +63,20 @@ export default defineComponent({
         	context.moveTo(this.canvas.width / 2, 0);
         	context.lineTo(this.canvas.width / 2, this.canvas.height);
         	context.stroke();
+
+			context.font = `${this.canvas.height * 0.05}px 'Press Start 2P'`;
+			context.fillStyle = '#6C757D';
+			context.fillText(
+				this.playerOneName,
+        	    this.canvas.width / 2 -
+        	        (this.canvas.width * 0.05 + context.measureText(this.playerOneName).width),
+        	    this.canvas.height * 0.95
+        	);
+			context.fillText(
+				this.playerTwoName,
+        	    this.canvas.width / 2 + this.canvas.width * 0.05,
+        	    this.canvas.height * 0.95
+        	);
         	// Draw players
         	context.fillStyle = elementsColor;
 			context.fillRect(
@@ -101,10 +116,15 @@ export default defineComponent({
         	    this.canvas.width / 2 + this.canvas.width * 0.05,
         	    this.canvas.height * 0.1
         	);
+			
+			
+			// context.fillStyle = elementsColor;
         	if (this.game_paused && this.info_value) {
         	    const textSize = context.measureText(this.info_value);
+				const textSize_name = context.measureText(this.namedisplay);
         	    context.fillStyle = "white";
         	    context.fillText(this.info_value, this.canvas.width / 2 - textSize.width / 2, this.canvas.height / 2);
+				context.fillText(this.namedisplay, this.canvas.width / 2 - textSize_name.width / 2, this.canvas.height * 0.60);
         	}
     	},
 		waitEndResize() {
@@ -131,6 +151,7 @@ export default defineComponent({
         	this.width_ratio = this.canvas.width / 1100;
 			this.draw();
 		},
+
 		toggle(e: any) {
 			const target = <HTMLElement>document.getElementById('2ddiv')
 			console.log("toggle 1", this.$q.fullscreen.isActive)
@@ -152,15 +173,31 @@ export default defineComponent({
 			this.ball_y = data.ball.y
 			this.draw();
 		},
+		// handleCoundown(data: any) {
+		// 	if (data.status == 'done') {
+		// 		this.game_paused = false;
+		// 		this.info_value = null;
+
+		// 	}
+		// 	else if (data.status == 'pending') {
+		// 		this.game_paused = true;
+		// 		this.info_value = data.value;
+		// 	}
+		// 	this.draw()
+		// },
 		handleCoundown(data: any) {
+			console.log(data);
 			if (data.status == 'done') {
 				this.game_paused = false;
 				this.info_value = null;
+				this.namedisplay = "";
 
 			}
 			else if (data.status == 'pending') {
 				this.game_paused = true;
 				this.info_value = data.value;
+				console.log(data.name);
+				this.namedisplay = (data.name == undefined) ? "": data.name;
 			}
 			this.draw()
 		},

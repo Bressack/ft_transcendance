@@ -32,7 +32,8 @@ export default defineComponent({
 			playerOneName: "p1",
 			playerTwoName: "p2",
 			storeMe: useMeStore(),
-			playermod : false,
+			game_paused : false,
+			// playermod : false,
 		};
 	},
 	
@@ -70,7 +71,20 @@ export default defineComponent({
 			return y
 		},
 		sendPosition(event: any) {
+			if (this.game_paused)
+				return
 			this.$ws.socket.volatile.emit(`${this.gameId}___mousemove`, this.getPlayerPosition(event))
+		},
+		askForPauseUnpause(){
+			this.$ws.socket.volatile.emit(`${this.gameId}___ask_pause`, this.storeMe.username)
+		},
+		handleCoundown(data: any) {
+			if (data.status == 'done') {
+				this.game_paused = false;
+			}
+			else if (data.status == 'pending') {
+				this.game_paused = true;
+			}
 		},
 	},
 	beforeMount() {
@@ -78,42 +92,35 @@ export default defineComponent({
 		this.playerOneName = this.$route.query.playerOneName as string;
 		this.playerTwoName = this.$route.query.playerTwoName as string;
 		},
-		mounted() {
-
-			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
-			this.canvas = <HTMLCanvasElement> document.getElementById('canvas_txt');
-			const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
-			this.canvas.addEventListener('mousemove', sendPositionThrottled);
-			
+	mounted() {
+		document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
+		this.canvas = <HTMLCanvasElement> document.getElementById('canvas_txt');
+		const sendPositionThrottled = throttle(this.sendPosition, this.throttleValue)
+		this.$ws.listen(`${this.gameId}___countdown`, this.handleCoundown);
+		addEventListener('keypress', (event) => {
+			if (event.code == 'Space')
+				this.askForPauseUnpause();
+			});
+		this.canvas.addEventListener('mousemove', sendPositionThrottled);
 	},
 	beforeUnmount() {
 		console.log('quit');
 		this.$ws.emit('quit', {})
 		this.canvas.removeEventListener('mousemove', this.sendPosition); // player
+		removeEventListener('keypress', (event) => {
+			if (event.code == 'Space')
+				this.askForPauseUnpause();
+			});
 		document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
-
 	}
 })
 </script>
 
 <style scoped>
-main {
-	display: flex;
-	flex-direction: column;
+#viewsidebtn
+{
+	z-index: 3;
 }
-
-h1,
-p,
-ul {
-	text-align: center;
-	list-style: none;
-	padding: 0;
-	flex-direction: column;
-}
-
-li {
-	display: inline-block;
-}
-</style>
+</style> 
 
 
