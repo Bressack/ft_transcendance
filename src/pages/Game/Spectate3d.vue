@@ -1,6 +1,6 @@
 <template>
 	<q-page>
-		<q-btn id="viewsidebtn" color="red" @click="changeViewSide" :label="viewside ? 'p1' : 'p2'" padding="xs"></q-btn>
+		<!-- <q-btn id="viewsidebtn" color="0x242729" @click="changeViewSide" :label="viewside ? 'p1' : 'p2'" padding="xs"></q-btn> -->
 		<DrawGame3d :viewside="viewside"></DrawGame3d>		
 	</q-page>
 </template>
@@ -33,9 +33,17 @@ export default defineComponent({
 			if (response === "NOT_FOUND")
 				return
 		});
+		addEventListener('keypress', (event) => {
+			if (event.code == 'Space')
+				this.changeViewSide();
+			});
 	},
 	beforeUnmount() {
 		this.$ws.socket.emit("unwatch-game", this.$route.params.gameId);
+		removeEventListener('keypress', (event) => {
+			if (event.code == 'Space')
+				this.changeViewSide();
+			});
 	}
 
 })

@@ -40,7 +40,7 @@ export default defineComponent({
   methods: {
     spectate (gameId: string, map : string) {
 		console.log(map)
-		  this.$router.push(`/spectate${map == '3D' ? '3d' : ''}/${gameId}`)
+		  this.$router.push(`/spectate${map == '3D' ? '3d' : ''}/${gameId}?playerOneName=${this.pOne}&playerTwoName=${this.pTwo}`)
     }
   }
 })
