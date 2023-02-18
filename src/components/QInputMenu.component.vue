@@ -58,6 +58,11 @@ enum EUserStatus {
   PENDINGTO,
 }
 
+interface Itoto {
+  username: string;
+  status: EUserStatus;
+}
+
 export default defineComponent({
   name: 'QInputMenu',
   emits: ['findListWithString', 'selectElement', 'createElement'],
@@ -77,7 +82,7 @@ export default defineComponent({
   },
   props: {
     menuList: {
-      type: Array,
+      type: Array<Itoto>,
       default: null
     },
     inputLabel: {

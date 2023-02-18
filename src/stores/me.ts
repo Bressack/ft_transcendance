@@ -47,10 +47,19 @@ export const useMeStore = defineStore('me', {
     async getUser(username: string) {
       return await api.user(username)
     },
+    getMapsDiffs(me: models.User) {
+      const ret = {
+        followedBy: me.followedBy .filter((e) => { !this.followedBy.values().include(e) }),
+        following : me.following  .filter((e) => { !this.following.values().include(e) }),
+        blocking  : me.blocking   .filter((e) => { !this.blocking.values().include(e) }),
+      }
+      console.log('*getMapsDiffs*:', ret);
+    },
     async fetch() {
       let that = this
       api.me()
       .then((me: models.User) => {
+        const diff = this.getMapsDiffs(me)
         that.username             = me.username
         that.email                = me.email
         that.channelSubscriptions = me.channelSubscriptions
