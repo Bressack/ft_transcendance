@@ -9,26 +9,37 @@
       <q-item-section class="name" @click="goProfilPage">
         {{ username }}
       </q-item-section>
-      <q-item-section side v-if="shortcut_profile">
+
+      <!-- <q-item-section side v-if="shortcut_profile" class="shortcut">
         <q-icon :name="icon_name" :color="icon_color" @click="goProfilPage" />
       </q-item-section>
-      <q-item-section side v-if="shortcut_block">
+      <q-item-section side v-if="shortcut_block" class="shortcut">
         <q-icon :name="icon_name" :color="icon_color" @click="block" />
       </q-item-section>
-      <q-item-section side v-if="shortcut_unblock">
+      <q-item-section side v-if="shortcut_unblock" class="shortcut">
         <q-icon :name="icon_name" :color="icon_color" @click="block" />
       </q-item-section>
-      <q-item-section side v-if="shortcut_play">
+      <q-item-section side v-if="shortcut_play" class="shortcut">
         <q-icon :name="icon_name" :color="icon_color" @click="goGameOptions" />
       </q-item-section>
-      <q-item-section side v-if="shortcut_chat">
+      <q-item-section side v-if="shortcut_chat" class="shortcut">
         <q-icon :name="icon_name" :color="icon_color" @click="userSelected" />
       </q-item-section>
-      <q-item-section side v-if="shortcut_unfollow">
+      <q-item-section side v-if="shortcut_unfollow" class="shortcut">
         <q-icon :name="icon_name" :color="icon_color" @click="unfollow" />
       </q-item-section>
-      <q-item-section side v-if="shortcut_follow">
+      <q-item-section side v-if="shortcut_follow" class="shortcut">
         <q-icon :name="icon_name" :color="icon_color" @click="follow" />
+      </q-item-section> -->
+
+      <q-item-section side class="toto">
+        <q-icon v-if="shortcut_profile"   class="shortcut" :name="icon_name" :color="icon_color" @click="goProfilPage" />
+        <q-icon v-if="shortcut_block"     class="shortcut" :name="icon_name" :color="icon_color" @click="block" />
+        <q-icon v-if="shortcut_unblock"   class="shortcut" :name="icon_name" :color="icon_color" @click="block" />
+        <q-icon v-if="shortcut_play"      class="shortcut" :name="icon_name" :color="icon_color" @click="goGameOptions" />
+        <q-icon v-if="shortcut_chat"      class="shortcut" :name="icon_name" :color="icon_color" @click="userSelected" />
+        <q-icon v-if="shortcut_unfollow"  class="shortcut" :name="icon_name" :color="icon_color" @click="unfollow" />
+        <q-icon v-if="shortcut_follow"    class="shortcut" :name="icon_name" :color="icon_color" @click="follow" />
       </q-item-section>
 
       <q-item-section side class="toto">
@@ -185,5 +196,11 @@ export default defineComponent({
 .INGAME-status
   background-color: $onlineStatus-ingame
   box-shadow: 0px 0px 5px $onlineStatus-ingame
+
+.shortcut .toto
+  visibility: hidden
+
+.shortcut:hover .toto
+  visibility: visible
 
 </style>

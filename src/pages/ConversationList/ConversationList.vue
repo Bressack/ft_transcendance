@@ -40,7 +40,7 @@
 
       <template v-slot:five>
         <div class="row justify-center items-center no-wrap" style="width: 26px;" v-if="$storeMe.blocking !== undefined">
-          <q-icon right name="cancel"/>
+          <q-icon right name="person_off"/>
           <div class="notif justify-center items-center circle" v-if="$storeMe.blocking?.length > 0"/>
           <div class="notif justify-center items-center" v-if="$storeMe?.blocking?.length > 0">{{ $storeMe.blocking?.length < 99 ? $storeMe.blocking?.length : '99+' }}</div>
         </div>
@@ -56,6 +56,8 @@
       <UserCard v-for="friend in $storeMe.friends" :key="friend"
         @goGameOptions="goGameOptions"
         :username="friend"
+        shortcut_chat
+        icon_name="chat" icon_color="orange"
 
         menu_profile
         menu_block
