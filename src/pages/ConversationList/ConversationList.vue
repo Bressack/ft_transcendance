@@ -1,155 +1,122 @@
-<template>
-  <div class="absolute-top bg" />
-  <div class="socialheader absolute-top">
-    <QInputMenu :menuList="searchResult?.result" @findListWithString="search" @selectElement="followorunfollow" />
+<template><!-- <div class="absolute-top bg" /> -->
 
-    <q-btn-toggle class="socialmenu" v-model="socialtoggle" push flat toggle-color="orange-7" :options="[
-      { value: '1', slot: 'one' },
-      { value: '2', slot: 'two' },
-      { value: '3', slot: 'three' },
-      { value: '4', slot: 'four' },
-      { value: '5', slot: 'five' },
-    ]">
-      <template v-slot:one>
-        <div class="row justify-center items-center no-wrap" style="width: 26px;">
-          <q-icon right name="group" />
-        </div>
-      </template>
+  <div class="q-gutter-y-md" style="max-width: 300px">
+    <q-card>
+      <q-tabs v-model="tab" dense class="text-grey-6" style="background-color: #212121;" active-color="orange"
+        indicator-color="orange" align="justify" narrow-indicator>
+        <q-tab name="friends" icon="group" class="tab" />
+        <q-tab name="channels" icon="chat" class="tab" />
+        <q-tab name="following" icon="hourglass_bottom" class="tab">
+          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestRecevied?.length > 0" />
+          <div class="notif justify-center items-center" v-if="$storeMe.friendRequestRecevied?.length > 0">
+            {{ $storeMe.friendRequestRecevied?.length < 99 ? $storeMe.friendRequestRecevied?.length : '99+' }}
+          </div>
+        </q-tab>
+        <q-tab name="follower" icon="notifications" class="tab">
+          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestSent?.length > 0" />
+          <div class="notif justify-center items-center" v-if="$storeMe?.friendRequestSent?.length > 0">
+            {{ $storeMe.friendRequestSent?.length < 99 ? $storeMe.friendRequestSent?.length : '99+' }}
+          </div>
+        </q-tab>
+        <q-tab name="blocked" icon="person_off" class="tab">
+          <div class="notif justify-center items-center circle" v-if="$storeMe.blocking?.length > 0" />
+          <div class="notif justify-center items-center" v-if="$storeMe?.blocking?.length > 0">
+            {{ $storeMe.blocking?.length < 99 ? $storeMe.blocking?.length : '99+' }}
+          </div>
+        </q-tab>
 
-      <template v-slot:two>
-        <div class="row justify-center items-center no-wrap" style="width: 26px;">
-          <q-icon right name="chat" />
-        </div>
-      </template>
+      </q-tabs>
 
-      <template v-slot:three>
-        <div class="row justify-center items-center no-wrap" style="width: 26px;" v-if="$storeMe.friendRequestRecevied !== undefined">
-          <q-icon right name="hourglass_bottom"/>
-          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestRecevied?.length > 0"/>
-          <div class="notif justify-center items-center" v-if="$storeMe.friendRequestRecevied?.length > 0">{{ $storeMe.friendRequestRecevied?.length < 99 ? $storeMe.friendRequestRecevied?.length : '99+' }}</div>
-        </div>
-      </template>
+      <q-separator />
 
-      <template v-slot:four>
-        <div class="row justify-center items-center no-wrap" style="width: 26px;" v-if="$storeMe.friendRequestRecevied !== undefined">
-          <q-icon right name="notifications"/>
-          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestSent?.length > 0"/>
-          <div class="notif justify-center items-center" v-if="$storeMe?.friendRequestSent?.length > 0">{{ $storeMe.friendRequestSent?.length < 99 ? $storeMe.friendRequestSent?.length : '99+' }}</div>
-        </div>
-      </template>
+      <q-tab-panels v-model="tab" animated>
 
-      <template v-slot:five>
-        <div class="row justify-center items-center no-wrap" style="width: 26px;" v-if="$storeMe.blocking !== undefined">
-          <q-icon right name="person_off"/>
-          <div class="notif justify-center items-center circle" v-if="$storeMe.blocking?.length > 0"/>
-          <div class="notif justify-center items-center" v-if="$storeMe?.blocking?.length > 0">{{ $storeMe.blocking?.length < 99 ? $storeMe.blocking?.length : '99+' }}</div>
-        </div>
-      </template>
-    </q-btn-toggle>
+
+<!-- #################################################################################################################### -->
+        <q-tab-panel name="friends" class="tab-panel">
+          <div class="text-h5 text-center q-py-sm text-orange-6 text-bold bg-grey-9">friends</div>
+          <UserCard v-for="friend in $storeMe.friends" :key="friend"
+            @goGameOptions="goGameOptions"
+            :username="friend"
+            icon_name="chat" icon_color="orange"
+            shortcut_chat
+            menu_profile menu_block menu_play menu_chat menu_unfollow
+          />
+        </q-tab-panel>
+
+<!-- #################################################################################################################### -->
+        <q-tab-panel name="channels" class="tab-panel">
+          <div class="text-h5 text-center q-py-sm text-orange-6 text-bold bg-grey-9">channels</div>
+          <q-item class="flex-center">
+            <q-btn class="createChannelButton" label="Create channel" color="orange" @click="dialog = true" />
+          </q-item>
+          <q-dialog persistent v-model="dialog">
+            <CreateChannel :closeFn=closeDialog />
+          </q-dialog>
+
+          <q-item clickable v-ripple v-for="channel in $storeMe.getPublicPrivateChannels()" :key="channel.channelId"
+            @click="chanSelected(channel)">
+            <q-item-section>
+              <span class="text-bold text-h6 pubchan" @click="chanSelected(channel)">{{
+                channel.channel.name
+              }}</span>
+            </q-item-section>
+            <q-item-section side v-if="channel.channel.channel_type === 'PRIVATE'">
+              <q-icon name="lock" color="grey-7" />
+            </q-item-section>
+
+            <q-dialog persistent v-model="dialogpassword">
+              <div class="password_dialog">
+                <div class="close-cross">
+                  <q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup />
+                </div>
+                <div class="q-ma-lg">
+                  <q-input v-model="password" dark label="Password" color="orange" label-color="white" />
+                  <q-btn class="q-ma-lg" label="Submit" color="orange-8" @click="joinprotectedchannel()" />
+                </div>
+              </div>
+            </q-dialog>
+
+          </q-item>
+        </q-tab-panel>
+<!-- #################################################################################################################### -->
+        <q-tab-panel name="following" class="tab-panel">
+          <div class="text-h5 text-center q-py-sm text-orange-6 text-bold bg-grey-9">following</div>
+          <UserCard v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv"
+            @goGameOptions="goGameOptions"
+            :username="rrecv"
+
+            icon_name="done" icon_color="green"
+            shortcut_follow menu_profile menu_follow menu_block
+          />
+        </q-tab-panel>
+<!-- #################################################################################################################### -->
+        <q-tab-panel name="follower" class="tab-panel">
+          <div class="text-h5 text-center q-py-sm text-orange-6 text-bold bg-grey-9">follower</div>
+          <UserCard v-for="rsent in $storeMe.friendRequestSent" :key="rsent"
+            @goGameOptions="goGameOptions"
+            :username="rsent"
+
+            icon_name="cancel" icon_color="red"
+            shortcut_unfollow menu_profile menu_unfollow menu_block
+          />
+        </q-tab-panel>
+<!-- #################################################################################################################### -->
+        <q-tab-panel name="blocked" class="tab-panel">
+          <div class="text-h5 text-center q-py-sm text-orange-6 text-bold bg-grey-9">blocked</div>
+          <UserCard v-for="tblocking in $storeMe.blocking" :key="tblocking"
+            @goGameOptions="goGameOptions"
+            :username="tblocking"
+
+            icon_name="cancel" icon_color="red"
+            shortcut_unblock menu_profile
+          />
+        </q-tab-panel>
+<!-- #################################################################################################################### -->
+      </q-tab-panels>
+    </q-card>
   </div>
 
-
-  <q-list bordered class="list">
-
-    <!-- list des amis -->
-    <div v-if="socialtoggle == '1'">
-      <UserCard v-for="friend in $storeMe.friends" :key="friend"
-        @goGameOptions="goGameOptions"
-        :username="friend"
-        shortcut_chat
-        icon_name="chat" icon_color="orange"
-
-        menu_profile
-        menu_block
-        menu_play
-        menu_chat
-        menu_unfollow
-      />
-    </div>
-
-    <!-- list des channels -->
-    <div v-if="socialtoggle == '2'">
-      <q-item class="flex-center">
-        <q-btn class="createChannelButton" label="Create channel" color="orange" @click="dialog = true"/>
-      </q-item>
-      <q-dialog persistent v-model="dialog">
-        <CreateChannel :closeFn=closeDialog />
-      </q-dialog>
-
-      <q-item clickable v-ripple v-for="channel in $storeMe.getPublicPrivateChannels()" :key="channel.channelId"
-        @click="chanSelected(channel)">
-        <q-item-section>
-          <span class="text-bold text-h6 pubchan" @click="chanSelected(channel)">{{
-            channel.channel.name
-          }}</span>
-        </q-item-section>
-        <q-item-section side v-if="channel.channel.channel_type === 'PRIVATE'">
-          <q-icon name="lock" color="grey-7" />
-        </q-item-section>
-
-        <q-dialog persistent v-model="dialogpassword">
-          <div class="password_dialog">
-            <div class="close-cross">
-              <q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup />
-            </div>
-            <div class="q-ma-lg">
-              <q-input
-                v-model="password"
-                dark
-                label="Password"
-                color="orange"
-                label-color="white"
-              />
-              <q-btn class="q-ma-lg"
-                label="Submit" color="orange-8" @click="joinprotectedchannel()"/>
-            </div>
-          </div>
-        </q-dialog>
-
-      </q-item>
-    </div>
-
-    <!-- list des requestes envoyées-->
-    <div v-if="socialtoggle == '3'">
-      <UserCard v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv"
-        icon_name="done" icon_color="green"
-        @goGameOptions="goGameOptions"
-        :username="rrecv"
-        shortcut_follow
-
-        menu_profile
-        menu_follow
-        menu_block
-      />
-    </div>
-
-    <!-- list des requestes reçus -->
-    <div v-if="socialtoggle == '4'">
-      <UserCard v-for="rsent in $storeMe.friendRequestSent" :key="rsent"
-        icon_name="cancel" icon_color="red"
-        @goGameOptions="goGameOptions"
-        :username="rsent"
-        shortcut_unfollow
-
-        menu_profile
-        menu_unfollow
-        menu_block
-      />
-    </div>
-
-    <!-- list des users bloqués -->
-    <div v-if="socialtoggle == '5'">
-      <UserCard v-for="tblocking in $storeMe.blocking" :key="tblocking"
-        icon_name="cancel" icon_color="red"
-        @goGameOptions="goGameOptions"
-        :username="tblocking"
-        shortcut_unblock
-
-        menu_profile
-      />
-    </div>
-
-  </q-list>
   <q-dialog v-model="gameOptions">
     <GameOptions :opponent="opponent" :closeFunction="closeGameOptions" />
   </q-dialog>
@@ -196,6 +163,7 @@ export default defineComponent({
     const dialog = ref(false)
     const dialogpassword = ref(false)
     return {
+      tab: ref('friends'),
       gameOptions,
       openGameOptions() {
         gameOptions.value = true
@@ -351,9 +319,10 @@ export default defineComponent({
   width: 16px
   height: 16px
   position: absolute
-  margin-bottom: 27px
+  margin-bottom: 20px
   margin-left: 23px
   font-size: 11px
+  font-weight: bold
   color: white
 
 .circle
@@ -366,4 +335,14 @@ export default defineComponent({
 
 .password_dialog
   background-color: $bg-primary
+
+.tab
+  width: calc(100%/5)
+  background-color: $bg-secondary
+  padding: 0
+  margin: 0
+
+.tab-panel
+  padding: 0 !important
+  background-color: $bg-secondary
 </style>

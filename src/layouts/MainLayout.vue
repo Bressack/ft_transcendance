@@ -5,6 +5,9 @@
         <q-btn flat @click="$storeMe.drawerStatus = !$storeMe.drawerStatus" round dense icon="menu" />
         <q-item class="label q-px-md" clickable @click="goHome">ft_transcendence</q-item>
         <q-space />
+        <q-item class="notifycenter" clickable @click="goNotifyCenter">
+          <q-icon name="notifications" size="md" />
+        </q-item>
         <q-item class="usercard-settings" clickable @click="goSettingsNotif">
           <q-icon name="settings" size="md" />
         </q-item>
