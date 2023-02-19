@@ -293,13 +293,10 @@ export default defineComponent({
       console.log('channel', channel)
       console.log('hash', channel.channel.hash)
       if (channel.channel.hash == 'yes')
-      {
         this.dialogpassword = true
-        // this.openPasswordOptions()
-      }
       else
         this.$router.push({
-          path: `/conversation/${channel.id}`,
+          path: `/conversation/${channel.channelId}`,
         })
     },
     followorunfollow(username: string, mode: string) {
@@ -311,13 +308,13 @@ export default defineComponent({
     follow(username: string) {
       let that = this
       this.$api.follow(username)
-        .then(function () { that.$storeMe.fetch() })
+        .then(function () { })
         .catch(function () { })
     },
     unfollow(username: string) {
       let that = this
       this.$api.unfollow(username)
-        .then(function () { that.$storeMe.fetch() })
+        .then(function () { })
         .catch(function () { })
     },
   },

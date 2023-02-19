@@ -110,7 +110,6 @@ export default defineComponent({
     async follow() {
       this.$api.follow(this.name)
         .then(() => {
-          this.$storeMe.fetch()
           this.friendLabel = 'cancel friend'
           this.friendColor = 'red'
         })

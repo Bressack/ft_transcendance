@@ -56,9 +56,6 @@ export default defineComponent({
         await new Promise(r => setTimeout(r, 10));
       element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
     },
-    debug () {
-      console.log('ICI', this.$storeChat)
-    }
   },
   computed: {
     margin_input() {
@@ -68,13 +65,9 @@ export default defineComponent({
     }
   },
   async beforeMount() {
-    console.log('beforeMount');
     await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
-    console.log('FINI ICI');
-
   },
   async beforeUpdate() {
-    console.log('beforeUpdate');
     await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
   },
   async beforeUnmount() {
@@ -84,29 +77,10 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-.image
-  width: 42px
-  height: 42px
-  border-radius: 250px
-
-.top-panel
-  display: flexbox
-  justify-content: space-between
-  height: 50px
-  padding: 10px 0px 10px 10px
-  background-color: #303030
-  width: 100%
-
-.titlename
-  font-size: 20px
-  font-weight: bold
-  color: white
-
 .list_messages
   overflow: auto
   height: calc(100vh - (90px + 50px + 50px))
   padding: 1vh
-  // max-width: calc(100vw - v-bind(margin_input))
   word-break: break-word
 
 .input
@@ -114,54 +88,4 @@ export default defineComponent({
   background-color: #555555
   position: fixed
   margin-left: v-bind(margin_input)
-
-.menuusers-username
-  width: 200px
-  font-size: 17px
-  word-break: break-word
-
-.menuusers
-  height: 500px
-  display: flexbox
-  justify-content: space-between
-
-.q-bg
-  background-color: $bg-primary !important
-
-.card
-  background-color: #424242
-  color: orange
-  border-radius: 10px
-  padding: 5px 15px
-  margin-right: 5px
-  margin-top: 0
-
-
-.userlist
-  height: 100%
-
-.slider
-  width: 100px
-
-.role
-  min-width: 80px
-
-.avatar
-  max-width: 42px !important
-  // margin-top: 10px
-  margin-left: 10px
-  margin-right: 10px
-
-.loginstatus
-  width: 15px
-  height: 15px
-  border-radius: 100px
-  position: absolute
-  margin-top: 27px
-  margin-left: 27px
-
-.ONLINE-status
-  background-color: green
-.OFFLINE-status
-  background-color: #707070
 </style>

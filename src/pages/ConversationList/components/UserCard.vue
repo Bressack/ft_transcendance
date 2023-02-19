@@ -123,20 +123,20 @@ export default defineComponent({
     follow() {
       let that = this
       this.$api.follow(this.username)
-        .then(function () { that.$storeMe.fetch() })
-        .catch(function () { })
+        .then(() => { })
+        .catch(() => { })
     },
     unfollow() {
       let that = this
       this.$api.unfollow(this.username)
-        .then(function () { that.$storeMe.fetch() })
-        .catch(function () { })
+        .then(() => { })
+        .catch(() => { })
     },
     block() {
       let that = this
       this.$api.block(this.username)
-        .then(function () { that.$storeMe.fetch() })
-        .catch(function () { })
+        .then(() => { })
+        .catch(() => { })
     },
     userSelected() {
       const channelID = this.$storeMe.getChannelIDByUsername(this.username)
