@@ -3,7 +3,7 @@
       <q-item-section style="max-width: 50px;" @click="goProfilPage">
         <q-avatar class="avatar">
           <img size="20px" :src="`/api/avatar/${username}/thumbnail`">
-          <div :class="getLoginStatus" class="loginstatus" />
+          <div :class="getLoginStatus()" class="loginstatus"/>
         </q-avatar>
       </q-item-section>
       <q-item-section class="name" @click="goProfilPage">

@@ -73,16 +73,37 @@
       <q-dialog persistent v-model="dialog">
         <CreateChannel :closeFn=closeDialog />
       </q-dialog>
+
       <q-item clickable v-ripple v-for="channel in $storeMe.getPublicPrivateChannels()" :key="channel.channelId"
-        @click="chanSelected(String(channel.channelId))">
+        @click="chanSelected(channel)">
         <q-item-section>
-          <span class="text-bold text-h6 pubchan" @click="chanSelected(channel.channelId)">{{
+          <span class="text-bold text-h6 pubchan" @click="chanSelected(channel)">{{
             channel.channel.name
           }}</span>
         </q-item-section>
         <q-item-section side v-if="channel.channel.channel_type === 'PRIVATE'">
           <q-icon name="lock" color="grey-7" />
         </q-item-section>
+
+        <q-dialog persistent v-model="dialogpassword">
+          <div class="password_dialog">
+            <div class="close-cross">
+              <q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup />
+            </div>
+            <div class="q-ma-lg">
+              <q-input
+                v-model="password"
+                dark
+                label="Password"
+                color="orange"
+                label-color="white"
+              />
+              <q-btn class="q-ma-lg"
+                label="Submit" color="orange-8" @click="joinprotectedchannel()"/>
+            </div>
+          </div>
+        </q-dialog>
+
       </q-item>
     </div>
 
@@ -141,6 +162,7 @@ import { ISearchQuery } from 'src/services/api.models'
 import QInputMenu from 'src/components/QInputMenu.component.vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
 import UserCard from './components/UserCard.vue'
+import * as models from 'src/services/api.models'
 
 enum EUserStatus {
   UNKNOWN,
@@ -170,6 +192,7 @@ export default defineComponent({
   setup() {
     const gameOptions = ref(false)
     const dialog = ref(false)
+    const dialogpassword = ref(false)
     return {
       gameOptions,
       openGameOptions() {
@@ -181,7 +204,11 @@ export default defineComponent({
       closeDialog() {
         dialog.value = false
       },
-      dialog
+      dialog,
+      dialogpassword,
+      closePasswordDialog() {
+        dialogpassword.value = false
+      },
     }
   },
   computed: {
@@ -256,10 +283,24 @@ export default defineComponent({
     isPrivate(item: IConvItem) {
       return item.scope == Scope.PRIVATE
     },
-    chanSelected(id: string) {
+    joinprotectedchannel() {
+      this.closePasswordDialog()
       this.$router.push({
-        path: `/conversation/${id}`,
+        path: `/conversation/${channel.id}`,
       })
+    },
+    chanSelected(channel: models.Channel) {
+      console.log('channel', channel)
+      console.log('hash', channel.channel.hash)
+      if (channel.channel.hash == 'yes')
+      {
+        this.dialogpassword = true
+        // this.openPasswordOptions()
+      }
+      else
+        this.$router.push({
+          path: `/conversation/${channel.id}`,
+        })
     },
     followorunfollow(username: string, mode: string) {
       if (mode == "unfollow")
@@ -324,4 +365,6 @@ export default defineComponent({
 .createChannelButton
   width: 100%
 
+.password_dialog
+  background-color: $bg-primary
 </style>

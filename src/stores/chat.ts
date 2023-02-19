@@ -74,6 +74,8 @@ export const useChatStore = defineStore('chat', {
       // join the new channel
       try {
         await channelInstance.join()
+        console.log('HERE');
+
         // close active channel if connected
         if (this.activeChannel?.isConnected())
           this.activeChannel?.close()
@@ -135,6 +137,7 @@ export const useChatStore = defineStore('chat', {
       this.socket = socket;
 
       this.socket.listen('fetch_me', () => {
+        console.log('fetch_me requested');
         this.vue.$storeMe.fetch()
       });
 
@@ -158,7 +161,7 @@ export const useChatStore = defineStore('chat', {
 
       this.socket.listen('error', (payload: IWSError) => {
         console.log('ws error:', payload)
-        this.$q.notify({
+        this.vue.$q.notify({
           type: "warning",
           message: payload.message,
         });
@@ -166,7 +169,7 @@ export const useChatStore = defineStore('chat', {
 
       this.socket.listen("infos", (payload: IWSInfos) => {
         console.log("ws infos:", payload);
-        this.$q.notify({
+        this.vue.$q.notify({
           type: "info",
           message: payload.status,
         });

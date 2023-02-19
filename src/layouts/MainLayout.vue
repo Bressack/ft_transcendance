@@ -60,7 +60,6 @@ export default defineComponent({
 		let InvitationFrom = ref(false)
 		const settings = ref(false)
 		return {
-      storeMe: useMeStore(),
 			settings,
 			openSettings() { settings.value = true },
 			InvitationFrom
@@ -151,7 +150,7 @@ export default defineComponent({
 		stopListeningForGameInvite() {
 			if (this.listening_for_game_invite)
 			{
-                this.$ws.removeListener('game-invite')
+        this.$ws.removeListener('game-invite')
 				this.$ws.listen('game-invite', this.onGameInviteBusy)
 
 				this.listening_for_game_invite = false;
@@ -205,6 +204,7 @@ export default defineComponent({
 		this.$storeChat.init(this.$ws, this) // set socket in the store
 		// clean possibly old datas
 		this.$storeMe.$reset()
+    this.$storeMe.init(this.$q)
 		this.$storeChat.leave()
 
 		// connect and init WebSockets

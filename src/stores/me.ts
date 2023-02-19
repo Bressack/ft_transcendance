@@ -20,6 +20,7 @@ export const useMeStore = defineStore('me', {
     defeatsAsPTwo                 :  0     as Number,
     // others
     drawerStatus                  :  false as boolean,
+    vue                           :  null as any
   }),
 
   getters: {
@@ -44,22 +45,25 @@ export const useMeStore = defineStore('me', {
   },
 
   actions: {
+    init(vue: any) {
+      this.vue = vue
+    },
     async getUser(username: string) {
       return await api.user(username)
     },
-    getMapsDiffs(me: models.User) {
-      const ret = {
-        followedBy: me.followedBy .filter((e) => { !this.followedBy.values().include(e) }),
-        following : me.following  .filter((e) => { !this.following.values().include(e) }),
-        blocking  : me.blocking   .filter((e) => { !this.blocking.values().include(e) }),
-      }
-      console.log('*getMapsDiffs*:', ret);
-    },
+
     async fetch() {
       let that = this
+
+      const oldmaps = {
+        followedBy: JSON.parse(JSON.stringify(this.followedBy)),
+        following: JSON.parse(JSON.stringify(this.following)),
+        blocking: JSON.parse(JSON.stringify(this.blocking)),
+      }
+      const isupdate = that.email?.length > 0
+
       api.me()
       .then((me: models.User) => {
-        const diff = this.getMapsDiffs(me)
         that.username             = me.username
         that.email                = me.email
         that.channelSubscriptions = me.channelSubscriptions
@@ -72,8 +76,47 @@ export const useMeStore = defineStore('me', {
         that.victoriesAsPTwo      = me.victoriesAsPTwo
         that.defeatsAsPOne        = me.defeatsAsPOne
         that.defeatsAsPTwo        = me.defeatsAsPTwo
+
+        if (isupdate) {
+          const diff = {
+            in: {
+              followedBy : ld.difference(that.followedBy, oldmaps.followedBy),
+              following  : ld.difference(that.following , oldmaps.following ),
+              blocking   : ld.difference(that.blocking  , oldmaps.blocking  ),
+            },
+            out: {
+              followedBy : ld.difference(oldmaps.followedBy, that.followedBy),
+              following  : ld.difference(oldmaps.following , that.following ),
+              blocking   : ld.difference(oldmaps.blocking  , that.blocking  ),
+            },
+          }
+          console.log(diff);
+          that.notify_diff(diff)
+        }
       })
       .catch(() => {})
+    },
+
+    notify_diff(diff: any) {
+      diff.in.followedBy.forEach((e: any) => {
+        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} just follow you !` });
+      });
+      diff.in.following.forEach((e: any) => {
+        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} followed !` });
+      });
+      diff.in.blocking.forEach((e: any) => {
+        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} blocked !` });
+      });
+
+      diff.out.followedBy.forEach((e: any) => {
+        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} just unfollow you !` });
+      });
+      diff.out.following.forEach((e: any) => {
+        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} unfollowed !` });
+      });
+      diff.out.blocking.forEach((e: any) => {
+        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} unblocked !` });
+      });
     },
     getChannelIDByUsername(username: string) {
       const needle = this.channelSubscriptions.find((e: models.Subscription) => e.channel.channel_type === "ONE_TO_ONE" && e.channel.SubscribedUsers.some((u) => u.username == username))

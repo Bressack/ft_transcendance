@@ -43,7 +43,7 @@ export class User implements IUser {
   username                      : string;
   email                         : string;
   TwoFA                         : boolean;
-  channelSubscriptions          : Subscription[];
+  channelSubscriptions          : Channel[];
   gameHistoryPOne               : Game[];
   gameHistoryPTwo               : Game[];
   followedBy                    : Follows[];
@@ -58,7 +58,7 @@ export class User implements IUser {
     username                      : string,
     email                         : string,
     TwoFA                         : boolean,
-    channelSubscriptions          : Subscription[],
+    channelSubscriptions          : Channel[],
     gameHistoryPOne               : Game[],
     gameHistoryPTwo               : Game[],
     followedBy                    : Follows[],
@@ -88,7 +88,7 @@ interface IUser {
   username                      : string;
   email                         : string;
   TwoFA                         : boolean;
-  channelSubscriptions          : Subscription[];
+  channelSubscriptions          : Channel[];
   gameHistoryPOne               : Game[];
   gameHistoryPTwo               : Game[];
   followedBy                    : Follows[];
