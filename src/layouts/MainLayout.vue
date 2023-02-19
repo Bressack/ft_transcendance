@@ -71,7 +71,8 @@ export default defineComponent({
 			opponent: "",
 			maps: "",
 			difficulty: "",
-			listening_for_game_invite : false
+			listening_for_game_invite : false,
+			listening_for_matchmaking : false
 		}
 	},
 	methods: {
@@ -86,7 +87,7 @@ export default defineComponent({
 		logout() {
 			this.$router.push("/logout")
 		},
-    goHome() {
+    	goHome() {
 			this.$router.push("/")
 		},
 		onGameInviteBusy(data: any, callback:Function) {
@@ -118,6 +119,7 @@ export default defineComponent({
 						that.$router.push(`/game3d/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
 					else
 						that.$router.push(`/game/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+					// that.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
 					// that.$router.push(`/game/${gameOptions.gameId}`)
 					document.removeEventListener('invite-response-accept', accept);
 				})
@@ -145,8 +147,18 @@ export default defineComponent({
 			{
 				this.$ws.removeListener('game-invite')
                 this.$ws.listen('game-invite', this.onGameInvite)
+				// this.$ws.removeListener('matchmaking-accepted')
+				// this.$ws.listen('matchmaking-accepted', this.onMatchmaking)
 				this.listening_for_game_invite = true;
 			}
+		},
+		onMatchmaking(){
+			this.$ws.removeListener('matchmaking-accepted')
+			this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
+				callback("OK")
+				console.log(gameOptions)
+				this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+			})
 		},
 		stopListeningForGameInvite() {
 			if (this.listening_for_game_invite)
@@ -155,6 +167,26 @@ export default defineComponent({
 				this.$ws.listen('game-invite', this.onGameInviteBusy)
 
 				this.listening_for_game_invite = false;
+			}
+		},
+		listenForMatchmaking()
+		{
+			if (!this.listening_for_matchmaking)
+			{
+				this.$ws.removeListener('matchmaking-accepted')
+				this.$ws.listen('matchmaking-accepted', this.onMatchmaking)
+				this.stopListeningForGameInvite();
+				this.listening_for_matchmaking = true;
+			}
+		},
+		StoplisteningForMatchmaking()
+		{
+			if (this.listening_for_matchmaking)
+			{
+				this.listenForGameInvite()
+				this.$ws.removeListener('matchmaking-accepted')
+				this.$ws.emit('matchmaking-canceled',{})
+				this.listening_for_matchmaking = false;
 			}
 		}
 
@@ -172,10 +204,15 @@ export default defineComponent({
 		// fetch datas
 		this.storeMe.fetch()
 	},
+	
 	mounted() {
 		this.listenForGameInvite()
 		document.addEventListener('can-listen-for-game-invite', this.listenForGameInvite)
 		document.addEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
+		document.addEventListener('ready-for-matchmaking',this.listenForMatchmaking);
+		document.addEventListener('stop-for-matchmaking',this.StoplisteningForMatchmaking)
+		// document.addEventListener('can-listen-for-matchmaking', this.listenForGameInvite)
+		// document.addEventListener('stop-listening-for-matchmaking', this.stopListeningForGameInvite)
 	},
 
 	beforeUnMount() {
