@@ -134,6 +134,10 @@ export default {
     return response.data
   },
 
+  async leaveChannel(channelId: string) {
+    const response = await this.axiosInstance.delete(`/chat/${channelId}`)
+    return response.data
+  },
 
 
 
@@ -204,15 +208,16 @@ export default {
     }
   },
 
-  async leaveChannel()
-  : Promise<void> {
-    try
-    {
-      await this.axiosInstance.patch(`/chat/leave`)
-    } catch(err: any) {
-      throw err
-    }
-  },
+  // replaced
+  // async leaveChannel()
+  // : Promise<void> {
+  //   try
+  //   {
+  //     await this.axiosInstance.patch(`/chat/leave`)
+  //   } catch(err: any) {
+  //     throw err
+  //   }
+  // },
 
   async sendMessage(channelId: string, password: string, text: string)
   : Promise<void> {

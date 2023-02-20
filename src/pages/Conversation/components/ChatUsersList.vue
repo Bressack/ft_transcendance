@@ -14,8 +14,9 @@
               <q-item-label>{{ subs.size }}</q-item-label>
             </q-item-section>
             <q-space />
-            <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role !== 'OWNER'" side>
-              <q-btn color="red" label="quit" @click="confirm = true" />
+            <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
+              <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" @click="leaveChannel" />
+              <q-btn v-else color="red" label="delete" @click="leaveChannel" />
             </q-item-section>
             <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
               <q-btn color="orange" label="settings" @click="settings = true" />
@@ -96,7 +97,18 @@ export default defineComponent({
       return `/api/avatar/${username}/thumbnail`
     },
     debug () {
-      console.log('ICI', this.$storeChat.channelType)
+      console.log('ICI', this.$storeChat)
+    },
+    leaveChannel() {
+      this.confirm = true
+      this.$api.leaveChannel(this.$storeChat.channelId)
+      .then(() => {
+        this.$storeChat.leave()
+        this.$router.push('/')
+      })
+      .catch((err) => {
+        console.error(err)
+      })
     }
   },
 });
