@@ -296,7 +296,35 @@ export default defineComponent({
         type: 'message',
         avatar: `/api/avatar/${notif.username}/thumbnail`,
       })
-    }
+    },
+    listenForMatchmaking()
+		{
+			// console.log("YssssssssssssssssssO")
+
+			// if (!this.listening_for_matchmaking)
+			// {
+				this.stopListeningForGameInvite();
+				// this.listening_for_matchmaking = true;
+				// console.log("YOOOOOOOOOO")
+				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
+					callback("OK")
+					console.log(gameOptions)
+					this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+					this.StoplisteningForMatchmaking()
+					this.stopListeningForGameInvite()
+					
+				})
+			// }
+		},
+		StoplisteningForMatchmaking()
+		{
+			// if (this.listening_for_matchmaking)
+			// {
+				// this.listenForGameInvite()
+				this.$ws.socket.removeListener('game-setup-and-init-go-go-power-ranger')
+				this.listening_for_matchmaking = false;
+			// }
+		}
 
 
   },
@@ -323,6 +351,8 @@ export default defineComponent({
     this.listenForGameInvite()
     document.addEventListener('can-listen-for-game-invite', this.listenForGameInvite)
     document.addEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
+    document.addEventListener('ready-for-matchmaking',this.listenForMatchmaking);
+		document.addEventListener('stop-for-matchmaking',this.StoplisteningForMatchmaking)
   },
 
   beforeUnMount() {
@@ -330,6 +360,8 @@ export default defineComponent({
     this.$ws.removeListener('game-invite')
     document.removeEventListener('can-listen-for-game-invite', this.listenForGameInvite)
     document.removeEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
+    document.removeEventListener('ready-for-matchmaking',this.listenForMatchmaking);
+		document.removeEventListener('stop-for-matchmaking',this.StoplisteningForMatchmaking)
     this.$ws.disconnect()
   }
 
