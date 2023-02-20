@@ -8,6 +8,8 @@ import {
 } from "./api.models";
 
 export default {
+  vue: {},
+
   axiosInstance: axios.create({
     baseURL: "/api",
     timeout: 3000,
@@ -232,6 +234,10 @@ export default {
       throw err
     }
   },
+
+  init(vue: any) {
+    this.vue = vue
+  }
 
 };
 

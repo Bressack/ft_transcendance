@@ -54,7 +54,6 @@ export class NotifyCenter {
   send(options: NotifyOptions) {
     this.quasar.notify(options)
     this.push(options)
-    console.log(this.notifications);
   }
 
   init(quasar: any) {

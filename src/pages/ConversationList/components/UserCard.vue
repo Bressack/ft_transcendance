@@ -52,30 +52,30 @@
                 <q-item-section>Profile</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_block" clickable @click="goGameOptions">
+              <q-item v-if="menu_play" clickable @click="goGameOptions">
                 <q-item-section>Invite to play</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_play" clickable @click="userSelected">
+              <q-item v-if="menu_chat" clickable @click="userSelected">
                 <q-item-section>Chat</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_chat" clickable @click="block">
+              <q-item v-if="menu_unblock" clickable @click="block">
                 <q-item-section>Unblock</q-item-section>
+              </q-item>
+
+              <q-item v-if="menu_follow" clickable @click="follow">
+                <q-item-section>Follow</q-item-section>
               </q-item>
 
               <q-separator dark />
 
-              <q-item v-if="menu_chat" clickable class="text-red-7" @click="block">
+              <q-item v-if="menu_block" clickable class="text-red-7" @click="block">
                 <q-item-section>Block</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_follow" clickable class="text-red-7" @click="follow">
-                <q-item-section>Unfriend</q-item-section>
-              </q-item>
-
               <q-item v-if="menu_unfollow" clickable class="text-red-7" @click="unfollow">
-                <q-item-section>Unfriend</q-item-section>
+                <q-item-section>Unfollow</q-item-section>
               </q-item>
             </q-list>
 

@@ -18,6 +18,16 @@ const routes: RouteRecordRaw[] = [
         path: "/conversation/:channel_id",
         meta: { requiresAuth: true },
         component: () => import("pages/Conversation/Conversation.vue"),
+        beforeEnter: async (to, from, next) => {
+          try {
+            await api.vue.$storeChat.join(to.params.channel_id)
+            console.log('try:', to);
+            next()
+          } catch (error) {
+            console.log('catch:', from);
+            next(from)
+          }
+        }
       },
       {
         path: "/profile/:username",

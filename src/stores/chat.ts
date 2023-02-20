@@ -7,7 +7,7 @@ import { Subscription } from "src/services/api.models";
 import { IWSMessages, IWSError, IWSInfos } from "src/models/messages.ws";
 
 type notifyMode = "negative" | "warning" | "info" | "positive";
-let scrollBack = null;
+let scrollBack: Function | null = null;
 
 export const useChatStore = defineStore("chat", {
   state: () => ({
@@ -71,12 +71,10 @@ export const useChatStore = defineStore("chat", {
       return channelInstance;
     },
 
-    async join(channelId: string, onFinishCallback: Function) {
-      console.log(`[ chat.ts ] join => channelId: ${channelId}`);
+    async join(channelId: string) {
 
       //   if (this.socket === null) { throw new Error('You are not connected to WS') }
 
-      this.scrollBack = onFinishCallback; // oui c'est saaaale, mais ça marche
       // check if channel is already known by the map otherwise create a new instance
       var channelInstance = null;
       try {
@@ -87,14 +85,11 @@ export const useChatStore = defineStore("chat", {
         channelInstance = new Channel(channelId);
         this.channels.set(channelId, channelInstance);
       }
-      console.log(
-        `[ chat.ts ] join => channelInstance: ${channelInstance?.channelId}`
-      );
 
       // join the new channel
       try {
         await channelInstance.join();
-        console.log("HERE");
+        console.log('[ chat.ts ] join success');
 
         // close active channel if connected
         if (this.activeChannel?.isConnected()) this.activeChannel?.close();
@@ -110,10 +105,12 @@ export const useChatStore = defineStore("chat", {
         this.messages.sort((a: IWSMessages, b: IWSMessages) => {
           return a.CreatedAt > b.CreatedAt ? 1 : -1;
         });
-        this.scrollBack();
-      } catch (err: any) {
+        // this.scrollBack();
+      }
+      catch (err: any) {
+        console.log('[ chat.ts ] join fail');
         this.__notifyClient(String(err), "negative");
-        return;
+        throw err
       }
     },
 
@@ -138,38 +135,50 @@ export const useChatStore = defineStore("chat", {
     },
 
     async sendMessage() {
-      console.log("[ chat.ts ] sendMessage");
       try {
         if (this.socket === null) {
           throw new Error("You are not connected to WS");
         }
-        console.log("[ chat.ts ] sendMessage", this.text);
 
         await this.activeChannel?.sendMessage(this.text);
-        console.log("[ chat.ts ] sendMessage");
       } catch (err: any) {
-        console.log("[ chat.ts ] sendMessage");
         this.__notifyClient(String(err), "negative");
         return;
       }
-      console.log("[ chat.ts ] sendMessage");
       this.text = "";
     },
 
     ///////////////////////////////////////////////
+
+    async initNewChannel(channelId: string, password: string) {
+      var channelInstance = null;
+      try {
+        channelInstance = await this.__getChannelInstance(channelId);
+        // channel found in map : reusing it
+      } catch {
+        // channel not found in map : create a new instance
+        channelInstance = new Channel(channelId);
+        channelInstance.password = password;
+        this.channels.set(channelId, channelInstance);
+      }
+      channelInstance.password = password;
+      this.channels.set(channelId, channelInstance);
+    },
+
+    // setScrollBack(scrollBack: Function) {
+    //   this.scrollBack = scrollBack;
+    // },
 
     init(socket: WsService, vue: any) {
       this.vue = vue;
       this.socket = socket;
 
       this.socket.listen("fetch_me", () => {
-        console.log("fetch_me requested");
         this.vue.$storeMe.fetch();
       });
 
       this.socket.listen("altered_subscription", (payload: Subscription) => {
         this.SubscribedUsers.set(payload.username, payload);
-        console.log("altered_subscription:", payload);
         if (this.vue.$storeMe.username == payload.username)
           this.vue.$storeMe.fetch();
       });
@@ -180,7 +189,7 @@ export const useChatStore = defineStore("chat", {
           this.messages.sort((a: IWSMessages, b: IWSMessages) => {
             return a.CreatedAt > b.CreatedAt ? 1 : -1;
           });
-          this.scrollBack();
+          // this.scrollBack();
         }
       });
 

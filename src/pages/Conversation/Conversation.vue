@@ -25,13 +25,13 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
-import CreateChannel from 'src/components/CreateChannel.vue'
+// import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
 import ChatUsersList from './components/ChatUsersList.vue'
 
 export default defineComponent({
   name: 'Conversation',
-  components: { Message, CreateChannel, ChatUsersList },
+  components: { Message, ChatUsersList },
   props: {
   },
   data() {
@@ -68,11 +68,14 @@ export default defineComponent({
       return "0px"
     }
   },
-  async beforeMount() {
-    await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
+  async mounted() {
+    this.scrollBottom()
+    // this.$storeChat.setScrollBack(this.scrollBottom)
+    // await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0])
   },
-  async beforeUpdate() {
-    await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
+  async updated() {
+    await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0])
+    this.scrollBottom()
   },
   async beforeUnmount() {
     await this.$storeChat.leave()

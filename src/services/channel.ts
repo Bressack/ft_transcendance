@@ -110,50 +110,35 @@ export class Channel implements join_channel_output {
   }
 
   isConnected(): boolean {
-    // console.log(`[ channel.ts ] isConnected`);
     return this.instanceState === "CONNECTED";
   }
 
   close(): void {
-    // console.log(`[ channel.ts ] close`);
     this.instanceState = "DISCONNECTED";
   }
 
   /////////////////////////////////////////////
+
   async join(): Promise<void> {
-    this.debug();
     if (this.isConnected()) throw "already connected";
 
-    // console.log(this.password, this.password_protected);
-    var password: string | null = null;
-    if (this.password_protected && !this.password) {
-      password = window.prompt("Enter channel password: ");
-      //   console.log('TOTODKJFSKLFJHLKSDJFKLSDJFK');
-      //   console.log('password:', password + '');
-
-      if (!password) {
-        // if user click cancel, just abort
-        // console.log('Bad Password');
-        throw "Bad Password";
-      }
-      this.password = password as string;
-    } else password = this.password;
-    // console.log('AH ?!!');
     var channelDTO: join_channel_output_payload | null = null;
     // try to join channel from api
     try {
-      channelDTO = await api.joinChannel(this.channelId, password as string);
-      //   console.log('channelDTO', channelDTO.data);
+      channelDTO = await api.joinChannel(this.channelId, this.password as string);
+      console.log('[ channel.ts ] join success');
+
     } catch (error) {
+      console.log('[ channel.ts ] join fail');
       throw "Unable to join the channel: " + error;
     }
     // assign datas to instance
     this.assign(channelDTO.data);
-    this.debug();
-    this.password = password as string;
     this.instanceState = "CONNECTED";
   }
+
   /////////////////////////////////////////////
+
   async leave(): Promise<void> {
     if (!this.isConnected()) throw "already disconnected";
     // try to join channel from api

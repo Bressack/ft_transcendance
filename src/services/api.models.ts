@@ -212,88 +212,88 @@ interface IMessage {
 ** Channel
 */
 export class Channel implements IChannel {
-  id               : string;
-  name             : string;
-  createdAt        : string;
-  updated          : string;
-  ispublic         : boolean;
-  SubscribedUsers  : Subscription[];
-  Message          : Message[];
-  hash             : string;
-  channel_type     : eChannelType;
+  id                  : string;
+  name                : string;
+  createdAt           : string;
+  updated             : string;
+  ispublic            : boolean;
+  SubscribedUsers     : Subscription[];
+  Message             : Message[];
+  hash                : string;
+  password_protected  : boolean;
+  channel_type        : eChannelType;
 
   constructor(
-    id               : string,
-    name             : string,
-    createdAt        : string,
-    updated          : string,
-    ispublic         : boolean,
-    SubscribedUsers  : Subscription[],
-    Message          : Message[],
-    hash             : string,
-    channel_type     : eChannelType,
+    id                  : string,
+    name                : string,
+    createdAt           : string,
+    updated             : string,
+    ispublic            : boolean,
+    SubscribedUsers     : Subscription[],
+    Message             : Message[],
+    hash                : string,
+    password_protected  : boolean,
+    channel_type        : eChannelType,
   ) {
-    this.id                = id;
-    this.name              = name;
-    this.createdAt         = createdAt;
-    this.updated           = updated;
-    this.ispublic          = ispublic;
-    this.SubscribedUsers   = SubscribedUsers;
-    this.Message           = Message;
-    this.hash              = hash;
-    this.channel_type      = channel_type
+    this.id                  = id;
+    this.name                = name;
+    this.createdAt           = createdAt;
+    this.updated             = updated;
+    this.ispublic            = ispublic;
+    this.SubscribedUsers     = SubscribedUsers;
+    this.Message             = Message;
+    this.hash                = hash;
+    this.password_protected  = password_protected;
+    this.channel_type        = channel_type
   }
 }
 interface IChannel {
-  id               : string;
-  name             : string;
-  createdAt        : string;
-  updated          : string;
-  ispublic         : boolean;
-  SubscribedUsers  : Subscription[];
-  Message          : Message[];
-  hash             : string;
-  channel_type     : eChannelType;
+  id                  : string;
+  name                : string;
+  createdAt           : string;
+  updated             : string;
+  ispublic            : boolean;
+  SubscribedUsers     : Subscription[];
+  Message             : Message[];
+  hash                : string;
+  password_protected  : boolean;
+  channel_type        : eChannelType;
 }
 
 /*
 ** Subscription
 */
 export class Subscription implements ISubscription {
-  id                : string
+  channelId         : string
   role              : eRole
   channel           : Channel
   user              : User
   username          : string
-  channelId         : string
   state             : eSubscriptionState
   stateActiveUntil  : string
 
   constructor(
-    id                    : string,
+    channelId             : string,
     role                  : eRole,
     channel               : Channel,
     user                  : User,
     username              : string,
-    channelId             : string,
     state                 : eSubscriptionState,
     stateActiveUntil      : string,
   ) {
-    this.id                  = id;
+    this.channelId           = channelId;
     this.role                = role;
     this.channel             = channel;
     this.user                = user;
     this.username            = username;
-    this.channelId           = channelId;
     this.state               = state;
     this.stateActiveUntil    = stateActiveUntil;
   }
 }
 interface ISubscription {
-  id                : string;
+  channelId         : string;
   channel           : Channel;
   user              : User;
-  channelId         : string;
   username          : string;
   role              : eRole;
   state             : eSubscriptionState;

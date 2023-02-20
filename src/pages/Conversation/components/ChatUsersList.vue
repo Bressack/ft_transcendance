@@ -58,7 +58,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
 import BanMute from './BanMute.vue'
-import CreateChannel from '../../../components/CreateChannel.vue'
+import CreateChannel from 'src/components/CreateChannel.vue'
 
 export default defineComponent({
   name: 'ChatUsersList',
