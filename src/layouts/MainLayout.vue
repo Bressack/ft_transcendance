@@ -5,7 +5,7 @@
     <q-header elevated>
       <q-toolbar class="toolbar">
         <q-btn flat @click="$storeMe.drawerStatus = !$storeMe.drawerStatus" round dense icon="menu" />
-        <q-item class="label" clickable @click="goHome" style="font-family: 'Press Start 2P'; left: 50%; transform: translateX(-60%)">Transcendence</q-item>
+        <q-item class="label center thetitle glow" clickable @click="goHome" style="">Transcendence</q-item>
 
         <q-space />
 
@@ -471,4 +471,30 @@ body
 
 .n-list
   margin-top: 60px
+.thetitle
+  font-family: 'Press Start 2P'
+  font-size: 1.5rem
+  font-weight: bold
+  left: 50%
+  transform: translateX(-60%)
+
+.glow
+  text-shadow: 1px 1px 2px white
+  color: transparent
+  --bg-size: 200%
+  background: -webkit-linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000)  0 0 / var(--bg-size) 100%
+  -webkit-background-clip: text
+  background-clip: text
+  -webkit-text-fill-color: transparent
+  animation: glowing 18s infinite linear
+
+
+@keyframes glowing
+  0%
+    background-position: 0 0
+  50%
+    background-position: 400% 0
+  100%
+    background-position: 0 0
+
 </style>
