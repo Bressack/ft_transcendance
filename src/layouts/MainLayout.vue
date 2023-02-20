@@ -1,9 +1,11 @@
 <template>
+		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="toolbar">
         <q-btn flat @click="$storeMe.drawerStatus = !$storeMe.drawerStatus" round dense icon="menu" />
-        <q-item class="label q-px-md" clickable @click="goHome">ft_transcendence</q-item>
+        <q-item class="label" clickable @click="goHome" style="font-family: 'Press Start 2P'; left: 50%; transform: translateX(-60%)">Transcendence</q-item>
 
         <q-space />
 
@@ -297,33 +299,65 @@ export default defineComponent({
         type: 'message',
         avatar: `/api/avatar/${notif.username}/thumbnail`,
       })
-    }
+    },
+    listenForMatchmaking()
+		{
+			// console.log("YssssssssssssssssssO")
+
+			// if (!this.listening_for_matchmaking)
+			// {
+				this.stopListeningForGameInvite();
+				// this.listening_for_matchmaking = true;
+				// console.log("YOOOOOOOOOO")
+				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
+					callback("OK")
+					console.log(gameOptions)
+					this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+					this.StoplisteningForMatchmaking()
+					this.stopListeningForGameInvite()
+					
+				})
+			// }
+		},
+		StoplisteningForMatchmaking()
+		{
+			// if (this.listening_for_matchmaking)
+			// {
+				// this.listenForGameInvite()
+				this.$ws.socket.removeListener('game-setup-and-init-go-go-power-ranger')
+				this.listening_for_matchmaking = false;
+			// }
+		}
 
 
   },
   async created() {
     this.nc.init(this.$q)
-    this.$ws.connect()
-    this.$storeChat.$reset()
-    this.$storeChat.init(this.$ws, this) // set socket in the store
-    // clean possibly old datas
-    this.$storeMe.$reset()
-    this.$storeMe.init(this)
-    this.$storeChat.leave()
+	this.$storeChat.$reset()
+	this.$storeMe.$reset()
+	this.$storeMe.init(this)
+	await this.$storeMe.fetch()
+    await this.$ws.connect().then(async () => {
 
-    // connect and init WebSockets
+		this.$storeChat.init(this.$ws, this) // set socket in the store
+		// clean possibly old datas
+		this.$storeChat.leave()
+		
+		// connect and init WebSockets
+	
+		console.log('HEEEERE');
+		this.$ws.listen("user-connected", this.handleUserConnectedEvent);
+		this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
+		this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
+	}).catch((err) => {console.log(err)})
     // fetch datas
-    await this.$storeMe.fetch()
-
-    console.log('HEEEERE');
-    this.$ws.listen("user-connected", this.handleUserConnectedEvent);
-    this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
-    this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
   },
   mounted() {
     this.listenForGameInvite()
     document.addEventListener('can-listen-for-game-invite', this.listenForGameInvite)
     document.addEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
+    document.addEventListener('ready-for-matchmaking',this.listenForMatchmaking);
+		document.addEventListener('stop-for-matchmaking',this.StoplisteningForMatchmaking)
   },
 
   beforeUnMount() {
@@ -331,6 +365,8 @@ export default defineComponent({
     this.$ws.removeListener('game-invite')
     document.removeEventListener('can-listen-for-game-invite', this.listenForGameInvite)
     document.removeEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
+    document.removeEventListener('ready-for-matchmaking',this.listenForMatchmaking);
+		document.removeEventListener('stop-for-matchmaking',this.StoplisteningForMatchmaking)
     this.$ws.disconnect()
   }
 

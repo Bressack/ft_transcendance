@@ -98,8 +98,6 @@ export default defineComponent({
 		async sendInviteAndOpen() {
 			this.InviteNotif = true
 			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
-
-			console.log('sendInviteAndOpen')
 			try {
 				await this.invite()
 				this.InviteNotif = false
@@ -107,7 +105,6 @@ export default defineComponent({
 				this.$ws.removeListener('game-invite-declined')
 				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
 					callback("OK")
-					console.log(gameOptions)
 					if (gameOptions.map == "3D")
 						this.$router.push(`/game3d/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
 					else
@@ -115,7 +112,6 @@ export default defineComponent({
 				})
 			}
 			catch (err: any) {
-				console.error(err)
 				this.InviteNotif = false
 				this.$ws.removeListener('game-invite-accepted')
 				this.$ws.removeListener('game-invite-declined')
