@@ -26,10 +26,11 @@
               >
 
                 <q-img v-if="tmp.options.avatar" :src="tmp.options.avatar" class="notify-avatar q-mr-sm"/>
-                <q-icon v-if="tmp.options?.type == 'info' "     name="info" size="32px" class="q-mr-sm"/>
-                <q-icon v-if="tmp.options?.type == 'negative' " name="error" size="32px" class="q-mr-sm"/>
-                <q-icon v-if="tmp.options?.type == 'positive' " name="done" size="32px" class="q-mr-sm"/>
-                <q-icon v-if="tmp.options?.type == 'warning' "  name="warning" size="32px" class="q-mr-sm"/>
+                <!-- <q-icon v-if="tmp.options?.type == 'info' "     name="info" size="32px" class="q-mr-sm"/> -->
+                <!-- <q-icon v-if="tmp.options?.type == 'negative' " name="error" size="32px" class="q-mr-sm"/> -->
+                <!-- <q-icon v-if="tmp.options?.type == 'positive' " name="done" size="32px" class="q-mr-sm"/> -->
+                <!-- <q-icon v-if="tmp.options?.type == 'warning' "  name="warning" size="32px" class="q-mr-sm"/> -->
+                <!-- <q-icon v-if="tmp.options?.type == 'message' "  name="chat" size="32px" class="q-mr-sm"/> -->
 
                 <q-item-section class="notify-message">
                   {{ tmp.options.message }}
@@ -129,6 +130,7 @@ export default defineComponent({
           case 'negative': return 'n-negative'
           case 'positive': return 'n-positive'
           case 'warning':  return 'n-warning'
+          case 'message':  return 'n-message'
         }
       }
       return 'n-other'
@@ -253,11 +255,20 @@ export default defineComponent({
       });
 
       nlogin.forEach(e => {
-        this.nc.send({
-          message: `${e} is connected !`,
-          color: 'cyan',
-          avatar: `/api/avatar/${e}/thumbnail`,
-        })
+        console.log(e, this.$storeMe.username);
+
+        if (e != this.$storeMe.username)
+          this.nc.send({
+            message: `${e} is connected !`,
+            color: 'cyan',
+            avatar: `/api/avatar/${e}/thumbnail`,
+          })
+        else
+          this.nc.send({
+            message: `Welcome back ${e} ! Ready to lose ?`,
+            type: 'positive',
+            avatar: `/api/avatar/${e}/thumbnail`,
+          })
       });
     },
     handleUserDisconnectedEvent(username: string) {
@@ -272,11 +283,24 @@ export default defineComponent({
         color: 'cyan',
         avatar: `/api/avatar/${username}/thumbnail`,
       })
+    },
+    handleNotifMessageEvent(payload: any) {
+      interface __NotifMessage {
+          username: string;
+          message: string;
+      }
+      const notif : __NotifMessage = payload as __NotifMessage
+
+      this.nc.send({
+        message: `New message from ${notif.username}: ${notif.message}`,
+        type: 'message',
+        avatar: `/api/avatar/${notif.username}/thumbnail`,
+      })
     }
 
 
   },
-  created() {
+  async created() {
     this.nc.init(this.$q)
     this.$ws.connect()
     this.$storeChat.$reset()
@@ -288,10 +312,12 @@ export default defineComponent({
 
     // connect and init WebSockets
     // fetch datas
-    this.$storeMe.fetch()
+    await this.$storeMe.fetch()
 
+    console.log('HEEEERE');
     this.$ws.listen("user-connected", this.handleUserConnectedEvent);
     this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
+    this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
   },
   mounted() {
     this.listenForGameInvite()
@@ -360,6 +386,7 @@ body
   background-color: $grey-7
 
 .notify-avatar
+  border-radius: 100px
   width: 42px
   height: 42px
 
@@ -380,6 +407,9 @@ body
 
 .n-other
   background-color: $grey-7
+
+.n-message
+  background-color: $yellow-4
 
 .notif-count
   width: 20px

@@ -53,48 +53,49 @@ export const useMeStore = defineStore('me', {
     },
 
     async fetch() {
-      let that = this
 
       const oldmaps = {
         followedBy: JSON.parse(JSON.stringify(this.followedBy)),
         following: JSON.parse(JSON.stringify(this.following)),
         blocking: JSON.parse(JSON.stringify(this.blocking)),
       }
-      const isupdate = that.email?.length > 0
+      const isupdate = this.email?.length > 0
 
-      api.me()
-      .then((me: models.User) => {
-        that.username             = me.username
-        that.email                = me.email
-        that.channelSubscriptions = me.channelSubscriptions
-        that.gameHistoryPOne      = me.gameHistoryPOne
-        that.gameHistoryPTwo      = me.gameHistoryPTwo
-        that.followedBy           = me.followedBy.map((e: models.Follows) => e.followerId)
-        that.following            = me.following.map((e: models.Follows) => e.followingId)
-        that.blocking             = me.blocking.map((e: Blocks) => e.blockingId)
-        that.victoriesAsPOne      = me.victoriesAsPOne
-        that.victoriesAsPTwo      = me.victoriesAsPTwo
-        that.defeatsAsPOne        = me.defeatsAsPOne
-        that.defeatsAsPTwo        = me.defeatsAsPTwo
+      try {
+
+        const me : models.User = await api.me()
+
+        this.username             = me.username
+        this.email                = me.email
+        this.channelSubscriptions = me.channelSubscriptions
+        this.gameHistoryPOne      = me.gameHistoryPOne
+        this.gameHistoryPTwo      = me.gameHistoryPTwo
+        this.followedBy           = me.followedBy.map((e: models.Follows) => e.followerId)
+        this.following            = me.following.map((e: models.Follows) => e.followingId)
+        this.blocking             = me.blocking.map((e: Blocks) => e.blockingId)
+        this.victoriesAsPOne      = me.victoriesAsPOne
+        this.victoriesAsPTwo      = me.victoriesAsPTwo
+        this.defeatsAsPOne        = me.defeatsAsPOne
+        this.defeatsAsPTwo        = me.defeatsAsPTwo
 
         if (isupdate) {
           const diff = {
             in: {
-              followedBy : ld.difference(that.followedBy, oldmaps.followedBy),
-              following  : ld.difference(that.following , oldmaps.following ),
-              blocking   : ld.difference(that.blocking  , oldmaps.blocking  ),
+              followedBy : ld.difference(this.followedBy, oldmaps.followedBy),
+              following  : ld.difference(this.following , oldmaps.following ),
+              blocking   : ld.difference(this.blocking  , oldmaps.blocking  ),
             },
             out: {
-              followedBy : ld.difference(oldmaps.followedBy, that.followedBy),
-              following  : ld.difference(oldmaps.following , that.following ),
-              blocking   : ld.difference(oldmaps.blocking  , that.blocking  ),
+              followedBy : ld.difference(oldmaps.followedBy, this.followedBy),
+              following  : ld.difference(oldmaps.following , this.following ),
+              blocking   : ld.difference(oldmaps.blocking  , this.blocking  ),
             },
           }
           console.log(diff);
-          that.notify_diff(diff)
+          this.notify_diff(diff)
         }
-      })
-      .catch(() => {})
+      } catch (error) {}
+      console.log('THEEEEERE');
     },
 
     notify_diff(diff: any) {
