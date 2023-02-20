@@ -330,22 +330,24 @@ export default defineComponent({
   },
   async created() {
     this.nc.init(this.$q)
-    this.$ws.connect()
-    this.$storeChat.$reset()
-    this.$storeChat.init(this.$ws, this) // set socket in the store
-    // clean possibly old datas
-    this.$storeMe.$reset()
-    this.$storeMe.init(this)
-    this.$storeChat.leave()
+	this.$storeChat.$reset()
+	this.$storeMe.$reset()
+	this.$storeMe.init(this)
+	await this.$storeMe.fetch()
+    await this.$ws.connect().then(async () => {
 
-    // connect and init WebSockets
+		this.$storeChat.init(this.$ws, this) // set socket in the store
+		// clean possibly old datas
+		this.$storeChat.leave()
+		
+		// connect and init WebSockets
+	
+		console.log('HEEEERE');
+		this.$ws.listen("user-connected", this.handleUserConnectedEvent);
+		this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
+		this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
+	}).catch((err) => {console.log(err)})
     // fetch datas
-    await this.$storeMe.fetch()
-
-    console.log('HEEEERE');
-    this.$ws.listen("user-connected", this.handleUserConnectedEvent);
-    this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
-    this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
   },
   mounted() {
     this.listenForGameInvite()
