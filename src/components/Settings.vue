@@ -25,9 +25,11 @@
       <q-btn color="white" label="Remove Avatar" flat icon="delete" @click="confirmRemoveAvatar = true" />
     </q-item>
     <div class="q-pa-md">
-      <q-input dark color="white" label="Change username" v-model="username">
-        <q-btn color="orange" type="submit" label="ok" @click="confirmChangeUsername = true" />
-      </q-input>
+      <form method="post" onsubmit="return false">
+        <q-input dark color="white" label="Change username" v-model="username">
+          <q-btn color="orange" type="submit" label="ok" @click="confirmChangeUsername = true" />
+        </q-input>
+      </form>
     </div>
     <q-item class="justify-center q-pb-md">
       <q-toggle color="orange" @update:model-value="onUpdate" v-model="twoFA">
@@ -68,7 +70,7 @@ export default defineComponent({
     return {
       confirmLogout,
       confirmRemoveAvatar,
-      confirmChangeUsername
+      confirmChangeUsername,
     }
   },
   data() {

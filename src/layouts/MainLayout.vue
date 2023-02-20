@@ -315,7 +315,7 @@ export default defineComponent({
 					this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
 					this.StoplisteningForMatchmaking()
 					this.stopListeningForGameInvite()
-					
+
 				})
 			// }
 		},
@@ -342,9 +342,9 @@ export default defineComponent({
 		this.$storeChat.init(this.$ws, this) // set socket in the store
 		// clean possibly old datas
 		this.$storeChat.leave()
-		
+
 		// connect and init WebSockets
-	
+
 		console.log('HEEEERE');
 		this.$ws.listen("user-connected", this.handleUserConnectedEvent);
 		this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);

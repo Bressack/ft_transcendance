@@ -10,9 +10,6 @@ import {
 
 export default defineComponent({
   name: 'App',
-  data() {
-    return {}
-  },
   methods: {
     has_refresh(): boolean {
       return Cookies.get("has_refresh")
