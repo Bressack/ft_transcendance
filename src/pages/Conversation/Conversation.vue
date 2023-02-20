@@ -1,19 +1,23 @@
 <template>
   <q-page>
     <div class="q-flex">
+
       <ChatUsersList/>
+
       <div class="row">
-        <div ref="chatList" class="list_messages">
+        <div ref="chatList" class="list_messages hide-scrollbar">
           <Message v-for="message in $storeChat.messages" :key="message.id" :username=message?.username
             :avatar=avatarstr(message?.username) :content=message?.content :timestamp="new Date(message?.CreatedAt)" />
         </div>
       </div>
+
       <q-input @keydown.enter.prevent="sendmessage" filled v-model="$storeChat.text" placeholder="Enter text here"
         class="absolute-bottom custom-input input">
         <template v-slot:append>
           <q-icon name="send" @click="sendmessage" class="cursor-pointer" />
         </template>
       </q-input>
+
     </div>
 
   </q-page>

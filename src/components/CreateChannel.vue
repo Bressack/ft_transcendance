@@ -147,7 +147,7 @@ export default defineComponent({
       // Si j'ai pas de mdp, et que je veux rien changer -> false et j'envoie password = ''
       this.$api.channelSettings(this.$storeChat.currentChannel, payload)
       .then(() => {
-        this.$q.notify({
+        this.$notifyCenter.send({
             type: 'positive',
             message: 'Channel successfully modified'
           })
@@ -155,7 +155,7 @@ export default defineComponent({
       })
       .catch((error) => {
         for (let i = 0; i < error.response.data.message.length; i++) {
-          this.$q.notify({
+          this.$notifyCenter.send({
               type: 'negative',
               message: error.response.data.message[i]
             })
@@ -175,7 +175,7 @@ export default defineComponent({
       console.log(payload)
       this.$api.createChannel(payload)
       .then(() => {
-        this.$q.notify({
+        this.$notifyCenter.send({
             type: 'positive',
             message: 'Channel successfully created'
           })
@@ -183,7 +183,7 @@ export default defineComponent({
       })
       .catch((error) => {
         for (let i = 0; i < error.response.data.message.length; i++) {
-          this.$q.notify({
+          this.$notifyCenter.send({
               type: 'negative',
               message: error.response.data.message[i]
             })

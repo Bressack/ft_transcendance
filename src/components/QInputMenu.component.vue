@@ -58,7 +58,7 @@ enum EUserStatus {
   PENDINGTO,
 }
 
-interface Itoto {
+interface IUserName {
   username: string;
   status: EUserStatus;
 }
@@ -82,7 +82,7 @@ export default defineComponent({
   },
   props: {
     menuList: {
-      type: Array<Itoto>,
+      type: Array<IUserName>,
       default: null
     },
     inputLabel: {

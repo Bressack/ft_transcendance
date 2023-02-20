@@ -1,21 +1,31 @@
 <template><!-- <div class="absolute-top bg" /> -->
 
-  <div class="q-gutter-y-md" style="max-width: 300px">
+  <QInputMenu :menuList="searchResult?.result as Array<IUserName>" @findListWithString="search" @selectElement="followorunfollow" />
+
+  <div class="q-gutter-y-md q-mt-md" style="max-width: 300px">
     <q-card>
-      <q-tabs v-model="tab" dense class="text-grey-6" style="background-color: #212121;" active-color="orange"
-        indicator-color="orange" align="justify" narrow-indicator>
+      <q-tabs
+          v-model="tab"
+          dense
+          class="text-grey-6"
+          style="background-color: #212121;"
+          active-color="orange"
+          indicator-color="orange"
+          align="justify"
+          narrow-indicator
+        >
         <q-tab name="friends" icon="group" class="tab" />
         <q-tab name="channels" icon="chat" class="tab" />
         <q-tab name="following" icon="hourglass_bottom" class="tab">
-          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestRecevied?.length > 0" />
-          <div class="notif justify-center items-center" v-if="$storeMe.friendRequestRecevied?.length > 0">
-            {{ $storeMe.friendRequestRecevied?.length < 99 ? $storeMe.friendRequestRecevied?.length : '99+' }}
+          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestSent?.length > 0" />
+          <div class="notif justify-center items-center" v-if="$storeMe.friendRequestSent?.length > 0">
+            {{ $storeMe.friendRequestSent?.length < 99 ? $storeMe.friendRequestSent?.length : '99+' }}
           </div>
         </q-tab>
         <q-tab name="follower" icon="notifications" class="tab">
-          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestSent?.length > 0" />
-          <div class="notif justify-center items-center" v-if="$storeMe?.friendRequestSent?.length > 0">
-            {{ $storeMe.friendRequestSent?.length < 99 ? $storeMe.friendRequestSent?.length : '99+' }}
+          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestRecevied?.length > 0" />
+          <div class="notif justify-center items-center" v-if="$storeMe?.friendRequestRecevied?.length > 0">
+            {{ $storeMe.friendRequestRecevied?.length < 99 ? $storeMe.friendRequestRecevied?.length : '99+' }}
           </div>
         </q-tab>
         <q-tab name="blocked" icon="person_off" class="tab">
@@ -29,7 +39,7 @@
 
       <q-separator />
 
-      <q-tab-panels v-model="tab" animated>
+      <q-tab-panels v-model="tab" animated class="hide-scrollbar" >
 
 
 <!-- #################################################################################################################### -->
@@ -82,23 +92,23 @@
 <!-- #################################################################################################################### -->
         <q-tab-panel name="following" class="tab-panel">
           <div class="text-h5 text-center q-py-sm text-orange-6 text-bold bg-grey-9">following</div>
-          <UserCard v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv"
-            @goGameOptions="goGameOptions"
-            :username="rrecv"
-
-            icon_name="done" icon_color="green"
-            shortcut_follow menu_profile menu_follow menu_block
-          />
-        </q-tab-panel>
-<!-- #################################################################################################################### -->
-        <q-tab-panel name="follower" class="tab-panel">
-          <div class="text-h5 text-center q-py-sm text-orange-6 text-bold bg-grey-9">follower</div>
           <UserCard v-for="rsent in $storeMe.friendRequestSent" :key="rsent"
             @goGameOptions="goGameOptions"
             :username="rsent"
 
             icon_name="cancel" icon_color="red"
             shortcut_unfollow menu_profile menu_unfollow menu_block
+          />
+        </q-tab-panel>
+<!-- #################################################################################################################### -->
+        <q-tab-panel name="follower" class="tab-panel">
+          <div class="text-h5 text-center q-py-sm text-orange-6 text-bold bg-grey-9">follower</div>
+          <UserCard v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv"
+            @goGameOptions="goGameOptions"
+            :username="rrecv"
+
+            icon_name="done" icon_color="green"
+            shortcut_follow menu_profile menu_follow menu_block
           />
         </q-tab-panel>
 <!-- #################################################################################################################### -->

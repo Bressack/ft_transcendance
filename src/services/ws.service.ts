@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 import { Cookies } from "quasar";
-import { useChatSocketStore } from "src/stores/chatSocket";
+import { useChatStore } from "src/stores/chat";
 
 var that: any = null;
 
@@ -8,12 +8,8 @@ class WsService {
   socket: any;
   storeChat: any;
   constructor() {
-    this.storeChat = useChatSocketStore();
-    console.log("debug constru: ", this.storeChat.connectedUsers);
+    this.storeChat = useChatStore();
     that = this;
-  }
-  init(vue: any) {
-    console.log('init ws.service');
   }
 
   getToken() {

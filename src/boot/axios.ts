@@ -3,7 +3,7 @@ import { boot } from 'quasar/wrappers';
 import axios, { AxiosInstance } from 'axios';
 import WsService from 'src/services/ws.service';
 import API from 'src/services/api.service';
-import { useChatSocketStore } from 'src/stores/chatSocket';
+import nc from 'src/services/notifyCenter';
 import { useChatStore } from 'src/stores/chat';
 
 declare module '@vue/runtime-core' {
@@ -11,7 +11,7 @@ declare module '@vue/runtime-core' {
     $axios: AxiosInstance;
     $ws: typeof ws;
     $api: typeof api;
-    // $storeChat: typeof storeChat;
+    $notifyCenter: typeof notifyCenter;
     $storeChat:  ReturnType<typeof useChatStore>;
     $storeMe:  ReturnType<typeof useMeStore>;
   }
@@ -26,13 +26,14 @@ declare module '@vue/runtime-core' {
 // const api = axios.create({ baseURL: 'https://api.example.com' });
 const api = API
 const ws = new WsService();
-// const storeChat = useChatSocketStore();
+const notifyCenter = nc
 const storeChat :  ReturnType<typeof useChatStore> = useChatStore();
 const storeMe :  ReturnType<typeof useMeStore> = useMeStore();
 declare module 'vue' {
   interface ComponentCustomProperties {
     $ws: typeof ws
     $api: typeof api
+    $notifyCenter: typeof notifyCenter
     $storeChat:  ReturnType<typeof useChatStore>
     $storeMe:  ReturnType<typeof useMeStore>
   }
@@ -45,6 +46,7 @@ export default boot(({ app }) => {
   //       so you won't necessarily have to import axios in each vue file
   app.config.globalProperties.$ws = ws;
   app.config.globalProperties.$api = api;
+  app.config.globalProperties.$notifyCenter = notifyCenter;
   app.config.globalProperties.$storeChat = storeChat
   app.config.globalProperties.$storeMe = storeMe;
 });

@@ -3,7 +3,7 @@
     <span class="titlename">{{ $storeChat.name }}</span>
 
     <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
-      <q-menu persistent class="menuusers">
+      <q-menu class="menuusers">
         <q-list class="userlist">
 
           <q-item class="q-bg q-flex">

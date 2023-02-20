@@ -98,24 +98,25 @@ export const useMeStore = defineStore('me', {
     },
 
     notify_diff(diff: any) {
+
       diff.in.followedBy.forEach((e: any) => {
-        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} just follow you !` });
+        this.vue.$notifyCenter.send({ color: "cyan", avatar: `/api/avatar/${e}/thumbnail`, message: `${e} just follow you !` });
       });
       diff.in.following.forEach((e: any) => {
-        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} followed !` });
+        this.vue.$notifyCenter.send({ color: "cyan", avatar: `/api/avatar/${e}/thumbnail`, message: `${e} followed !` });
       });
       diff.in.blocking.forEach((e: any) => {
-        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} blocked !` });
+        this.vue.$notifyCenter.send({ color: "cyan", avatar: `/api/avatar/${e}/thumbnail`, message: `${e} blocked !` });
       });
 
       diff.out.followedBy.forEach((e: any) => {
-        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} just unfollow you !` });
+        this.vue.$notifyCenter.send({ color: "cyan", avatar: `/api/avatar/${e}/thumbnail`, message: `${e} just unfollow you !` });
       });
       diff.out.following.forEach((e: any) => {
-        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} unfollowed !` });
+        this.vue.$notifyCenter.send({ color: "cyan", avatar: `/api/avatar/${e}/thumbnail`, message: `${e} unfollowed !` });
       });
       diff.out.blocking.forEach((e: any) => {
-        this.vue.notify({ color: "cyan", progress: true, avatar: `/api/avatar/${e}/thumbnail`, message: `${e} unblocked !` });
+        this.vue.$notifyCenter.send({ color: "cyan", avatar: `/api/avatar/${e}/thumbnail`, message: `${e} unblocked !` });
       });
     },
     getChannelIDByUsername(username: string) {

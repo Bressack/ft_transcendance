@@ -97,15 +97,15 @@ import { defineComponent } from 'vue';
 
 const _preSetUsers = [
   {
-    username: 'Lylou',
+    username: 'Bianca',
     password: 'null',
   },
   {
-    username: 'Marie-Ange',
+    username: 'Yassine',
     password: 'null',
   },
   {
-    username: 'Flora',
+    username: 'Gabriella',
     password: 'null',
   },
 ]
@@ -147,7 +147,7 @@ export default defineComponent({
         this.$router.push('/')
       })
       .catch((error) =>  {
-        that.$q.notify({
+        that.$notifyCenter.send({
             // position: 'center',
             // multiLine: true,
             type: 'negative',
@@ -175,7 +175,7 @@ export default defineComponent({
         // if (error.response)
         console.log(error.response.data)
         for (let i = 0; i < error.response.data.message.length; i++) {
-          that.$q.notify({
+          that.$notifyCenter.send({
               type: 'negative',
               message: error.response.data.message[i]
             })

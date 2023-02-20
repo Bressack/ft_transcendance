@@ -1,4 +1,4 @@
-<template><router-view /></template>
+<template><router-view/></template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -42,7 +42,7 @@ export default defineComponent({
       return await fetch('/api/auth/clear-cookies')
     },
     notifyAlreadyConnected() {
-      this.$q.notify({
+      this.$notifyCenter.send({
         type: 'warning',
         message: 'You are already connected'
       })

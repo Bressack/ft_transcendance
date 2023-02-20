@@ -212,48 +212,48 @@ interface IMessage {
 ** Channel
 */
 export class Channel implements IChannel {
-  id                            : string;
-  name                          : string;
-  createdAt                     : string;
-  updated                       : string;
-  ispublic                      : boolean;
-  SubscribedUsers               : Subscription[];
-  Message                       : Message[];
-  hash                          : string;
-  salt                          : string;
+  id               : string;
+  name             : string;
+  createdAt        : string;
+  updated          : string;
+  ispublic         : boolean;
+  SubscribedUsers  : Subscription[];
+  Message          : Message[];
+  hash             : string;
+  channel_type     : eChannelType;
 
   constructor(
-    id                            : string,
-    name                          : string,
-    createdAt                     : string,
-    updated                       : string,
-    ispublic                      : boolean,
-    SubscribedUsers               : Subscription[],
-    Message                       : Message[],
-    hash                          : string,
-    salt                          : string,
+    id               : string,
+    name             : string,
+    createdAt        : string,
+    updated          : string,
+    ispublic         : boolean,
+    SubscribedUsers  : Subscription[],
+    Message          : Message[],
+    hash             : string,
+    channel_type     : eChannelType,
   ) {
-    this.id                             = id;
-    this.name                           = name;
-    this.createdAt                      = createdAt;
-    this.updated                        = updated;
-    this.ispublic                       = ispublic;
-    this.SubscribedUsers                = SubscribedUsers;
-    this.Message                        = Message;
-    this.hash                           = hash;
-    this.salt                           = salt;
+    this.id                = id;
+    this.name              = name;
+    this.createdAt         = createdAt;
+    this.updated           = updated;
+    this.ispublic          = ispublic;
+    this.SubscribedUsers   = SubscribedUsers;
+    this.Message           = Message;
+    this.hash              = hash;
+    this.channel_type      = channel_type
   }
 }
 interface IChannel {
-  id                            : string;
-  name                          : string;
-  createdAt                     : string;
-  updated                       : string;
-  ispublic                      : boolean;
-  SubscribedUsers               : Subscription[];
-  Message                       : Message[];
-  hash                          : string;
-  salt                          : string;
+  id               : string;
+  name             : string;
+  createdAt        : string;
+  updated          : string;
+  ispublic         : boolean;
+  SubscribedUsers  : Subscription[];
+  Message          : Message[];
+  hash             : string;
+  channel_type     : eChannelType;
 }
 
 /*

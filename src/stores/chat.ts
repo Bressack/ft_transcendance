@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import { Channel } from 'src/services/channel'
 import WsService from "src/services/ws.service";
+import notifyCenter, { NotifyOptions } from 'src/services/notifyCenter';
 
 import {
   Subscription,
@@ -40,7 +41,7 @@ export const useChatStore = defineStore('chat', {
 
   actions: {
     __notifyClient(msg: string, mode: notifyMode) : void {
-      this.vue.$q.notify({ type: mode, message: msg })
+      notifyCenter.send({ type: mode, message: msg } as NotifyOptions)
     },
 
     async __getChannelInstance(channelId: string) {
@@ -161,7 +162,7 @@ export const useChatStore = defineStore('chat', {
 
       this.socket.listen('error', (payload: IWSError) => {
         console.log('ws error:', payload)
-        this.vue.$q.notify({
+        this.vue.$notifyCenter.send({
           type: "warning",
           message: payload.message,
         });
@@ -169,7 +170,7 @@ export const useChatStore = defineStore('chat', {
 
       this.socket.listen("infos", (payload: IWSInfos) => {
         console.log("ws infos:", payload);
-        this.vue.$q.notify({
+        this.vue.$notifyCenter.send({
           type: "info",
           message: payload.status,
         });

@@ -83,13 +83,13 @@ export default defineComponent({
       this.$api.delete('avatar')
         .then((res) => {
           if (res.data === true) {
-            this.$q.notify({
+            this.$notifyCenter.send({
               type: 'warning',
               message: 'Avatar is already set as default'
             })
           }
           else {
-            this.$q.notify({
+            this.$notifyCenter.send({
               type: 'positive',
               message: 'Avatar successfully removed'
             })
@@ -102,7 +102,7 @@ export default defineComponent({
       if (this.username !== this.profile.username) {
         this.$api.changeUsername(this.username)
           .then(() => {
-            this.$q.notify({
+            this.$notifyCenter.send({
               type: 'positive',
               message: 'Username successfully changed'
             })
@@ -111,7 +111,7 @@ export default defineComponent({
           .catch((error) => {
             console.log(error.response.data)
             for (let i = 0; i < error.response.data.message.length; i++) {
-              this.$q.notify({
+              this.$notifyCenter.send({
                 type: 'negative',
                 message: error.response.data.message[i]
               })
@@ -119,7 +119,7 @@ export default defineComponent({
           })
       }
       else {
-        this.$q.notify({
+        this.$notifyCenter.send({
           type: 'warning',
           message: `Your username is already "${this.username}"`
         })
@@ -131,7 +131,7 @@ export default defineComponent({
       return ([])
     },
     onUploaded(info: UploadObject) {
-      this.$q.notify({
+      this.$notifyCenter.send({
         type: 'positive',
         message: 'Avatar successfully uploaded'
       })
@@ -140,14 +140,14 @@ export default defineComponent({
     },
     onRejected(rejectedEntries: QRejectedEntry[]) {
       if (rejectedEntries[0].failedPropValidation === 'filter') {
-        this.$q.notify({
+        this.$notifyCenter.send({
           type: 'negative',
           message: 'The file should be an image (.jpg, .jpeg or .png)'
         })
       }
       else {
         console.log(rejectedEntries[0])
-        this.$q.notify({
+        this.$notifyCenter.send({
           type: 'warning',
           message: 'This file has already been downloaded'
         })
