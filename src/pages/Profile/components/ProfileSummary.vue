@@ -1,22 +1,24 @@
 <template>
-  <div class="q-pa-lg">
-    <q-item class="wrap">
-      <q-item-section avatar>
-      <q-avatar class="avatar">
-        <q-img :src="avatar"/>
-      </q-avatar>
-    </q-item-section>
-      <q-item-section>
-        <q-item-label class="label name">{{ name }}</q-item-label>
+  <div class="r-pa-lg">
+    <q-item >
+      <q-item-section  avatar>
+        <q-avatar class="avatar">
+          <q-img :src="avatar"/>
+        </q-avatar>
       </q-item-section>
-      <q-item v-if="interact && name != $storeMe.username">
+      <q-item class="q-pa-none">
         <q-item-section>
-          <q-btn label="play" class="interpolate-btn q-mr-xs" color="orange" @click="goGameOptions" />
+          <q-item-label class="label name">{{ name }}</q-item-label>
         </q-item-section>
-        <q-item-section side>
-          <q-btn v-if="!isFriend()" class="interpolate-btn" :label=friendLabel :color=friendColor @click="followOrUnfollow()"/>
-          <q-btn v-else class="interpolate-btn" label="chat" color="green" @click="userSelected()" />
-        </q-item-section>
+        <q-item v-if="interact && name != $storeMe.username">
+          <q-item-section>
+            <q-btn label="play" class="interpolate-btn q-mr-xs" color="orange" @click="goGameOptions" />
+          </q-item-section>
+          <q-item-section>
+            <q-btn v-if="!isFriend()" class="interpolate-btn" :label=friendLabel :color=friendColor @click="followOrUnfollow()"/>
+            <q-btn v-else class="interpolate-btn" label="chat" color="green" @click="userSelected()" />
+          </q-item-section>
+        </q-item>
       </q-item>
       <q-dialog v-model="gameOptions">
         <GameOptions :opponent="name" :closeFunction="closeGameOptions" />

@@ -1,6 +1,6 @@
 <template>
 <q-page>
-  <div class="q-px-xl">
+  <div class="r-px-xl">
     <ProfileSummary v-if="userFetched"
       :name=profile.username
       :avatar=avatar
@@ -9,7 +9,7 @@
       interact
     />
   </div>
-  <q-item class="q-px-xl">
+  <q-item class="r-px-xl">
     <q-item-section>
       <div>
         <LevelProgress v-if="userFetched"
@@ -18,7 +18,7 @@
         />
       </div>
     </q-item-section>
-    <q-item-section class="q-pr-xl col-3">
+    <q-item-section class="col-3">
       <Rank v-if="userFetched"
         :victory="(profile.victoriesAsPOne+profile.victoriesAsPTwo)"
         :defeat="(profile.defeatsAsPOne+profile.defeatsAsPTwo)"

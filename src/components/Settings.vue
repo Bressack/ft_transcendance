@@ -35,14 +35,18 @@
       </q-toggle>
     </q-item>
     <q-item>
-      <q-btn class="absolute-center logout" @click="logout()" color="red" label="LOGOUT" />
+      <q-btn class="absolute-center logout" @click="confirmLogout = true" color="red" label="LOGOUT" />
     </q-item>
+    <q-dialog persistent v-model=confirmLogout>
+      <Confirm what="logout" :cancel=cancel :accept=logout />
+    </q-dialog>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, ref } from 'vue'
 import { QRejectedEntry } from 'quasar'
+import Confirm from './Confirm.vue'
 
 interface UploadObject {
   files: readonly any[]
@@ -50,6 +54,16 @@ interface UploadObject {
 
 export default defineComponent({
   name: 'Settings',
+  components : { Confirm },
+  setup () {
+    const confirmLogout = ref(false)
+    return {
+      confirmLogout,
+      cancel() {
+        confirmLogout.value = false
+      }
+    }
+  },
   data() {
     return {
       profile: [] as any,
