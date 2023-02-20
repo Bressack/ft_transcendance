@@ -21,7 +21,7 @@ export default defineComponent({
 	{
 		changeViewSide()
 		{
-			console.log(this.viewside);
+			// console.log(this.viewside);
 			if (this.viewside)
 				this.viewside = false;
 			else

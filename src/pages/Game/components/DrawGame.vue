@@ -154,14 +154,14 @@ export default defineComponent({
 
 		toggle(e: any) {
 			const target = <HTMLElement>document.getElementById('2ddiv')
-			console.log("toggle 1", this.$q.fullscreen.isActive)
+			// console.log("toggle 1", this.$q.fullscreen.isActive)
 			this.$q.fullscreen.toggle(target)
 				.then(() => {
 				})
 				.catch((err) => {
 					alert(err)
 				})
-			console.log("toggle 2 ", this.$q.fullscreen.isActive)
+			// console.log("toggle 2 ", this.$q.fullscreen.isActive)
 			this.draw();
 		},
 		update_and_draw(data: any) {
@@ -186,7 +186,7 @@ export default defineComponent({
 		// 	this.draw()
 		// },
 		handleCoundown(data: any) {
-			console.log(data);
+			// console.log(data);
 			if (data.status == 'done') {
 				this.game_paused = false;
 				this.info_value = null;
@@ -196,7 +196,7 @@ export default defineComponent({
 			else if (data.status == 'pending') {
 				this.game_paused = true;
 				this.info_value = data.value;
-				console.log(data.name);
+				// console.log(data.name);
 				this.namedisplay = (data.name == undefined) ? "": data.name;
 			}
 			this.draw()
@@ -234,7 +234,7 @@ export default defineComponent({
 		this.$ws.removeListener(`${this.gameId}___frame-update`)
 		this.canvas.removeEventListener('dblclick',this.toggle )
 		window.removeEventListener('resize', this.onResize);
-		console.log('quit');
+		// console.log('quit');
 		this.$ws.emit('quit', {})
 	}
 })

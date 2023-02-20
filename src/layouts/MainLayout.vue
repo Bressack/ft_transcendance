@@ -101,40 +101,40 @@ export default defineComponent({
 			this.$ws.removeListener('game-invite')
 
 			this.$ws.socket.once('game-invite-canceled', (res: any) => {
-				that.InvitationFrom = false
+				this.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
-				that.$ws.listen('game-invite', that.onGameInvite)
+				this.$ws.listen('game-invite', this.onGameInvite)
 			})
-			const accept = function (res: any) {
+			const accept =  (res: any) => {
 				console.log(res)
 				callback('ACCEPTED')
-				that.InvitationFrom = false
-				that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
+				this.InvitationFrom = false
+				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
 					callback("OK")
 					// console.log(`/game/${gameOptions.gameId}?map=${gameOptions.map}`)
 					console.log(gameOptions)
 
 					if (gameOptions.map == "3D")
-						that.$router.push(`/game3d/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+						this.$router.push(`/game3d/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
 					else
-						that.$router.push(`/game/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
-					// that.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
-					// that.$router.push(`/game/${gameOptions.gameId}`)
+						this.$router.push(`/game/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+					// this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+					// this.$router.push(`/game/${gameOptions.gameId}`)
 					document.removeEventListener('invite-response-accept', accept);
 				})
 				document.removeEventListener('invite-response-decline', decline);
-				that.$ws.removeListener('game-invite-canceled')
-				that.$ws.listen('game-invite', that.onGameInvite) //might need to remove this until the game is finished
+				this.$ws.removeListener('game-invite-canceled')
+				this.$ws.listen('game-invite', this.onGameInvite) //might need to remove this until the game is finished
 			}
-			const decline = function (res: any) {
+			const decline = (res: any) => {
 				console.log(res)
 				callback('DECLINED')
-				that.InvitationFrom = false
+				this.InvitationFrom = false
 				document.removeEventListener('invite-response-accept', accept);
 				document.removeEventListener('invite-response-decline', decline);
-				that.$ws.removeListener('game-invite-canceled')
-				that.$ws.listen('game-invite', that.onGameInvite)
+				this.$ws.removeListener('game-invite-canceled')
+				this.$ws.listen('game-invite', this.onGameInvite)
 
 			}
 			console.log(data)
@@ -152,14 +152,14 @@ export default defineComponent({
 				this.listening_for_game_invite = true;
 			}
 		},
-		onMatchmaking(){
-			this.$ws.removeListener('matchmaking-accepted')
-			this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
-				callback("OK")
-				console.log(gameOptions)
-				this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
-			})
-		},
+		// onMatchmaking(){
+		// 	this.$ws.removeListener('matchmaking-accepted')
+		// 	this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
+		// 		callback("OK")
+		// 		console.log(gameOptions)
+		// 		this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+		// 	})
+		// },
 		stopListeningForGameInvite() {
 			if (this.listening_for_game_invite)
 			{
@@ -171,30 +171,38 @@ export default defineComponent({
 		},
 		listenForMatchmaking()
 		{
-			if (!this.listening_for_matchmaking)
-			{
-				this.$ws.removeListener('matchmaking-accepted')
-				this.$ws.listen('matchmaking-accepted', this.onMatchmaking)
+			console.log("YssssssssssssssssssO")
+
+			// if (!this.listening_for_matchmaking)
+			// {
 				this.stopListeningForGameInvite();
-				this.listening_for_matchmaking = true;
-			}
+				// this.listening_for_matchmaking = true;
+				console.log("YOOOOOOOOOO")
+				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
+					callback("OK")
+					console.log(gameOptions)
+					this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+					this.StoplisteningForMatchmaking()
+					this.stopListeningForGameInvite()
+					
+				})
+			// }
 		},
 		StoplisteningForMatchmaking()
 		{
-			if (this.listening_for_matchmaking)
-			{
-				this.listenForGameInvite()
-				this.$ws.removeListener('matchmaking-accepted')
-				this.$ws.emit('matchmaking-canceled',{})
+			// if (this.listening_for_matchmaking)
+			// {
+				// this.listenForGameInvite()
+				this.$ws.socket.removeListener('game-setup-and-init-go-go-power-ranger')
 				this.listening_for_matchmaking = false;
-			}
+			// }
 		}
 
 
 	},
 	created() {
 		this.$ws.connect()
-    this.$storeChat.$reset()
+    	this.$storeChat.$reset()
 		this.$storeChat.init_socket(this.$ws, this) // set socket in the store
 		// clean possibly old datas
 		this.storeMe.$reset()

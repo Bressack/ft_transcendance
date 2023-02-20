@@ -44,6 +44,9 @@ const routes: RouteRecordRaw[] = [
               if (res.status == 404) {
                 next({ name: "GameError" });
               } else next();
+            })
+            .catch(() => {
+              return next({ name: "GameError" });
             });
         },
       },
@@ -61,6 +64,9 @@ const routes: RouteRecordRaw[] = [
               if (res.status == 404) {
                 next({ name: "GameError" });
               } else next();
+            })
+            .catch(() => {
+              return next({ name: "GameError" });
             });
         },
       },
@@ -82,6 +88,9 @@ const routes: RouteRecordRaw[] = [
                 }
                 next({ name: "GameError" });
               } else next();
+            })
+            .catch(() => {
+              return next({ name: "GameError" });
             });
         },
       },
@@ -99,6 +108,9 @@ const routes: RouteRecordRaw[] = [
               if (res.status == 404) {
                 next({ name: "GameError" });
               } else next();
+            })
+            .catch(() => {
+              return next({ name: "GameError" });
             });
         },
       },

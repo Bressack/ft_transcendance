@@ -229,7 +229,7 @@ export default defineComponent({
 				.catch((err) => {
 					alert(err)
 				})
-			console.log("toggle 2 ", this.$q.fullscreen.isActive)
+			// console.log("toggle 2 ", this.$q.fullscreen.isActive)
 			this.draw();
 		},
 		waitEndResize() {
@@ -280,7 +280,7 @@ export default defineComponent({
 			this.draw();
 		},
 		handleCoundown(data: any) {
-			console.log(data);
+			// console.log(data);
 			if (data.status == 'done') {
 				this.game_paused = false;
 				this.info_value = null;
@@ -324,7 +324,7 @@ export default defineComponent({
 	},
 	mounted() {
 		this.prevviewside = this.viewside;
-		console.log("aled")
+		// console.log("aled")
 		setTimeout(this.ft_mounted, 10)
 		
 	},
@@ -334,7 +334,7 @@ export default defineComponent({
 		this.$ws.removeListener(`${this.gameId}___frame-update`)
 		this.canvas_txt.removeEventListener('dblclick',this.toggle )
 		window.removeEventListener('resize', this.waitEndResize);
-		console.log('quit');
+		// console.log('quit');
 		this.$ws.emit('quit', {})
 	}
 })
