@@ -1,6 +1,6 @@
 <template>
 	<div>
-		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+		<!-- <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet"> -->
 		<ul>
 				<div id="div3d">
 					<canvas id="canvas_txt"></canvas>

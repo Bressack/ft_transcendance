@@ -1,7 +1,6 @@
 <template>
 	<div>
 
-		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
 		<ul>
 			<div class="q-ml-md q-gutter-sm">
 				<!-- <q-btn color="blue" @click="toggle" icon="fullscreen" padding="xs"></q-btn> -->

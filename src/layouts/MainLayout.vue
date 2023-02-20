@@ -1,9 +1,11 @@
 <template>
+		<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+
   <q-layout view="lHh Lpr lFf">
     <q-header elevated>
       <q-toolbar class="toolbar">
         <q-btn flat @click="$storeMe.drawerStatus = !$storeMe.drawerStatus" round dense icon="menu" />
-        <q-item class="label q-px-md" clickable @click="goHome">ft_transcendence</q-item>
+        <q-item class="label" clickable @click="goHome" style="font-family: 'Press Start 2P'; left: 50%; transform: translateX(-60%)">Transcendence</q-item>
 
         <q-space />
 
