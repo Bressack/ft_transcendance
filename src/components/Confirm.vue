@@ -7,10 +7,10 @@
     </q-item>
     <q-item>
       <q-item-section>
-        <q-btn color="red" class="interpolate-btn" label="cancel" @click=cancel() />
+        <q-btn color="red" class="interpolate-btn" label="cancel" v-close-popup />
       </q-item-section>
       <q-item-section>
-        <q-btn color="green" class="interpolate-btn" label="accept" @click="accept()" />
+        <q-btn color="green" class="interpolate-btn" label="accept" @click="accept()" v-close-popup />
       </q-item-section>
     </q-item>
   </div>
@@ -23,7 +23,6 @@ export default defineComponent ({
   name: 'Confirm',
   props: {
     what:   { type: String, default: 'do something' },
-    cancel: { type: Function, default: null },
     accept: { type: Function, default: null },
   },
 })

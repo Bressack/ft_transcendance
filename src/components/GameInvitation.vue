@@ -83,7 +83,7 @@ export default defineComponent({
     this.recursiveProgress()
 		this.loader()
     this.fetchUserProfile(this.opponent)
-    this.avatar += `${this.opponent}/medium`
+    this.avatar += `${this.opponent}/thumbnail`
 		document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
 	},
   created() {

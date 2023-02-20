@@ -22,11 +22,11 @@
       </q-uploader>
     </q-item>
     <q-item class="justify-center">
-      <q-btn color="white" label="Remove Avatar" flat icon="delete" @click="removeAvatar()" />
+      <q-btn color="white" label="Remove Avatar" flat icon="delete" @click="confirmRemoveAvatar = true" />
     </q-item>
     <div class="q-pa-md">
       <q-input dark color="white" label="Change username" v-model="username">
-        <q-btn color="orange" type="submit" label="Ok" @click="changeUsername" />
+        <q-btn color="orange" type="submit" label="ok" @click="confirmChangeUsername = true" />
       </q-input>
     </div>
     <q-item class="justify-center q-pb-md">
@@ -35,10 +35,16 @@
       </q-toggle>
     </q-item>
     <q-item>
-      <q-btn class="absolute-center logout" @click="confirmLogout = true" color="red" label="LOGOUT" />
+      <q-btn class="absolute-center logout" @click="confirmLogout = true" color="red" label="logout" />
     </q-item>
     <q-dialog persistent v-model=confirmLogout>
-      <Confirm what="logout" :cancel=cancel :accept=logout />
+      <Confirm what="logout" :accept=logout />
+    </q-dialog>
+    <q-dialog persistent v-model=confirmRemoveAvatar>
+      <Confirm what="remove your avatar" :accept=removeAvatar />
+    </q-dialog>
+    <q-dialog persistent v-model=confirmChangeUsername>
+      <Confirm :what="`change your username to ${username}`" :accept=changeUsername />
     </q-dialog>
   </div>
 </template>
@@ -57,11 +63,12 @@ export default defineComponent({
   components : { Confirm },
   setup () {
     const confirmLogout = ref(false)
+    const confirmRemoveAvatar = ref(false)
+    const confirmChangeUsername = ref(false)
     return {
       confirmLogout,
-      cancel() {
-        confirmLogout.value = false
-      }
+      confirmRemoveAvatar,
+      confirmChangeUsername
     }
   },
   data() {
@@ -86,7 +93,7 @@ export default defineComponent({
         .then((result) => {
           this.profile = result
           this.username = result.username
-          this.avatar = `/api/avatar/${result.username}/large?refresh?refresh=${this.refresh++}`
+          this.avatar = `/api/avatar/${result.username}/large?${this.refresh++}`
           this.twoFA = result.TwoFA
         })
         .catch((error) => {
@@ -107,7 +114,7 @@ export default defineComponent({
               type: 'positive',
               message: 'Avatar successfully removed'
             })
-            this.avatar = `/api/avatar/${this.profile.username}/large?refresh=${this.refresh++}`
+            this.avatar = `/api/avatar/${this.profile.username}/large?${this.refresh++}`
           }
           this.$refs.uploader.reset()
         })
@@ -150,7 +157,7 @@ export default defineComponent({
         message: 'Avatar successfully uploaded'
       })
       this.$refs.uploader.removeUploadedFiles()
-      this.avatar = `/api/avatar/${this.profile.username}/large?refresh=${this.refresh++}`
+      this.avatar = `/api/avatar/${this.profile.username}/large?${this.refresh++}`
     },
     onRejected(rejectedEntries: QRejectedEntry[]) {
       if (rejectedEntries[0].failedPropValidation === 'filter') {

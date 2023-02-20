@@ -57,10 +57,11 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
 import BanMute from './BanMute.vue'
+import CreateChannel from '../../../components/CreateChannel.vue'
 
 export default defineComponent({
   name: 'ChatUsersList',
-  components: { BanMute },
+  components: { BanMute, CreateChannel },
   props: {},
   setup () {
     const confirm = ref(false)
