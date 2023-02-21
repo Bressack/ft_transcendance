@@ -11,46 +11,29 @@
 
       <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
         <q-menu class="menuusers">
+
+          <q-item class="q-bg q-flex pannel">
+            <q-item-section side class="card">
+              <q-item-label class="menuusers-username">User count:</q-item-label>
+            </q-item-section>
+            <q-item-section side class="card">
+              <q-item-label>{{ subs.size }}</q-item-label>
+            </q-item-section>
+            <q-space />
+            {{ $storeChat.channelType }}
+            <q-item-section v-if="$storeChat.channelType == `PRIVATE` " side>
+              <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" @click="leaveChannel" />
+              <q-btn v-else color="red" label="delete" @click="leaveChannel" />
+            </q-item-section>
+            <q-item-section v-if="$storeChat.channelType == `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
+              <q-btn color="orange" label="settings" @click="settings = true" />
+            </q-item-section>
+            <q-item-section side>
+              <q-btn color="pink" label="debug" @click="debug" />
+            </q-item-section>
+          </q-item>
+
           <q-list class="userlist">
-
-            <q-item class="q-bg q-flex">
-              <q-item-section side class="card">
-                <q-item-label class="menuusers-username">User count:</q-item-label>
-              </q-item-section>
-              <q-item-section side class="card">
-                <q-item-label>{{ subs.size }}</q-item-label>
-              </q-item-section>
-              <q-space />
-              <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
-                <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" @click="leaveChannel" />
-                <q-btn v-else color="red" label="delete" @click="leaveChannel" />
-              </q-item-section>
-              <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
-                <q-btn color="orange" label="settings" @click="settings = true" />
-              </q-item-section>
-              <q-item-section side>
-                <q-btn color="pink" label="debug" @click="debug" />
-              </q-item-section>
-            </q-item>
-
-            <!-- <q-item class="q-bg q-flex">
-              <q-item-section side class="card">
-                <q-item-label class="menuusers-username">User count:</q-item-label>
-              </q-item-section>
-              <q-item-section side class="card">
-                <q-item-label>{{ subs.size }}</q-item-label>
-              </q-item-section>
-              <q-space />
-              <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role !== 'OWNER'" side>
-                <q-btn color="red" label="quit" @click="confirm = true" />
-              </q-item-section>
-              <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
-                <q-btn color="orange" label="settings" @click="settings = true" />
-              </q-item-section>
-              <q-item-section side>
-                <q-btn color="pink" label="debug" @click="debug" />
-              </q-item-section>
-            </q-item> -->
 
             <q-item v-for="user in subs.values()" :key="user.username" class="q-bg">
               <q-item-section class="avatar">
@@ -68,7 +51,7 @@
                 <q-item-label>{{ user.role }}</q-item-label>
               </q-item-section>
               <q-item-section>
-                <BanMute :subscription="getUserSubscription(user.username)" />
+                <BanMute :subscription="getUserSubscription(user.username) as Subscription" />
               </q-item-section>
             </q-item>
 
@@ -86,6 +69,19 @@
 import { defineComponent, ref, computed } from 'vue';
 import BanMute from './BanMute.vue'
 import CreateChannel from 'src/components/CreateChannel.vue'
+import {
+  User,
+  Follows,
+  Blocks,
+  Message,
+  Channel,
+  Subscription,
+  Game,
+  Avatar,
+  eSubscriptionState,
+  eRole,
+  eChannelType,
+} from "src/services/api.models";
 
 export default defineComponent({
   name: 'ChatUsersList',
@@ -108,15 +104,15 @@ export default defineComponent({
   data() {
     return {
       minidrawerStatus: false as boolean,
-      subs: computed(() => this.$storeChat.SubscribedUsers),
+      subs: computed(() => this.$storeChat.SubscribedUsers as Map<string, Subscription> ),
     }
   },
   methods: {
     lockChannel() {
       this.$emit('lockChannel')
     },
-    getUserSubscription(username: string) {
-      return this.subs.get(username)
+    getUserSubscription(username: string): Subscription {
+      return this.subs.get(username) as Subscription
     },
     getLoginStatus(username: string) {
       if (this.$storeChat.connectedUsers.includes(username))
@@ -153,7 +149,6 @@ export default defineComponent({
 .top-panel
   display: flexbox
   justify-content: space-between
-  // height: 50px
   padding: 10px 0px 10px 10px
   background-color: #303030
   width: 100%
@@ -188,6 +183,7 @@ export default defineComponent({
 
 .userlist
   height: 100%
+  margin-top: 50px
 
 .role
   min-width: 80px
@@ -210,4 +206,10 @@ export default defineComponent({
   background-color: green
 .OFFLINE-status
   background-color: #707070
+
+.pannel
+  position: fixed
+  width: 631px
+  z-index: 1
+
 </style>

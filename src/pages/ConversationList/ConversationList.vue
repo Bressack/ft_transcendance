@@ -282,23 +282,17 @@ export default defineComponent({
     },
 
 
-    followorunfollow(username: string, mode: string) {
+    async followorunfollow(username: string, mode: string) {
       if (mode == "unfollow")
-        this.unfollow(username)
+        await this.unfollow(username)
       else if (mode == "follow")
-        this.follow(username)
+        await this.follow(username)
     },
-    follow(username: string) {
-      let that = this
-      this.$api.follow(username)
-        .then(function () { })
-        .catch(function () { })
+    async follow(username: string) {
+      await this.$api.follow(username)
     },
-    unfollow(username: string) {
-      let that = this
-      this.$api.unfollow(username)
-        .then(function () { })
-        .catch(function () { })
+    async unfollow(username: string) {
+      await this.$api.unfollow(username)
     },
   },
 });

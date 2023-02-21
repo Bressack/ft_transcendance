@@ -1,9 +1,19 @@
 import { defineStore } from "pinia";
-import { Channel } from "src/services/channel";
 import WsService from "src/services/ws.service";
 import notifyCenter, { NotifyOptions } from "src/services/notifyCenter";
 
-import { Subscription } from "src/services/api.models";
+import {
+  eSubscriptionState,
+  eRole,
+  eChannelType,
+  Subscription,
+} from "src/services/api.models";
+
+import {
+  Message,
+  Channel,
+} from "src/services/channel";
+
 import { IWSMessages, IWSError, IWSInfos } from "src/models/messages.ws";
 
 type notifyMode = "negative" | "warning" | "info" | "positive";
@@ -24,35 +34,40 @@ export const useChatStore = defineStore("chat", {
     channel(state: any) {
       return state.activeChannel;
     },
-    channelId(state: any) {
+    channelId(state: any) : string {
       return state.activeChannel?.channelId;
     },
-    name(state: any) {
+    name(state: any) : string {
       return state.activeChannel?.name;
     },
-    channel_type(state: any) {
+    channel_type(state: any) : eChannelType {
       return state.activeChannel?.channel_type;
     },
-    state(state: any) {
+    state(state: any) : eSubscriptionState {
       return state.activeChannel?.state;
     },
-    stateActiveUntil(state: any) {
+    stateActiveUntil(state: any) : Date | null {
       return state.activeChannel?.stateActiveUntil;
     },
-    messages(state: any) {
+    messages(state: any) : Message[] {
       return state.activeChannel?.messages;
     },
-    role(state: any) {
+    role(state: any) : eRole {
       return state.activeChannel?.role;
     },
-    SubscribedUsers(state: any) {
+    SubscribedUsers(state: any) : Map<string, Subscription> {
       return state.activeChannel?.SubscribedUsers;
     },
-    username(state: any) {
+    username(state: any) : string {
       return state.activeChannel?.username;
     },
-    password_protected(state: any) {
+    password_protected(state: any) : boolean {
       return state.activeChannel?.password_protected;
+    },
+    checked(state: any) : boolean {
+      console.log(state.activeChannel?.checked);
+
+      return state.activeChannel?.checked;
     },
   },
 
@@ -74,8 +89,6 @@ export const useChatStore = defineStore("chat", {
     },
 
     async join(channelId: string) {
-      console.log(this.scrollBack)
-
       //   if (this.socket === null) { throw new Error('You are not connected to WS') }
 
       // check if channel is already known by the map otherwise create a new instance

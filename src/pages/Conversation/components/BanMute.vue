@@ -40,14 +40,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { Subscription } from 'src/services/api.models'
+import { defineComponent, ref, PropType } from 'vue';
+import { ISubscription } from "src/services/api.models";
 
 export default defineComponent({
   name: 'BanMute',
   components: {},
   props: {
-    subscription: { type: Subscription, required: true }, // Deso theo, type: Object pour enlever l'erreur console avec type: Subscription
+    subscription: { type: Object as PropType<ISubscription>, required: true }, // Deso theo, type: Object pour enlever l'erreur console avec type: Subscription
   },
   data() {
     return {

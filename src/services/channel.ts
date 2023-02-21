@@ -7,7 +7,7 @@ import {
   Subscription,
 } from "src/services/api.models";
 
-type Message = {
+export type Message = {
   id: string;
   CreatedAt: string;
   ReceivedAt: string;
@@ -37,7 +37,7 @@ export interface join_channel_output {
   password_protected: boolean;
 }
 
-type ChannelInstanceState = "CONNECTED" | "DISCONNECTED";
+export type ChannelInstanceState = "CONNECTED" | "DISCONNECTED";
 
 export class Channel implements join_channel_output {
   password: string | null;
@@ -143,7 +143,7 @@ export class Channel implements join_channel_output {
     if (!this.isConnected()) throw "already disconnected";
     // try to join channel from api
     try {
-      await api.leaveChannel();
+      await api.leavehttpChannel();
     } catch (error) {
       throw "unable to leave channel: " + error;
     }

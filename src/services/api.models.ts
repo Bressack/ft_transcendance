@@ -84,7 +84,7 @@ export class User implements IUser {
     this.defeatsAsPTwo                  = defeatsAsPTwo;
   }
 }
-interface IUser {
+export interface IUser {
   username                      : string;
   email                         : string;
   TwoFA                         : boolean;
@@ -124,7 +124,7 @@ export class Follows implements IFollows {
     this.id                             = id;
   }
 }
-interface IFollows {
+export interface IFollows {
   follower                      : User;
   followerId                    : string;
   following                     : User;
@@ -156,7 +156,7 @@ export class Blocks implements IBlocks {
     this.id          = id;
   }
 }
-interface IBlocks {
+export interface IBlocks {
   blocker            : User;
   blockerId          : string;
   blocking           : User;
@@ -197,7 +197,7 @@ export class Message implements IMessage {
     this.channelId                      = channelId;
   }
 }
-interface IMessage {
+export interface IMessage {
   id                            : string;
   CreatedAt                     : string;
   ReceivedAt                    : string;
@@ -247,7 +247,7 @@ export class Channel implements IChannel {
     this.channel_type        = channel_type
   }
 }
-interface IChannel {
+export interface IChannel {
   id                  : string;
   name                : string;
   createdAt           : string;
@@ -290,7 +290,7 @@ export class Subscription implements ISubscription {
     this.stateActiveUntil    = stateActiveUntil;
   }
 }
-interface ISubscription {
+export interface ISubscription {
   channelId         : string;
   channel           : Channel;
   user              : User;
@@ -336,7 +336,7 @@ export class Game implements IGame {
     this.playerTwoName                  = playerTwoName;
   }
 }
-interface IGame {
+export interface IGame {
   id                            : string;
   finishedAt                    : string;
   startedAt                     : string;
@@ -384,7 +384,7 @@ export class Avatar implements IAvatar {
     this.linkLarge                      = linkLarge;
   }
 }
-interface IAvatar {
+export interface IAvatar {
   id                            : string;
   updatedAt                     : string;
   createdAt                     : string;

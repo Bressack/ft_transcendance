@@ -48,22 +48,26 @@ export default defineComponent({
     }
   },
   methods: {
+
     async lockChannel() {
-      this.$storeChat.channel.checked = false;
       await this.$storeChat.leave()
       this.$router.push({ path: `/` })
     },
+
     sendmessage() {
       this.$storeChat.sendMessage()
     },
+
     goProfilPage(user: string) {
       this.$router.push({
         path: `/profile/${user}`
       })
     },
+
     avatarstr(username: string) {
       return `/api/avatar/${username}/thumbnail`
     },
+
     async scrollBottom() {
       const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
       while (element?.children?.length != this.$storeChat.messages.length)
@@ -98,6 +102,7 @@ export default defineComponent({
   height: calc(100vh - (90px + 50px + 50px))
   padding: 1vh
   word-break: break-word
+  width: 100%
 
 .input
   height: 50px

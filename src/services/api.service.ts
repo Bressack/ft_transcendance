@@ -210,16 +210,16 @@ export default {
     }
   },
 
-  // replaced
-  // async leaveChannel()
-  // : Promise<void> {
-  //   try
-  //   {
-  //     await this.axiosInstance.patch(`/chat/leave`)
-  //   } catch(err: any) {
-  //     throw err
-  //   }
-  // },
+  // replaced <- alors non, on le garde lui
+  async leavehttpChannel()
+  : Promise<void> {
+    try
+    {
+      await this.axiosInstance.patch(`/chat/leave`)
+    } catch(err: any) {
+      throw err
+    }
+  },
 
   async sendMessage(channelId: string, password: string, text: string)
   : Promise<void> {
