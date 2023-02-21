@@ -103,7 +103,7 @@
   </div>
 
   <q-dialog v-model="gameOptions">
-    <GameOptions :opponent="opponent" :closeFunction="closeGameOptions" />
+    <ChooseGameOptions :opponent="opponent" :closeFunction="closeGameOptions" :inviteType="false"  />
   </q-dialog>
 
   <q-dialog persistent v-model="dialogpassword" @keydown.esc="dialogpassword = false">
@@ -124,7 +124,7 @@
 import { defineComponent, ref } from 'vue';
 import { IConvList, IConvItem, Scope } from '../../models/models';
 import { fake_IConvList } from '../../models/fakedatas'
-import GameOptions from '../../components/GameOptions.vue'
+import ChooseGameOptions from '../../components/ChooseGameOptions.vue'
 import { ISearchQuery } from 'src/services/api.models'
 import QInputMenu from 'src/components/QInputMenu.component.vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
@@ -154,7 +154,7 @@ interface IUserSelected {
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { GameOptions, QInputMenu, CreateChannel, UserCard },
+  components: { ChooseGameOptions, QInputMenu, CreateChannel, UserCard },
   props: {},
   setup() {
     const gameOptions = ref(false)

@@ -126,6 +126,7 @@ export default defineComponent({
 				this.context.fillStyle = "#242729";
 				this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 			}
+			else
 			{
 				this.context.globalAlpha = 1;
 			}

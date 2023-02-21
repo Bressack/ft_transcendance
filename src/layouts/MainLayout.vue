@@ -335,11 +335,11 @@ export default defineComponent({
 		this.$ws.listen("user-connected", this.handleUserConnectedEvent);
 		this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
 		this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
+    this.listenForGameInvite()
 	}).catch((err) => {console.log(err)})
     // fetch datas
   },
   mounted() {
-    this.listenForGameInvite()
     document.addEventListener('can-listen-for-game-invite', this.listenForGameInvite)
     document.addEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
     document.addEventListener('ready-for-matchmaking',this.listenForMatchmaking);

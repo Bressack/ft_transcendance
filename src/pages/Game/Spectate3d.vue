@@ -48,10 +48,3 @@ export default defineComponent({
 
 })
 </script>
-
-<style>
-#viewsidebtn
-{
-	z-index: 3;
-}
-</style>

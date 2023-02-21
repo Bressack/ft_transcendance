@@ -21,7 +21,7 @@
         </q-item>
       </q-item>
       <q-dialog v-model="gameOptions">
-        <GameOptions :opponent="name" :closeFunction="closeGameOptions" />
+        <ChooseGameOptions :opponent="name" :closeFunction="closeGameOptions" :inviteType="false"  />
       </q-dialog>
     </q-item>
   </div>
@@ -43,11 +43,12 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import GameOptions from '../../../components/GameOptions.vue'
+import ChooseGameOptions from '../../../components/ChooseGameOptions.vue'
+
 
 export default defineComponent({
   name: 'ProfileSummary',
-  components: { GameOptions },
+  components: { ChooseGameOptions },
   props: {
     name    : { type: String , default: '' },
     avatar  : { type: String , required: true },

@@ -12,6 +12,7 @@
     <q-item>
       <q-item-label class="bigger">Spectate games</q-item-label>
     </q-item>
+    
     <q-separator class="q-ma-md" color="white" />
     <q-item v-if="!games.length">
       <q-item-label class="label">No game is currently running</q-item-label>
@@ -21,7 +22,7 @@
     </div>
   </div>
   <q-dialog persistent v-model="MatchMaking">
-		<WaitForPairing />
+		<ChooseGameOptions :opponent="'test'" :inviteType="true"/>
 	</q-dialog>
 </q-page>
 </template>
@@ -29,11 +30,11 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import SpectateGames from '../../components/SpectateGames.vue';
-import WaitForPairing from '../../components/WaitForPairing.vue'
+import ChooseGameOptions from '../../components/ChooseGameOptions.vue'
 
 export default defineComponent({
 	name: 'Index',
-	components: { SpectateGames, WaitForPairing },
+	components: { SpectateGames, ChooseGameOptions },
 	props: {},
   setup () {
     const MatchMaking = ref(false)

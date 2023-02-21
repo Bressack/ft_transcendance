@@ -32,10 +32,12 @@
 			</div>
 		</q-item-section>
 		<q-item class="justify-center centers bigger q-mb-lg">
-			<q-btn class="label" v-if="opponent" :label="`Play against ${opponent}`" color="orange"
-				@click="sendInviteAndOpen" />
-			<!-- <q-btn class="label" v-else label="matchmaking" color="orange" @click="InviteNotif = true" /> -->
+			<q-btn class="label" v-if="opponent" :label="inviteType ? 'Start matchmaking' :`Play against ${opponent}`" color="orange"
+				@click="clickfct" />
 		</q-item>
+        <q-dialog persistent v-model="MatchMakingStart">
+		    <WaitForPairing sent :map=map :difficulty=opt />
+	    </q-dialog>
 		<q-dialog persistent v-model="InviteNotif">
 			<GameInvitation :opponent="opponent" sent :map=map :difficulty=opt />
 		</q-dialog>
@@ -45,13 +47,17 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
 import GameInvitation from './GameInvitation.vue'
+import WaitForPairing from './WaitForPairing.vue'
+
 
 export default defineComponent({
-	components: { GameInvitation },
+	components: { GameInvitation , WaitForPairing},
 	name: 'GameOptions',
 	setup() {
 		const InviteNotif = ref(false)
+        const MatchMakingStart = ref(false)
 		return {
+            MatchMakingStart,
 			map: ref('2D'),
 			maps: [
 				{ label: '2D', value: '2D' },
@@ -63,11 +69,12 @@ export default defineComponent({
 				{ label: 'INTERMEDIATE', value: 'INTERMEDIATE' },
 				{ label: 'HARD', value: 'HARD' },
 			],
-			InviteNotif
+			InviteNotif,
 		}
 	},
 	props: {
 		opponent: { type: String, default: null },
+        inviteType: {type: Boolean, default: false},
 		closeFunction: { type: Function, default: null },
 	},
 	methods: {
@@ -96,6 +103,7 @@ export default defineComponent({
 			})
 		},
 		async sendInviteAndOpen() {
+            console.log("here sendInviteAndOpen")
 			this.InviteNotif = true
 			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
 			try {
@@ -125,10 +133,26 @@ export default defineComponent({
 				this.closeFunction()
 			}
 		},
-		mounted(){
-			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
-		}
+        startMatch()
+        {
+            console.log("here startMatch")
+            this.MatchMakingStart = true;
+        },
+        clickfct()
+        {
+            if(this.inviteType)
+                this.startMatch()
+            else
+                this.sendInviteAndOpen()
+        }
+		
 	},
+    mounted(){
+			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
+	},
+	unmounted() {
+		document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
+	}
 })
 </script>
 

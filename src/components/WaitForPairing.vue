@@ -21,20 +21,32 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
 	name: 'WaitForPairing',
+  props: {
+    difficulty: { type: String, default: "EASY" },
+    map: { type: String, default: "2D" },
+  },
   methods: 
   {
     stopMatchmaking()
     {
+      console.log("stopMatchmaking")
       this.$ws.emit('stop-matchmaking', {})
       document.dispatchEvent(new CustomEvent('stop-for-matchmaking'));
+    },
+    startMatchmaking()
+    {
+      console.log("startMatchmaking")
+      document.dispatchEvent(new CustomEvent('ready-for-matchmaking'));
+      this.$ws.emit('matchmaking', {difficulty: this.difficulty, map: this.map})
     }
   },
   beforeMount () {
-    document.dispatchEvent(new CustomEvent('ready-for-matchmaking'));
-    this.$ws.emit('matchmaking', {difficulty: "EASY", map: "3D"})
+    // console.log("test1")
+    this.startMatchmaking()
     // this.$ws.listen('matchmaking-accepted', this.startgame);
   },
   unmounted () {
+    // console.log("test2")
     this.stopMatchmaking()
   }
 })
