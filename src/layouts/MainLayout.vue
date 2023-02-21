@@ -75,7 +75,7 @@
       <q-dialog v-model="settings">
         <settings />
       </q-dialog>
-      <q-dialog persistent v-model="InvitationFrom">
+      <q-dialog persistent v-model="invitationFrom">
         <GameInvitation :opponent="opponent" :map=maps :difficulty=difficulty />
       </q-dialog>
     </q-drawer>
@@ -104,14 +104,14 @@ export default defineComponent({
   },
   props: {},
   setup() {
-    let InvitationFrom = ref(false)
+    const invitationFrom = ref(false)
     const settings = ref(false)
     const notifyCenterLever = ref(false)
     return {
       notifyCenterLever,
       settings,
       openSettings() { settings.value = true },
-      InvitationFrom,
+      invitationFrom,
     }
   },
   data() {
@@ -186,14 +186,14 @@ export default defineComponent({
       this.$ws.removeListener('game-invite')
 
       this.$ws.socket.once('game-invite-canceled', (res: any) => {
-        that.InvitationFrom = false
+        that.invitationFrom = false
         document.removeEventListener('invite-response-accept', accept);
         document.removeEventListener('invite-response-decline', decline);
         that.$ws.listen('game-invite', that.onGameInvite)
       })
       const accept = function (res: any) {
         callback('ACCEPTED')
-        that.InvitationFrom = false
+        that.invitationFrom = false
         that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
           callback("OK")
           if (gameOptions.map == "3D")
@@ -209,14 +209,14 @@ export default defineComponent({
       }
       const decline = function (res: any) {
         callback('DECLINED')
-        that.InvitationFrom = false
+        that.invitationFrom = false
         document.removeEventListener('invite-response-accept', accept);
         document.removeEventListener('invite-response-decline', decline);
         that.$ws.removeListener('game-invite-canceled')
         that.$ws.listen('game-invite', that.onGameInvite)
 
       }
-      this.InvitationFrom = true
+      this.invitationFrom = true
       document.addEventListener('invite-response-accept', accept)
       document.addEventListener('invite-response-decline', decline)
     },
