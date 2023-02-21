@@ -6,7 +6,7 @@
       <q-toolbar class="toolbar">
         <q-btn flat @click="$storeMe.drawerStatus = !$storeMe.drawerStatus" round dense icon="menu" />
 
-        <q-item-label class="absolute-center relative-position label thetitle glow" clickable @click="goHome" style="">Transcendence</q-item-label>
+        <q-item class="absolute-center relative-position label thetitle glow" clickable @click="goHome" style="">Transcendence</q-item>
 
         <q-space/>
 

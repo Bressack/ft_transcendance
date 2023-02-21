@@ -15,15 +15,15 @@
             </q-item-section>
             <q-space />
             <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" @click="leaveChannel" />
-              <q-btn v-else color="red" label="delete" @click="leaveChannel" />
+              <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" class="interpolate-btn" @click="leaveChannel" />
+              <q-btn v-else color="red" label="delete" class="interpolate-btn" @click="leaveChannel" />
             </q-item-section>
             <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
-              <q-btn color="orange" label="settings" @click="settings = true" />
+              <q-btn color="orange" label="settings" class="interpolate-btn" @click="settings = true" />
             </q-item-section>
-            <q-item-section side>
+            <!-- <q-item-section side>
               <q-btn color="pink" label="debug" @click="debug" />
-            </q-item-section>
+            </q-item-section> -->
           </q-item>
 
           <q-item v-for="user in subs.values()" :key="user.username" class="q-bg">
