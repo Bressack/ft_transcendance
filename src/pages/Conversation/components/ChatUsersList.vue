@@ -203,9 +203,14 @@ export default defineComponent({
   margin-left: 27px
 
 .ONLINE-status
-  background-color: green
+  background-color: $onlineStatus-online
+  box-shadow: 0px 0px 5px $onlineStatus-online
 .OFFLINE-status
-  background-color: #707070
+  background-color: $onlineStatus-offline
+  box-shadow: 0px 0px 5px $onlineStatus-offline
+.INGAME-status
+  background-color: $onlineStatus-ingame
+  box-shadow: 0px 0px 5px $onlineStatus-ingame
 
 .pannel
   position: fixed
