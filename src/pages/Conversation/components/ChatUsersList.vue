@@ -1,9 +1,13 @@
 <template>
   <div class="top-panel row items-center">
-    <q-toolbar elevated>
+    <q-toolbar>
+
       <span class="titlename">{{ $storeChat.name }}</span>
 
       <q-space/>
+
+      <q-btn v-if="$storeChat.password_protected === true"
+        color="brown-9" class="q-mr-lg" @click="lockChannel" >Lock channel</q-btn>
 
       <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
         <q-menu class="menuusers">
@@ -108,6 +112,9 @@ export default defineComponent({
     }
   },
   methods: {
+    lockChannel() {
+      this.$emit('lockChannel')
+    },
     getUserSubscription(username: string) {
       return this.subs.get(username)
     },
@@ -146,7 +153,7 @@ export default defineComponent({
 .top-panel
   display: flexbox
   justify-content: space-between
-  height: 50px
+  // height: 50px
   padding: 10px 0px 10px 10px
   background-color: #303030
   width: 100%
@@ -155,6 +162,7 @@ export default defineComponent({
   font-size: 20px
   font-weight: bold
   color: white
+  height: 40px
 
 .menuusers-username
   width: 200px

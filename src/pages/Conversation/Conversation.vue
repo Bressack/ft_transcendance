@@ -1,11 +1,10 @@
-<template>
+<template> <!-- hide-scrollbar -->
   <q-page>
     <div class="q-flex">
 
-      <ChatUsersList />
+      <ChatUsersList @lockChannel="lockChannel" />
 
-      <div class="row">
-        <!-- hide-scrollbar -->
+      <div class="row chatListContainer">
         <div ref="chatList" class="list_messages">
           <Message v-for="message in $storeChat.messages" :key="message.id" :username=message?.username
             :avatar=avatarstr(message?.username) :content=message?.content :timestamp="new Date(message?.CreatedAt)" />
@@ -49,6 +48,11 @@ export default defineComponent({
     }
   },
   methods: {
+    async lockChannel() {
+      this.$storeChat.channel.checked = false;
+      await this.$storeChat.leave()
+      this.$router.push({ path: `/` })
+    },
     sendmessage() {
       this.$storeChat.sendMessage()
     },
@@ -88,6 +92,7 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+
 .list_messages
   overflow: auto
   height: calc(100vh - (90px + 50px + 50px))
