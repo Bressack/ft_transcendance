@@ -30,9 +30,12 @@ export default defineComponent({
     }
   },
   beforeMount () {
-    this.$ws.emit('matchmaking', {difficulty: "EASY", map: "3D"})
     document.dispatchEvent(new CustomEvent('ready-for-matchmaking'));
+    this.$ws.emit('matchmaking', {difficulty: "EASY", map: "3D"})
     // this.$ws.listen('matchmaking-accepted', this.startgame);
+  },
+  unmounted () {
+    this.stopMatchmaking()
   }
 })
 </script>

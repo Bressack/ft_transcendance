@@ -48,11 +48,11 @@ export const useMeStore = defineStore('me', {
     init(vue: any) {
       this.vue = vue
     },
-    async getUser(username: string) {
+    async getUser(username: string) : Promise<models.User> {
       return await api.user(username)
     },
 
-    async fetch() {
+    async fetch() : Promise<void> {
 
       const oldmaps = {
         followedBy: JSON.parse(JSON.stringify(this.followedBy)),
@@ -91,14 +91,12 @@ export const useMeStore = defineStore('me', {
               blocking   : ld.difference(oldmaps.blocking  , this.blocking  ),
             },
           }
-          console.log(diff);
           this.notify_diff(diff)
         }
       } catch (error) {}
-      console.log('THEEEEERE');
     },
 
-    notify_diff(diff: any) {
+    notify_diff(diff: any) : void {
 
       diff.in.followedBy.forEach((e: any) => {
         this.vue.$notifyCenter.send({ color: "cyan", avatar: `/api/avatar/${e}/thumbnail`, message: `${e} just follow you !` });
@@ -120,11 +118,11 @@ export const useMeStore = defineStore('me', {
         this.vue.$notifyCenter.send({ color: "cyan", avatar: `/api/avatar/${e}/thumbnail`, message: `${e} unblocked !` });
       });
     },
-    getChannelIDByUsername(username: string) {
+    getChannelIDByUsername(username: string) : string {
       const needle = this.channelSubscriptions.find((e: models.Subscription) => e.channel.channel_type === "ONE_TO_ONE" && e.channel.SubscribedUsers.some((u) => u.username == username))
       return needle?.channelId
     },
-    getPublicPrivateChannels() {
+    getPublicPrivateChannels() : Array<models.Channel> {
       return this.channelSubscriptions.filter((e: models.Subscription) => e.channel.channel_type !== "ONE_TO_ONE")
     },
   }

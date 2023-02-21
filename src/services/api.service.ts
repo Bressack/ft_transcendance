@@ -8,6 +8,8 @@ import {
 } from "./api.models";
 
 export default {
+  vue: {},
+
   axiosInstance: axios.create({
     baseURL: "/api",
     timeout: 3000,
@@ -208,16 +210,16 @@ export default {
     }
   },
 
-  // replaced
-  // async leaveChannel()
-  // : Promise<void> {
-  //   try
-  //   {
-  //     await this.axiosInstance.patch(`/chat/leave`)
-  //   } catch(err: any) {
-  //     throw err
-  //   }
-  // },
+  // replaced <- alors non, on le garde lui
+  async leavehttpChannel()
+  : Promise<void> {
+    try
+    {
+      await this.axiosInstance.patch(`/chat/leave`)
+    } catch(err: any) {
+      throw err
+    }
+  },
 
   async sendMessage(channelId: string, password: string, text: string)
   : Promise<void> {
@@ -232,6 +234,10 @@ export default {
       throw err
     }
   },
+
+  init(vue: any) {
+    this.vue = vue
+  }
 
 };
 

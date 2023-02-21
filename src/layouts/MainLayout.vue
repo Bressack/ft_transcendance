@@ -93,7 +93,7 @@ import ConversationList from '../pages/ConversationList/ConversationList.vue'
 import Settings from '../components/Settings.vue'
 import GameInvitation from '../components/GameInvitation.vue'
 import ncc, { NotifyOptions, NotifyCenter, Notifications } from 'src/services/notifyCenter'
-
+import ld from 'lodash'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -192,14 +192,10 @@ export default defineComponent({
         that.$ws.listen('game-invite', that.onGameInvite)
       })
       const accept = function (res: any) {
-        console.log(res)
         callback('ACCEPTED')
         that.InvitationFrom = false
         that.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
           callback("OK")
-          // console.log(`/game/${gameOptions.gameId}?map=${gameOptions.map}`)
-          console.log(gameOptions)
-
           if (gameOptions.map == "3D")
             that.$router.push(`/game3d/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
           else
@@ -212,7 +208,6 @@ export default defineComponent({
         that.$ws.listen('game-invite', that.onGameInvite) //might need to remove this until the game is finished
       }
       const decline = function (res: any) {
-        console.log(res)
         callback('DECLINED')
         that.InvitationFrom = false
         document.removeEventListener('invite-response-accept', accept);
@@ -221,7 +216,6 @@ export default defineComponent({
         that.$ws.listen('game-invite', that.onGameInvite)
 
       }
-      console.log(data)
       this.InvitationFrom = true
       document.addEventListener('invite-response-accept', accept)
       document.addEventListener('invite-response-decline', decline)
@@ -243,38 +237,35 @@ export default defineComponent({
     },
 
     handleUserConnectedEvent(users: Array<string>) {
-      console.log(`${users} connected`); // should update an array of connected users
+      const diff = ld.difference(users, this.$storeChat.connectedUsers)
+      if (diff.length > 2)
+        this.nc.send({
+          message: `${users.length} users connected !`,
+          color: 'cyan',
+        })
+      else
+        diff.forEach(e => {
+          if (e != this.$storeMe.username)
+            this.nc.send({
+              message: `${e} is connected !`,
+              color: 'cyan',
+              avatar: `/api/avatar/${e}/thumbnail`,
+            })
+        });
 
-      let nlogin = [] as Array<string>
-      users.forEach((user) => {
-        if (this.$storeChat.connectedUsers.includes(user) == false)
-          nlogin.push(user);
-      });
-
+      if (diff.includes(this.$storeMe.username))
+        this.nc.send({
+          message: `Welcome back ${this.$storeMe.username} ! Ready to lose ?`,
+          type: 'positive',
+          avatar: `/api/avatar/${this.$storeMe.username}/thumbnail`,
+        })
       users.forEach((user) => {
         if (this.$storeChat.connectedUsers.includes(user) == false)
           this.$storeChat.connectedUsers.push(user);
       });
 
-      nlogin.forEach(e => {
-        console.log(e, this.$storeMe.username);
-
-        if (e != this.$storeMe.username)
-          this.nc.send({
-            message: `${e} is connected !`,
-            color: 'cyan',
-            avatar: `/api/avatar/${e}/thumbnail`,
-          })
-        else
-          this.nc.send({
-            message: `Welcome back ${e} ! Ready to lose ?`,
-            type: 'positive',
-            avatar: `/api/avatar/${e}/thumbnail`,
-          })
-      });
     },
     handleUserDisconnectedEvent(username: string) {
-      console.log(`${username} disconnected`); // should update an array of connected users
       this.$storeChat.connectedUsers = this.$storeChat.connectedUsers.filter(
         (elem: any) => {
           return elem !== username;
@@ -301,37 +292,34 @@ export default defineComponent({
     },
     listenForMatchmaking()
 		{
-			// console.log("YssssssssssssssssssO")
-
-			// if (!this.listening_for_matchmaking)
-			// {
-				this.stopListeningForGameInvite();
-				// this.listening_for_matchmaking = true;
-				// console.log("YOOOOOOOOOO")
-				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
-					callback("OK")
-					console.log(gameOptions)
-					this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
-					this.StoplisteningForMatchmaking()
-					this.stopListeningForGameInvite()
-
-				})
-			// }
+		 // console.log("YssssssssssssssssssO")
+  	 // if (!this.listening_for_matchmaking)
+		 // {
+		  this.stopListeningForGameInvite();
+		  // this.listening_for_matchmaking = true;
+		  // console.log("YOOOOOOOOOO")
+		  this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
+			  callback("OK")
+			  console.log(gameOptions)
+			  this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+			  this.StoplisteningForMatchmaking()
+			  this.stopListeningForGameInvite()
+		  })
+		 // }
 		},
 		StoplisteningForMatchmaking()
-		{
-			// if (this.listening_for_matchmaking)
-			// {
-				// this.listenForGameInvite()
-				this.$ws.socket.removeListener('game-setup-and-init-go-go-power-ranger')
-				this.listening_for_matchmaking = false;
-			// }
-		}
-
-
+		  {
+			  // if (this.listening_for_matchmaking)
+			  // {
+				  this.listenForGameInvite()
+				  this.$ws.socket.removeListener('game-setup-and-init-go-go-power-ranger')
+				  // this.listening_for_matchmaking = false;
+			  // }
+		  }
   },
   async created() {
-    this.nc.init(this.$q)
+  this.nc.init(this.$q)
+//   this.$api.init(this)
 	this.$storeChat.$reset()
 	this.$storeMe.$reset()
 	this.$storeMe.init(this)
@@ -344,7 +332,6 @@ export default defineComponent({
 
 		// connect and init WebSockets
 
-		console.log('HEEEERE');
 		this.$ws.listen("user-connected", this.handleUserConnectedEvent);
 		this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
 		this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
@@ -360,7 +347,6 @@ export default defineComponent({
   },
 
   beforeUnMount() {
-    console.log("beforeunmount login page")
     this.$ws.removeListener('game-invite')
     document.removeEventListener('can-listen-for-game-invite', this.listenForGameInvite)
     document.removeEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)

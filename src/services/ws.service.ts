@@ -5,12 +5,14 @@ import { useChatStore } from "src/stores/chat";
 var that: any = null;
 
 class WsService {
-  socket: any;
+  public socket: any;
   storeChat: any;
   constructor() {
     this.storeChat = useChatStore();
   }
-
+  get connected(): boolean {
+    return this.socket && this.socket.connected;
+  }
   getToken() {
     return Cookies.get("WsAuth");
   }

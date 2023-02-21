@@ -6,6 +6,7 @@ export type NotifyOptions = {
   color? : string | null
   message : string | null
   avatar? : string | null
+  timeout?: number
 }
 
 interface INotifications {
@@ -52,9 +53,9 @@ export class NotifyCenter {
   }
 
   send(options: NotifyOptions) {
+    options.timeout = 1000
     this.quasar.notify(options)
     this.push(options)
-    console.log(this.notifications);
   }
 
   init(quasar: any) {

@@ -37,7 +37,7 @@
       </q-toggle>
     </q-item>
     <q-item>
-      <q-btn class="absolute-center logout" @click="confirmLogout = true" color="red" label="logout" />
+      <q-btn class="absolute-center logout" @click="confirmLogout = true" color="red" label="logout" icon="logout"/>
     </q-item>
     <q-dialog persistent v-model=confirmLogout>
       <Confirm what="logout" :accept=logout />

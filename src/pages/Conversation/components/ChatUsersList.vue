@@ -1,12 +1,18 @@
 <template>
   <div class="top-panel row items-center">
-    <span class="titlename">{{ $storeChat.name }}</span>
+    <q-toolbar>
 
-    <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
-      <q-menu class="menuusers">
-        <q-list class="userlist">
+      <span class="titlename">{{ $storeChat.name }}</span>
 
-          <q-item class="q-bg q-flex">
+      <q-space/>
+
+      <q-btn v-if="$storeChat.password_protected === true"
+        color="brown-9" class="q-mr-lg" @click="lockChannel" >Lock channel</q-btn>
+
+      <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
+        <q-menu class="menuusers">
+
+          <q-item class="q-bg q-flex pannel">
             <q-item-section side class="card">
               <q-item-label class="menuusers-username">User count:</q-item-label>
             </q-item-section>
@@ -26,29 +32,32 @@
             </q-item-section>
           </q-item>
 
-          <q-item v-for="user in subs.values()" :key="user.username" class="q-bg">
-            <q-item-section class="avatar">
-              <img :src="avatarstr(user?.username)" class="image" />
-              <div :class="getLoginStatus(user?.username)" class="loginstatus" />
-            </q-item-section>
-            <q-item-section side class="">
-              <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
-            </q-item-section>
-            <q-item-section side class="q-pa-sm">
-              <q-img></q-img>
-            </q-item-section>
-            <q-item-section side class="card role">
-              <q-item-label>Role</q-item-label>
-              <q-item-label>{{ user.role }}</q-item-label>
-            </q-item-section>
-            <q-item-section>
-              <BanMute :subscription="getUserSubscription(user.username)" />
-            </q-item-section>
-          </q-item>
+          <q-list class="userlist">
 
-        </q-list>
-      </q-menu>
-    </q-btn>
+            <q-item v-for="user in subs.values()" :key="user.username" class="q-bg">
+              <q-item-section class="avatar">
+                <img :src="avatarstr(user?.username)" class="image" />
+                <div :class="getLoginStatus(user?.username)" class="loginstatus" />
+              </q-item-section>
+              <q-item-section side class="">
+                <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
+              </q-item-section>
+              <q-item-section side class="q-pa-sm">
+                <q-img></q-img>
+              </q-item-section>
+              <q-item-section side class="card role">
+                <q-item-label>Role</q-item-label>
+                <q-item-label>{{ user.role }}</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <BanMute :subscription="getUserSubscription(user.username) as Subscription" />
+              </q-item-section>
+            </q-item>
+
+          </q-list>
+        </q-menu>
+      </q-btn>
+    </q-toolbar>
     <q-dialog persistent v-model="settings">
       <CreateChannel settings :oldname=$storeChat.name :closeFn=closeSettings />
     </q-dialog>
@@ -64,8 +73,21 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
 import BanMute from './BanMute.vue'
-import CreateChannel from '../../../components/CreateChannel.vue'
-import Confirm from '../../../components/Confirm.vue'
+import Confirm from 'src/components/Confirm.vue'
+import CreateChannel from 'src/components/CreateChannel.vue'
+import {
+  User,
+  Follows,
+  Blocks,
+  Message,
+  Channel,
+  Subscription,
+  Game,
+  Avatar,
+  eSubscriptionState,
+  eRole,
+  eChannelType,
+} from "src/services/api.models";
 
 export default defineComponent({
   name: 'ChatUsersList',
@@ -87,12 +109,15 @@ export default defineComponent({
   data() {
     return {
       minidrawerStatus: false as boolean,
-      subs: computed(() => this.$storeChat.SubscribedUsers),
+      subs: computed(() => this.$storeChat.SubscribedUsers as Map<string, Subscription> ),
     }
   },
   methods: {
-    getUserSubscription(username: string) {
-      return this.subs.get(username)
+    lockChannel() {
+      this.$emit('lockChannel')
+    },
+    getUserSubscription(username: string): Subscription {
+      return this.subs.get(username) as Subscription
     },
     getLoginStatus(username: string) {
       if (this.$storeChat.connectedUsers.includes(username))
@@ -129,7 +154,6 @@ export default defineComponent({
 .top-panel
   display: flexbox
   justify-content: space-between
-  height: 50px
   padding: 10px 0px 10px 10px
   background-color: #303030
   width: 100%
@@ -138,6 +162,7 @@ export default defineComponent({
   font-size: 20px
   font-weight: bold
   color: white
+  height: 40px
 
 .menuusers-username
   width: 200px
@@ -163,6 +188,7 @@ export default defineComponent({
 
 .userlist
   height: 100%
+  margin-top: 50px
 
 .role
   min-width: 80px
@@ -182,7 +208,18 @@ export default defineComponent({
   margin-left: 27px
 
 .ONLINE-status
-  background-color: green
+  background-color: $onlineStatus-online
+  box-shadow: 0px 0px 5px $onlineStatus-online
 .OFFLINE-status
-  background-color: #707070
+  background-color: $onlineStatus-offline
+  box-shadow: 0px 0px 5px $onlineStatus-offline
+.INGAME-status
+  background-color: $onlineStatus-ingame
+  box-shadow: 0px 0px 5px $onlineStatus-ingame
+
+.pannel
+  position: fixed
+  width: 631px
+  z-index: 1
+
 </style>

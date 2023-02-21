@@ -1,16 +1,27 @@
 import { defineStore } from "pinia";
-import { Channel } from "src/services/channel";
 import WsService from "src/services/ws.service";
 import notifyCenter, { NotifyOptions } from "src/services/notifyCenter";
 
-import { Subscription } from "src/services/api.models";
+import {
+  eSubscriptionState,
+  eRole,
+  eChannelType,
+  Subscription,
+} from "src/services/api.models";
+
+import {
+  Message,
+  Channel,
+} from "src/services/channel";
+
 import { IWSMessages, IWSError, IWSInfos } from "src/models/messages.ws";
 
 type notifyMode = "negative" | "warning" | "info" | "positive";
-let scrollBack = null;
+let scrollBack: Function | null = null;
 
 export const useChatStore = defineStore("chat", {
   state: () => ({
+    // scrollBack: null as Function | null,
     vue: null as any,
     socket: null as WsService | null,
     connectedUsers: [] as Array<string>,
@@ -23,47 +34,53 @@ export const useChatStore = defineStore("chat", {
     channel(state: any) {
       return state.activeChannel;
     },
-    channelId(state: any) {
+    channelId(state: any) : string {
       return state.activeChannel?.channelId;
     },
-    name(state: any) {
+    name(state: any) : string {
       return state.activeChannel?.name;
     },
-    channel_type(state: any) {
+    channel_type(state: any) : eChannelType {
       return state.activeChannel?.channel_type;
     },
-    state(state: any) {
+    state(state: any) : eSubscriptionState {
       return state.activeChannel?.state;
     },
-    stateActiveUntil(state: any) {
+    stateActiveUntil(state: any) : Date | null {
       return state.activeChannel?.stateActiveUntil;
     },
-    messages(state: any) {
+    messages(state: any) : Message[] {
       return state.activeChannel?.messages;
     },
-    role(state: any) {
+    role(state: any) : eRole {
       return state.activeChannel?.role;
     },
-    SubscribedUsers(state: any) {
+    SubscribedUsers(state: any) : Map<string, Subscription> {
       return state.activeChannel?.SubscribedUsers;
     },
-    username(state: any) {
+    username(state: any) : string {
       return state.activeChannel?.username;
     },
-    password_protected(state: any) {
+    password_protected(state: any) : boolean {
       return state.activeChannel?.password_protected;
+    },
+    checked(state: any) : boolean {
+      console.log(state.activeChannel?.checked);
+
+      return state.activeChannel?.checked;
     },
   },
 
   actions: {
+
     __notifyClient(msg: string, mode: notifyMode): void {
       notifyCenter.send({ type: mode, message: msg } as NotifyOptions);
     },
 
-    async __getChannelInstance(channelId: string) {
+    __getChannelInstance(channelId: string) {
       var channelInstance = null;
       try {
-        channelInstance = await this.channels.get(channelId);
+        channelInstance = this.channels.get(channelId);
         if (!channelInstance) throw "invalid channel id";
       } catch (err: any) {
         throw "invalid channel id";
@@ -71,30 +88,23 @@ export const useChatStore = defineStore("chat", {
       return channelInstance;
     },
 
-    async join(channelId: string, onFinishCallback: Function) {
-      console.log(`[ chat.ts ] join => channelId: ${channelId}`);
-
+    async join(channelId: string) {
       //   if (this.socket === null) { throw new Error('You are not connected to WS') }
 
-      this.scrollBack = onFinishCallback; // oui c'est saaaale, mais ça marche
       // check if channel is already known by the map otherwise create a new instance
       var channelInstance = null;
       try {
-        channelInstance = await this.__getChannelInstance(channelId);
+        channelInstance = this.__getChannelInstance(channelId);
         // channel found in map : reusing it
       } catch {
         // channel not found in map : create a new instance
         channelInstance = new Channel(channelId);
         this.channels.set(channelId, channelInstance);
       }
-      console.log(
-        `[ chat.ts ] join => channelInstance: ${channelInstance?.channelId}`
-      );
 
       // join the new channel
       try {
         await channelInstance.join();
-        console.log("HERE");
 
         // close active channel if connected
         if (this.activeChannel?.isConnected()) this.activeChannel?.close();
@@ -110,10 +120,11 @@ export const useChatStore = defineStore("chat", {
         this.messages.sort((a: IWSMessages, b: IWSMessages) => {
           return a.CreatedAt > b.CreatedAt ? 1 : -1;
         });
-        this.scrollBack();
-      } catch (err: any) {
+        // this?.scrollBack();
+      }
+      catch (err: any) {
         this.__notifyClient(String(err), "negative");
-        return;
+        throw err
       }
     },
 
@@ -138,38 +149,52 @@ export const useChatStore = defineStore("chat", {
     },
 
     async sendMessage() {
-      console.log("[ chat.ts ] sendMessage");
+      if (this.text?.length == 0)
+        return
       try {
         if (this.socket === null) {
           throw new Error("You are not connected to WS");
         }
-        console.log("[ chat.ts ] sendMessage", this.text);
 
         await this.activeChannel?.sendMessage(this.text);
-        console.log("[ chat.ts ] sendMessage");
       } catch (err: any) {
-        console.log("[ chat.ts ] sendMessage");
         this.__notifyClient(String(err), "negative");
         return;
       }
-      console.log("[ chat.ts ] sendMessage");
       this.text = "";
     },
 
     ///////////////////////////////////////////////
+
+    async initNewChannel(channelId: string, password: string) {
+      var channelInstance = null;
+      try {
+        channelInstance = this.__getChannelInstance(channelId);
+        // channel found in map : reusing it
+      } catch {
+        // channel not found in map : create a new instance
+        channelInstance = new Channel(channelId);
+        channelInstance.password = password;
+        this.channels.set(channelId, channelInstance);
+      }
+      channelInstance.password = password;
+      this.channels.set(channelId, channelInstance);
+    },
+
+    setScrollBack(scrollBack: Function) {
+      this.scrollBack = scrollBack;
+    },
 
     init(socket: WsService, vue: any) {
       this.vue = vue;
       this.socket = socket;
 
       this.socket.listen("fetch_me", () => {
-        console.log("fetch_me requested");
         this.vue.$storeMe.fetch();
       });
 
       this.socket.listen("altered_subscription", (payload: Subscription) => {
         this.SubscribedUsers.set(payload.username, payload);
-        console.log("altered_subscription:", payload);
         if (this.vue.$storeMe.username == payload.username)
           this.vue.$storeMe.fetch();
       });

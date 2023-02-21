@@ -97,15 +97,15 @@ import { defineComponent } from 'vue';
 
 const _preSetUsers = [
   {
-    username: 'Bianca',
+    username: 'Lilou',
     password: 'null',
   },
   {
-    username: 'Yassine',
+    username: 'Arto',
     password: 'null',
   },
   {
-    username: 'Gabriella',
+    username: 'Leontine',
     password: 'null',
   },
 ]
@@ -124,7 +124,7 @@ export default defineComponent({
     }
   },
   methods: {
-    quickconnect(user: object) {
+    quickconnect(user: any) {
       this.username = user.username
       this.password = user.password
       this.onSubmitSignIn()
@@ -143,7 +143,6 @@ export default defineComponent({
 
       this.$api.login(payload)
       .then( (/* data */) => {
-		console.log('success')
         this.$router.push('/')
       })
       .catch((error) =>  {

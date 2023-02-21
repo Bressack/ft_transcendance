@@ -1,11 +1,11 @@
-<template>
+<template> <!-- hide-scrollbar -->
   <q-page>
     <div class="q-flex">
 
-      <ChatUsersList/>
+      <ChatUsersList @lockChannel="lockChannel" />
 
-      <div class="row">
-        <div ref="chatList" class="list_messages hide-scrollbar">
+      <div class="row chatListContainer">
+        <div ref="chatList" class="list_messages">
           <Message v-for="message in $storeChat.messages" :key="message.id" :username=message?.username
             :avatar=avatarstr(message?.username) :content=message?.content :timestamp="new Date(message?.CreatedAt)" />
         </div>
@@ -24,36 +24,50 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
-import CreateChannel from 'src/components/CreateChannel.vue'
+import { defineComponent, computed, ref } from 'vue';
+// import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
 import ChatUsersList from './components/ChatUsersList.vue'
 
 export default defineComponent({
   name: 'Conversation',
-  components: { Message, CreateChannel, ChatUsersList },
+  components: { Message, ChatUsersList },
   props: {
+  },
+  beforeCreate() {
+    this.$storeChat.setScrollBack(async () => {
+      const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
+      while (element?.children?.length != this.$storeChat.messages.length)
+        await new Promise(r => setTimeout(r, 10));
+      element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
+    })
   },
   data() {
     return {
       subs: computed(() => this.$storeChat.SubscribedUsers),
-      notif1: false as boolean,
-      notif2: false as boolean,
-      dialog: false as boolean
     }
   },
   methods: {
+
+    async lockChannel() {
+      await this.$storeChat.leave()
+      this.$router.push({ path: `/` })
+    },
+
     sendmessage() {
       this.$storeChat.sendMessage()
     },
+
     goProfilPage(user: string) {
       this.$router.push({
         path: `/profile/${user}`
       })
     },
+
     avatarstr(username: string) {
       return `/api/avatar/${username}/thumbnail`
     },
+
     async scrollBottom() {
       const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
       while (element?.children?.length != this.$storeChat.messages.length)
@@ -66,13 +80,14 @@ export default defineComponent({
       if (this.$storeMe.drawerStatus)
         return "300px"
       return "0px"
-    }
+    },
   },
-  async beforeMount() {
-    await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
+  async mounted() {
+    this.scrollBottom()
   },
   async beforeUpdate() {
-    await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0], this.scrollBottom)
+    await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0])
+    this.scrollBottom()
   },
   async beforeUnmount() {
     await this.$storeChat.leave()
@@ -81,11 +96,13 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
+
 .list_messages
   overflow: auto
   height: calc(100vh - (90px + 50px + 50px))
   padding: 1vh
   word-break: break-word
+  width: 100%
 
 .input
   height: 50px

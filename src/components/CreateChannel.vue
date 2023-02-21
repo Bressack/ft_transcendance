@@ -176,17 +176,17 @@ export default defineComponent({
       this.$api.createChannel(payload)
       .then(() => {
         this.$notifyCenter.send({
-            type: 'positive',
-            message: 'Channel successfully created'
-          })
-          this.closeFn()
+          type: 'positive',
+          message: 'Channel successfully created'
+        })
+        this.closeFn()
       })
       .catch((error) => {
         for (let i = 0; i < error.response.data.message.length; i++) {
           this.$notifyCenter.send({
-              type: 'negative',
-              message: error.response.data.message[i]
-            })
+            type: 'negative',
+            message: error.response.data.message[i]
+          })
         }
       })
     },

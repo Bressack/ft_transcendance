@@ -7,6 +7,7 @@ import {
   NavigationGuardNext,
   RouteLocationNormalized,
 } from "vue-router";
+import ncc, { NotifyOptions, NotifyCenter, Notifications } from 'src/services/notifyCenter'
 
 export default defineComponent({
   name: 'App',
@@ -62,6 +63,8 @@ export default defineComponent({
     },
 
     initSystem() {
+		//   this.nc.init(this.$q)
+			this.$api.init(this)
       this.$router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
         if (to.meta.requiresAuth && this.is_fully_logged())
           return next();
