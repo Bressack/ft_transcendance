@@ -21,7 +21,7 @@
             </q-item-section>
             <q-space />
             <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$storeChat.role !== 'OWNER' && $storeChat.role.channelType !== 'PUBLIC'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
+              <q-btn v-if="$storeChat.role !== 'OWNER' && $storeChat.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
               <q-btn v-else-if="$storeChat.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
             </q-item-section>
             <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
@@ -128,7 +128,7 @@ export default defineComponent({
       return `/api/avatar/${username}/thumbnail`
     },
     debug () {
-      console.log('ICI', this.$storeChat)
+      console.log('ICI', this.$storeChat.channelId)
     },
     leaveChannel() {
       console.log(this.$storeChat.channelId)

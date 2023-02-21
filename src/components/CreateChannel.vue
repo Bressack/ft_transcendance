@@ -145,7 +145,7 @@ export default defineComponent({
       // Si j'ai un mdp, je veux rien changer -> false et j'envoie password = ''
       // Si j'ai pas de mdp, je veux en set un -> true et j'envoie password = '********'
       // Si j'ai pas de mdp, et que je veux rien changer -> false et j'envoie password = ''
-      this.$api.channelSettings(this.$storeChat.currentChannel, payload)
+      this.$api.channelSettings(this.$storeChat.channelId, payload)
       .then(() => {
         this.$notifyCenter.send({
             type: 'positive',

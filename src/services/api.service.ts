@@ -210,7 +210,6 @@ export default {
     }
   },
 
-  // replaced <- alors non, on le garde lui
   async leavehttpChannel()
   : Promise<void> {
     try

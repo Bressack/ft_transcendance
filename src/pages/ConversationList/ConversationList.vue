@@ -111,10 +111,10 @@
       <div class="q-ma-lg q-pt-lg">
         <q-item class="text-h6">Enter Password</q-item>
         <q-separator/>
-        <q-input v-model="password" dark  color="orange" label-color="white"/>
+        <q-input v-model="password" dark autofocus color="orange" label-color="white"/>
         <q-separator/>
-        <q-btn class="q-ma-lg" label="Submit" color="green-8" @click="joinprotectedchannel"/>
         <q-btn class="q-ma-lg" label="Cancel" color="red-8" v-close-popup />
+        <q-btn class="q-ma-lg" label="Submit" color="green-8" @click="joinprotectedchannel"/>
       </div>
     </div>
   </q-dialog>
@@ -199,7 +199,7 @@ export default defineComponent({
       searchInput: '',
       searchResult: {} as IResult,
       opponent: '' as string,
-      socialtoggle: '1' as string
+      socialtoggle: '1' as string,
     }
   },
   methods: {
