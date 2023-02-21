@@ -5,11 +5,12 @@
     <q-header elevated>
       <q-toolbar class="toolbar">
         <q-btn flat @click="$storeMe.drawerStatus = !$storeMe.drawerStatus" round dense icon="menu" />
-        <q-item class="label center thetitle glow" clickable @click="goHome" style="">Transcendence</q-item>
 
-        <q-space />
+        <q-item-label class="absolute-center relative-position label thetitle glow" clickable @click="goHome" style="">Transcendence</q-item-label>
 
-        <q-btn flat @click="notifyCenterLever = !notifyCenterLever" round dense icon="notifications" class="justify-right">
+        <q-space/>
+
+        <q-btn flat @click="notifyCenterLever = !notifyCenterLever" round dense icon="notifications">
           <div class="notif-count justify-center items-center circle" v-if="nc.notifications.size > 0" />
           <div class="notif-count justify-center items-center" v-if="nc.notifications.size > 0">
             {{ nc.notifications.size < 99 ? nc.notifications.size : '99+' }}
@@ -49,9 +50,7 @@
           </q-menu>
         </q-btn>
 
-        <q-item class="usercard-settings" clickable @click="goSettingsNotif">
-          <q-icon name="settings" size="md" />
-        </q-item>
+        <q-btn class="r-mx-md" flat @click="goSettingsNotif" round dense icon="settings" />
       </q-toolbar>
     </q-header>
 
@@ -388,6 +387,8 @@ body
 </style>
 
 <style lang="sass" scoped>
+@use "../css/interpolate" as r
+
 .toolbar
   height: 90px
   background-color: $bg-secondary !important
@@ -473,10 +474,8 @@ body
   margin-top: 60px
 .thetitle
   font-family: 'Press Start 2P'
-  font-size: 1.5rem
   font-weight: bold
-  left: 50%
-  transform: translateX(-60%)
+  @include r.interpolate(font-size, 320px, 2560px, 10px, 40px)
 
 .glow
   text-shadow: 1px 1px 2px white
