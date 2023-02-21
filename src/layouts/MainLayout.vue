@@ -293,32 +293,30 @@ export default defineComponent({
     },
     listenForMatchmaking()
 		{
-
-			// if (!this.listening_for_matchmaking)
-			// {
-				this.stopListeningForGameInvite();
-				// this.listening_for_matchmaking = true;
-				this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
-					callback("OK")
-					console.log(gameOptions)
-					this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
-					this.StoplisteningForMatchmaking()
-					this.stopListeningForGameInvite()
-
-				})
-			// }
+		 // console.log("YssssssssssssssssssO")
+  	 // if (!this.listening_for_matchmaking)
+		 // {
+		  this.stopListeningForGameInvite();
+		  // this.listening_for_matchmaking = true;
+		  // console.log("YOOOOOOOOOO")
+		  this.$ws.socket.once('game-setup-and-init-go-go-power-ranger', (gameOptions: any, callback: Function) => {
+			  callback("OK")
+			  console.log(gameOptions)
+			  this.$router.push(`/game${(gameOptions.map == "3D") ? '3d' : ''}/${gameOptions.gameId}?playerOneName=${gameOptions.playerOneName}&playerTwoName=${gameOptions.playerTwoName}`)
+			  this.StoplisteningForMatchmaking()
+			  this.stopListeningForGameInvite()
+		  })
+		 // }
 		},
 		StoplisteningForMatchmaking()
-		{
-			// if (this.listening_for_matchmaking)
-			// {
-				// this.listenForGameInvite()
-				this.$ws.socket.removeListener('game-setup-and-init-go-go-power-ranger')
-				this.listening_for_matchmaking = false;
-			// }
-		}
-
-
+		  {
+			  // if (this.listening_for_matchmaking)
+			  // {
+				  this.listenForGameInvite()
+				  this.$ws.socket.removeListener('game-setup-and-init-go-go-power-ranger')
+				  // this.listening_for_matchmaking = false;
+			  // }
+		  }
   },
   async created() {
   this.nc.init(this.$q)
