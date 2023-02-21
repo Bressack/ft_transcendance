@@ -102,8 +102,9 @@ export default defineComponent({
 
 
       this.$api.axiosInstance.interceptors.response.use((resp) => {
-        // if (resp.status === 205)
-        //   this.$storeMe.fetch()
+        if (resp.status === 205)
+          this.$storeMe.fetch()
+          // this.$storeChat.fetch()
         return resp
       }, undefined)
     },

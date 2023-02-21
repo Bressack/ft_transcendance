@@ -15,15 +15,15 @@
             </q-item-section>
             <q-space />
             <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" class="interpolate-btn" @click="leaveChannel" />
-              <q-btn v-else color="red" label="delete" class="interpolate-btn" @click="leaveChannel" />
+              <q-btn v-if="$storeChat.role !== 'OWNER' && $storeChat.role.channelType !== 'PUBLIC'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
+              <q-btn v-else-if="$storeChat.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
             </q-item-section>
             <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
               <q-btn color="orange" label="settings" class="interpolate-btn" @click="settings = true" />
             </q-item-section>
-            <!-- <q-item-section side>
+            <q-item-section side>
               <q-btn color="pink" label="debug" @click="debug" />
-            </q-item-section> -->
+            </q-item-section>
           </q-item>
 
           <q-item v-for="user in subs.values()" :key="user.username" class="q-bg">
@@ -52,6 +52,12 @@
     <q-dialog persistent v-model="settings">
       <CreateChannel settings :oldname=$storeChat.name :closeFn=closeSettings />
     </q-dialog>
+    <q-dialog persistent v-model=confirmDelete>
+      <Confirm what="delete the channel" :accept=leaveChannel />
+    </q-dialog>
+    <q-dialog persistent v-model=confirmLeave>
+      <Confirm what="leave the channel" :accept=leaveChannel />
+    </q-dialog>
   </div>
 </template>
 
@@ -59,22 +65,22 @@
 import { defineComponent, ref, computed } from 'vue';
 import BanMute from './BanMute.vue'
 import CreateChannel from '../../../components/CreateChannel.vue'
+import Confirm from '../../../components/Confirm.vue'
 
 export default defineComponent({
   name: 'ChatUsersList',
-  components: { BanMute, CreateChannel },
+  components: { BanMute, CreateChannel, Confirm },
   props: {},
   setup () {
-    const confirm = ref(false)
+    const confirmDelete = ref(false)
+    const confirmLeave = ref(false)
     const settings = ref(false)
     return {
-      closeConfirm() {
-        confirm.value = false
-      },
       closeSettings() {
         settings.value = false
       },
-      confirm,
+      confirmDelete,
+      confirmLeave,
       settings
     }
   },
@@ -100,7 +106,7 @@ export default defineComponent({
       console.log('ICI', this.$storeChat)
     },
     leaveChannel() {
-      this.confirm = true
+      console.log(this.$storeChat.channelId)
       this.$api.leaveChannel(this.$storeChat.channelId)
       .then(() => {
         this.$storeChat.leave()
