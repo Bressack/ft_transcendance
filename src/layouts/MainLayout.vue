@@ -322,7 +322,7 @@ export default defineComponent({
   },
   async created() {
   this.nc.init(this.$q)
-  this.$api.init(this)
+//   this.$api.init(this)
 	this.$storeChat.$reset()
 	this.$storeMe.$reset()
 	this.$storeMe.init(this)
