@@ -53,11 +53,13 @@ export class Channel implements join_channel_output {
   SubscribedUsers: Map<string, Subscription>;
   username: string;
   password_protected: boolean;
+  checked: boolean;
 
   constructor(channelId: string) {
     // local variables
     this.password = null;
     this.instanceState = "DISCONNECTED";
+    this.checked = false;
 
     // from server
     this.channelId = channelId;
@@ -126,15 +128,13 @@ export class Channel implements join_channel_output {
     // try to join channel from api
     try {
       channelDTO = await api.joinChannel(this.channelId, this.password as string);
-      console.log('[ channel.ts ] join success');
-
     } catch (error) {
-      console.log('[ channel.ts ] join fail');
       throw "Unable to join the channel: " + error;
     }
     // assign datas to instance
     this.assign(channelDTO.data);
     this.instanceState = "CONNECTED";
+    this.checked = true
   }
 
   /////////////////////////////////////////////

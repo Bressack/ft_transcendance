@@ -1,54 +1,77 @@
 <template>
   <div class="top-panel row items-center">
-    <span class="titlename">{{ $storeChat.name }}</span>
+    <q-toolbar elevated>
+      <span class="titlename">{{ $storeChat.name }}</span>
 
-    <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
-      <q-menu class="menuusers">
-        <q-list class="userlist">
+      <q-space/>
 
-          <q-item class="q-bg q-flex">
-            <q-item-section side class="card">
-              <q-item-label class="menuusers-username">User count:</q-item-label>
-            </q-item-section>
-            <q-item-section side class="card">
-              <q-item-label>{{ subs.size }}</q-item-label>
-            </q-item-section>
-            <q-space />
-            <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" @click="leaveChannel" />
-              <q-btn v-else color="red" label="delete" @click="leaveChannel" />
-            </q-item-section>
-            <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
-              <q-btn color="orange" label="settings" @click="settings = true" />
-            </q-item-section>
-            <q-item-section side>
-              <q-btn color="pink" label="debug" @click="debug" />
-            </q-item-section>
-          </q-item>
+      <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
+        <q-menu class="menuusers">
+          <q-list class="userlist">
 
-          <q-item v-for="user in subs.values()" :key="user.username" class="q-bg">
-            <q-item-section class="avatar">
-              <img :src="avatarstr(user?.username)" class="image" />
-              <div :class="getLoginStatus(user?.username)" class="loginstatus" />
-            </q-item-section>
-            <q-item-section side class="">
-              <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
-            </q-item-section>
-            <q-item-section side class="q-pa-sm">
-              <q-img></q-img>
-            </q-item-section>
-            <q-item-section side class="card role">
-              <q-item-label>Role</q-item-label>
-              <q-item-label>{{ user.role }}</q-item-label>
-            </q-item-section>
-            <q-item-section>
-              <BanMute :subscription="getUserSubscription(user.username)" />
-            </q-item-section>
-          </q-item>
+            <q-item class="q-bg q-flex">
+              <q-item-section side class="card">
+                <q-item-label class="menuusers-username">User count:</q-item-label>
+              </q-item-section>
+              <q-item-section side class="card">
+                <q-item-label>{{ subs.size }}</q-item-label>
+              </q-item-section>
+              <q-space />
+              <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
+                <q-btn v-if="$storeChat.role !== 'OWNER'" color="red" label="quit" @click="leaveChannel" />
+                <q-btn v-else color="red" label="delete" @click="leaveChannel" />
+              </q-item-section>
+              <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
+                <q-btn color="orange" label="settings" @click="settings = true" />
+              </q-item-section>
+              <q-item-section side>
+                <q-btn color="pink" label="debug" @click="debug" />
+              </q-item-section>
+            </q-item>
 
-        </q-list>
-      </q-menu>
-    </q-btn>
+            <!-- <q-item class="q-bg q-flex">
+              <q-item-section side class="card">
+                <q-item-label class="menuusers-username">User count:</q-item-label>
+              </q-item-section>
+              <q-item-section side class="card">
+                <q-item-label>{{ subs.size }}</q-item-label>
+              </q-item-section>
+              <q-space />
+              <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role !== 'OWNER'" side>
+                <q-btn color="red" label="quit" @click="confirm = true" />
+              </q-item-section>
+              <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
+                <q-btn color="orange" label="settings" @click="settings = true" />
+              </q-item-section>
+              <q-item-section side>
+                <q-btn color="pink" label="debug" @click="debug" />
+              </q-item-section>
+            </q-item> -->
+
+            <q-item v-for="user in subs.values()" :key="user.username" class="q-bg">
+              <q-item-section class="avatar">
+                <img :src="avatarstr(user?.username)" class="image" />
+                <div :class="getLoginStatus(user?.username)" class="loginstatus" />
+              </q-item-section>
+              <q-item-section side class="">
+                <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
+              </q-item-section>
+              <q-item-section side class="q-pa-sm">
+                <q-img></q-img>
+              </q-item-section>
+              <q-item-section side class="card role">
+                <q-item-label>Role</q-item-label>
+                <q-item-label>{{ user.role }}</q-item-label>
+              </q-item-section>
+              <q-item-section>
+                <BanMute :subscription="getUserSubscription(user.username)" />
+              </q-item-section>
+            </q-item>
+
+          </q-list>
+        </q-menu>
+      </q-btn>
+    </q-toolbar>
     <q-dialog persistent v-model="settings">
       <CreateChannel settings :oldname=$storeChat.name :closeFn=closeSettings />
     </q-dialog>

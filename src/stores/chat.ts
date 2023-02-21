@@ -11,6 +11,7 @@ let scrollBack: Function | null = null;
 
 export const useChatStore = defineStore("chat", {
   state: () => ({
+    // scrollBack: null as Function | null,
     vue: null as any,
     socket: null as WsService | null,
     connectedUsers: [] as Array<string>,
@@ -56,14 +57,15 @@ export const useChatStore = defineStore("chat", {
   },
 
   actions: {
+
     __notifyClient(msg: string, mode: notifyMode): void {
       notifyCenter.send({ type: mode, message: msg } as NotifyOptions);
     },
 
-    async __getChannelInstance(channelId: string) {
+    __getChannelInstance(channelId: string) {
       var channelInstance = null;
       try {
-        channelInstance = await this.channels.get(channelId);
+        channelInstance = this.channels.get(channelId);
         if (!channelInstance) throw "invalid channel id";
       } catch (err: any) {
         throw "invalid channel id";
@@ -72,13 +74,14 @@ export const useChatStore = defineStore("chat", {
     },
 
     async join(channelId: string) {
+      console.log(this.scrollBack)
 
       //   if (this.socket === null) { throw new Error('You are not connected to WS') }
 
       // check if channel is already known by the map otherwise create a new instance
       var channelInstance = null;
       try {
-        channelInstance = await this.__getChannelInstance(channelId);
+        channelInstance = this.__getChannelInstance(channelId);
         // channel found in map : reusing it
       } catch {
         // channel not found in map : create a new instance
@@ -89,7 +92,6 @@ export const useChatStore = defineStore("chat", {
       // join the new channel
       try {
         await channelInstance.join();
-        console.log('[ chat.ts ] join success');
 
         // close active channel if connected
         if (this.activeChannel?.isConnected()) this.activeChannel?.close();
@@ -105,10 +107,9 @@ export const useChatStore = defineStore("chat", {
         this.messages.sort((a: IWSMessages, b: IWSMessages) => {
           return a.CreatedAt > b.CreatedAt ? 1 : -1;
         });
-        // this.scrollBack();
+        // this?.scrollBack();
       }
       catch (err: any) {
-        console.log('[ chat.ts ] join fail');
         this.__notifyClient(String(err), "negative");
         throw err
       }
@@ -135,6 +136,8 @@ export const useChatStore = defineStore("chat", {
     },
 
     async sendMessage() {
+      if (this.text?.length == 0)
+        return
       try {
         if (this.socket === null) {
           throw new Error("You are not connected to WS");
@@ -153,7 +156,7 @@ export const useChatStore = defineStore("chat", {
     async initNewChannel(channelId: string, password: string) {
       var channelInstance = null;
       try {
-        channelInstance = await this.__getChannelInstance(channelId);
+        channelInstance = this.__getChannelInstance(channelId);
         // channel found in map : reusing it
       } catch {
         // channel not found in map : create a new instance
@@ -165,9 +168,9 @@ export const useChatStore = defineStore("chat", {
       this.channels.set(channelId, channelInstance);
     },
 
-    // setScrollBack(scrollBack: Function) {
-    //   this.scrollBack = scrollBack;
-    // },
+    setScrollBack(scrollBack: Function) {
+      this.scrollBack = scrollBack;
+    },
 
     init(socket: WsService, vue: any) {
       this.vue = vue;
@@ -189,7 +192,7 @@ export const useChatStore = defineStore("chat", {
           this.messages.sort((a: IWSMessages, b: IWSMessages) => {
             return a.CreatedAt > b.CreatedAt ? 1 : -1;
           });
-          // this.scrollBack();
+          this.scrollBack();
         }
       });
 

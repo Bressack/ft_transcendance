@@ -97,15 +97,15 @@ import { defineComponent } from 'vue';
 
 const _preSetUsers = [
   {
-    username: 'Lula',
+    username: 'Lilou',
     password: 'null',
   },
   {
-    username: 'Aminata',
+    username: 'Arto',
     password: 'null',
   },
   {
-    username: 'Elisabeth',
+    username: 'Leontine',
     password: 'null',
   },
 ]

@@ -1,7 +1,7 @@
 <template>
   <div class="absolute-top bg" />
 
-  <QInputMenu class="inputmenu" :menuList="searchResult?.result as Array<IUserName>" @findListWithString="search"
+  <QInputMenu class="inputmenu" :menuList="searchResult?.result as any" @findListWithString="search"
     @selectElement="followorunfollow" />
 
   <div class="q-gutter-y-md q-mt-md" style="max-width: 300px">
@@ -34,14 +34,15 @@
 
       <q-separator />
 
+
       <q-tab-panels v-model="tab" animated class="list">
 
 <!-- #################################################################################################################### -->
           <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
             <q-list>
               <UserCard v-for="friend in $storeMe.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
-                icon_name="chat" icon_color="orange"
-                shortcut_chat menu_profile menu_block menu_play menu_chat menu_unfollow />
+
+                shortcut_chat shortcut_play menu_profile menu_block menu_play menu_chat menu_unfollow />
             </q-list>
           </q-tab-panel>
 
@@ -53,10 +54,10 @@
             <q-dialog persistent v-model="dialog">
               <CreateChannel :closeFn=closeDialog />
             </q-dialog>
-
             <q-list>
               <q-item clickable v-ripple
-                v-for="sub in $storeMe.getPublicPrivateChannels() as Array<models.Subscription>" :key="sub.channelId"
+                v-for="sub in ($storeMe.getPublicPrivateChannels() as Array<models.Subscription>)"
+                :key="sub.channelId"
                 @click="chanSelected(sub.channel)"
               >
                 <q-item-section>
@@ -75,7 +76,7 @@
           <q-tab-panel name="following" class="tab-panel hide-scrollbar">
             <q-list>
               <UserCard v-for="rsent in $storeMe.friendRequestSent" :key="rsent" @goGameOptions="goGameOptions"
-                :username="rsent" icon_name="cancel" icon_color="red"
+                :username="rsent"
                 shortcut_unfollow menu_profile menu_unfollow menu_block menu_play />
             </q-list>
           </q-tab-panel>
@@ -83,7 +84,7 @@
           <q-tab-panel name="follower" class="tab-panel hide-scrollbar">
             <q-list>
               <UserCard v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv" @goGameOptions="goGameOptions"
-                :username="rrecv" icon_name="done" icon_color="green"
+                :username="rrecv"
                 shortcut_follow menu_profile menu_follow menu_block menu_play />
             </q-list>
           </q-tab-panel>
@@ -91,7 +92,7 @@
           <q-tab-panel name="blocked" class="tab-panel hide-scrollbar">
             <q-list>
               <UserCard v-for="tblocking in $storeMe.blocking" :key="tblocking" @goGameOptions="goGameOptions"
-                :username="tblocking" icon_name="cancel" icon_color="red"
+                :username="tblocking"
                 shortcut_unblock menu_profile />
             </q-list>
           </q-tab-panel>
@@ -104,14 +105,16 @@
   <q-dialog v-model="gameOptions">
     <GameOptions :opponent="opponent" :closeFunction="closeGameOptions" />
   </q-dialog>
-  <q-dialog persistent v-model="dialogpassword">
+
+  <q-dialog persistent v-model="dialogpassword" @keydown.esc="dialogpassword = false">
     <div class="password_dialog">
-      <div class="close-cross">
-        <q-btn class="cross absolute-right" color="orange" icon="close" flat round v-close-popup />
-      </div>
       <div class="q-ma-lg q-pt-lg">
-        <q-input v-model="password" dark label="Password" color="orange" label-color="white" />
-        <q-btn class="q-ma-lg" label="Submit" color="orange-8" @click="joinprotectedchannel()" />
+        <q-item class="text-h6">Enter Password</q-item>
+        <q-separator/>
+        <q-input v-model="password" dark  color="orange" label-color="white"/>
+        <q-separator/>
+        <q-btn class="q-ma-lg" label="Submit" color="green-8" @click="joinprotectedchannel"/>
+        <q-btn class="q-ma-lg" label="Cancel" color="red-8" v-close-popup />
       </div>
     </div>
   </q-dialog>
@@ -156,10 +159,9 @@ export default defineComponent({
   setup() {
     const gameOptions = ref(false)
     const dialog = ref(false)
-    const dialogpassword = ref(false)
+    // const dialogpassword = ref(false)
     return {
       channelSelector: '',
-      password: '',
       tab: ref('friends'),
       gameOptions,
       openGameOptions() {
@@ -172,7 +174,7 @@ export default defineComponent({
         dialog.value = false
       },
       dialog,
-      dialogpassword,
+      // dialogpassword,
     }
   },
   computed: {
@@ -191,6 +193,8 @@ export default defineComponent({
   },
   data() {
     return {
+      password: '',
+      dialogpassword: false,
       conversationList: fake_IConvList(15) as IConvList,
       searchInput: '',
       searchResult: {} as IResult,
@@ -201,7 +205,6 @@ export default defineComponent({
   methods: {
     closePasswordDialog() {
       this.dialogpassword = false
-      this.password = ''
     },
     goGameOptions(username: string) {
       this.opponent = username
@@ -210,7 +213,6 @@ export default defineComponent({
     clearInput() {
       this.searchInput = ''
       this.searchResult = {} as IResult
-      console.log('toto', this.searchResult);
 
     },
     search(text: string) {
@@ -260,9 +262,15 @@ export default defineComponent({
       this.$router.push({
         path: `/conversation/${this.channelSelector}`,
       })
+      this.channelSelector = ''
     },
     chanSelected(channel: models.Channel) {
-      if (channel.password_protected) {
+      let instance
+      try {
+        instance = this.$storeChat.__getChannelInstance(channel.id)
+      } catch(err: any) {}
+
+      if (!instance?.checked && channel.password_protected) {
         this.channelSelector = channel.id
         this.dialogpassword = true
       } else {

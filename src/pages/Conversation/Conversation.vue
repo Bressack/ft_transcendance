@@ -2,10 +2,11 @@
   <q-page>
     <div class="q-flex">
 
-      <ChatUsersList/>
+      <ChatUsersList />
 
       <div class="row">
-        <div ref="chatList" class="list_messages hide-scrollbar">
+        <!-- hide-scrollbar -->
+        <div ref="chatList" class="list_messages">
           <Message v-for="message in $storeChat.messages" :key="message.id" :username=message?.username
             :avatar=avatarstr(message?.username) :content=message?.content :timestamp="new Date(message?.CreatedAt)" />
         </div>
@@ -24,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 // import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
 import ChatUsersList from './components/ChatUsersList.vue'
@@ -34,12 +35,17 @@ export default defineComponent({
   components: { Message, ChatUsersList },
   props: {
   },
+  beforeCreate() {
+    this.$storeChat.setScrollBack(async () => {
+      const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
+      while (element?.children?.length != this.$storeChat.messages.length)
+        await new Promise(r => setTimeout(r, 10));
+      element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
+    })
+  },
   data() {
     return {
       subs: computed(() => this.$storeChat.SubscribedUsers),
-      notif1: false as boolean,
-      notif2: false as boolean,
-      dialog: false as boolean
     }
   },
   methods: {
@@ -66,14 +72,12 @@ export default defineComponent({
       if (this.$storeMe.drawerStatus)
         return "300px"
       return "0px"
-    }
+    },
   },
   async mounted() {
     this.scrollBottom()
-    // this.$storeChat.setScrollBack(this.scrollBottom)
-    // await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0])
   },
-  async updated() {
+  async beforeUpdate() {
     await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0])
     this.scrollBottom()
   },
