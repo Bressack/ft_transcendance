@@ -46,16 +46,18 @@ export default defineComponent({
       })
     },
     async disconnect(next: NavigationGuardNext | null) {
-      try {
-        if (this.has_access())
-          await this._fLogout().catch(() => this._fClearCookies())
-        else if (this.must_refresh())
-          await this._fRefresh().then(() => this._fLogout()).catch(() => this._fClearCookies())
-      } catch (e) { }
+		if (next) {
+			try {
+			  if (this.has_access())
+				await this._fLogout().catch(() => this._fClearCookies())
+			  else if (this.must_refresh())
+				await this._fRefresh().then(() => this._fLogout()).catch(() => this._fClearCookies())
+			} catch (e) { }
+		}
       await this._fClearCookies()
       this.$ws.disconnect()
       this.$storeMe.$reset()
-      this.$storeChat.leave()
+    //   this.$storeChat.leave()
       this.$storeChat.$reset()
       if (next)
         return next('/login')

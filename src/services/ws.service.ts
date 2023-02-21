@@ -85,8 +85,8 @@ class WsService {
     //   }).connect();
     // else this.socket.connect();
     this.socket = await this.__init(); //.catch((err) => {});
-    this.socket?.on("disconnect", () => {
-      console.warn("WsService DISCONNECTED");
+    this.socket?.on("disconnect", (e: any) => {
+      console.warn("WsService DISCONNECTED", e);
     });
   }
 
