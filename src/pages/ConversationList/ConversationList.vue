@@ -93,7 +93,7 @@
             <q-list>
               <UserCard v-for="tblocking in $storeMe.blocking" :key="tblocking" @goGameOptions="goGameOptions"
                 :username="tblocking"
-                shortcut_unblock menu_profile />
+                shortcut_unblock menu_profile menu_unblock />
             </q-list>
           </q-tab-panel>
 <!-- #################################################################################################################### -->

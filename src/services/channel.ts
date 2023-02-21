@@ -144,6 +144,7 @@ export class Channel implements join_channel_output {
     // try to join channel from api
     try {
       await api.leavehttpChannel();
+      this.checked = false
     } catch (error) {
       throw "unable to leave channel: " + error;
     }

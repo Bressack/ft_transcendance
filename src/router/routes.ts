@@ -24,7 +24,10 @@ const routes: RouteRecordRaw[] = [
             console.log('try:', to);
             next()
           } catch (error) {
-            console.log('catch:', from);
+            api.vue.$notifyCenter.send({
+              type: 'negative',
+              message: 'Bad Password !',
+            })
             next(from)
           }
         }
