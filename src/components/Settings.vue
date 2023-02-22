@@ -25,16 +25,39 @@
       <q-btn color="white" label="Remove Avatar" flat icon="delete" @click="confirmRemoveAvatar = true" />
     </q-item>
     <div class="q-pa-md">
-      <form onsubmit="return false">
         <q-input dark color="white" label="Change username" v-model="username">
           <q-btn color="orange" type="submit" label="ok" @click="confirmChangeUsername = true" />
         </q-input>
-      </form>
     </div>
-    <q-item class="justify-center q-pb-md">
-      <q-toggle color="orange" @update:model-value="onUpdate" v-model="twoFA">
-        <q-item-label class="label">Two factor authentification</q-item-label>
+    <q-item class="flex-center q-pb-md">
+      <q-toggle class="q-pr-md" color="orange" @update:model-value="onUpdate" v-model="twoFA">
+        <q-item-label class="text-white">Two factor authentification</q-item-label>
       </q-toggle>
+      <q-item-label class="clickable text-white" :style="qrlink" @click="qrVerification">View QR Code</q-item-label>
+      <!-- QR-DIALOG -->
+      <q-dialog persistent v-model="qrcode">
+        <div class="dialog">
+          <div class="q-px-xl r-py-md">
+            <q-item-label class="bigger">QR-CODE</q-item-label>
+          </div>
+          <q-item class="flex-center">
+            <q-img src="http://t3.gstatic.com/licensed-image?q=tbn:ANd9GcSh-wrQu254qFaRcoYktJ5QmUhmuUedlbeMaQeaozAVD4lh4ICsGdBNubZ8UlMvWjKC" width="200px" />
+          </q-item>
+          <q-item>
+            <q-item-label class="text-white">Please scan this QR code with your authenticator</q-item-label>
+          </q-item>
+            <!-- <q-separator color="white" inset /> -->
+          <q-item class="flex-center">
+            <q-input item-aligned label="Validation code" dark color="white" v-model="validateQrcode">
+              <q-btn color="orange" type="submit" label="ok" />
+            </q-input>
+          </q-item>
+          <q-item class="flex-center q-pb-md">
+            <q-btn color="red" label="cancel" v-close-popup />
+          </q-item>
+        </div>
+      </q-dialog>
+      <!-- end QR-DIALOG -->
     </q-item>
     <q-item>
       <q-btn class="absolute-center logout" @click="confirmLogout = true" color="red" label="logout" icon="logout"/>
@@ -67,10 +90,12 @@ export default defineComponent({
     const confirmLogout = ref(false)
     const confirmRemoveAvatar = ref(false)
     const confirmChangeUsername = ref(false)
+    const qrcode = ref(false)
     return {
       confirmLogout,
       confirmRemoveAvatar,
       confirmChangeUsername,
+      qrcode
     }
   },
   data() {
@@ -80,11 +105,24 @@ export default defineComponent({
       twoFA: false as Boolean,
       refresh: 0 as number,
       username: '' as string,
+      validateQrcode: '' as string,
       $refs: undefined as any,
     }
   },
   created() {
     this.fetchMe()
+  },
+  computed: {
+    qrlink() {
+      if (this.twoFA == true)
+        return {
+          'text-decoration': 'underline'
+        }
+      else
+        return {
+          'text-decoration': 'line-through'
+        }
+    }
   },
   methods: {
     logout() {
@@ -178,6 +216,10 @@ export default defineComponent({
     },
     onUpdate(value: any, evt: Event) {
       this.$api.patch(`/users/2FA?toggle=${value}`)
+    },
+    qrVerification () {
+      if (this.twoFA)
+        this.qrcode = true
     }
   }
 })
@@ -190,6 +232,11 @@ export default defineComponent({
 </style>
 
 <style lang="sass" scoped>
+.clickable
+  cursor: pointer
+
+.clickable:hover
+  text-decoration: none
 
 .avatar
   object-fit: cover
@@ -203,4 +250,5 @@ export default defineComponent({
 
 .logout
   width: 80%
+
 </style>

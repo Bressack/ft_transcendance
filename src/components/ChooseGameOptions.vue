@@ -145,7 +145,7 @@ export default defineComponent({
             else
                 this.sendInviteAndOpen()
         }
-		
+
 	},
     mounted(){
 			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));
