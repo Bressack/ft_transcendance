@@ -11,7 +11,7 @@
         {{ username }}
       </q-item-section>
 
-      <q-item-section side class="tata text-right">
+      <q-item-section side thumbnail class="tata">
         <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilPage" />
         <q-icon v-if="shortcut_block"     class="shortcut" name="person_off" color="red"    @click="block" />
         <q-icon v-if="shortcut_unblock"   class="shortcut" name="done"       color="green"  @click="block" />
@@ -19,10 +19,7 @@
         <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="userSelected" />
         <q-icon v-if="shortcut_unfollow"  class="shortcut" name="cancel"     color="red"    @click="unfollow" />
         <q-icon v-if="shortcut_follow"    class="shortcut" name="done"       color="green"  @click="follow" />
-      </q-item-section>
-
-      <q-item-section side class="toto">
-        <q-icon name="more_vert" color="white" class="toto">
+        <q-icon name="more_vert" color="white" class="shortcut">
           <q-menu class="bg-grey-9 text-white" auto-close>
 
             <q-list style="min-width: 100px">
@@ -61,6 +58,7 @@
           </q-menu>
         </q-icon>
       </q-item-section>
+
   </q-item>
 </template>
 
@@ -149,21 +147,14 @@ export default defineComponent({
   border-radius: 50%
   margin-right: 0
 
-.usermenu .toto
-  visibility: hidden
-  width: 10px !important
-  padding: 0
-  padding-left: 5px
 
 .usermenu .tata
+  width: auto
   visibility: hidden
   padding: 0
   padding-left: 5px
   display: flex
   justify-content: flex-end
-
-.usermenu:hover .toto
-  visibility: visible
 
 .usermenu:hover .tata
   visibility: visible
@@ -185,12 +176,6 @@ export default defineComponent({
 .INGAME-status
   background-color: $onlineStatus-ingame
   box-shadow: 0px 0px 5px $onlineStatus-ingame
-
-.shortcut .toto
-  visibility: hidden
-
-.shortcut:hover .toto
-  visibility: visible
 
 .shortcut
   margin-right: 10px
