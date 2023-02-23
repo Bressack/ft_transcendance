@@ -84,7 +84,7 @@
         </q-card-actions>
       </q-form>
       <q-form>
-        <q-card class="q-pa-md q-ma-sm text-center text-bold text-h6" v-for="user in preSetUsers" :key="user" @click="quickconnect(user)">
+        <q-card class="q-pa-md q-ma-sm text-center text-bold text-h6" v-for="user in preSetUsers" key=user @click="quickconnect(user)">
           {{ user.username }}
         </q-card>
       </q-form>
@@ -97,11 +97,11 @@ import { defineComponent } from 'vue';
 
 const _preSetUsers = [
   {
-    username: 'Lilou',
+    username: 'adeburea',
     password: 'null',
   },
   {
-    username: 'Arto',
+    username: 'Victor',
     password: 'null',
   },
   {
@@ -116,7 +116,7 @@ export default defineComponent({
   props: {},
   data() {
     return {
-      preSetUsers: _preSetUsers as [],
+      preSetUsers: _preSetUsers as [{ username: string, password: string }],
       username: '' as string,
       password: '' as string,
       email: '' as string,
@@ -143,7 +143,14 @@ export default defineComponent({
 
       this.$api.login(payload)
       .then( (/* data */) => {
-        this.$router.push('/')
+        // if (error.status === 3XX) {
+        //   this.$api.post({payload -> code authenticator})
+        //   .then(() => {
+        //     this.$router.push('/')
+        //   })
+        // }
+        // else
+          this.$router.push('/')
       })
       .catch((error) =>  {
         that.$notifyCenter.send({

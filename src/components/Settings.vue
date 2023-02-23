@@ -214,7 +214,11 @@ export default defineComponent({
         })
       }
     },
-    onUpdate(value: any, evt: Event) {
+    onUpdate(value: boolean, evt: Event) {
+      console.log(value)
+      if (value === true) {
+        this.qrcode = true
+      }
       this.$api.patch(`/users/2FA?toggle=${value}`)
     },
     qrVerification () {
