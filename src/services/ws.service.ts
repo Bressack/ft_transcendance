@@ -1,6 +1,7 @@
 import { io } from "socket.io-client";
 import { Cookies } from "quasar";
 import { useChatStore } from "src/stores/chat";
+import { useMainStore } from "src/stores/store";
 
 var that: any = null;
 
@@ -65,6 +66,7 @@ class WsService {
         reject(new Error("WsService Connection timeout"));
       }, 3000);
       socket.once("connect", () => {
+        useMainStore().ws_connected = true;
         console.log("WsService CONNECTED");
         clearTimeout(connectionTimeOut);
         resolve(socket);
@@ -86,7 +88,12 @@ class WsService {
     // else this.socket.connect();
     this.socket = await this.__init(); //.catch((err) => {});
     this.socket?.on("disconnect", (e: any) => {
+      useMainStore().ws_connected = false;
+
       console.warn("WsService DISCONNECTED", e);
+    });
+    this.socket.on("connect", () => {
+      useMainStore().ws_connected = true;
     });
   }
 

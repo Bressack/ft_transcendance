@@ -1,5 +1,11 @@
-import axios from "axios";
-import { join_channel_output, join_channel_output_payload } from 'src/services/channel'
+import axios, { AxiosError, AxiosRequestConfig } from "axios";
+import {
+  join_channel_output,
+  join_channel_output_payload,
+} from "src/services/channel";
+import { useMainStore } from "src/stores/store";
+import { ChannelSubscription } from "src/stores/store.types";
+import { Convert } from "src/stores/store.validation";
 import {
   IGameQuery,
   ISearchQuery,
@@ -24,9 +30,31 @@ export default {
     return response.status;
   },
 
+  async fetchMe() {
+    const store = useMainStore();
+    return await this.axiosInstance
+      .get("/users/me", {
+        transformResponse: (r: string) => Convert.toStoreData(r),
+      })
+      .then((response) => {
+        store.setStoreData(response.data);
+      });
+  },
+
   async login(payload: object) {
-    const response = await this.axiosInstance.post("/auth/login", payload);
-    return response.status;
+    return await this.axiosInstance
+      .post("/auth/login", payload, {
+        transformResponse: (r: string) => Convert.toStoreData(r),
+      })
+      .then((response) => {
+        // console.log(response.data);
+        const store = useMainStore();
+        store.setStoreData(response.data);
+        // console.log("YOOOOO", store.username);
+
+        // console.log(response.data);
+        return response.status;
+      });
   },
 
   async logout() {
@@ -55,7 +83,8 @@ export default {
     return response.data;
   },
 
-  async user(username: String) { // get user object
+  async user(username: String) {
+    // get user object
     const response = await this.axiosInstance.get(`/users/${username}`);
     return response.data;
   },
@@ -104,9 +133,7 @@ export default {
   },
 
   async block(username: String) {
-    const response = await this.axiosInstance.patch(
-      `/users/${username}/block`
-    );
+    const response = await this.axiosInstance.patch(`/users/${username}/block`);
     console.log(response);
     return response;
   },
@@ -122,26 +149,29 @@ export default {
   },
 
   async changeUsername(username: String) {
-    const response = await this.axiosInstance.patch('/users/username', { username: username });
+    const response = await this.axiosInstance.patch("/users/username", {
+      username: username,
+    });
     return response.data;
   },
 
   async createChannel(payload: object) {
-    const response = await this.axiosInstance.post('/chat/channel', payload)
-    return response.data
+    const response = await this.axiosInstance.post("/chat/channel", payload);
+    return response.data;
   },
 
   async channelSettings(channelId: string, payload: object) {
-    const response = await this.axiosInstance.patch(`/chat/${channelId}/settings`, payload)
-    return response.data
+    const response = await this.axiosInstance.patch(
+      `/chat/${channelId}/settings`,
+      payload
+    );
+    return response.data;
   },
 
   async leaveChannel(channelId: string) {
-    const response = await this.axiosInstance.delete(`/chat/${channelId}`)
-    return response.data
+    const response = await this.axiosInstance.delete(`/chat/${channelId}`);
+    return response.data;
   },
-
-
 
   /**
    **   general
@@ -158,26 +188,31 @@ export default {
   },
 
   async games() {
-    const response = await this.axiosInstance.get('/games/running')
+    const response = await this.axiosInstance.get("/games/running");
     return response;
   },
 
   async users() {
-    const response = await this.axiosInstance.get('/users')
-    return (response)
+    const response = await this.axiosInstance.get("/users");
+    return response;
   },
 
   async setState(channelId: string, username: string, payload: any) {
-    const response = await this.axiosInstance.post(`/chat/${channelId}/${username}/state`, payload)
+    const response = await this.axiosInstance.post(
+      `/chat/${channelId}/${username}/state`,
+      payload
+    );
     return response;
   },
 
   async resetState(channelId: string, username: string) {
-    const response = await this.axiosInstance.get(`/chat/${channelId}/${username}/state/reset`)
+    const response = await this.axiosInstance.get(
+      `/chat/${channelId}/${username}/state/reset`
+    );
     return response;
   },
 
-  logIt(message: string): void  {
+  logIt(message: string): void {
     let stack = new Error().stack as string;
     let caller = stack
       .split("\n")[2]
@@ -197,46 +232,57 @@ export default {
    **   chat
    **/
 
-  async joinChannel(channelId: string, password: string)
-  : Promise<join_channel_output_payload> {
+  async joinChannel(channelId: string, password: string): Promise<void> {
+    // console.log("joinChannel started");
+
+    const store = useMainStore();
+    if (!password) password = "";
     try {
-      if (!password)
-        password = ''
-      return await this.axiosInstance.post(`/chat/${channelId}/join`, {
-        password: password
-      }) as join_channel_output_payload
-    } catch(err: any) {
-      throw err
+      await this.axiosInstance
+        .post(
+          `/chat/${channelId}/join`,
+          {
+            password: password,
+          }
+          //   {
+          //     transformResponse: ((r: string) =>
+          //       Convert.toChannelSubscription(r)),
+          //   } as AxiosRequestConfig
+        )
+        .then((response) => {
+          //   console.log("join response", response.data);
+          //   console.log(
+          // "join response",
+          //   const truc = Convert.toChannelSubscription2(response.data);
+          //   console.log("join truc");
+          store.updateChannelSubscription(response.data);
+
+          //   );
+        });
+    } catch {}
+  },
+
+  async leavehttpChannel(): Promise<void> {
+    try {
+      await this.axiosInstance.patch(`/chat/leave`);
+    } catch (err: any) {
+      throw err;
     }
   },
 
-  async leavehttpChannel()
-  : Promise<void> {
-    try
-    {
-      await this.axiosInstance.patch(`/chat/leave`)
-    } catch(err: any) {
-      throw err
-    }
-  },
-
-  async sendMessage(channelId: string, password: string, text: string)
-  : Promise<void> {
-    if (!password)
-      password = ''
-    try {
-      await this.axiosInstance.post(`/chat/${channelId}/message`, {
-        content: text,
-        password: password,
-      })
-    } catch(err: any) {
-      throw err
-    }
+  async sendMessage(
+    channelId: string,
+    password: string,
+    text: string
+  ): Promise<void> {
+    if (!password) password = "";
+    return await this.axiosInstance.post(`/chat/${channelId}/message`, {
+      content: text,
+      password: password,
+    });
   },
 
   init(vue: any) {
-    this.vue = vue
-  }
-
+    this.vue = vue;
+  },
 };
-

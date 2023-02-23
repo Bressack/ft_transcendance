@@ -34,7 +34,7 @@ export interface join_channel_output {
   role: eRole;
   SubscribedUsers: Map<string, Subscription>;
   username: string;
-  password_protected: boolean;
+  passwordProtected: boolean;
 }
 
 export type ChannelInstanceState = "CONNECTED" | "DISCONNECTED";
@@ -52,7 +52,7 @@ export class Channel implements join_channel_output {
   role: eRole;
   SubscribedUsers: Map<string, Subscription>;
   username: string;
-  password_protected: boolean;
+  passwordProtected: boolean;
   checked: boolean;
 
   constructor(channelId: string) {
@@ -74,7 +74,7 @@ export class Channel implements join_channel_output {
       Subscription
     >),
       (this.username = "");
-    this.password_protected = false;
+    this.passwordProtected = false;
   }
 
   assign(p: join_channel_output) {
@@ -86,7 +86,7 @@ export class Channel implements join_channel_output {
     this.messages = p.messages;
     this.role = p.role;
     this.username = p.username;
-    this.password_protected = p.password_protected;
+    this.passwordProtected = p.passwordProtected;
 
     this.SubscribedUsers.clear();
     p.SubscribedUsers.forEach((e) => {
@@ -107,7 +107,7 @@ export class Channel implements join_channel_output {
       role: this.role,
       SubscribedUsers: this.SubscribedUsers,
       username: this.username,
-      password_protected: this.password_protected,
+      passwordProtected: this.passwordProtected,
     });
   }
 
@@ -127,14 +127,17 @@ export class Channel implements join_channel_output {
     var channelDTO: join_channel_output_payload | null = null;
     // try to join channel from api
     try {
-      channelDTO = await api.joinChannel(this.channelId, this.password as string);
+      channelDTO = await api.joinChannel(
+        this.channelId,
+        this.password as string
+      );
     } catch (error) {
       throw "Unable to join the channel: " + error;
     }
     // assign datas to instance
     this.assign(channelDTO.data);
     this.instanceState = "CONNECTED";
-    this.checked = true
+    this.checked = true;
   }
 
   /////////////////////////////////////////////
@@ -144,7 +147,7 @@ export class Channel implements join_channel_output {
     // try to join channel from api
     try {
       await api.leavehttpChannel();
-      this.checked = false
+      this.checked = false;
     } catch (error) {
       throw "unable to leave channel: " + error;
     }

@@ -129,11 +129,13 @@ export default defineComponent({
         .catch(() => { })
     },
     userSelected() {
-      const channelID = this.$storeMe.getChannelIDByUsername(this.username)
-      console.log('toto:', channelID);
-      this.$router.push({
-        path: `/conversation/${channelID}`,
-      })
+      const channelID = this.$store.getChannelIDByUsername(this.username)
+      if (channelID)
+        this.$router.push({
+          path: `/conversation/${channelID}`,
+        })
+      else
+        console.error('user one-to-one channelId undefined')
     },
   },
 });

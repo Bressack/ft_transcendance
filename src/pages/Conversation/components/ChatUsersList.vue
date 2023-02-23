@@ -2,11 +2,11 @@
   <div class="top-panel row items-center">
     <q-toolbar>
 
-      <span class="titlename">{{ $storeChat.name }}</span>
+      <span class="titlename">{{ $store.currentChannelSub?.channel.name }}</span>
 
       <q-space/>
 
-      <q-btn v-if="$storeChat.password_protected === true"
+      <q-btn v-if="$store.currentChannelSub?.channel.passwordProtected === true"
         color="brown-9" class="q-mr-lg" @click="lockChannel" >Lock channel</q-btn>
 
       <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
@@ -20,11 +20,11 @@
               <q-item-label>{{ subs.size }}</q-item-label>
             </q-item-section>
             <q-space />
-            <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$storeChat.role !== 'OWNER' && $storeChat.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
-              <q-btn v-else-if="$storeChat.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
+            <q-item-section v-if="$store.currentChannelSub?.channel.channelType !== `ONE_TO_ONE`" side>
+              <q-btn v-if="$store.currentChannelSub?.channel.role !== 'OWNER' && $store.currentChannelSub?.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
+              <q-btn v-else-if="$store.currentChannelSub?.channel.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
             </q-item-section>
-            <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
+            <q-item-section v-if="$store.currentChannelSub?.channel.channelType !== `ONE_TO_ONE` && $store.currentChannelSub?.channel.role === 'OWNER'" side>
               <q-btn color="orange" label="settings" class="interpolate-btn" @click="settings = true" />
             </q-item-section>
             <q-item-section side>
@@ -59,7 +59,7 @@
       </q-btn>
     </q-toolbar>
     <q-dialog persistent v-model="settings">
-      <CreateChannel settings :oldname=$storeChat.name :closeFn=closeSettings />
+      <CreateChannel settings :oldname=$store.currentChannelSub?.channel.name :closeFn=closeSettings />
     </q-dialog>
     <q-dialog persistent v-model=confirmDelete>
       <Confirm what="delete the channel" :accept=leaveChannel />
@@ -108,7 +108,7 @@ export default defineComponent({
   data() {
     return {
       minidrawerStatus: false as boolean,
-      subs: computed(() => this.$storeChat.SubscribedUsers as Map<string, Subscription> ),
+      subs: computed(() => this.$store.currentChannelSub?.channel?.subscribedUsers as Map<string, Subscription> ),
     }
   },
   methods: {
@@ -119,21 +119,21 @@ export default defineComponent({
       return this.subs.get(username) as Subscription
     },
     getLoginStatus(username: string) {
-      if (this.$storeChat.connectedUsers.includes(username))
-        return 'ONLINE-status'
+      // if (this.$store.user.includes(username))
+      //   return 'ONLINE-status'
       return 'OFFLINE-status'
     },
     avatarstr(username: string) {
       return `/api/avatar/${username}/thumbnail`
     },
     debug () {
-      console.log('ICI', this.$storeChat.channelId)
+      console.log('ICI', this.$store.currentChannelSub?.channel.channelId)
     },
     leaveChannel() {
-      console.log(this.$storeChat.channelId)
-      this.$api.leaveChannel(this.$storeChat.channelId)
-      .then(() => {
-        this.$storeChat.leave()
+      console.log(this.$store.currentChannelSub?.channel.channelId)
+      this.$api.leaveChannel(this.$store.currentChannelSub?.channel.channelId)
+      .then(async () => {
+        await this.$store.leave()
         this.$router.push('/')
       })
       .catch((err) => {

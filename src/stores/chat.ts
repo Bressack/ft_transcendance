@@ -9,10 +9,7 @@ import {
   Subscription,
 } from "src/services/api.models";
 
-import {
-  Message,
-  Channel,
-} from "src/services/channel";
+import { Message, Channel } from "src/services/channel";
 
 import { IWSMessages, IWSError, IWSInfos } from "src/models/messages.ws";
 
@@ -34,37 +31,37 @@ export const useChatStore = defineStore("chat", {
     channel(state: any) {
       return state.activeChannel;
     },
-    channelId(state: any) : string {
+    channelId(state: any): string {
       return state.activeChannel?.channelId;
     },
-    name(state: any) : string {
+    name(state: any): string {
       return state.activeChannel?.name;
     },
-    channel_type(state: any) : eChannelType {
+    channel_type(state: any): eChannelType {
       return state.activeChannel?.channel_type;
     },
-    state(state: any) : eSubscriptionState {
+    state(state: any): eSubscriptionState {
       return state.activeChannel?.state;
     },
-    stateActiveUntil(state: any) : Date | null {
+    stateActiveUntil(state: any): Date | null {
       return state.activeChannel?.stateActiveUntil;
     },
-    messages(state: any) : Message[] {
+    messages(state: any): Message[] {
       return state.activeChannel?.messages;
     },
-    role(state: any) : eRole {
+    role(state: any): eRole {
       return state.activeChannel?.role;
     },
-    SubscribedUsers(state: any) : Map<string, Subscription> {
+    SubscribedUsers(state: any): Map<string, Subscription> {
       return state.activeChannel?.SubscribedUsers;
     },
-    username(state: any) : string {
+    username(state: any): string {
       return state.activeChannel?.username;
     },
-    password_protected(state: any) : boolean {
-      return state.activeChannel?.password_protected;
+    passwordProtected(state: any): boolean {
+      return state.activeChannel?.passwordProtected;
     },
-    checked(state: any) : boolean {
+    checked(state: any): boolean {
       console.log(state.activeChannel?.checked);
 
       return state.activeChannel?.checked;
@@ -72,7 +69,6 @@ export const useChatStore = defineStore("chat", {
   },
 
   actions: {
-
     __notifyClient(msg: string, mode: notifyMode): void {
       notifyCenter.send({ type: mode, message: msg } as NotifyOptions);
     },
@@ -121,10 +117,9 @@ export const useChatStore = defineStore("chat", {
           return a.CreatedAt > b.CreatedAt ? 1 : -1;
         });
         // this?.scrollBack();
-      }
-      catch (err: any) {
+      } catch (err: any) {
         this.__notifyClient(String(err), "negative");
-        throw err
+        throw err;
       }
     },
 
@@ -149,8 +144,7 @@ export const useChatStore = defineStore("chat", {
     },
 
     async sendMessage() {
-      if (this.text?.length == 0)
-        return
+      if (this.text?.length == 0) return;
       try {
         if (this.socket === null) {
           throw new Error("You are not connected to WS");
@@ -189,41 +183,41 @@ export const useChatStore = defineStore("chat", {
       this.vue = vue;
       this.socket = socket;
 
-      this.socket.listen("fetch_me", () => {
-        this.vue.$storeMe.fetch();
-      });
+      // this.socket.listen("fetch_me", () => {
+      //   this.vue.$storeMe.fetch();
+      // });
 
-      this.socket.listen("altered_subscription", (payload: Subscription) => {
-        this.SubscribedUsers.set(payload.username, payload);
-        if (this.vue.$storeMe.username == payload.username)
-          this.vue.$storeMe.fetch();
-      });
+      // this.socket.listen("altered_subscription", (payload: Subscription) => {
+      //   this.SubscribedUsers.set(payload.username, payload);
+      //   if (this.vue.$storeMe.username == payload.username)
+      //     this.vue.$storeMe.fetch();
+      // });
 
-      this.socket.listen("message", (payload: IWSMessages) => {
-        if (payload.channel_id == this.currentChannel) {
-          this.messages.push(payload);
-          this.messages.sort((a: IWSMessages, b: IWSMessages) => {
-            return a.CreatedAt > b.CreatedAt ? 1 : -1;
-          });
-          this.scrollBack();
-        }
-      });
+      // this.socket.listen("message", (payload: IWSMessages) => {
+      //   if (payload.channel_id == this.currentChannel) {
+      //     this.messages.push(payload);
+      //     this.messages.sort((a: IWSMessages, b: IWSMessages) => {
+      //       return a.CreatedAt > b.CreatedAt ? 1 : -1;
+      //     });
+      //     this.scrollBack();
+      //   }
+      // });
 
-      this.socket.listen("error", (payload: IWSError) => {
-        console.log("ws error:", payload);
-        this.vue.$notifyCenter.send({
-          type: "warning",
-          message: payload.message,
-        });
-      });
+      // this.socket.listen("error", (payload: IWSError) => {
+      //   console.log("ws error:", payload);
+      //   this.vue.$notifyCenter.send({
+      //     type: "warning",
+      //     message: payload.message,
+      //   });
+      // });
 
-      this.socket.listen("infos", (payload: IWSInfos) => {
-        console.log("ws infos:", payload);
-        this.vue.$notifyCenter.send({
-          type: "info",
-          message: payload.status,
-        });
-      });
+      // this.socket.listen("infos", (payload: IWSInfos) => {
+      //   console.log("ws infos:", payload);
+      //   this.vue.$notifyCenter.send({
+      //     type: "info",
+      //     message: payload.status,
+      //   });
+      // });
     },
   },
 });

@@ -112,7 +112,7 @@ export default defineComponent({
         this.access = true
         this.fillUserList()
       }
-      if (this.$storeChat.password_protected) {
+      if (this.$storeChat.passwordProtected) {
         this.protect = true
         this.accessLabelOne = 'Your password will be removed'
         this.accessLabelTwo = `Leave this field blank if you don't want to modify your password or click the lock if you want to remove it`
@@ -191,9 +191,9 @@ export default defineComponent({
       })
     },
     passwordState () : boolean {
-      if (this.$storeChat.password_protected && this.protect && this.password === '')
+      if (this.$storeChat.passwordProtected && this.protect && this.password === '')
         return false
-      else if (!this.$storeChat.password_protected && !this.protect)
+      else if (!this.$storeChat.passwordProtected && !this.protect)
         return false
       return true
     },

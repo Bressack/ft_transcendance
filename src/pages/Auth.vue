@@ -32,12 +32,13 @@
         />
 
         <q-input
-        class="input"
+          class="input"
           filled
           v-model="password"
           label="Password"
           lazy-rules
           type="password"
+          current-password
         />
         <q-card-actions class="q-mt-md">
           <q-btn label="Connect" type="submit" color="primary" class="submitbutton"/>
@@ -97,15 +98,15 @@ import { defineComponent } from 'vue';
 
 const _preSetUsers = [
   {
-    username: 'Lilou',
+    username: 'Alice99',
     password: 'null',
   },
   {
-    username: 'Arto',
+    username: 'admin',
     password: 'null',
   },
   {
-    username: 'Leontine',
+    username: 'leCaca',
     password: 'null',
   },
 ]
@@ -135,23 +136,22 @@ export default defineComponent({
       this.email = ''
     },
     signIn(username: string, password: string) {
-      let that = this
       let payload: object = Object({
         username: username,
         password: password,
       })
 
       this.$api.login(payload)
-      .then( (/* data */) => {
+      .then(() => {
         this.$router.push('/')
       })
       .catch((error) =>  {
-        that.$notifyCenter.send({
-            // position: 'center',
-            // multiLine: true,
-            type: 'negative',
-            message: 'incorrect username or password'
-          })
+        // this.$notifyCenter.send({
+        //     // position: 'center',
+        //     // multiLine: true,
+        //     type: 'negative',
+        //     message: 'incorrect username or password'
+        //   })
         console.log(error);
       })
     },

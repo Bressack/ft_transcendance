@@ -65,5 +65,5 @@ export interface IJoinChannelPayload {
   role?: eRole;
   SubscribedUsers?: Subscription[];
   username?: string;
-  password_protected?: Boolean;
+  passwordProtected?: Boolean;
 }

@@ -6,12 +6,12 @@
 
       <div class="row chatListContainer">
         <div ref="chatList" class="list_messages">
-          <Message v-for="message in $storeChat.messages" :key="message.id" :username=message?.username
-            :avatar=avatarstr(message?.username) :content=message?.content :timestamp="new Date(message?.CreatedAt)" />
+          <Message v-for="message in $store.messages" :key="message.id" :username=message.username
+            :avatar=avatarstr(message.username) :content=message.content :timestamp="new Date(message.createdAt)" />
         </div>
       </div>
 
-      <q-input @keydown.enter.prevent="sendmessage" filled v-model="$storeChat.text" placeholder="Enter text here"
+      <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
         class="absolute-bottom custom-input input">
         <template v-slot:append>
           <q-icon name="send" @click="sendmessage" class="cursor-pointer" />
@@ -32,30 +32,32 @@ import ChatUsersList from './components/ChatUsersList.vue'
 export default defineComponent({
   name: 'Conversation',
   components: { ChatUsersList, Message },
-  props: {
-  },
   beforeCreate() {
-    this.$storeChat.setScrollBack(async () => {
-      const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
-      while (element?.children?.length != this.$storeChat.messages.length)
-        await new Promise(r => setTimeout(r, 10));
-      element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
-    })
+    // this.$store.setScrollBack(async () => {
+    //   const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
+    //   while (element?.children?.length != this.$store.messagesCount)
+    //     await new Promise(r => setTimeout(r, 10));
+    //   element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
+    // })
   },
   data() {
     return {
-      subs: computed(() => this.$storeChat.SubscribedUsers),
+      subs: computed(() => this.$store.currentChannelSub?.channel.subscribedUsers),
+      text: ref(''),
     }
   },
   methods: {
 
     async lockChannel() {
-      await this.$storeChat.leave()
+      await this.$api.leavehttpChannel()
       this.$router.push({ path: `/` })
     },
 
     sendmessage() {
-      this.$storeChat.sendMessage()
+      if (this.text == '')
+        return
+      this.$api.sendMessage(this.$store.active_channel, this.$store.channelPassword, this.text)
+      this.text = ''
     },
 
     goProfilPage(user: string) {
@@ -70,27 +72,49 @@ export default defineComponent({
 
     async scrollBottom() {
       const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
-      while (element?.children?.length != this.$storeChat.messages.length)
+      while (element?.children?.length != this.$store.messagesCount)
         await new Promise(r => setTimeout(r, 10));
       element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
     },
+
+    getDatas() {
+      const channelId = this.$route.path.split('/').slice(-1)[0]
+      if (this.$store.isSubscribedToChannel(channelId))
+          this.$store.setCurrentChannel(channelId);
+      this.$api
+      .joinChannel(this.$store.active_channel, this.$store.channelPassword)
+      .then(() => {
+        this.scrollBottom()
+      })
+      .catch(err => {
+        // mot de passe incorrect
+        // non connecte en socket
+        // que t'es ban
+        // tout le reste ERROR
+      })
+    }
   },
   computed: {
     margin_input() {
-      if (this.$storeMe.drawerStatus)
+      if (this.$store.drawerStatus)
         return "300px"
       return "0px"
     },
   },
-  async mounted() {
-    this.scrollBottom()
+  mounted() {
+    this.$ws.listen("message", () => {
+      this.scrollBottom()
+      this.$store.message_received = false;
+    });
+    this.getDatas()
+
   },
-  async beforeUpdate() {
-    await this.$storeChat.join(this.$route.path.split('/').slice(-1)[0])
-    this.scrollBottom()
+  beforeUpdate() {
+    this.getDatas()
   },
   async beforeUnmount() {
-    await this.$storeChat.leave()
+    await this.$api.leavehttpChannel()
+	this.$store.setCurrentChannel("")
   }
 });
 </script>
@@ -99,7 +123,7 @@ export default defineComponent({
 
 .list_messages
   overflow: auto
-  height: calc(100vh - (90px + 50px + 50px))
+  height: calc(100vh - (90px + 50px + 70px))
   padding: 1vh
   word-break: break-word
   width: 100%

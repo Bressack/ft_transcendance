@@ -11,19 +11,19 @@
         <q-tab name="friends" icon="group" class="tab" />
         <q-tab name="channels" icon="chat" class="tab" />
         <q-tab name="following" icon="hourglass_bottom" class="tab">
-          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestSent?.length > 0" />
-          <div class="notif justify-center items-center" v-if="$storeMe.friendRequestSent?.length > 0">
-            {{ $storeMe.friendRequestSent?.length < 99 ? $storeMe.friendRequestSent?.length : '99+' }} </div>
+          <div class="notif justify-center items-center circle" v-if="$store.friendRequestSent?.length > 0" />
+          <div class="notif justify-center items-center" v-if="$store.friendRequestSent?.length > 0">
+            {{ $store.friendRequestSent?.length < 99 ? $store.friendRequestSent?.length : '99+' }} </div>
         </q-tab>
         <q-tab name="follower" icon="notifications" class="tab">
-          <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestRecevied?.length > 0" />
-          <div class="notif justify-center items-center" v-if="$storeMe?.friendRequestRecevied?.length > 0">
-            {{ $storeMe.friendRequestRecevied?.length < 99 ? $storeMe.friendRequestRecevied?.length : '99+' }} </div>
+          <div class="notif justify-center items-center circle" v-if="$store.friendRequestRecevied?.length > 0" />
+          <div class="notif justify-center items-center" v-if="$store.friendRequestRecevied?.length > 0">
+            {{ $store.friendRequestRecevied?.length < 99 ? $store.friendRequestRecevied?.length : '99+' }} </div>
         </q-tab>
         <q-tab name="blocked" icon="person_off" class="tab">
-          <div class="notif justify-center items-center circle" v-if="$storeMe.blocking?.length > 0" />
-          <div class="notif justify-center items-center" v-if="$storeMe?.blocking?.length > 0">
-            {{ $storeMe.blocking?.length < 99 ? $storeMe.blocking?.length : '99+' }} </div>
+          <div class="notif justify-center items-center circle" v-if="$store.blocked?.length > 0" />
+          <div class="notif justify-center items-center" v-if="$store.blocked?.length > 0">
+            {{ $store.blocked?.length < 99 ? $store.blocked?.length : '99+' }} </div>
         </q-tab>
 
       </q-tabs>
@@ -40,7 +40,7 @@
 <!-- #################################################################################################################### -->
           <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
             <q-list>
-              <UserCard v-for="friend in $storeMe.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
+              <UserCard v-for="friend in $store.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
 
                 shortcut_chat shortcut_play menu_profile menu_block menu_play menu_chat menu_unfollow />
             </q-list>
@@ -56,16 +56,14 @@
             </q-dialog>
             <q-list>
               <q-item clickable v-ripple
-                v-for="sub in ($storeMe.getPublicPrivateChannels() as Array<models.Subscription>)"
+                v-for="sub in ($store.getPublicPrivateChannels)"
                 :key="sub.channelId"
                 @click="chanSelected(sub.channel)"
               >
                 <q-item-section>
-                  <span class="text-bold text-h6 pubchan">{{
-                    sub.channel.name
-                  }}</span>
+                  <span class="text-bold text-h6 pubchan">{{ sub.channel.name }}</span>
                 </q-item-section>
-                <q-item-section side v-if="sub.channel.password_protected">
+                <q-item-section side v-if="sub.channel.passwordProtected">
                   <q-icon name="lock" color="grey-7" />
                 </q-item-section>
 
@@ -75,7 +73,7 @@
 <!-- #################################################################################################################### -->
           <q-tab-panel name="following" class="tab-panel hide-scrollbar">
             <q-list>
-              <UserCard v-for="rsent in $storeMe.friendRequestSent" :key="rsent" @goGameOptions="goGameOptions"
+              <UserCard v-for="rsent in $store.friendRequestSent" :key="rsent" @goGameOptions="goGameOptions"
                 :username="rsent"
                 shortcut_unfollow menu_profile menu_unfollow menu_block menu_play />
             </q-list>
@@ -83,7 +81,7 @@
 <!-- #################################################################################################################### -->
           <q-tab-panel name="follower" class="tab-panel hide-scrollbar">
             <q-list>
-              <UserCard v-for="rrecv in $storeMe.friendRequestRecevied" :key="rrecv" @goGameOptions="goGameOptions"
+              <UserCard v-for="rrecv in $store.friendRequestRecevied" :key="rrecv" @goGameOptions="goGameOptions"
                 :username="rrecv"
                 shortcut_follow menu_profile menu_follow menu_block menu_play />
             </q-list>
@@ -91,8 +89,8 @@
 <!-- #################################################################################################################### -->
           <q-tab-panel name="blocked" class="tab-panel hide-scrollbar">
             <q-list>
-              <UserCard v-for="tblocking in $storeMe.blocking" :key="tblocking" @goGameOptions="goGameOptions"
-                :username="tblocking"
+              <UserCard v-for="username in $store.blocked" :key="username" @goGameOptions="goGameOptions"
+                :username="username"
                 shortcut_unblock menu_profile menu_unblock />
             </q-list>
           </q-tab-panel>
@@ -130,6 +128,7 @@ import QInputMenu from 'src/components/QInputMenu.component.vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
 import UserCard from './components/UserCard.vue'
 import * as models from 'src/services/api.models'
+import { Channel } from 'src/stores/store.types'
 
 enum EUserStatus {
   UNKNOWN,
@@ -177,18 +176,6 @@ export default defineComponent({
     }
   },
   computed: {
-    friendRequestRecevied(): number {
-      if (this.$storeMe.friendRequestRecevied)
-        return this.$storeMe.friendRequestRecevied.length
-      return 0
-    },
-    friendRequestSent(): number {
-      if (this.$storeMe.friendRequestSent)
-        return this.$storeMe.friendRequestSent.length
-      return 0
-    },
-    tabPanelTitle(tab: string) {
-    },
   },
   data() {
     return {
@@ -200,7 +187,13 @@ export default defineComponent({
       opponent: '' as string,
       socialtoggle: '1' as string,
     }
-  },
+		    // console.log(this.$route.params.channel_id)
+	},
+  // watch: {
+  //   toto(n_value, o_value) {
+      
+  //   }
+  // },
   methods: {
     closePasswordDialog() {
       this.dialogpassword = false
@@ -219,10 +212,9 @@ export default defineComponent({
         this.searchResult = {} as IResult
         return;
       }
-      let that = this
       const searchQuery: ISearchQuery = { key: text }
       this.$api.search(searchQuery)
-        .then(function (result) {
+        .then((result) => {
           let ret: IResult = {
             total: 0,
             result: []
@@ -230,11 +222,11 @@ export default defineComponent({
 
           for (let elem of result.result) {
             let stat: EUserStatus = EUserStatus.UNKNOWN
-            if (that.$storeMe.friends?.includes(elem.username))
+            if (this.$store.friends?.includes(elem.username))
               stat = EUserStatus.FRIEND
-            else if (that.$storeMe.friendRequestRecevied?.includes(elem.username))
+            else if (this.$store.friendRequestRecevied?.includes(elem.username))
               stat = EUserStatus.PENDINGFROM
-            else if (that.$storeMe.friendRequestSent?.includes(elem.username))
+            else if (this.$store.friendRequestSent?.includes(elem.username))
               stat = EUserStatus.PENDINGTO
             ret.result.push({
               username: elem.username,
@@ -242,10 +234,10 @@ export default defineComponent({
             })
           }
           ret.total = ret.result?.length
-          that.searchResult = ret
+          this.searchResult = ret
         })
-        .catch(function (error) {
-          that.searchResult = {} as IResult
+        .catch((error) => {
+          this.searchResult = {} as IResult
         })
     },
 
@@ -263,21 +255,23 @@ export default defineComponent({
       })
       this.channelSelector = ''
     },
-    chanSelected(channel: models.Channel) {
-      let instance
-      try {
-        instance = this.$storeChat.__getChannelInstance(channel.id)
-      } catch(err: any) {}
+    async chanSelected(channel: Channel) {
+			
+    //   let instance
+    //   try {
+    //     instance = this.$storeChat.__getChannelInstance(channel.id)
+    //   } catch(err: any) {}
 
-      if (!instance?.checked && channel.password_protected) {
-        this.channelSelector = channel.id
-        this.dialogpassword = true
-      } else {
-        this.password = ''
-        this.$router.push({
+    //   if (!instance?.checked && channel.passwordProtected) {
+    //     this.channelSelector = channel.id
+    //     this.dialogpassword = true
+    //   } else {
+    //     this.password = ''
+        console.log('thechan', channel);
+        this.$router.replace({
           path: `/conversation/${channel.id}`,
         })
-      }
+      // }
     },
 
 

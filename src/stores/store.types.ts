@@ -8,86 +8,86 @@
 // match the expected interface, even if the JSON is valid.
 
 export type StoreData = {
-    username: string;
-    email?: string;
-    twoFA: boolean;
-    createdAt?: Date;
-    updatedAt?: Date;
-    victoriesAsPOne: number;
-    victoriesAsPTwo: number;
-    defeatsAsPOne: number;
-    defeatsAsPTwo: number;
-    refreshToken?: string;
-    password?: string;
-    avatars?: null;
-    channelSubscriptions?: ChannelSubscription[];
-    followedBy?: FollowedBy[];
-    following?: Following[];
-    blocking?: Blocking[];
+  username: string;
+  email?: string;
+  twoFA: boolean;
+  createdAt?: Date;
+  updatedAt?: Date;
+  victoriesAsPOne: number;
+  victoriesAsPTwo: number;
+  defeatsAsPOne: number;
+  defeatsAsPTwo: number;
+  // refresh_token?: string;
+  // password?: string;
+  // avatars?: null;
+  channelSubscriptions?: ChannelSubscription[];
+  followedBy?: FollowedBy[];
+  following?: Following[];
+  blocking?: Blocking[];
 };
 
 export type Blocking = {
-    blockingId: string;
-    id: string;
+  blockingId: string;
+  id: string;
 };
 
 export type ChannelSubscription = {
-    channelId: string;
-    role: Role;
-    stateActiveUntil: Date | null;
-    state: State;
-    channel: Channel;
+  channelId: string;
+  role: Role;
+  stateActiveUntil: Date | null;
+  state: State;
+  channel: Channel;
 };
 
 export type Channel = {
-    subscribedUsers: SubscribedUser[];
-    id: string;
-    name: string;
-    channelType: string;
-    hash?: null | string;
-    passwordProtected: boolean;
-    messages?: Message[];
+  subscribedUsers: SubscribedUser[];
+  id: string;
+  name: string;
+  channelType: string;
+  hash?: null | string;
+  passwordProtected: boolean;
+  messages: Message[];
 };
 
 export type Message = {
-    id: number;
-    createdAt: Date;
-    receivedAt?: Date;
-    content?: string;
-    username?: string;
-    channelId?: string;
+  id: number;
+  createdAt: Date;
+  receivedAt?: Date;
+  content: string;
+  username: string;
+  channelId: string;
 };
 
 export type SubscribedUser = {
-    username: string;
-    role: Role;
-    state: State;
-    stateActiveUntil: Date | null;
+  username: string;
+  role: Role;
+  state: State;
+  stateActiveUntil: Date | null;
 };
 
 export enum Role {
-    ADMIN = "ADMIN",
-    OWNER = "OWNER",
-    USER = "USER",
+  ADMIN = "ADMIN",
+  OWNER = "OWNER",
+  USER = "USER",
 }
 
 export enum State {
-    BANNED = "BANNED",
-    MUTED = "MUTED",
-    OK = "OK",
+  BANNED = "BANNED",
+  MUTED = "MUTED",
+  OK = "OK",
 }
 export enum ChannelType {
-    PUBLIC = "PUBLIC",
-    PRIVATE = "PRIVATE",
-    ONE_TO_ONE = "ONE_TO_ONE",
+  PUBLIC = "PUBLIC",
+  PRIVATE = "PRIVATE",
+  ONE_TO_ONE = "ONE_TO_ONE",
 }
 
 export type FollowedBy = {
-    followerId?: string;
-    id?: string;
+  followerId: string;
+  id?: string;
 };
 
 export type Following = {
-    followingId?: string;
-    id?: string;
+  followingId: string;
+  id?: string;
 };

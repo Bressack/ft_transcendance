@@ -9,15 +9,15 @@ import { useMainStore } from "src/stores/store";
 import { createPinia } from "pinia";
 
 declare module "@vue/runtime-core" {
-    interface ComponentCustomProperties {
-        $axios: AxiosInstance;
-        $ws: typeof ws;
-        $api: typeof api;
-        $notifyCenter: typeof notifyCenter;
-        $storeChat: ReturnType<typeof useChatStore>;
-        $storeMe: ReturnType<typeof useMeStore>;
-        $store: ReturnType<typeof useMainStore>;
-    }
+  interface ComponentCustomProperties {
+    $axios: AxiosInstance;
+    $ws: typeof ws;
+    $api: typeof api;
+    $notifyCenter: typeof notifyCenter;
+    $storeChat: ReturnType<typeof useChatStore>;
+    $storeMe: ReturnType<typeof useMeStore>;
+    $store: ReturnType<typeof useMainStore>;
+  }
 }
 
 // Be careful when using SSR for cross-request state pollution
@@ -34,26 +34,26 @@ const storeChat: ReturnType<typeof useChatStore> = useChatStore();
 const storeMe: ReturnType<typeof useMeStore> = useMeStore();
 const store: ReturnType<typeof useMainStore> = useMainStore();
 declare module "vue" {
-    interface ComponentCustomProperties {
-        $ws: typeof ws;
-        $api: typeof api;
-        $notifyCenter: typeof notifyCenter;
-        $storeChat: ReturnType<typeof useChatStore>;
-        $storeMe: ReturnType<typeof useMeStore>;
-        $store: ReturnType<typeof useMainStore>;
-    }
+  interface ComponentCustomProperties {
+    $ws: typeof ws;
+    $api: typeof api;
+    $notifyCenter: typeof notifyCenter;
+    $storeChat: ReturnType<typeof useChatStore>;
+    $storeMe: ReturnType<typeof useMeStore>;
+    $store: ReturnType<typeof useMainStore>;
+  }
 }
 export default boot(({ app }) => {
-    // for use inside Vue files (Options API) through this.$axios and this.$api
+  // for use inside Vue files (Options API) through this.$axios and this.$api
 
-    // app.config.globalProperties.$axios = axios;
-    // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
-    //       so you won't necessarily have to import axios in each vue file
-    // app.use(createPinia());
-    app.config.globalProperties.$ws = ws;
-    app.config.globalProperties.$api = api;
-    app.config.globalProperties.$notifyCenter = notifyCenter;
-    app.config.globalProperties.$storeChat = storeChat;
-    app.config.globalProperties.$storeMe = storeMe;
-    app.config.globalProperties.$store = store;
+  // app.config.globalProperties.$axios = axios;
+  // ^ ^ ^ this will allow you to use this.$axios (for Vue Options API form)
+  //       so you won't necessarily have to import axios in each vue file
+  // app.use(createPinia());
+  app.config.globalProperties.$ws = ws;
+  app.config.globalProperties.$api = api;
+  app.config.globalProperties.$notifyCenter = notifyCenter;
+  app.config.globalProperties.$storeChat = storeChat;
+  app.config.globalProperties.$storeMe = storeMe;
+  app.config.globalProperties.$store = store;
 });

@@ -1,5 +1,6 @@
 import { useQuasar } from "quasar";
 import { useChatStore } from "src/stores/chat";
+import { useMainStore } from "src/stores/store";
 import { RouteRecordRaw } from "vue-router";
 import api from "../services/api.service";
 import WsService from "../services/ws.service";
@@ -22,26 +23,12 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true },
         component: () => import("pages/Conversation/Conversation.vue"),
         beforeEnter: async (to, from, next) => {
-          const storeChat = useChatStore();
-          try {
-            if (storeChat?.socket.connected) {
-              console.log("connected");
-
-              await storeChat.join(to.params.channel_id);
-            } else {
-              console.log("not connected");
-              await storeChat.socket.connect();
-              await storeChat.join(to.params.channel_id);
-            }
-            console.log("try:", to);
+          const store = useMainStore();
+          const channel_id: string = to.params.channel_id as string;
+          if (store.isSubscribedToChannel(channel_id)) {
+            store.setCurrentChannel(channel_id);
             next();
-          } catch (error) {
-            // api.vue.$notifyCenter.send({
-            //   type: 'negative',
-            //   message: 'Bad Password !',
-            // })
-            next(from);
-          }
+          } else next(from);
         },
       },
       {
