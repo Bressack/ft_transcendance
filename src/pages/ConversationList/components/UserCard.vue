@@ -12,7 +12,7 @@
         {{ username }}
       </q-item-section>
 
-      <q-item-section side thumbnail class="tata">
+      <q-item-section side thumbnail class="q-mb-xs tata">
         <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilPage" />
         <q-icon v-if="shortcut_block"     class="shortcut" name="person_off" color="red"    @click="block" />
         <q-icon v-if="shortcut_unblock"   class="shortcut" name="cancel"     color="red"    @click="block"><q-tooltip>Unblock</q-tooltip></q-icon>
@@ -179,7 +179,7 @@ export default defineComponent({
   box-shadow: 0px 0px 5px $onlineStatus-ingame
 
 .shortcut
-  margin-right: 14px
+  margin-left: 10px
 
 .shortcut .tata
   visibility: hidden
