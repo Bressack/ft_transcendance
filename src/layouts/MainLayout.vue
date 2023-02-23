@@ -54,11 +54,11 @@
       </q-toolbar>
     </q-header>
 
-
+	
     <q-drawer v-model="$storeMe.drawerStatus" show-if-above :breakpoint="500" :width="300">
-      <q-scroll-area class="scroll">
-        <ConversationList />
-      </q-scroll-area>
+		<q-scroll-area class="scroll">
+		  <ConversationList />
+	</q-scroll-area>
 
       <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
         <q-item clickable @click="goProfilePage" class="usercard">
@@ -94,6 +94,18 @@ import Settings from '../components/Settings.vue'
 import GameInvitation from '../components/GameInvitation.vue'
 import ncc, { NotifyOptions, NotifyCenter, Notifications } from 'src/services/notifyCenter'
 import ld from 'lodash'
+import { Convert } from 'src/stores/store.validation';
+import {
+	Blocking,
+	Channel,
+	ChannelSubscription,
+	ChannelType,
+	FollowedBy,
+	Message,
+	State,
+	StoreData,
+	SubscribedUser,
+} from "src/stores/store.types";
 
 export default defineComponent({
   name: 'MainLayout',
@@ -207,13 +219,13 @@ export default defineComponent({
         that.$ws.removeListener('game-invite-canceled')
         that.$ws.listen('game-invite', that.onGameInvite) //might need to remove this until the game is finished
       }
-      const decline = function (res: any) {
+      const decline =  (res: any) => {
         callback('DECLINED')
-        that.invitationFrom = false
+        this.invitationFrom = false
         document.removeEventListener('invite-response-accept', accept);
         document.removeEventListener('invite-response-decline', decline);
-        that.$ws.removeListener('game-invite-canceled')
-        that.$ws.listen('game-invite', that.onGameInvite)
+        this.$ws.removeListener('game-invite-canceled')
+        this.$ws.listen('game-invite', this.onGameInvite)
 
       }
       this.invitationFrom = true
@@ -344,6 +356,15 @@ export default defineComponent({
     document.addEventListener('stop-listening-for-game-invite', this.stopListeningForGameInvite)
     document.addEventListener('ready-for-matchmaking',this.listenForMatchmaking);
 		document.addEventListener('stop-for-matchmaking',this.StoplisteningForMatchmaking)
+		this.$api.axiosInstance.get('/users/me', { transformResponse: (r:string) => Convert.toStoreData(r) }).then(response => {
+			this.$store.setStoreData(response.data)
+			console.log(this.$store.getOneToOneChannels)
+		})
+		// this.$api.axiosInstance.post('/chat/f8edc315-dc99-43ab-ab3c-cda60a30828e/join', { transformResponse: (r:string) => Convert.toChannelSubscription(r) }).then(response => {
+		// 	this.$store.updateChannelSubscription(response.data);
+		// 	console.log(response.data);
+
+		// })
   },
 
   beforeUnMount() {

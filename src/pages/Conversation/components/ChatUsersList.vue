@@ -50,7 +50,7 @@
                 <q-item-label>{{ user.role }}</q-item-label>
               </q-item-section>
               <q-item-section>
-                <BanMute :subscription="getUserSubscription(user.username) as Subscription" />
+                <BanMute :subscription="getUserSubscription(user.username)" />
               </q-item-section>
             </q-item>
 
@@ -92,7 +92,6 @@ import {
 export default defineComponent({
   name: 'ChatUsersList',
   components: { BanMute, CreateChannel, Confirm },
-  props: {},
   setup () {
     const confirmDelete = ref(false)
     const confirmLeave = ref(false)

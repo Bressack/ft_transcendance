@@ -31,7 +31,7 @@ import ChatUsersList from './components/ChatUsersList.vue'
 
 export default defineComponent({
   name: 'Conversation',
-  components: { Message, ChatUsersList },
+  components: { ChatUsersList, Message },
   props: {
   },
   beforeCreate() {

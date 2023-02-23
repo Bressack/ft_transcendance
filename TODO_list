@@ -1,5 +1,13 @@
+- essayer d'import la police Press start 2p dans quasar
+- check les setting d'une conv (lié a la modif de storeChat)
+- modifier le role
+- sort les list pour plus d'ergonomie (les user connectés en haut, les owner et admin aussi)
 
- - essayer d'import la police Press start 2p dans quasar
- - check les setting d'une conv (lié a la modif de storeChat)
- - modifier le role
- - sort les list pour plus d'ergonomie (les user connectés en haut, les owner et admin aussi)
+// composant conversation created
+// -> appel api Join la channel
+.then()
+-> data > store
+them()
+data from store <- peupler la vue avec message role etc..
+catch().
+route change

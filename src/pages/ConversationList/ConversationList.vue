@@ -155,7 +155,6 @@ interface IUserSelected {
 export default defineComponent({
   name: 'ConversationList',
   components: { ChooseGameOptions, QInputMenu, CreateChannel, UserCard },
-  props: {},
   setup() {
     const gameOptions = ref(false)
     const dialog = ref(false)
