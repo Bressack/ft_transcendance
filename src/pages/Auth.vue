@@ -84,7 +84,7 @@
         </q-card-actions>
       </q-form>
       <q-form>
-        <q-card class="q-pa-md q-ma-sm text-center text-bold text-h6" v-for="user in preSetUsers" key=user @click="quickconnect(user)">
+        <q-card class="q-pa-md q-ma-sm text-center text-bold text-h6" v-for="user in preSetUsers" :key="user.username" @click="quickconnect(user)">
           {{ user.username }}
         </q-card>
       </q-form>
@@ -103,11 +103,7 @@ const _preSetUsers = [
   {
     username: 'Victor',
     password: 'null',
-  },
-  {
-    username: 'Leontine',
-    password: 'null',
-  },
+  }
 ]
 
 export default defineComponent({

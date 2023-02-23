@@ -8,19 +8,22 @@
     <q-card>
       <q-tabs v-model="tab" dense class="text-grey-6 q-fixed qtab" style="background-color: #212121;"
         active-color="orange" indicator-color="orange" align="justify" narrow-indicator>
-        <q-tab name="friends" icon="group" class="tab" />
-        <q-tab name="channels" icon="chat" class="tab" />
+        <q-tab name="friends" icon="group" class="tab"><q-tooltip>Friends</q-tooltip></q-tab>
+        <q-tab name="channels" icon="chat" class="tab"><q-tooltip>Channels</q-tooltip></q-tab>
         <q-tab name="following" icon="hourglass_bottom" class="tab">
+          <q-tooltip>Pending friends to accept</q-tooltip>
           <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestSent?.length > 0" />
           <div class="notif justify-center items-center" v-if="$storeMe.friendRequestSent?.length > 0">
             {{ $storeMe.friendRequestSent?.length < 99 ? $storeMe.friendRequestSent?.length : '99+' }} </div>
         </q-tab>
         <q-tab name="follower" icon="notifications" class="tab">
+          <q-tooltip>Waiting you to accept</q-tooltip>
           <div class="notif justify-center items-center circle" v-if="$storeMe.friendRequestRecevied?.length > 0" />
           <div class="notif justify-center items-center" v-if="$storeMe?.friendRequestRecevied?.length > 0">
             {{ $storeMe.friendRequestRecevied?.length < 99 ? $storeMe.friendRequestRecevied?.length : '99+' }} </div>
         </q-tab>
         <q-tab name="blocked" icon="person_off" class="tab">
+          <q-tooltip>Blocked users</q-tooltip>
           <div class="notif justify-center items-center circle" v-if="$storeMe.blocking?.length > 0" />
           <div class="notif justify-center items-center" v-if="$storeMe?.blocking?.length > 0">
             {{ $storeMe.blocking?.length < 99 ? $storeMe.blocking?.length : '99+' }} </div>

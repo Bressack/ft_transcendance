@@ -11,13 +11,14 @@
         <q-space/>
 
         <q-btn flat @click="notifyCenterLever = !notifyCenterLever" round dense icon="notifications">
+          <q-tooltip>Notification center</q-tooltip>
           <div class="notif-count justify-center items-center circle" v-if="nc.notifications.size > 0" />
           <div class="notif-count justify-center items-center" v-if="nc.notifications.size > 0">
             {{ nc.notifications.size < 99 ? nc.notifications.size : '99+' }}
           </div>
           <q-menu anchor="bottom left" class="notifmenu hide-scrollbar">
             <q-item class="n-info">
-              <q-item-section class="items-center text-h6">{{ nc.notifications.size }} notification(s)</q-item-section>
+              <q-item-section class="items-center text-h6">{{ nc.notifications.size }} notification{{ nc.notifications.size > 1 ? 's' :'' }}</q-item-section>
               <q-space/>
               <q-btn icon="cancel" flat @click="nc.clear()" v-if="nc.notifications.size > 0" />
             </q-item>
@@ -50,7 +51,7 @@
           </q-menu>
         </q-btn>
 
-        <q-btn class="r-mx-md" flat @click="goSettingsNotif" round dense icon="settings" />
+        <q-btn class="r-mx-md" flat @click="goSettingsNotif" round dense icon="settings"><q-tooltip>Settings</q-tooltip></q-btn>
       </q-toolbar>
     </q-header>
 
@@ -62,14 +63,17 @@
 
       <q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
         <q-item clickable @click="goProfilePage" class="usercard">
-          <q-item-section v-if="$storeMe.username">
-            <q-img :src="`/api/avatar/${$storeMe.username}/thumbnail`" width="60px" height="60px"
+          <q-tooltip anchor="center middle" self="center middle">
+            Your profile page
+          </q-tooltip>
+            <q-item-section v-if="$storeMe.username">
+              <q-img :src="`/api/avatar/${$storeMe.username}/thumbnail`" width="60px" height="60px"
               img-class="usercard-image" />
-          </q-item-section>
-          <q-item-section class="usercard-name">
-            <!-- <q-item-label class="usercard-name-label">{{ $storeMe.username }}</q-item-label> -->
-            <q-item-label>{{ $storeMe.username }}</q-item-label>
-          </q-item-section>
+            </q-item-section>
+            <q-item-section class="usercard-name">
+              <!-- <q-item-label class="usercard-name-label">{{ $storeMe.username }}</q-item-label> -->
+              <q-item-label>{{ $storeMe.username }}</q-item-label>
+            </q-item-section>
         </q-item>
       </q-img>
       <q-dialog v-model="settings">

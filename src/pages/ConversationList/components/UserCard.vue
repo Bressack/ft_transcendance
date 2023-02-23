@@ -8,17 +8,18 @@
         </q-avatar>
       </q-item-section>
       <q-item-section class="name" @click="goProfilPage">
+        <q-tooltip anchor="center left" self="center left">{{ username }}'s profile</q-tooltip>
         {{ username }}
       </q-item-section>
 
       <q-item-section side thumbnail class="tata">
         <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilPage" />
         <q-icon v-if="shortcut_block"     class="shortcut" name="person_off" color="red"    @click="block" />
-        <q-icon v-if="shortcut_unblock"   class="shortcut" name="done"       color="green"  @click="block" />
-        <q-icon v-if="shortcut_play"      class="shortcut" name="play_arrow" color="green"  @click="goGameOptions" />
-        <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="userSelected" />
-        <q-icon v-if="shortcut_unfollow"  class="shortcut" name="cancel"     color="red"    @click="unfollow" />
-        <q-icon v-if="shortcut_follow"    class="shortcut" name="done"       color="green"  @click="follow" />
+        <q-icon v-if="shortcut_unblock"   class="shortcut" name="cancel"     color="red"    @click="block"><q-tooltip>Unblock</q-tooltip></q-icon>
+        <q-icon v-if="shortcut_play"      class="shortcut" name="play_arrow" color="green"  @click="goGameOptions"><q-tooltip>Play</q-tooltip></q-icon>
+        <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="userSelected"><q-tooltip>Chat</q-tooltip></q-icon>
+        <q-icon v-if="shortcut_unfollow"  class="shortcut" name="cancel"     color="red"    @click="unfollow"><q-tooltip>Cancel</q-tooltip></q-icon>
+        <q-icon v-if="shortcut_follow"    class="shortcut" name="done"       color="green"  @click="follow"><q-tooltip>Accept</q-tooltip></q-icon>
         <q-icon name="more_vert" color="white" class="shortcut">
           <q-menu class="bg-grey-9 text-white" auto-close>
 
@@ -178,7 +179,7 @@ export default defineComponent({
   box-shadow: 0px 0px 5px $onlineStatus-ingame
 
 .shortcut
-  margin-right: 10px
+  margin-right: 14px
 
 .shortcut .tata
   visibility: hidden
