@@ -21,7 +21,7 @@
             </q-item-section>
             <q-space />
             <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$store.currentChannelSub.role !== storeTypes.Role.OWNER && $store.currentChannelSub.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
+              <q-btn v-if="$store.currentChannelSub.role !== 'OWNER' && $store.currentChannelSub.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
               <q-btn v-else-if="$store.currentChannelSub.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
             </q-item-section>
             <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE` && $store.currentChannelSub.role === 'OWNER'" side>
