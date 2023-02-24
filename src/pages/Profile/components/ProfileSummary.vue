@@ -10,7 +10,7 @@
         <q-item-section>
           <q-item-label class="label name">{{ name }}</q-item-label>
         </q-item-section>
-        <q-item v-if="interact && name != $storeMe.username">
+        <q-item v-if="interact && userFetched && name != $storeMe.username">
           <q-item-section>
             <q-btn label="play" class="interpolate-btn q-mr-xs" color="orange" @click="goGameOptions" />
           </q-item-section>
@@ -54,7 +54,8 @@ export default defineComponent({
     avatar  : { type: String , required: true },
     victory : { type: Number , default: 0 },
     defeat  : { type: Number , default: 0 },
-    interact : { type: Boolean, default: false }
+    interact : { type: Boolean, default: false },
+    userFetched: { type: Boolean, default: false }
   },
   mounted () {
     this.friendStatus()

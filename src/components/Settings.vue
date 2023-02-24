@@ -26,7 +26,7 @@
     </q-item>
     <div class="q-pa-md">
         <q-input dark color="white" label="Change username" v-model="username">
-          <q-btn color="orange" type="submit" label="ok" @click="confirmChangeUsername = true" />
+          <q-btn color="orange" type="submit" label="ok" @click="confirmChangeUsernameFn" />
         </q-input>
     </div>
     <q-item class="flex-center q-pb-md">
@@ -160,31 +160,23 @@ export default defineComponent({
         })
     },
     changeUsername() {
-      if (this.username !== this.profile.username) {
-        this.$api.changeUsername(this.username)
-          .then(() => {
-            this.$notifyCenter.send({
-              type: 'positive',
-              message: 'Username successfully changed'
-            })
-            this.profile.username = this.username
+      this.$api.changeUsername(this.username)
+        .then(() => {
+          this.$notifyCenter.send({
+            type: 'positive',
+            message: 'Username successfully changed'
           })
-          .catch((error) => {
-            console.log(error.response.data)
-            for (let i = 0; i < error.response.data.message.length; i++) {
-              this.$notifyCenter.send({
-                type: 'negative',
-                message: error.response.data.message[i]
-              })
-            }
-          })
-      }
-      else {
-        this.$notifyCenter.send({
-          type: 'warning',
-          message: `Your username is already "${this.username}"`
+          this.profile.username = this.username
         })
-      }
+        .catch((error) => {
+          console.log(error.response.data)
+          for (let i = 0; i < error.response.data.message.length; i++) {
+            this.$notifyCenter.send({
+              type: 'negative',
+              message: error.response.data.message[i]
+            })
+          }
+        })
     },
     imgOnly(files: readonly any[] | FileList): readonly any[] {
       if (files[0].type === 'image/png' || files[0].type === 'image/jpg' || files[0].type === 'image/jpeg')
@@ -220,6 +212,16 @@ export default defineComponent({
         this.qrcode = true
       }
       this.$api.patch(`/users/2FA?toggle=${value}`)
+    },
+    confirmChangeUsernameFn () {
+      if (this.username === this.profile.username) {
+        this.$notifyCenter.send({
+          type: 'warning',
+          message: `Your username is already "${this.username}"`
+        })
+      }
+      else
+        this.confirmChangeUsername = true
     },
     qrVerification () {
       if (this.twoFA)

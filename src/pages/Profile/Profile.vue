@@ -7,6 +7,7 @@
       :victory=(profile.victoriesAsPOne+profile.victoriesAsPTwo)
       :defeat=(profile.defeatsAsPOne+profile.defeatsAsPTwo)
       interact
+      :userFetched=userFetched
     />
   </div>
   <q-item class="r-px-xl">

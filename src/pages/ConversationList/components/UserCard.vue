@@ -1,19 +1,19 @@
 <template>
 
     <q-item clickable v-ripple class="usermenu">
-      <q-item-section style="max-width: 50px;" @click="goProfilPage">
+      <q-item-section style="max-width: 50px;" @click="goProfilePage">
         <q-avatar class="avatar">
           <img size="20px" :src="`/api/avatar/${username}/thumbnail`">
           <div :class="getLoginStatus()" class="loginstatus"/>
         </q-avatar>
       </q-item-section>
-      <q-item-section class="name" @click="goProfilPage">
+      <q-item-section class="name" @click="goProfilePage">
         <q-tooltip anchor="center left" self="center left">{{ username }}'s profile</q-tooltip>
         {{ username }}
       </q-item-section>
 
       <q-item-section side thumbnail class="q-mb-xs tata">
-        <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilPage" />
+        <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilePage" />
         <q-icon v-if="shortcut_block"     class="shortcut" name="person_off" color="red"    @click="block" />
         <q-icon v-if="shortcut_unblock"   class="shortcut" name="cancel"     color="red"    @click="block"><q-tooltip>Unblock</q-tooltip></q-icon>
         <q-icon v-if="shortcut_play"      class="shortcut" name="play_arrow" color="green"  @click="goGameOptions"><q-tooltip>Play</q-tooltip></q-icon>
@@ -25,7 +25,7 @@
 
             <q-list style="min-width: 100px">
 
-              <q-item v-if="menu_profile" clickable @click="goProfilPage">
+              <q-item v-if="menu_profile" clickable @click="goProfilePage">
                 <q-item-section>Profile</q-item-section>
               </q-item>
 
@@ -101,7 +101,7 @@ export default defineComponent({
         return 'ONLINE-status'
       return 'OFFLINE-status'
     },
-    goProfilPage() {
+    goProfilePage() {
       this.$router.push({
         path: '/profile/' + this.username,
       })

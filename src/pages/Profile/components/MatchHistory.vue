@@ -1,7 +1,8 @@
 <template>
 <div class="doc-container">
   <div class="row">
-    <q-item v-bind:href=pOne class="col">
+    <q-item class="col" clickable @click=goProfilePage(pOne)>
+      <q-tooltip anchor="center middle" self="center right">{{ pOne }}'s profile</q-tooltip>
       <q-item-section avatar>
           <q-avatar class="avatar">
               <q-img :src="avatarOne"/>
@@ -19,7 +20,8 @@
         </q-item-section>
       </q-item>
     <q-separator class="mobile-hide" vertical inset color="white"/>
-    <q-item v-bind:href=pTwo class="col">
+    <q-item class="col" clickable @click=goProfilePage(pTwo)>
+      <q-tooltip anchor="center middle" self="center left">{{ pTwo }}'s profile</q-tooltip>
       <q-item-section>
         <q-item-label class="right label username">{{pTwo}}</q-item-label>
       </q-item-section>
@@ -40,10 +42,17 @@ export default defineComponent({
   name: 'MatchHistory',
   props: {
     status : { type: String , default: 'Defeat' },
-    pOne : { type: String , default: undefined },
-    pTwo : { type: String , default: undefined },
+    pOne : { type: String , default: '' },
+    pTwo : { type: String , default: '' },
     scoreOne : { type: Number, default: 0 },
     scoreTwo : { type: Number, default: 0 }
+  },
+  methods: {
+    goProfilePage(username : string) {
+      this.$router.push({
+        path: '/profile/' + username,
+      })
+    }
   },
   data () {
     return {
