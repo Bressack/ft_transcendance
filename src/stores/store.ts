@@ -178,9 +178,11 @@ const useMainStore = defineStore("main-store", {
     //     });
     //   }
     // },
-    currentChannelSub(state: MainStoreState): ChannelSubscription | undefined {
-      return state.channelSubscriptions?.find(
-        (e: ChannelSubscription) => e.channelId === this.active_channel
+    currentChannelSub(state: MainStoreState): ChannelSubscription {
+      return (
+        state.channelSubscriptions?.find(
+          (e: ChannelSubscription) => e.channelId === this.active_channel
+        ) || ({} as ChannelSubscription)
       );
     },
     currentChannelName(state: MainStoreState): string {

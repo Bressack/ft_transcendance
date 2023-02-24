@@ -8,7 +8,7 @@
       <q-item-section class="datas">
 
         <q-item-section class="layer_1">
-          <span class="name" @click="goProfilPage">{{ username }}</span>
+          <span class="name" :style="{ color: _color }" @click="goProfilPage">{{ username }}</span>
           <span class="date">{{ getRelativeDate(timestamp) }}</span>
         </q-item-section>
 
@@ -33,7 +33,9 @@ export default defineComponent({
     timestamp: { type: Date  , required: true },
   },
   data() {
-    return {}
+    return {
+		_color: this.$store.username === this.username ? '#bb72f2' : 'white'
+	}
   },
   methods: {
     goProfilPage() {

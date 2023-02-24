@@ -20,11 +20,11 @@
               <q-item-label>{{ $store.currentChannelUserCount }}</q-item-label>
             </q-item-section>
             <q-space />
-            <q-item-section v-if="$store.currentChannelSub?.channel.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$store.currentChannelSub?.role !== 'OWNER' && $store.currentChannelSub?.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
-              <q-btn v-else-if="$store.currentChannelSub?.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
+            <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE`" side>
+              <q-btn v-if="$store.currentChannelSub.role !== storeTypes.Role.OWNER && $store.currentChannelSub.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
+              <q-btn v-else-if="$store.currentChannelSub.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
             </q-item-section>
-            <q-item-section v-if="$store.currentChannelSub?.channel.channelType !== `ONE_TO_ONE` && $store.currentChannelSub?.role === 'OWNER'" side>
+            <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE` && $store.currentChannelSub.role === 'OWNER'" side>
               <q-btn color="orange" label="settings" class="interpolate-btn" @click="settings = true" />
             </q-item-section>
             <q-item-section side>
@@ -75,19 +75,7 @@ import { defineComponent, ref, computed } from 'vue';
 import BanMute from './BanMute.vue'
 import Confirm from 'src/components/Confirm.vue'
 import CreateChannel from 'src/components/CreateChannel.vue'
-import {
-  User,
-  Follows,
-  Blocks,
-  Message,
-  Channel,
-  Subscription,
-  Game,
-  Avatar,
-  eSubscriptionState,
-  eRole,
-  eChannelType,
-} from "src/services/api.models";
+import * as storeTypes from "src/stores/store.types";
 
 export default defineComponent({
   name: 'ChatUsersList',
