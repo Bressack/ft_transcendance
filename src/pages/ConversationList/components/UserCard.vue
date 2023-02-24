@@ -2,10 +2,7 @@
 
     <q-item clickable v-ripple class="usermenu">
       <q-item-section style="max-width: 50px;" @click="goProfilePage">
-        <q-avatar class="avatar">
-          <img size="20px" :src="`/api/avatar/${username}/thumbnail`">
-          <div :class="getLoginStatus()" class="loginstatus"/>
-        </q-avatar>
+        <Avatars :username=username badge />
       </q-item-section>
       <q-item-section class="name" @click="goProfilePage">
         <q-tooltip anchor="center left" self="center left">{{ username }}'s profile</q-tooltip>
@@ -15,12 +12,13 @@
       <q-item-section side thumbnail class="q-mb-xs tata">
         <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilePage" />
         <q-icon v-if="shortcut_block"     class="shortcut" name="person_off" color="red"    @click="block" />
-        <q-icon v-if="shortcut_unblock"   class="shortcut" name="cancel"     color="red"    @click="block"><q-tooltip>Unblock</q-tooltip></q-icon>
+        <q-icon v-if="shortcut_unblock"   class="shortcut" name="cancel"     color="red"    @click="confirmUnblock = true"><q-tooltip>Unblock</q-tooltip></q-icon>
         <q-icon v-if="shortcut_play"      class="shortcut" name="play_arrow" color="green"  @click="goGameOptions"><q-tooltip>Play</q-tooltip></q-icon>
         <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="userSelected"><q-tooltip>Chat</q-tooltip></q-icon>
         <q-icon v-if="shortcut_unfollow"  class="shortcut" name="cancel"     color="red"    @click="unfollow"><q-tooltip>Cancel</q-tooltip></q-icon>
         <q-icon v-if="shortcut_follow"    class="shortcut" name="done"       color="green"  @click="follow"><q-tooltip>Accept</q-tooltip></q-icon>
         <q-icon name="more_vert" color="white" class="shortcut">
+          <q-tooltip>More</q-tooltip>
           <q-menu class="bg-grey-9 text-white" auto-close>
 
             <q-list style="min-width: 100px">
@@ -37,7 +35,7 @@
                 <q-item-section>Chat</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_unblock" clickable @click="block">
+              <q-item v-if="menu_unblock" clickable @click="confirmUnblock = true">
                 <q-item-section>Unblock</q-item-section>
               </q-item>
 
@@ -47,11 +45,11 @@
 
               <q-separator dark />
 
-              <q-item v-if="menu_block" clickable class="text-red-7" @click="block">
+              <q-item v-if="menu_block" clickable class="text-red-7" @click="confirmBlock = true">
                 <q-item-section>Block</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_unfollow" clickable class="text-red-7" @click="unfollow">
+              <q-item v-if="menu_unfollow" clickable class="text-red-7" @click="confirmUnfollow = true">
                 <q-item-section>Unfollow</q-item-section>
               </q-item>
             </q-list>
@@ -59,16 +57,27 @@
           </q-menu>
         </q-icon>
       </q-item-section>
+      <q-dialog persistent v-model=confirmUnfollow>
+        <Confirm :what="`unfollow ${username}`" :accept="unfollow" />
+      </q-dialog>
+      <q-dialog persistent v-model=confirmBlock>
+        <Confirm :what="`block ${username}`" :accept="block" />
+      </q-dialog>
+      <q-dialog persistent v-model=confirmUnblock>
+        <Confirm :what="`unblock ${username}`" :accept="block" />
+      </q-dialog>
 
   </q-item>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue'
+import Confirm from 'src/components/Confirm.vue'
+import Avatars from 'src/components/Avatars.vue'
 
 export default defineComponent({
   name: 'UserCard',
-  components: {},
+  components: { Confirm, Avatars },
   props: {
     username          : { type: String,  required: true },
     icon_name         : { type: String,  default : ''   },
@@ -90,17 +99,17 @@ export default defineComponent({
     shortcut_follow   : { type: Boolean, default: false },
     shortcut_unfollow : { type: Boolean, default: false },
   },
-  data() {
+  setup() {
+    const confirmUnfollow = ref(false)
+    const confirmBlock = ref(false)
+    const confirmUnblock = ref(false)
     return {
-
+      confirmUnfollow,
+      confirmBlock,
+      confirmUnblock
     }
   },
   methods: {
-    getLoginStatus() {
-      if (this.$storeChat.connectedUsers.includes(this.username))
-        return 'ONLINE-status'
-      return 'OFFLINE-status'
-    },
     goProfilePage() {
       this.$router.push({
         path: '/profile/' + this.username,

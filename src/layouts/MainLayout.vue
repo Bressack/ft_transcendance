@@ -70,8 +70,9 @@
             Your profile page
           </q-tooltip>
             <q-item-section v-if="$storeMe.username">
-              <q-img :src="`/api/avatar/${$storeMe.username}/thumbnail`" width="60px" height="60px"
-              img-class="usercard-image" />
+              <Avatars :username=$storeMe.username :size=60 />
+              <!-- <q-img :src="`/api/avatar/${$storeMe.username}/thumbnail`" width="60px" height="60px"
+              img-class="usercard-image" /> -->
             </q-item-section>
             <q-item-section class="usercard-name">
               <!-- <q-item-label class="usercard-name-label">{{ $storeMe.username }}</q-item-label> -->
@@ -96,9 +97,10 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import ConversationList from '../pages/ConversationList/ConversationList.vue'
-import Settings from '../components/Settings.vue'
-import GameInvitation from '../components/GameInvitation.vue'
+import ConversationList from 'src/pages/ConversationList/ConversationList.vue'
+import Settings from 'src/components/Settings.vue'
+import Avatars from 'src/components/Avatars.vue'
+import GameInvitation from 'src/components/GameInvitation.vue'
 import ncc, { NotifyOptions, NotifyCenter, Notifications } from 'src/services/notifyCenter'
 import ld from 'lodash'
 
@@ -107,7 +109,8 @@ export default defineComponent({
   components: {
     ConversationList,
     Settings,
-    GameInvitation
+    GameInvitation,
+    Avatars
   },
   props: {},
   setup() {
