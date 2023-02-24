@@ -7,7 +7,7 @@
       <div class="row chatListContainer">
         <div ref="chatList" class="list_messages">
           <Message v-for="message in $store.messages" :key="message.id" :username=message.username
-            :avatar=avatarstr(message.username) :content=message.content :timestamp="new Date(message.createdAt)" />
+            :avatar=avatarstr(message.username) :content=message.content :timestamp="new Date(message.CreatedAt) as Date" />
         </div>
       </div>
 

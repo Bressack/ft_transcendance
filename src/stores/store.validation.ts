@@ -332,8 +332,8 @@ const typeMap: any = {
   Message: o(
     [
       { json: "id", js: "id", typ: 0 },
-      { json: "CreatedAt", js: "createdAt", typ: u(undefined, Date) },
-      { json: "ReceivedAt", js: "receivedAt", typ: u(undefined, Date) },
+      { json: "CreatedAt", js: "CreatedAt", typ: u(undefined, Date) },
+      { json: "ReceivedAt", js: "ReceivedAt", typ: u(undefined, Date) },
       { json: "content", js: "content", typ: u(undefined, "") },
       { json: "username", js: "username", typ: u(undefined, "") },
       { json: "channelId", js: "channelId", typ: u(undefined, "") },

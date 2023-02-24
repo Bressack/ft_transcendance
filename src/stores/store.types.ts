@@ -51,8 +51,8 @@ export type Channel = {
 
 export type Message = {
   id: number;
-  createdAt: Date;
-  receivedAt?: Date;
+  CreatedAt: Date;
+  ReceivedAt?: Date;
   content: string;
   username: string;
   channelId: string;

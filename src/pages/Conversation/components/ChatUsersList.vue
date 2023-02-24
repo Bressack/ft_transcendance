@@ -2,7 +2,7 @@
   <div class="top-panel row items-center">
     <q-toolbar>
 
-      <span class="titlename">{{ $store.currentChannelSub?.channel.name }}</span>
+      <span class="titlename">{{ $store.currentChannelName }}</span>
 
       <q-space/>
 
@@ -17,14 +17,14 @@
               <q-item-label class="menuusers-username">User count:</q-item-label>
             </q-item-section>
             <q-item-section side class="card">
-              <q-item-label>{{ subs.size }}</q-item-label>
+              <q-item-label>{{ $store.currentChannelUserCount }}</q-item-label>
             </q-item-section>
             <q-space />
             <q-item-section v-if="$store.currentChannelSub?.channel.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$store.currentChannelSub?.channel.role !== 'OWNER' && $store.currentChannelSub?.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
-              <q-btn v-else-if="$store.currentChannelSub?.channel.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
+              <q-btn v-if="$store.currentChannelSub?.role !== 'OWNER' && $store.currentChannelSub?.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
+              <q-btn v-else-if="$store.currentChannelSub?.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
             </q-item-section>
-            <q-item-section v-if="$store.currentChannelSub?.channel.channelType !== `ONE_TO_ONE` && $store.currentChannelSub?.channel.role === 'OWNER'" side>
+            <q-item-section v-if="$store.currentChannelSub?.channel.channelType !== `ONE_TO_ONE` && $store.currentChannelSub?.role === 'OWNER'" side>
               <q-btn color="orange" label="settings" class="interpolate-btn" @click="settings = true" />
             </q-item-section>
             <q-item-section side>
@@ -34,7 +34,7 @@
 
           <q-list class="userlist">
 
-            <q-item v-for="user in subs.values()" :key="user.username" class="q-bg">
+            <q-item v-for="user in $store.currentChannelUsers" :key="user.username" class="q-bg">
               <q-item-section class="avatar">
                 <img :src="avatarstr(user?.username)" class="image" />
                 <div :class="getLoginStatus(user?.username)" class="loginstatus" />
@@ -50,7 +50,7 @@
                 <q-item-label>{{ user.role }}</q-item-label>
               </q-item-section>
               <q-item-section>
-                <BanMute :subscription="getUserSubscription(user.username)" />
+                <BanMute :subscription="user" />
               </q-item-section>
             </q-item>
 
@@ -108,16 +108,16 @@ export default defineComponent({
   data() {
     return {
       minidrawerStatus: false as boolean,
-      subs: computed(() => this.$store.currentChannelSub?.channel?.subscribedUsers as Map<string, Subscription> ),
+      subs: computed(() => this.$store.currentChannelSub?.channel?.subscribedUsers),
     }
   },
   methods: {
     lockChannel() {
       this.$emit('lockChannel')
     },
-    getUserSubscription(username: string): Subscription {
-      return this.subs.get(username) as Subscription
-    },
+    // getUserSubscription(username: string): Subscription {
+    //   return this.subs.get(username) as Subscription
+    // },
     getLoginStatus(username: string) {
       // if (this.$store.user.includes(username))
       //   return 'ONLINE-status'
@@ -127,13 +127,13 @@ export default defineComponent({
       return `/api/avatar/${username}/thumbnail`
     },
     debug () {
-      console.log('ICI', this.$store.currentChannelSub?.channel.channelId)
+      console.log('ICI', this.$store.currentChannelSub?.channelId)
     },
     leaveChannel() {
-      console.log(this.$store.currentChannelSub?.channel.channelId)
-      this.$api.leaveChannel(this.$store.currentChannelSub?.channel.channelId)
-      .then(async () => {
-        await this.$store.leave()
+    //   console.log(this.$store.currentChannelSub?.channel.channelId)
+      this.$api.leaveChannel(this.$store.active_channel)
+      .then(() => {
+        // await this.$store.leave()
         this.$router.push('/')
       })
       .catch((err) => {

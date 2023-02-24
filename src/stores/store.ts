@@ -183,6 +183,40 @@ const useMainStore = defineStore("main-store", {
         (e: ChannelSubscription) => e.channelId === this.active_channel
       );
     },
+    currentChannelName(state: MainStoreState): string {
+      const channel = this.currentChannelSub?.channel;
+      if (channel) {
+        if (channel.channelType === ChannelType.ONE_TO_ONE)
+          return (
+            channel.subscribedUsers.find((e) => e.username !== state.username)
+              ?.username || ""
+          );
+        else return channel.name;
+      }
+      return "";
+    },
+    currentChannelUsers(state: MainStoreState): SubscribedUser[] {
+      const channel = this.currentChannelSub?.channel;
+      if (channel) {
+        return channel.subscribedUsers;
+      }
+      return {} as SubscribedUser[];
+    },
+    currentChannelUserCount(state: MainStoreState): number {
+      return this.currentChannelUsers.length;
+    },
+    // currentChannelIsPasswordProtected(state: MainStoreState): boolean {
+    // 	const channel = this.currentChannelSub?.channel;
+    //     if (channel) {
+    //         if (channel.channelType === ChannelType.ONE_TO_ONE)
+    //             return (
+    //                 channel.subscribedUsers.find((e) => e.username!== state.username)
+    //                     ?.password || false
+    //             );
+    //         else return channel.password || false;
+    //     }
+    //     return false;
+    // }
   },
   actions: {
     getStatus(state: MainStoreState): Function {
@@ -190,6 +224,7 @@ const useMainStore = defineStore("main-store", {
         return state.users_status.get(username) || UserStatus.OFFLINE;
       };
     },
+
     getChannelIDByUsername(username: string): string | undefined {
       console.log(
         "getChannelIDByUsername:",
@@ -247,7 +282,7 @@ const useMainStore = defineStore("main-store", {
       if (!foundSub) {
         channelSubscription.channel.messages?.sort((a: Message, b: Message) => {
           // console.log(a.createdAt, b.createdAt);
-          return a.createdAt?.getTime() - b.createdAt?.getTime();
+          return a.CreatedAt?.getTime() - b.CreatedAt?.getTime();
         });
         this.channelSubscriptions?.push(channelSubscription);
       } else {
@@ -272,7 +307,7 @@ const useMainStore = defineStore("main-store", {
         ) {
           channelSubscription.channel.messages.sort(
             (a: Message, b: Message) => {
-              return a.createdAt?.getTime() - b.createdAt?.getTime();
+              return a.CreatedAt?.getTime() - b.CreatedAt?.getTime();
             }
           );
           for (
@@ -292,7 +327,7 @@ const useMainStore = defineStore("main-store", {
         ) {
           channelSubscription.channel.messages.sort(
             (a: Message, b: Message) => {
-              return a.createdAt.getTime() - b.createdAt.getTime();
+              return a.CreatedAt.getTime() - b.CreatedAt.getTime();
             }
           );
           for (

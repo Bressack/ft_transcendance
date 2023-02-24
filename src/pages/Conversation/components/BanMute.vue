@@ -42,12 +42,13 @@
 <script lang="ts">
 import { defineComponent, ref, PropType } from 'vue';
 import { ISubscription } from "src/services/api.models";
+import { SubscribedUser } from 'src/stores/store.types';
 
 export default defineComponent({
   name: 'BanMute',
   components: {},
   props: {
-    subscription: { type: Object as PropType<ISubscription>, required: true }, // Deso theo, type: Object pour enlever l'erreur console avec type: Subscription
+    subscription: { type: Object as PropType<SubscribedUser>, required: true }, // Deso theo, type: Object pour enlever l'erreur console avec type: Subscription
   },
   data() {
     return {
@@ -69,10 +70,10 @@ export default defineComponent({
       return (parseInt(s[0]) * 60 + parseInt(s[1]))
     },
     returnStateToOK() {
-      this.$api.resetState(this.subscription.channelId, this.subscription.username)
+      this.$api.resetState(this.$store.active_channel, this.subscription.username)
     },
     sendNewState() {
-      this.$api.setState(this.subscription.channelId, this.subscription.username, {
+      this.$api.setState(this.$store.active_channel, this.subscription.username, {
         stateTo: this.state,
         duration: this.timeToMin(),
       })
@@ -88,12 +89,12 @@ export default defineComponent({
       this.state = s
     },
 
-    getRelativeDate(date: string): string {
+    getRelativeDate(cdate: Date | null): string {
       function floorStr(n: number) {
         return (n < 10 ? '0' : '') + n
       }
+	  if (!cdate) return "Error"
       const now = new Date()
-      const cdate = new Date(date)
       // cdate.setTime((minute * 60 * 1000) + now.getTime())
 
       if (now.getDate() - cdate.getDate() == 0)
