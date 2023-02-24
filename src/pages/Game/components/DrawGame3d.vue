@@ -16,15 +16,24 @@ import {defineComponent} from 'vue'
 import { watch } from 'vue'
 import * as THREE from 'three';
 import { useMeStore } from '../../../stores/me';
+// import {neonCursor} from "truc.js"
 // import THREE from 'three';
 
-var	paddle1Material = new THREE.MeshBasicMaterial({color: 0x00ffff});
-var	paddle2Material = new THREE.MeshBasicMaterial({color: 0xFF0000});
+var	paddle1Material = new THREE.MeshLambertMaterial({color: 0x00ffff});
+var	paddle2Material = new THREE.MeshLambertMaterial({color: 0xFF0000});
 var	loader = new THREE.TextureLoader();
-// var	planeMaterial = new THREE.MeshBasicMaterial({color: 0x242729});
+var	planeMaterial = new THREE.MeshLambertMaterial({color: 0x242729});
+
 // var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://cdn.intra.42.fr/users/d0f4dd0d898a9e9cdb2df466d0e5c944/aribesni.jpg' )});
-var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://upload.wikimedia.org/wikipedia/commons/3/38/Xavier_Niel004.jpg' )});
-var	tableMaterial = new THREE.MeshBasicMaterial({color: 0x9f9f9f}); 
+// var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://upload.wikimedia.org/wikipedia/commons/3/38/Xavier_Niel004.jpg' )});
+
+// var planeMaterial = new THREE.MeshLambertMaterial({ map: loader.load( 'https://cdn.intra.42.fr/users/d7a1da210f5052f9a1a93ca6d9f45ee2/mprigent.jpg' )});
+// var	tableMaterial = new THREE.MeshBasicMaterial({color: 0x00e0f9});
+
+// light.position.set( 50, 50, 50 );
+
+var	tableMaterial = new THREE.MeshLambertMaterial({color: 0x9f9f9f, emissiveIntensity: 100, emissive: new THREE.Color(1, 1, 1),});
+// tableMaterial.emissive(new THREE.color(0xFFFFFF));
 var	sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
 
 var		timeOutFunctionId = undefined as any;
@@ -46,11 +55,13 @@ const	radius = 10, segments = 6, rings = 6;
 const	VIEW_ANGLE = 50, NEAR = 0.1, FAR = 5000;
 
 // geometric elements
+var light_ball = new THREE.PointLight( 0xFFFFFF, 10, 30 );
 var ball =  new THREE.Mesh(new THREE.SphereGeometry(radius, segments, rings), sphereMaterial);
 var paddle1=  new THREE.Mesh(new THREE.BoxGeometry(paddleWidth, paddleHeight, paddleDepth), paddle1Material);
 var paddle2 =  new THREE.Mesh(new THREE.BoxGeometry(paddleWidth, paddleHeight, paddleDepth,),paddle2Material);
 var plane =  new THREE.Mesh(new THREE.PlaneGeometry(fieldWidth, fieldHeight ), planeMaterial);
-var table =  new THREE.Mesh(new THREE.PlaneGeometry(fieldWidth * 1.03, fieldHeight * 1.03), tableMaterial);
+var table =  new THREE.Mesh(new THREE.PlaneGeometry(fieldWidth + 15, fieldHeight + 15), tableMaterial);
+var light = new THREE.HemisphereLight(0xFFFFFF, 0x101010, 1);
  
 
 export default defineComponent({
@@ -91,20 +102,31 @@ export default defineComponent({
 			scene.background = loader.load( 'https://cdn.sortiraparis.com/images/1001/94880/721017-espace-un-objet-mysterieux.jpg' );
 			renderer.setSize(WIDTH, HEIGHT);
 			renderer.domElement.id = 'testid';
+			camera.sha
+			// planecamera.sha
+			// tablecamera.sha
+			// ballcamera.sha
+			// paddle1camera.sha
+			// paddle2camera.sha
+
 			scene.add(camera);
 			scene.add(plane);
 			scene.add(table);
 			scene.add(ball);
 			scene.add(paddle1);
 			scene.add(paddle2);
+			scene.add(light);
+			scene.add(light_ball);
 			this.canvas.appendChild(renderer.domElement);	
 			/*
 				setup elements pos
 			*/ 
 			camera.position.z = 320;
-			table.position.z = -5;
+			table.position.z = -1;
 			ball.position.x = 0;
 			ball.position.y = 0;
+			light.position.z = 20;
+			light_ball.position.z = radius;
 			ball.position.z = radius;
 			paddle1.position.x = -fieldWidth/2 + paddleWidth + 15;
 			paddle2.position.x = fieldWidth/2 - paddleWidth - 15;
@@ -272,12 +294,24 @@ export default defineComponent({
 			this.draw();
 		},
 		update_and_draw(data: any) {
-			paddle1.position.y = -1 * (data.p1) + 310
-			paddle2.position.y = -1 * (data.p2) + 310
-			this.player1_score = data.scorep1
-			this.player2_score = data.scorep2
-			ball.position.x =  data.ball.x - 550
-			ball.position.y = -1 * (data.ball.y) + 360
+			// console.log(data);
+			let bidule = new Uint16Array(data.gamedata)
+			// this.player1_y = bidule[0]
+			// this.player2_y = bidule[1]
+			// this.ball_x = bidule[2]
+			// this.ball_y = bidule[3]
+			// this.player1_score = bidule[4]
+			// this.player2_score = bidule[5]
+
+			// console.log(bidule[0])
+			paddle1.position.y = -1 * (bidule[0]) + 310
+			paddle2.position.y = -1 * (bidule[1]) + 310
+			ball.position.x =  bidule[2] - 550
+			ball.position.y = -1 * (bidule[3]) + 360
+			light_ball.position.x =  bidule[2] - 550
+			light_ball.position.y = -1 * (bidule[3]) + 360
+			this.player1_score = bidule[4]
+			this.player2_score = bidule[5]
 			this.draw();
 		},
 		handleCoundown(data: any) {
