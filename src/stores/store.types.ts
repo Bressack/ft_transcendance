@@ -82,6 +82,13 @@ export enum ChannelType {
   ONE_TO_ONE = "ONE_TO_ONE",
 }
 
+export enum ChanState {
+  LOADING = "LOADING",
+  PASSWDSUBMITION = "PASSWDSUBMITION",
+  ACTIVE = "ACTIVE",
+  ERROR = "ERROR",
+}
+
 export type FollowedBy = {
   followerId: string;
   id?: string;

@@ -1,6 +1,7 @@
 import { useQuasar } from "quasar";
 import { useChatStore } from "src/stores/chat";
 import { useMainStore } from "src/stores/store";
+import { ChanState } from "src/stores/store.types";
 import { RouteRecordRaw } from "vue-router";
 import api from "../services/api.service";
 import WsService from "../services/ws.service";
@@ -27,6 +28,7 @@ const routes: RouteRecordRaw[] = [
           const channelId: string = to.params.channelId as string;
           console.log("beforeEnter", channelId);
           if (store.isSubscribedToChannel(channelId)) {
+            store.current_channel_state = ChanState.LOADING;
             store.setCurrentChannel(channelId);
             next();
           } else next(from);

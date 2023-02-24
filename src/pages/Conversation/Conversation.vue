@@ -2,10 +2,12 @@
   <q-page>
     <div class="q-flex">
 
-      <ChatUsersList @lockChannel="lockChannel" />
+      <ChatUsersList v-if="$store.current_channel_state === 'ACTIVE'" @lockChannel="lockChannel" />
 
       <div class="row chatListContainer">
-        <div ref="chatList" class="list_messages">
+		<div v-if="$store.current_channel_state === 'LOADING'" class="loadingState">Loading...</div>
+		<div v-if="$store.current_channel_state === 'ERROR'">Error</div>
+        <div v-if="$store.current_channel_state === 'ACTIVE'" ref="chatList" class="list_messages">
           <Message v-for="message in $store.messages" :key="message.id" :username=message.username
             :avatar=avatarstr(message.username) :content=message.content :timestamp="new Date(message.CreatedAt) as Date" />
         </div>
@@ -28,15 +30,28 @@ import { defineComponent, computed, ref } from 'vue';
 // import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
 import ChatUsersList from './components/ChatUsersList.vue'
+import { ChanState } from 'src/stores/store.types';
 
 export default defineComponent({
   name: 'Conversation',
   components: { ChatUsersList, Message },
+//   beforeRouteEnter (to, from) {
+// 	console.log('Conversation beforeRouteEnter', to, from);
+	
+// 		const channelId: string = to.params.channelId as string;
+// 		if (this.$store.isSubscribedToChannel(channelId) && to.params.channelId !== from.params.channelId) {
+// 			this.$store.setCurrentChannel(channelId);
+// 			this.getDatas();
+// 			return true
+// 		}
+// 		return false
+//   },
   beforeRouteUpdate(to, from) {
 	console.log('beforeRouteUpdate', to, from);
 	const channelId : string = to.params.channelId as string;
     if (this.$store.isSubscribedToChannel(channelId) && to.params.channelId !== from.params.channelId) {
 		this.$store.setCurrentChannel(channelId);
+		this.$store.current_channel_state = ChanState.LOADING
 		this.getDatas();
 		return true
 	}
@@ -50,7 +65,6 @@ export default defineComponent({
   },
   data() {
     return {
-      subs: computed(() => this.$store.currentChannelSub?.channel.subscribedUsers),
       text: ref(''),
     }
   },
@@ -92,6 +106,7 @@ export default defineComponent({
       this.$api
       .joinChannel(this.$store.active_channel, this.$store.channelPassword)
       .then(() => {
+		this.$store.current_channel_state = ChanState.ACTIVE
         this.scrollBottom()
       })
       .catch(err => {
@@ -128,7 +143,7 @@ export default defineComponent({
 </script>
 
 <style lang="sass" scoped>
-
+@use "../../css/interpolate" as r
 .list_messages
   overflow: auto
   height: calc(100vh - (90px + 50px + 70px))
@@ -141,4 +156,16 @@ export default defineComponent({
   background-color: #555555
   position: fixed
   margin-left: v-bind(margin_input)
+
+.loadingState
+  color: black
+  opacity: 0.2
+  font-family: 'Press Start 2P'
+  font-weight: bold
+  @include r.interpolate(font-size, 320px, 2560px, 10px, 40px)
+  position: absolute
+  left:50%
+  top:50%
+  transform: translate(-50%, -50%)
+
 </style>
