@@ -69,7 +69,7 @@ export default defineComponent({
   watch: {
     stringToFind(newValue: string, oldValue: string) {
       // Pour ne pas lancer un findListWithString
-      // si une valeur est set à l'initatlisation du composant
+      // si une valeur est set à l'initialisation du composant
       if (!this.touched)
         return
       this.$emit('findListWithString', newValue)

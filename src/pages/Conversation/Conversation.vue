@@ -220,7 +220,7 @@ export default defineComponent({
     padding: 0px 100px 0px 100px
 //   word-break: break-word
 
-	
+
 .message_element
   width: 100%
 
@@ -247,5 +247,5 @@ export default defineComponent({
 
 .linkMessageProfile:hover
   cursor: pointer
-  text-decoration: underline 
+  text-decoration: underline
 </style>

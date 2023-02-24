@@ -77,7 +77,12 @@ extras: [
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
       // https: true,
+<<<<<<< Updated upstream
 	  vueDevtools: true,
+=======
+	    port: 9000,
+	    vueDevtools: true,
+>>>>>>> Stashed changes
       open: false, // opens browser window automatically
       proxy: {
         // proxy all requests starting with /api to jsonplaceholder
@@ -101,7 +106,7 @@ extras: [
         // }
       }
     },
-	
+
 
     // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
