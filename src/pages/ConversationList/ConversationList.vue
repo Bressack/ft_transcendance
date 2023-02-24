@@ -58,7 +58,7 @@
               <q-item clickable v-ripple
                 v-for="sub in ($store.getPublicPrivateChannels)"
                 :key="sub.channelId"
-                @click="chanSelected(sub.channel)"
+                @click="chanSelected(sub.channel.id)"
               >
                 <q-item-section>
                   <span class="text-bold text-h6 pubchan">{{ sub.channel.name }}</span>
@@ -104,7 +104,7 @@
     <ChooseGameOptions :opponent="opponent" :closeFunction="closeGameOptions" :inviteType="false"  />
   </q-dialog>
 
-  <q-dialog persistent v-model="dialogpassword" @keydown.esc="dialogpassword = false">
+  <!-- <q-dialog persistent v-model="dialogpassword" @keydown.esc="dialogpassword = false">
     <div class="password_dialog">
       <div class="q-ma-lg q-pt-lg">
         <q-item class="text-h6">Enter Password</q-item>
@@ -115,7 +115,7 @@
         <q-btn class="q-ma-lg" label="Submit" color="green-8" @click="joinprotectedchannel"/>
       </div>
     </div>
-  </q-dialog>
+  </q-dialog> -->
 </template>
 
 <script lang="ts">
@@ -179,9 +179,9 @@ export default defineComponent({
   },
   data() {
     return {
-      password: '',
-      dialogpassword: false,
-      conversationList: fake_IConvList(15) as IConvList,
+    //   password: '',
+    //   dialogpassword: false,
+    //   conversationList: fake_IConvList(15) as IConvList,
       searchInput: '',
       searchResult: {} as IResult,
       opponent: '' as string,
@@ -195,9 +195,9 @@ export default defineComponent({
   //   }
   // },
   methods: {
-    closePasswordDialog() {
-      this.dialogpassword = false
-    },
+    // closePasswordDialog() {
+    //   this.dialogpassword = false
+    // },
     goGameOptions(username: string) {
       this.opponent = username
       this.openGameOptions()
@@ -246,32 +246,10 @@ export default defineComponent({
     },
 
 
-    async joinprotectedchannel() : Promise<void> {
-      this.closePasswordDialog()
-      await this.$storeChat.initNewChannel(this.channelSelector, this.password)
-      this.password = ''
-      this.$router.push({
-        path: `/conversation/${this.channelSelector}`,
-      })
-      this.channelSelector = ''
-    },
-    async chanSelected(channel: Channel) {
-			
-    //   let instance
-    //   try {
-    //     instance = this.$storeChat.__getChannelInstance(channel.id)
-    //   } catch(err: any) {}
-
-    //   if (!instance?.checked && channel.passwordProtected) {
-    //     this.channelSelector = channel.id
-    //     this.dialogpassword = true
-    //   } else {
-    //     this.password = ''
-        console.log('thechan', channel);
-        this.$router.replace({
-          path: `/conversation/${channel.id}`,
-        })
-      // }
+   chanSelected(channelId: string) {
+		this.$router.replace({
+		  path: `/conversation/${channelId}`,
+		})
     },
 
 

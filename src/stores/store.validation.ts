@@ -304,7 +304,7 @@ const typeMap: any = {
   Channel: o(
     [
       {
-        json: "SubscribedUsers",
+        json: "subscribedUsers",
         js: "subscribedUsers",
         typ: u(undefined, a(r("SubscribedUser"))),
       },

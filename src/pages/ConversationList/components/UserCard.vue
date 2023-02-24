@@ -129,7 +129,8 @@ export default defineComponent({
         .catch(() => { })
     },
     userSelected() {
-      const channelID = this.$store.getChannelIDByUsername(this.username)
+		const channelID = this.$store.getChannelIDByUsername(this.username)
+		console.log('____userSelected', "username:", this.username ," channelId", channelID)
       if (channelID)
         this.$router.push({
           path: `/conversation/${channelID}`,

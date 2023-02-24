@@ -19,14 +19,15 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/Index/Index.vue"),
       },
       {
-        path: "/conversation/:channel_id",
+        path: "/conversation/:channelId",
         meta: { requiresAuth: true },
         component: () => import("pages/Conversation/Conversation.vue"),
         beforeEnter: async (to, from, next) => {
           const store = useMainStore();
-          const channel_id: string = to.params.channel_id as string;
-          if (store.isSubscribedToChannel(channel_id)) {
-            store.setCurrentChannel(channel_id);
+          const channelId: string = to.params.channelId as string;
+          console.log("beforeEnter", channelId);
+          if (store.isSubscribedToChannel(channelId)) {
+            store.setCurrentChannel(channelId);
             next();
           } else next(from);
         },

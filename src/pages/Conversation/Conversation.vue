@@ -32,8 +32,16 @@ import ChatUsersList from './components/ChatUsersList.vue'
 export default defineComponent({
   name: 'Conversation',
   components: { ChatUsersList, Message },
-  beforeCreate() {
-    // this.$store.setScrollBack(async () => {
+  beforeRouteUpdate(to, from) {
+	console.log('beforeRouteUpdate', to, from);
+	const channelId : string = to.params.channelId as string;
+    if (this.$store.isSubscribedToChannel(channelId) && to.params.channelId !== from.params.channelId) {
+		this.$store.setCurrentChannel(channelId);
+		this.getDatas();
+		return true
+	}
+	return false
+	// this.$store.setScrollBack(async () => {
     //   const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
     //   while (element?.children?.length != this.$store.messagesCount)
     //     await new Promise(r => setTimeout(r, 10));
@@ -78,9 +86,9 @@ export default defineComponent({
     },
 
     getDatas() {
-      const channelId = this.$route.path.split('/').slice(-1)[0]
-      if (this.$store.isSubscribedToChannel(channelId))
-          this.$store.setCurrentChannel(channelId);
+    //   const channelId = this.$route.path.split('/').slice(-1)[0]
+    //   if (this.$store.isSubscribedToChannel(channelId))
+    //       this.$store.setCurrentChannel(channelId);
       this.$api
       .joinChannel(this.$store.active_channel, this.$store.channelPassword)
       .then(() => {

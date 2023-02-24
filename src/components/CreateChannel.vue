@@ -169,7 +169,7 @@ export default defineComponent({
       const payload = {
         usernames: usernames,
         name: this.name,
-        channel_type: this.access ? 'PRIVATE' : 'PUBLIC',
+        channelType: this.access ? 'PRIVATE' : 'PUBLIC',
         password: this.password
       }
       console.log(payload)

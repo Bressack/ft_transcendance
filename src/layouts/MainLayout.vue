@@ -466,9 +466,10 @@ export default defineComponent({
 	this.$ws.listen("user-connected", this.handleUserConnectedEvent);
 	this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
 	this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
-  this.$ws.listen("altered_subscription", (payload: Subscription) => {
-    if (this.$store.username == payload.username)
-      this.$store.fetch();
+  this.$ws.listen("altered_subscription", (payload: ChannelSubscription) => {
+	console.log("MainLayout:470 altered_subscription", payload);
+    // if (this.$store.username == payload.username)
+      this.$api.fetchMe();
   });
 
   this.$ws.listen("message", (payload: Message) => {
