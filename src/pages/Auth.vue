@@ -10,7 +10,7 @@
         rounded
         unelevated
         toggle-color="primary"
-        color="white"
+        color="#F7F7FF"
         text-color="primary"
         :options="[
           {label: 'SIGN IN', value: true},

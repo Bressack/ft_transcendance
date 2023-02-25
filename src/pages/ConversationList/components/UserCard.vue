@@ -1,6 +1,8 @@
 <template>
 
-    <q-item clickable v-ripple class="usermenu">
+    <q-item clickable v-ripple class="usermenu"
+					manual-focus
+					:focused="$store.active_channel === $store.getChannelIDByUsername(username)">
       <q-item-section style="max-width: 50px;" @click="goProfilPage">
         <q-avatar class="avatar">
           <img size="20px" :src="`/api/avatar/${username}/thumbnail`">
@@ -22,7 +24,7 @@
       </q-item-section>
 
       <q-item-section side class="toto">
-        <q-icon name="more_vert" color="white" class="toto">
+        <q-icon name="more_vert" color="#F7F7FF" class="toto">
           <q-menu class="bg-grey-9 text-white" auto-close>
 
             <q-list style="min-width: 100px">

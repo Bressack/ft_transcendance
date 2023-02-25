@@ -55,9 +55,11 @@
               <CreateChannel :closeFn=closeDialog />
             </q-dialog>
             <q-list>
-              <q-item clickable v-ripple
+              <q-item clickable v-ripple 
                 v-for="sub in ($store.getPublicPrivateChannels)"
                 :key="sub.channelId"
+				manual-focus
+				:focused="$store.active_channel === sub.channelId"
                 @click="chanSelected(sub.channel.id)"
               >
                 <q-item-section>
@@ -109,7 +111,7 @@
       <div class="q-ma-lg q-pt-lg">
         <q-item class="text-h6">Enter Password</q-item>
         <q-separator/>
-        <q-input v-model="password" dark autofocus color="orange" label-color="white"/>
+        <q-input v-model="password" dark autofocus color="orange" label-color="#F7F7FF"/>
         <q-separator/>
         <q-btn class="q-ma-lg" label="Cancel" color="red-8" v-close-popup />
         <q-btn class="q-ma-lg" label="Submit" color="green-8" @click="joinprotectedchannel"/>

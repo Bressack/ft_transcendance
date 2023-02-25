@@ -29,16 +29,16 @@
     <q-item-section>
       <q-item-label class="label score">Victory<div class="bigger victory">{{victory}}</div></q-item-label>
     </q-item-section>
-    <q-separator vertical color="white" spaced/>
+    <q-separator vertical color="#F7F7FF" spaced/>
     <q-item-section>
       <q-item-label class="label score">Defeat<div class="bigger defeat">{{defeat}}</div></q-item-label>
     </q-item-section>
-    <q-separator vertical color="white" spaced/>
+    <q-separator vertical color="#F7F7FF" spaced/>
     <q-item-section>
       <q-item-label class="label score">Ratio<div class="bigger">{{ratio(victory, defeat)}}%</div></q-item-label>
     </q-item-section>
   </q-item>
-  <q-separator color="white" spaced/>
+  <q-separator color="#F7F7FF" spaced/>
 </template>
 
 <script lang="ts">

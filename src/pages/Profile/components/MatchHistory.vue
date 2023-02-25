@@ -11,14 +11,14 @@
           <q-item-label class="label username">{{pOne}}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-separator class="mobile-hide" vertical inset color="white"/>
+      <q-separator class="mobile-hide" vertical inset color="#F7F7FF"/>
       <q-item class="col-2">
         <q-item-section>
           <q-item-label class="bigger score"><span v-bind:class=status>{{status}}</span></q-item-label>
           <q-item-label class="label score">{{scoreOne}} - {{scoreTwo}}</q-item-label>
         </q-item-section>
       </q-item>
-    <q-separator class="mobile-hide" vertical inset color="white"/>
+    <q-separator class="mobile-hide" vertical inset color="#F7F7FF"/>
     <q-item v-bind:href=pTwo class="col">
       <q-item-section>
         <q-item-label class="right label username">{{pTwo}}</q-item-label>

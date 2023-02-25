@@ -51,7 +51,7 @@ export default defineComponent({
 	methods:
 	{
 		draw() {
-			const elementsColor: string = this.game_paused && this.info_value ? "white" : "white";
+			const elementsColor: string = this.game_paused && this.info_value ? "#F7F7FF" : "#F7F7FF";
         	var context = <CanvasRenderingContext2D>this.canvas.getContext("2d");
         	// Draw field
 			context.fillStyle = "#242729";
@@ -121,7 +121,7 @@ export default defineComponent({
         	if (this.game_paused && this.info_value) {
         	    const textSize = context.measureText(this.info_value);
 				const textSize_name = context.measureText(this.namedisplay);
-        	    context.fillStyle = "white";
+        	    context.fillStyle = "#F7F7FF";
         	    context.fillText(this.info_value, this.canvas.width / 2 - textSize.width / 2, this.canvas.height / 2);
 				context.fillText(this.namedisplay, this.canvas.width / 2 - textSize_name.width / 2, this.canvas.height * 0.60);
         	}

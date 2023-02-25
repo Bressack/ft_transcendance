@@ -7,8 +7,8 @@
 			<q-item-label class="bigger">Game Options</q-item-label>
 		</div>
 		<q-item-section class="q-pa-md">
-			<q-separator color="white" />
-			<q-option-group inline v-model="map" :options="maps" color="white" keep-color>
+			<q-separator color="#F7F7FF" />
+			<q-option-group inline v-model="map" :options="maps" color="#F7F7FF" keep-color>
 				<template v-slot:label="map">
 					<div class="row items-center">
 						<!-- <q-item-label class="label">{{ map.label }}</q-item-label> -->
@@ -16,13 +16,13 @@
 					</div>
 				</template>
 			</q-option-group>
-			<q-separator color="white" />
+			<q-separator color="#F7F7FF" />
 			<div class="q-pa-md rounded-borders">
 				<q-item-label class="label">
 					Difficulty level
 				</q-item-label>
-				<!-- <q-slider v-model="difficulty" :min="1" :max="3" color="white"/> -->
-				<q-option-group inline v-model="opt" :options="opts" color="white" keep-color>
+				<!-- <q-slider v-model="difficulty" :min="1" :max="3" color="#F7F7FF"/> -->
+				<q-option-group inline v-model="opt" :options="opts" color="#F7F7FF" keep-color>
 					<template v-slot:label="dif">
 						<div class="row items-center">
 							<q-item-label class="q-pa-auto label">{{ dif.label }}</q-item-label>

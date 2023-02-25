@@ -17,7 +17,7 @@
         dark
         label="Channel name"
         color="orange"
-        label-color="white"
+        label-color="#F7F7FF"
       />
     </div>
 
@@ -27,7 +27,7 @@
           dark
           v-model="password"
           color="orange"
-          label-color="white"
+          label-color="#F7F7FF"
           type='text'
           :disable="!protect ? true : false"
           :hint="!protect ? accessLabelOne : accessLabelTwo"
@@ -57,7 +57,7 @@
           input-debounce="0"
           stack-label
           label="Manage users"
-          label-color="white"
+          label-color="#F7F7FF"
           @filter="filterFn"
           :options="filterOptions"
         >

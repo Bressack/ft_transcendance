@@ -1,15 +1,28 @@
 <template> <!-- hide-scrollbar -->
   <q-page>
     <div class="q-flex">
+	
+      <ChatUsersList  @lockChannel="lockChannel" />
+	  <div v-if="$store.current_channel_state === 'LOADING'" class="loadingState">Loading...</div>
+	  <div v-if="$store.current_channel_state === 'ERROR'">Error</div>
 
-      <ChatUsersList v-if="$store.current_channel_state === 'ACTIVE'" @lockChannel="lockChannel" />
-
-      <div class="row chatListContainer">
-		<div v-if="$store.current_channel_state === 'LOADING'" class="loadingState">Loading...</div>
-		<div v-if="$store.current_channel_state === 'ERROR'">Error</div>
-        <div v-if="$store.current_channel_state === 'ACTIVE'" ref="chatList" class="list_messages">
-          <Message v-for="message in $store.messages" :key="message.id" :username=message.username
-            :avatar=avatarstr(message.username) :content=message.content :timestamp="new Date(message.CreatedAt) as Date" />
+      <div class="row chatListContainer q-pa-md justify-center">
+        <div  ref="chatList" class="list_messages" v-if="$store.current_channel_state === 'ACTIVE'"  style="padding-bottom:30px;" >
+			
+			<div v-for="(message, index) in $store.messages">
+			
+				<q-chat-message
+					:key="index"
+					:name="message.username === $store.username ? 'me' : message.username"
+					:avatar=avatarstr(message.username)
+					:text="[message.content]"
+					:stamp="getRelativeDate(new Date(message.CreatedAt))"
+					:sent="message.username === $store.username"
+					:bg-color="message.username === $store.username ? 'secondary' : 'blue-grey-11'"
+					size="4"/>
+			</div>
+          			<!-- <Message  v-for="message in $store.messages" :key="message.id" :username=message.username
+          				 :avatar=avatarstr(message.username) :content=message.content :timestamp="new Date(message.CreatedAt) as Date" /> -->
         </div>
       </div>
 
@@ -49,9 +62,10 @@ export default defineComponent({
   beforeRouteUpdate(to, from) {
 	console.log('beforeRouteUpdate', to, from);
 	const channelId : string = to.params.channelId as string;
+		this.$store.current_channel_state = ChanState.LOADING
+
     if (this.$store.isSubscribedToChannel(channelId) && to.params.channelId !== from.params.channelId) {
 		this.$store.setCurrentChannel(channelId);
-		this.$store.current_channel_state = ChanState.LOADING
 		this.getDatas();
 		return true
 	}
@@ -115,7 +129,30 @@ export default defineComponent({
         // que t'es ban
         // tout le reste ERROR
       })
-    }
+    },
+	    getRelativeDate(cdate: Date): string {
+			function floorStr(n: number) {
+				return (n < 10 ? '0' : '') + n
+			}
+
+			const now = new Date()
+
+			if (now.getDate() - cdate.getDate() == 0)
+				return 'Today at ' + floorStr(cdate.getHours()) + ':' + floorStr(cdate.getMinutes())
+			else if (now.getDate() - cdate.getDate() == 1)
+				return 'Yesterday at ' + floorStr(cdate.getHours()) + ':' + floorStr(cdate.getMinutes())
+			else if (now.getDate() - cdate.getDate() == -1)
+				return 'Tomorrow at ' + floorStr(cdate.getHours()) + ':' + floorStr(cdate.getMinutes())
+			else {
+				const d = cdate.getDate()
+				const m = (cdate.getMonth() + 1)
+				return floorStr(d) + '/'
+					+ floorStr(m) + '/'
+					+ cdate.getFullYear() + ' '
+					+ floorStr(cdate.getHours()) + ':'
+					+ floorStr(cdate.getMinutes())
+			}
+		},
   },
   computed: {
     margin_input() {
@@ -138,7 +175,8 @@ export default defineComponent({
   async beforeUnmount() {
     await this.$api.leavehttpChannel()
 	this.$store.setCurrentChannel("")
-  }
+  },
+  
 });
 </script>
 
@@ -168,4 +206,8 @@ export default defineComponent({
   top:50%
   transform: translate(-50%, -50%)
 
+.q-message-sent
+  color: #aeaeae !important
+.q-message-received
+  color: #aeaeae !important
 </style>

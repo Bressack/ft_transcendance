@@ -11,7 +11,7 @@
 
       <q-btn
         class="q-mt-xl"
-        color="white"
+        color="#F7F7FF"
         text-color="blue"
         unelevated
         to="/"

@@ -117,7 +117,7 @@ export default defineComponent({
 		{
 			// paddle1.position.y = 310
 			this.cameraPhysics();
-			const elementsColor: string = "white";
+			const elementsColor: string = "#F7F7FF";
         	this.context = <CanvasRenderingContext2D>this.canvas_txt.getContext("2d");
 				this.context.clearRect(0,0,this.canvas_txt.width,this.canvas_txt.height)
 			if (this.game_paused == true)
@@ -162,7 +162,7 @@ export default defineComponent({
         	if (this.game_paused && this.info_value) {
         	    const textSize = this.context.measureText(this.info_value);
 				const textSize_name = this.context.measureText(this.namedisplay);
-        	    this.context.fillStyle = "white";
+        	    this.context.fillStyle = "#F7F7FF";
         	    this.context.fillText(this.info_value, this.canvas_txt.width / 2 - textSize.width / 2, this.canvas_txt.height / 2);
 				this.context.fillText(this.namedisplay, this.canvas_txt.width / 2 - textSize_name.width / 2, this.canvas_txt.height * 0.60);
         	}

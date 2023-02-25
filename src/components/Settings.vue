@@ -22,11 +22,11 @@
       </q-uploader>
     </q-item>
     <q-item class="justify-center">
-      <q-btn color="white" label="Remove Avatar" flat icon="delete" @click="confirmRemoveAvatar = true" />
+      <q-btn color="#F7F7FF" label="Remove Avatar" flat icon="delete" @click="confirmRemoveAvatar = true" />
     </q-item>
     <div class="q-pa-md">
       <form onsubmit="return false">
-        <q-input dark color="white" label="Change username" v-model="username">
+        <q-input dark color="#F7F7FF" label="Change username" v-model="username">
           <q-btn color="orange" type="submit" label="ok" @click="confirmChangeUsername = true" />
         </q-input>
       </form>
