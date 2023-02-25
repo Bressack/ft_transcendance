@@ -6,7 +6,7 @@
 
   <div class="q-gutter-y-md q-mt-md" style="max-width: 300px">
     <q-card>
-      <q-tabs v-model="tab" dense class="text-grey-6 q-fixed qtab" style="background-color: #212121;"
+      <q-tabs v-model="tab" dense class="text-grey-6 q-fixed qtab" 
         active-color="orange" indicator-color="orange" align="justify" narrow-indicator>
         <q-tab name="friends" icon="group" class="tab" />
         <q-tab name="channels" icon="chat" class="tab" />
@@ -335,6 +335,7 @@ body
   margin-top: 50px
   height: calc(100vh - 260px)
   width: 300px
+
 
 .inputmenu
   width: 300px
