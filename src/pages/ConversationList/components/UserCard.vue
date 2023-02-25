@@ -120,19 +120,16 @@ export default defineComponent({
       this.$emit('goGameOptions', this.username)
     },
     follow() {
-      let that = this
       this.$api.follow(this.username)
         .then(() => { })
         .catch(() => { })
     },
     unfollow() {
-      let that = this
       this.$api.unfollow(this.username)
         .then(() => { })
         .catch(() => { })
     },
     block() {
-      let that = this
       this.$api.block(this.username)
         .then(() => { })
         .catch(() => { })
