@@ -2,7 +2,7 @@
 
     <q-item clickable v-ripple class="usermenu"
 					manual-focus
-					:focused="$store.active_channel === $store.getChannelIDByUsername(username)">
+					:focused="$store.active_channel === channelId">
       <q-item-section style="max-width: 50px;" @click="goProfilPage">
         <q-avatar class="avatar">
           <img size="20px" :src="`/api/avatar/${username}/thumbnail`">
@@ -18,7 +18,7 @@
         <q-icon v-if="shortcut_block"     class="shortcut" name="person_off" color="red"    @click="block" />
         <q-icon v-if="shortcut_unblock"   class="shortcut" name="done"       color="green"  @click="block" />
         <q-icon v-if="shortcut_play"      class="shortcut" name="play_arrow" color="green"  @click="goGameOptions" />
-        <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="userSelected" />
+        <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="goChat" />
         <q-icon v-if="shortcut_unfollow"  class="shortcut" name="cancel"     color="red"    @click="unfollow" />
         <q-icon v-if="shortcut_follow"    class="shortcut" name="done"       color="green"  @click="follow" />
       </q-item-section>
@@ -37,7 +37,7 @@
                 <q-item-section>Invite to play</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_chat" clickable @click="userSelected">
+              <q-item v-if="menu_chat" clickable :to="channelPath">
                 <q-item-section>Chat</q-item-section>
               </q-item>
 
@@ -95,8 +95,15 @@ export default defineComponent({
   },
   data() {
     return {
-
     }
+  },
+  computed: {
+	channelId() {
+		return this.$store.getChannelIDByUsername(this.username)
+	},
+	channelPath() {
+		return `/channel/${this.channelId}`
+	}
   },
   methods: {
     getLoginStatus() {
@@ -130,12 +137,10 @@ export default defineComponent({
         .then(() => { })
         .catch(() => { })
     },
-    userSelected() {
-		const channelID = this.$store.getChannelIDByUsername(this.username)
-		console.log('____userSelected', "username:", this.username ," channelId", channelID)
-      if (channelID)
+    goChat() {
+      if (this.channelId)
         this.$router.push({
-          path: `/conversation/${channelID}`,
+          path: `/conversation/${this.channelId}`,
         })
       else
         console.error('user one-to-one channelId undefined')
