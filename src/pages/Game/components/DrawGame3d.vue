@@ -16,13 +16,23 @@ import {defineComponent} from 'vue'
 import { watch } from 'vue'
 import * as THREE from 'three';
 import { useMeStore } from '../../../stores/me';
+import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass';
+import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer';
+import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 // import {neonCursor} from "truc.js"
 // import THREE from 'three';
+var renderscene = undefined as any;
+var composer = undefined as any;
+var bloomPass = undefined as any;
 
-var	paddle1Material = new THREE.MeshLambertMaterial({color: 0x00ffff});
-var	paddle2Material = new THREE.MeshLambertMaterial({color: 0xFF0000});
+var	paddle1Material = new THREE.MeshBasicMaterial({color: 0x00FFFF, wireframe: true});
+var	paddle2Material = new THREE.MeshBasicMaterial({color: 0xFF0000, wireframe: true});
 var	loader = new THREE.TextureLoader();
-var	planeMaterial = new THREE.MeshLambertMaterial({color: 0x242729});
+var	borderMaterial = new THREE.MeshBasicMaterial({color: 0x424242, wireframe: false});
+var	planeMaterial = new THREE.MeshBasicMaterial({color: 0x000000, wireframe: false});
+// planeMaterial.roughness = 0;
+// planeMaterial.metalness = 1;
+// planeMaterial.reflectivity = 1
 
 // var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://cdn.intra.42.fr/users/d0f4dd0d898a9e9cdb2df466d0e5c944/aribesni.jpg' )});
 // var planeMaterial = new THREE.MeshBasicMaterial({ map: loader.load( 'https://upload.wikimedia.org/wikipedia/commons/3/38/Xavier_Niel004.jpg' )});
@@ -32,9 +42,10 @@ var	planeMaterial = new THREE.MeshLambertMaterial({color: 0x242729});
 
 // light.position.set( 50, 50, 50 );
 
-var	tableMaterial = new THREE.MeshLambertMaterial({color: 0x9f9f9f, emissiveIntensity: 100, emissive: new THREE.Color(1, 1, 1),});
+var	tableMaterial = new THREE.MeshBasicMaterial({color: 0x9f9f9f});
 // tableMaterial.emissive(new THREE.color(0xFFFFFF));
-var	sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF} );
+var	sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF , wireframe: true} );
+var	sphereMaterial_2 = new THREE.MeshBasicMaterial( {color: 0x268f1e , wireframe: true} );
 
 var		timeOutFunctionId = undefined as any;
 // scene object variables
@@ -46,22 +57,33 @@ var		camera = null as any
 const	fieldWidth = 1150, fieldHeight = 725;
 
 // paddle const
-const	paddleWidth = 10, paddleHeight = 90, paddleDepth = 10;
+const	paddleWidth = 10, paddleHeight = 90, paddleDepth = 5;
 
 // ball const
-const	radius = 10, segments = 6, rings = 6;
+const	radius = 10, segments = 6, rings = 5;
 
 // camera const
 const	VIEW_ANGLE = 50, NEAR = 0.1, FAR = 5000;
 
 // geometric elements
-var light_ball = new THREE.PointLight( 0xFFFFFF, 10, 30 );
+var light_ball = new THREE.PointLight( 0xff00ff, 20, 100);
+var light_ball_2 = new THREE.PointLight( 0xff00ff, 20, 100);
+
+
+var back =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 725, 3, 25), borderMaterial);
+var front =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 725, 3, 25),borderMaterial);
+var left =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 1150, 3, 25), borderMaterial);
+var right =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, 1150, 3, 25),borderMaterial);
+
 var ball =  new THREE.Mesh(new THREE.SphereGeometry(radius, segments, rings), sphereMaterial);
-var paddle1=  new THREE.Mesh(new THREE.BoxGeometry(paddleWidth, paddleHeight, paddleDepth), paddle1Material);
-var paddle2 =  new THREE.Mesh(new THREE.BoxGeometry(paddleWidth, paddleHeight, paddleDepth,),paddle2Material);
-var plane =  new THREE.Mesh(new THREE.PlaneGeometry(fieldWidth, fieldHeight ), planeMaterial);
+var bigSphere =  new THREE.Mesh(new THREE.SphereGeometry(radius * 200, segments, rings), sphereMaterial_2);
+var paddle1=  new THREE.Mesh(new THREE.CylinderGeometry(paddleWidth,paddleWidth, paddleHeight, 3, 4), paddle1Material);
+var paddle2 =  new THREE.Mesh(new THREE.CylinderGeometry(paddleWidth,paddleWidth, paddleHeight, 3, 4),paddle2Material);
+var plane =  new THREE.Mesh(new THREE.BoxGeometry(3, fieldHeight - 10, fieldWidth - 10 ), planeMaterial);
 var table =  new THREE.Mesh(new THREE.PlaneGeometry(fieldWidth + 15, fieldHeight + 15), tableMaterial);
-var light = new THREE.HemisphereLight(0xFFFFFF, 0x101010, 1);
+var light =new THREE.AmbientLight( 0x404040 )
+//  new THREE.HemisphereLight(0xffffff, 0xffffff, 100);
+
  
 
 export default defineComponent({
@@ -92,48 +114,74 @@ export default defineComponent({
 		setup()
 		{	
 			this.createScene();
-			this.draw();
+			// this.draw();
 		},
 		createScene()
 		{
 			let HEIGHT = window.innerWidth / 1.5 / 1.6;
 			let WIDTH = window.innerWidth / 1.5;
 			camera = new THREE.PerspectiveCamera( VIEW_ANGLE,  WIDTH / HEIGHT, NEAR, FAR);
-			scene.background = loader.load( 'https://cdn.sortiraparis.com/images/1001/94880/721017-espace-un-objet-mysterieux.jpg' );
+			// scene.background = loader.load( 'https://cdn.sortiraparis.com/images/1001/94880/721017-espace-un-objet-mysterieux.jpg' );
 			renderer.setSize(WIDTH, HEIGHT);
 			renderer.domElement.id = 'testid';
-			camera.sha
+			
+			// camera.sha
 			// planecamera.sha
 			// tablecamera.sha
 			// ballcamera.sha
 			// paddle1camera.sha
 			// paddle2camera.sha
-
-			scene.add(camera);
-			scene.add(plane);
-			scene.add(table);
-			scene.add(ball);
-			scene.add(paddle1);
-			scene.add(paddle2);
+			
+			scene.add(back);
+			scene.add(front);
+			scene.add(left);
+			scene.add(right);
+			scene.add(bigSphere);
 			scene.add(light);
 			scene.add(light_ball);
+			scene.add(camera);
+			// scene.add(plane);
+			scene.add(paddle1);
+			scene.add(paddle2);
+			scene.add(ball);
 			this.canvas.appendChild(renderer.domElement);	
 			/*
 				setup elements pos
 			*/ 
 			camera.position.z = 320;
-			table.position.z = -1;
+			plane.position.z = 0;
+			plane.rotation.y = 90 * Math.PI/180
+			// table.position.z = -80;
 			ball.position.x = 0;
 			ball.position.y = 0;
 			light.position.z = 20;
 			light_ball.position.z = radius;
 			ball.position.z = radius;
+			back.position.x = -fieldWidth/2;
+			front.position.x = fieldWidth/2;
+			left.position.y = -fieldHeight/2;
+			right.position.y = fieldHeight/2;
+			left.rotation.z = 90 * Math.PI/180
+			right.rotation.z = 90 * Math.PI/180
 			paddle1.position.x = -fieldWidth/2 + paddleWidth + 15;
 			paddle2.position.x = fieldWidth/2 - paddleWidth - 15;
-			paddle1.position.z = paddleDepth;
-			paddle2.position.z = paddleDepth;
+			// paddle1.position.x = -fieldWidth/2 + paddleWidth + 15;
+			// paddle2.position.x = fieldWidth/2 - paddleWidth - 15;
+			// paddle2.position.x = 100;
+			paddle1.position.z = 10;
+			paddle2.position.z = 10;
 			camera.position.z = paddleDepth + 800;
-			this.cameraPhysics()	
+			this.cameraPhysics()
+			renderscene = new RenderPass( scene, camera );
+			composer = new EffectComposer(renderer);
+			composer.addPass(renderscene);
+			bloomPass = new UnrealBloomPass(
+				new THREE.Vector2(WIDTH, HEIGHT),
+				0.5,
+				0.1,
+				1
+			)
+			composer.addPass(bloomPass);	
 		},
 		draw()
 		{
@@ -188,7 +236,9 @@ export default defineComponent({
         	    this.context.fillText(this.info_value, this.canvas_txt.width / 2 - textSize.width / 2, this.canvas_txt.height / 2);
 				this.context.fillText(this.namedisplay, this.canvas_txt.width / 2 - textSize_name.width / 2, this.canvas_txt.height * 0.60);
         	}
-			renderer.render(scene, camera);
+			// renderer.render(scene, camera);
+			composer.render();
+			requestAnimationFrame(this.draw);
 		},
 		cameraPhysics()
 		{
@@ -253,7 +303,7 @@ export default defineComponent({
 					alert(err)
 				})
 			// console.log("toggle 2 ", this.$q.fullscreen.isActive)
-			this.draw();
+			// this.draw();
 		},
 		waitEndResize() {
 			clearTimeout(timeOutFunctionId);
@@ -290,8 +340,22 @@ export default defineComponent({
 				this.canvas_txt.width = window.innerWidth / 1.5;
 				camera = new THREE.PerspectiveCamera( VIEW_ANGLE, this.canvas_txt.width / this.canvas_txt.height, NEAR, FAR);
 				camera.position.z = paddleDepth + 800;
+				
 			}
-			this.draw();
+			// renderscene = new RenderPass( scene, camera );
+			composer = new EffectComposer(renderer);
+			composer.addPass(renderscene);
+			// resolution: THREE.Vector2
+			// bloomPass.resolution = new THREE.Vector2(this.canvas.width, this.canvas.height)
+			// bloomPass.height = this.canvas.height
+			bloomPass = new UnrealBloomPass(
+				new THREE.Vector2(this.canvas.width, this.canvas.height),
+				2,
+				1,
+				0
+			)
+			composer.addPass(bloomPass);
+			// this.draw();
 		},
 		update_and_draw(data: any) {
 			// console.log(data);
@@ -309,10 +373,11 @@ export default defineComponent({
 			ball.position.x =  bidule[2] - 550
 			ball.position.y = -1 * (bidule[3]) + 360
 			light_ball.position.x =  bidule[2] - 550
-			light_ball.position.y = -1 * (bidule[3]) + 360
+			light_ball.position.x = -1 * (bidule[3]) + 360
+			bigSphere.rotation.y += 0.1 * Math.PI/180;
 			this.player1_score = bidule[4]
 			this.player2_score = bidule[5]
-			this.draw();
+			// this.draw();
 		},
 		handleCoundown(data: any) {
 			// console.log(data);
@@ -327,12 +392,12 @@ export default defineComponent({
 				this.info_value = data.value;
 				this.namedisplay = (data.name == undefined) ? "": data.name;
 			}
-			this.draw()
+			// this.draw()
 		},
 		handleGameEnd(data: any) {
 			this.game_paused = true;
 			this.info_value = data.value;
-			this.draw()
+			// this.draw()
 			setTimeout(() => {
 				this.$router.push("/profile/me")
 			}, 1000)
@@ -349,7 +414,8 @@ export default defineComponent({
 				this.waitEndResize();
 			})
 			this.setup();
-			this.onResize()
+			this.onResize();
+			this.draw()
 		},
 	},
 	created() {
