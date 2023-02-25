@@ -5,6 +5,7 @@ import { ChanState } from "src/stores/store.types";
 import { RouteRecordRaw } from "vue-router";
 import api from "../services/api.service";
 import WsService from "../services/ws.service";
+import { defineAsyncComponent } from "vue";
 
 const routes: RouteRecordRaw[] = [
   {

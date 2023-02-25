@@ -5,10 +5,10 @@
     @selectElement="followorunfollow" />
 
   <div class="q-gutter-y-md q-mt-md" style="max-width: 300px">
-    <q-card>
-      <q-tabs v-model="tab" dense class="text-grey-6 q-fixed qtab" 
+    <q-card >
+      <q-tabs v-model="tab" dense class="text-grey-6 q-fixed qtab "  
         active-color="orange" indicator-color="orange" align="justify" narrow-indicator>
-        <q-tab name="friends" icon="group" class="tab" />
+        <q-tab name="friends" icon="group" class="tab unautretruc" />
         <q-tab name="channels" icon="chat" class="tab" />
         <q-tab name="following" icon="hourglass_bottom" class="tab">
           <div class="notif justify-center items-center circle" v-if="$store.friendRequestSent?.length > 0" />
@@ -30,7 +30,7 @@
 
       <q-separator />
 
-      <div class="text-h5 text-center q-py-sm text-orange-6 text-bold bg-grey-9 q-fixed tabtitle">{{ tab }}</div>
+      <div class="text-h5 text-center q-py-sm text-blue-grey-3 text-bold bg-grey-9 q-fixed tabtitle">{{ tab }}</div>
 
       <q-separator />
 
@@ -326,11 +326,18 @@ body
   padding: 0
   margin: 0
 
+.text-h5
+  font-size: 1em
+  color: $ternary
+  font-family: 'Press Start 2P'
+
 .tab-panel
   overflow: auto
   z-index: 0
   // position: absolute
   padding: 0 !important
+  
+  
   background-color: $bg-secondary
   margin-top: 50px
   height: calc(100vh - 260px)

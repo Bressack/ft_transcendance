@@ -3,28 +3,51 @@
     <div class="q-flex">
 	
       <ChatUsersList  @lockChannel="lockChannel" />
-	  <div v-if="$store.current_channel_state === 'LOADING'" class="loadingState">Loading...</div>
-	  <div v-if="$store.current_channel_state === 'ERROR'">Error</div>
+					<q-virtual-scroll v-if="$store.messagesCount" class="list_messages" 
+							component="q-list"
+							separator
+							:items="$store.messages"
+							ref="chatScroll"
+							v-slot="{ index, item }">
+						<!-- <transition appear enter-active-class="animated fadeIn"> -->
+							<q-chat-message
+								:key="index"
+								:avatar=avatarstr(item.username)
+								:text="[item.content]"
+								:stamp="getRelativeDate(new Date(item.CreatedAt))"
+								:sent="item.username === $store.username"
+								:bg-color="item.username === $store.username ? 'secondary' : 'blue-grey-11'"
+								>
+								<template v-slot:name>
+									<span class="linkMessageProfile" @click="goProfilPage(item.username)">{{ item.username === $store.username ? 'me' : item.username }}</span>
+								</template>
+							</q-chat-message>
 
-      <div class="row chatListContainer q-pa-md justify-center">
-        <div  ref="chatList" class="list_messages" v-if="$store.current_channel_state === 'ACTIVE'"  style="padding-bottom:30px;" >
-			
-			<div v-for="(message, index) in $store.messages">
-			
-				<q-chat-message
-					:key="index"
-					:name="message.username === $store.username ? 'me' : message.username"
-					:avatar=avatarstr(message.username)
-					:text="[message.content]"
-					:stamp="getRelativeDate(new Date(message.CreatedAt))"
-					:sent="message.username === $store.username"
-					:bg-color="message.username === $store.username ? 'secondary' : 'blue-grey-11'"
-					size="4"/>
-			</div>
-          			<!-- <Message  v-for="message in $store.messages" :key="message.id" :username=message.username
-          				 :avatar=avatarstr(message.username) :content=message.content :timestamp="new Date(message.CreatedAt) as Date" /> -->
-        </div>
+					  	<!-- </transition> -->
+					</q-virtual-scroll>
+					<div v-else>
+						<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+							 <div  class="loadingState">No messages</div>
+						 </transition>
+					</div>
+	  <div v-if="$store.currentChannelSubState === 'BANNED'">
+			<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+			<div class="loadingState">Banned !</div>
+			</transition>
+	  </div>
+      <div v-else-if="$store.current_channel_state === 'ACTIVE'" class="row q-pa-md justify-center" style="padding-top: 0px; padding-right: 0px; bottom:auto;">
+
       </div>
+	<div v-else-if="$store.current_channel_state === 'LOADING'">
+	 	  <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+		  	<div class="loadingState">Loading...</div>
+		  </transition>
+	</div>
+	<div v-else-if="$store.current_channel_state === 'ERROR'">
+	 	  <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+		  	<div class="loadingState">Error</div>
+		  </transition>
+	</div>
 
       <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
         class="absolute-bottom custom-input input">
@@ -105,8 +128,13 @@ export default defineComponent({
     avatarstr(username: string) {
       return `/api/avatar/${username}/thumbnail`
     },
-
-    async scrollBottom() {
+	scrollBottom() {
+		const scrollArea : any = this.$refs.chatScroll;
+		const scrollTarget = scrollArea.getScrollTarget();
+		const duration = 0; // ms - use 0 to instant scroll
+		scrollArea.setScrollPosition(scrollTarget.scrollHeight, duration);
+	},
+    async scrollBottom2() {
       const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
       while (element?.children?.length != this.$store.messagesCount)
         await new Promise(r => setTimeout(r, 10));
@@ -120,8 +148,12 @@ export default defineComponent({
       this.$api
       .joinChannel(this.$store.active_channel, this.$store.channelPassword)
       .then(() => {
-		this.$store.current_channel_state = ChanState.ACTIVE
-        this.scrollBottom()
+		setTimeout(()=> {
+			this.$store.current_channel_state = ChanState.ACTIVE
+					setTimeout(() => {
+							this.scrollBottom()
+						}, 300)
+		},300)
       })
       .catch(err => {
         // mot de passe incorrect
@@ -196,8 +228,7 @@ export default defineComponent({
   margin-left: v-bind(margin_input)
 
 .loadingState
-  color: black
-  opacity: 0.2
+  color: #8E8E8E
   font-family: 'Press Start 2P'
   font-weight: bold
   @include r.interpolate(font-size, 320px, 2560px, 10px, 40px)
@@ -210,4 +241,8 @@ export default defineComponent({
   color: #aeaeae !important
 .q-message-received
   color: #aeaeae !important
+
+.linkMessageProfile:hover
+  cursor: pointer
+  text-decoration: underline 
 </style>

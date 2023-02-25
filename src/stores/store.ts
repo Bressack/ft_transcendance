@@ -185,6 +185,13 @@ const useMainStore = defineStore("main-store", {
         ) || ({} as ChannelSubscription)
       );
     },
+    currentChannelSubState(state: MainStoreState): State {
+      return (
+        state.channelSubscriptions?.find(
+          (e: ChannelSubscription) => e.channelId === this.active_channel
+        )?.state || State.OK
+      );
+    },
     currentChannelName(state: MainStoreState): string {
       const channel = this.currentChannelSub?.channel;
       if (channel) {
