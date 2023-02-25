@@ -6,7 +6,7 @@
 
   <div class="q-gutter-y-md q-mt-md" style="max-width: 300px">
     <q-card >
-      <q-tabs v-model="tab" dense class="text-grey-6 q-fixed qtab "  
+      <q-tabs v-model="tab" dense class="text-grey-6 q-fixed qtab "
         active-color="orange" indicator-color="orange" align="justify" narrow-indicator>
         <q-tab name="friends" icon="group" class="tab unautretruc" />
         <q-tab name="channels" icon="chat" class="tab" />
@@ -42,14 +42,31 @@
 
       <q-tab-panels v-model="tab" animated class="list">
 
-<!-- #################################################################################################################### -->
-          <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
-            <q-list>
-              <UserCard v-for="friend in $store.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
+        <!-- #################################################################################################################### -->
+        <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
+          <q-list>
+            <UserCard v-for="friend in $store.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
+              shortcut_chat shortcut_play menu_profile menu_block menu_play menu_chat menu_unfollow />
+          </q-list>
+        </q-tab-panel>
 
-                shortcut_chat shortcut_play menu_profile menu_block menu_play menu_chat menu_unfollow />
-            </q-list>
-          </q-tab-panel>
+        <!-- #################################################################################################################### -->
+        <q-tab-panel name="channels" class="tab-panel hide-scrollbar">
+          <q-item class="flex-center">
+            <q-btn class="createChannelButton" label="Create channel" color="orange" @click="dialog = true" />
+          </q-item>
+          <q-dialog persistent v-model="dialog">
+            <CreateChannel :closeFn=closeDialog />
+          </q-dialog>
+          <q-list>
+            <q-item clickable v-ripple v-for="sub in ($store.getPublicPrivateChannels)" :key="sub.channelId" manual-focus
+              :focused="$store.active_channel === sub.channelId" @click="chanSelected(sub.channel.id)">
+              <q-item-section>
+                <span class="text-bold text-h6 pubchan">{{ sub.channel.name }}</span>
+              </q-item-section>
+              <q-item-section side v-if="sub.channel.passwordProtected">
+                <q-icon name="lock" color="grey-7" />
+              </q-item-section>
 
 <!-- #################################################################################################################### -->
           <q-tab-panel name="channels" class="tab-panel hide-scrollbar">
@@ -60,7 +77,7 @@
               <CreateChannel :closeFn=closeDialog />
             </q-dialog>
             <q-list>
-              <q-item clickable v-ripple 
+              <q-item clickable v-ripple
                 v-for="sub in ($store.getPublicPrivateChannels)"
                 :key="sub.channelId"
 				manual-focus
@@ -116,10 +133,10 @@
   </div>
 
   <q-dialog v-model="gameOptions">
-    <ChooseGameOptions :opponent="opponent" :closeFunction="closeGameOptions" :inviteType="false"  />
+    <ChooseGameOptions :opponent="opponent" :closeFunction="closeGameOptions" :inviteType="false" />
   </q-dialog>
 
-  <!-- <q-dialog persistent v-model="dialogpassword" @keydown.esc="dialogpassword = false">
+<!-- <q-dialog persistent v-model="dialogpassword" @keydown.esc="dialogpassword = false">
     <div class="password_dialog">
       <div class="q-ma-lg q-pt-lg">
         <q-item class="text-h6">Enter Password</q-item>
@@ -130,8 +147,7 @@
         <q-btn class="q-ma-lg" label="Submit" color="green-8" @click="joinprotectedchannel"/>
       </div>
     </div>
-  </q-dialog> -->
-</template>
+  </q-dialog> --></template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
@@ -192,19 +208,19 @@ export default defineComponent({
   },
   data() {
     return {
-    //   password: '',
-    //   dialogpassword: false,
-    //   conversationList: fake_IConvList(15) as IConvList,
+      //   password: '',
+      //   dialogpassword: false,
+      //   conversationList: fake_IConvList(15) as IConvList,
       searchInput: '',
       searchResult: {} as IResult,
       opponent: '' as string,
       socialtoggle: '1' as string,
     }
-		    // console.log(this.$route.params.channel_id)
-	},
+    // console.log(this.$route.params.channel_id)
+  },
   // watch: {
   //   toto(n_value, o_value) {
-      
+
   //   }
   // },
   methods: {
@@ -259,10 +275,10 @@ export default defineComponent({
     },
 
 
-   chanSelected(channelId: string) {
-		this.$router.replace({
-		  path: `/conversation/${channelId}`,
-		})
+    chanSelected(channelId: string) {
+      this.$router.replace({
+        path: `/conversation/${channelId}`,
+      })
     },
 
 
@@ -348,8 +364,8 @@ body
   z-index: 0
   // position: absolute
   padding: 0 !important
-  
-  
+
+
   background-color: $bg-secondary
   margin-top: 50px
   height: calc(100vh - 260px)

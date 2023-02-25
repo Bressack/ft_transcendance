@@ -80,7 +80,7 @@ import { defineComponent, computed, ref, } from 'vue';
 // import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
 import ChatUsersList from './components/ChatUsersList.vue'
-import { ChanState } from 'src/stores/store.types';
+import { ChanState, SubscribedUser } from 'src/stores/store.types';
 
 export default defineComponent({
 	name: 'Conversation',
