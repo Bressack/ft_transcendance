@@ -111,6 +111,26 @@ export default defineComponent({
 			text: ref(''),
 		}
 	},
+		computed: {
+		margin_input() {
+			if (this.$store.drawerStatus)
+				return "300px"
+			return "0px"
+		},
+	},
+	mounted() {
+		this.$ws.listen("message", () => {
+			this.scrollBottom(true)
+		});
+		this.getDatas()
+	},
+	beforeUpdate() {
+		// this.getDatas()
+	},
+	async beforeUnmount() {
+		await this.$api.leavehttpChannel()
+		this.$store.setCurrentChannel("")
+	},
 	methods: {
 		async lockChannel() {
 			await this.$api.leavehttpChannel()
@@ -169,36 +189,25 @@ export default defineComponent({
 			}
 		},
 	},
-	computed: {
-		margin_input() {
-			if (this.$store.drawerStatus)
-				return "300px"
-			return "0px"
-		},
-	},
-	mounted() {
-		this.$ws.listen("message", () => {
-			this.scrollBottom(true)
-		});
-		this.getDatas()
-	},
-	beforeUpdate() {
-		// this.getDatas()
-	},
-	async beforeUnmount() {
-		await this.$api.leavehttpChannel()
-		this.$store.setCurrentChannel("")
-	},
+
 
 });
 </script>
 
 <style lang="sass" scoped>
 @use "../../css/interpolate" as r
-.list_messages
+
+#virtScroll
   height: calc(100vh - (90px + 50px + 70px))
   width: 100%
   padding: 0px 50px 0px 50px
+
+@media screen and (max-width: 800px)
+  #virtScroll
+    padding: 0px 15px 0px 15px
+@media screen and (min-width: 1200px)
+  #virtScroll
+    padding: 0px 100px 0px 100px
 //   word-break: break-word
 
 	

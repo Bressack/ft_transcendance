@@ -30,6 +30,11 @@ import { Convert } from "./store.validation";
 //   createdAt: Date;
 //   options: NotifyOptions;
 // }
+type PendingRequest = {
+  username: string;
+  // createdAt: Date;
+  category: "received" | "sent";
+};
 
 enum UserStatus {
   OFFLINE = "OFFLINE",
@@ -146,15 +151,25 @@ const useMainStore = defineStore("main-store", {
     },
     friendRequestSent(state: MainStoreState): string[] {
       // keep only request without follow back
-      if (this.followedBy_str && this.following_str)
-        return difference(this.following_str, this.followedBy_str);
-      else return [];
+      return difference(state.following_str, state.followedBy_str || []);
     },
     friendRequestRecevied(state: MainStoreState): string[] {
       // keep only request without follow back
-      if (this.followedBy_str && this.following_str)
-        return difference(this.followedBy_str, this.following_str);
-      else return [];
+      return difference(state.followedBy_str, state.following_str || []);
+    },
+    pendingRequests: (state: MainStoreState): PendingRequest[] => {
+      const invitationList: PendingRequest[] = [];
+      const received: string[] =
+        difference(state.followedBy_str, state.following_str || []) || [];
+      const sent: string[] =
+        difference(state.following_str, state.followedBy_str || []) || [];
+      received.forEach((r) => {
+        invitationList.push({ username: r, category: "received" });
+      });
+      sent.forEach((r) => {
+        invitationList.push({ username: r, category: "sent" });
+      });
+      return invitationList;
     },
     // oneToOneChannels(state: MainStoreState): ChannelSubscription | undefined {
     //   return this.channelSubscriptions?.find(

@@ -122,15 +122,12 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import { IConvList, IConvItem, Scope } from '../../models/models';
-import { fake_IConvList } from '../../models/fakedatas'
+import { IConvItem, Scope } from '../../models/models';
 import ChooseGameOptions from '../../components/ChooseGameOptions.vue'
 import { ISearchQuery } from 'src/services/api.models'
 import QInputMenu from 'src/components/QInputMenu.component.vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
 import UserCard from './components/UserCard.vue'
-import * as models from 'src/services/api.models'
-import { Channel } from 'src/stores/store.types'
 
 enum EUserStatus {
   UNKNOWN,
