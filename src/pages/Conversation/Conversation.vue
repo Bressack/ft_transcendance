@@ -1,64 +1,70 @@
-<template> <!-- hide-scrollbar -->
-  <q-page>
-    <div class="q-flex">
-		<!-- <q-btn label="scrolltobottom" @click="chatVirtualScroll.scrollTo($store.messagesCount)"/> -->
-		<ChatUsersList  @lockChannel="lockChannel" />
-	
-			<q-virtual-scroll v-if="$store.messagesCount" id="virtScroll" ref="chatVirtualScroll" component="q-list" :items="$store.messages"
-				scroll-target="#virtScroll .scroll"
-				virtual-scroll-item-size="93.19"
-				@virtual-scroll="onVirtualScroll">
-					<template #default="{item, index}">
-					  <q-chat-message
-					  	:key="index"
-						:avatar=avatarstr(item.username)
-						:text="[item.content]"
-						:stamp="getRelativeDate(new Date(item.CreatedAt))"
-						:sent="item.username === $store.username"
-						:bg-color="item.username === $store.username ? 'secondary' : 'blue-grey-11'">
-						<template v-slot:name>
-							<span class="linkMessageProfile" @click="goProfilPage(item.username)">{{ item.username === $store.username ? 'me' : item.username }} {{ index }}</span>
-						</template>
-					  </q-chat-message>
-					</template>
-					<!-- <template #after :key="$store.messagesCount">
-						<div style="height:93px"> end</div>
-					</template> -->
-			</q-virtual-scroll>
-		<div v-else>
-			<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-			  <div class="loadingState">No messages</div>
-			</transition>
-		</div>
-	  <div v-if="$store.currentChannelSubState === 'BANNED'">
+<template>
+	<!-- hide-scrollbar -->
+	<q-page>
+		<div class="q-flex">
+			<!-- <q-btn label="scrolltobottom" @click="chatVirtualScroll.scrollTo($store.messagesCount)"/> -->
+			<ChatUsersList @lockChannel="lockChannel" />
+			<!-- <div v-if="$store.current_channel_state === 'ACTIVE'">
+
+			</div> -->
+			<!-- <div v-if="$store.currentChannelSubState === 'BANNED'">
 			<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
 			<div class="loadingState">Banned !</div>
 			</transition>
-	  </div>
-      <div v-else-if="$store.current_channel_state === 'ACTIVE'" class="row q-pa-md justify-center" style="padding-top: 0px; padding-right: 0px; bottom:auto;">
+	  </div> -->
+			<div v-show="$store.current_channel_state === 'ACTIVE'" class="row q-pa-md justify-center"
+				style="padding-top: 0px; padding-right: 0px; bottom:auto;">
+				<q-scroll-area id="virtScroll" class="list_messages">
+					<q-virtual-scroll component="q-list" :items="$store.messages" ref="chatVirtualScroll"
+						scroll-target="#virtScroll > .scroll" virtual-scroll-item-size="80" virtual-scroll-slice-size="12"
+						virtual-scroll-slice="15">
+						<template #default="{ item, index }">
+							<q-chat-message style="margin-top:0px; margin-bottom:0px; padding-bottom:8px; min-height: 80px;"
+								:key="index" :avatar=avatarstr(item.username) :text="[item.content]"
+								:stamp="getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username"
+								:bg-color="item.username === $store.username ? 'secondary' : 'blue-grey-11'">
+								<template v-slot:name>
+									<span class="linkMessageProfile" @click="goProfilPage(item.username)">{{ item.username
+										=== $store.username ? 'me' : item.username }}</span>
+								</template>
+							</q-chat-message>
+						</template>
+						<template #after>
+							<div :key="$store.messagesCount">
+								<transition appear enter-active-class="animated fadeIn"
+									leave-active-class="animated fadeOut">
+									<div v-show="!$store.messagesCount" class="loadingState">No messages</div>
+								</transition>
+							</div>
+						</template>
+					</q-virtual-scroll>
+				</q-scroll-area>
 
-      </div>
-	<div v-else-if="$store.current_channel_state === 'LOADING'">
-	 	  <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-		  	<div class="loadingState">Loading...</div>
-		  </transition>
-	</div>
-	<div v-else-if="$store.current_channel_state === 'ERROR'">
-	 	  <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-		  	<div class="loadingState">Error</div>
-		  </transition>
-	</div>
+			</div>
+			<div v-if="$store.current_channel_state === 'LOADING'">
+				<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+					<div class="loadingState">Loading...</div>
+				</transition>
+			</div>
+			<div v-else-if="$store.current_channel_state === 'ERROR'">
+				<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+					<div class="loadingState">Error</div>
+				</transition>
+			</div>
 
-      <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
-        class="absolute-bottom custom-input input">
-        <template v-slot:append>
-          <q-icon name="send" @click="sendmessage" class="cursor-pointer" />
-        </template>
-      </q-input>
+			<q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
+				class="absolute-bottom custom-input input"
+				maxlength="128"
+				:loading="$store.current_channel_state === 'LOADING'"
+				:disable="!($store.current_channel_state === 'ACTIVE')">
+				<template v-slot:append>
+					<q-icon name="send" @click="sendmessage" class="cursor-pointer" />
+				</template>
+			</q-input>
 
-    </div>
+		</div>
 
-  </q-page>
+	</q-page>
 </template>
 
 <script lang="ts">
@@ -69,122 +75,83 @@ import ChatUsersList from './components/ChatUsersList.vue'
 import { ChanState } from 'src/stores/store.types';
 
 export default defineComponent({
-  name: 'Conversation',
-  /// <reference path="" />
-  
-  components: { ChatUsersList, Message },
-//   beforeRouteEnter (to, from) {
-// 	console.log('Conversation beforeRouteEnter', to, from);
-	
-// 		const channelId: string = to.params.channelId as string;
-// 		if (this.$store.isSubscribedToChannel(channelId) && to.params.channelId !== from.params.channelId) {
-// 			this.$store.setCurrentChannel(channelId);
-// 			this.getDatas();
-// 			return true
-// 		}
-// 		return false
-//   },
-	setup(){
+	name: 'Conversation',
+	/// <reference path="" />
+
+	components: { ChatUsersList, Message },
+	//   beforeRouteEnter (to, from) {
+	// 	console.log('Conversation beforeRouteEnter', to, from);
+
+	// 		const channelId: string = to.params.channelId as string;
+	// 		if (this.$store.isSubscribedToChannel(channelId) && to.params.channelId !== from.params.channelId) {
+	// 			this.$store.setCurrentChannel(channelId);
+	// 			this.getDatas();
+	// 			return true
+	// 		}
+	// 		return false
+	//   },
+	setup() {
 		return {
 			chatVirtualScroll: ref(),
 		}
 	},
-  beforeRouteUpdate(to, from) {
-	console.log('beforeRouteUpdate', to, from);
-	const channelId : string = to.params.channelId as string;
+	beforeRouteUpdate(to, from) {
+		const channelId: string = to.params.channelId as string;
 		this.$store.current_channel_state = ChanState.LOADING
 
-    if (this.$store.isSubscribedToChannel(channelId) && to.params.channelId !== from.params.channelId) {
-		this.$store.setCurrentChannel(channelId);
-		this.getDatas();
-		return true
-	}
-	return false
-	// this.$store.setScrollBack(async () => {
-    //   const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
-    //   while (element?.children?.length != this.$store.messagesCount)
-    //     await new Promise(r => setTimeout(r, 10));
-    //   element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
-    // })
-  },
-  data() {
-    return {
-      text: ref(''),
-    }
-  },
-  methods: {
-	    onVirtualScroll({ index }) {
-			// this.virtualListIndex = index
-		},
-    async lockChannel() {
-      await this.$api.leavehttpChannel()
-      this.$router.push({ path: `/` })
-    },
-
-    sendmessage() {
-      if (this.text == '')
-        return
-      this.$api.sendMessage(this.$store.active_channel, this.$store.channelPassword, this.text)
-      this.text = ''
-    },
-
-    goProfilPage(user: string) {
-      this.$router.push({
-        path: `/profile/${user}`
-      })
-    },
-
-    avatarstr(username: string) {
-      return `/api/avatar/${username}/thumbnail`
-    },
-	scrollBottom() {
-		this.chatVirtualScroll.scrollTo(this.$store.messagesCount - 1)
-		// if (this.$store.messagesCount > 0)
-		// 	this.chatVirtualScroll.scrollTo(this.$store.messagesCount - 1)
+		if (this.$store.isSubscribedToChannel(channelId) && to.params.channelId !== from.params.channelId) {
+			this.$store.setCurrentChannel(channelId);
+			this.getDatas();
+			return true
+		}
+		return false
 	},
-	// scrollBottom() {
-	// 	if (this.$refs.chatScroll) {
-	// 		const scrollArea = this.$refs.chatScroll;
-	// 		const scrollTarget = scrollArea.getScrollTarget();
-	// 		const duration = 0; // ms - use 0 to instant scroll
-	// 		scrollArea.setScrollPosition('vertical', scrollTarget.scrollHeight, duration);
+	data() {
+		return {
+			text: ref(''),
+		}
+	},
+	methods: {
+		async lockChannel() {
+			await this.$api.leavehttpChannel()
+			this.$router.push({ path: `/` })
+		},
+		sendmessage() {
+			if (this.text == '')
+				return
+			this.$api.sendMessage(this.$store.active_channel, this.$store.channelPassword, this.text)
+			this.text = ''
+		},
+		goProfilPage(user: string) {
+			this.$router.push({
+				path: `/profile/${user}`
+			})
+		},
+		avatarstr(username: string) {
+			return `/api/avatar/${username}/thumbnail`
+		},
+		scrollBottom(refresh: boolean = false) {
+			if (refresh) {
+				this.chatVirtualScroll.refresh(this.$store.messagesCount)
+			}
+			else {
+				this.chatVirtualScroll.scrollTo(this.$store.messagesCount)
+			}
+		},
+		getDatas() {
+			return this.$api
+				.joinChannel(this.$store.active_channel, this.$store.channelPassword)
+				.then(() => {
+					this.$store.current_channel_state = ChanState.ACTIVE
+					this.chatVirtualScroll.refresh(this.$store.messagesCount)
+				})
 
-	// 	}
-
-	// },
-    // async scrollBottom() {
-    //   const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
-    //   while (element?.children?.length != this.$store.messagesCount)
-    //     await new Promise(r => setTimeout(r, 10));
-    //   element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
-    // },
-
-    getDatas() {
-    //   const channelId = this.$route.path.split('/').slice(-1)[0]
-    //   if (this.$store.isSubscribedToChannel(channelId))
-    //       this.$store.setCurrentChannel(channelId);
-      this.$api
-      .joinChannel(this.$store.active_channel, this.$store.channelPassword)
-      .then(() => {
-		setTimeout(()=> {
-			this.$store.current_channel_state = ChanState.ACTIVE
-			this.scrollBottom()
-		},300)
-      })
-      .catch(err => {
-        // mot de passe incorrect
-        // non connecte en socket
-        // que t'es ban
-        // tout le reste ERROR
-      })
-    },
-	    getRelativeDate(cdate: Date): string {
+		},
+		getRelativeDate(cdate: Date): string {
 			function floorStr(n: number) {
 				return (n < 10 ? '0' : '') + n
 			}
-
 			const now = new Date()
-
 			if (now.getDate() - cdate.getDate() == 0)
 				return 'Today at ' + floorStr(cdate.getHours()) + ':' + floorStr(cdate.getMinutes())
 			else if (now.getDate() - cdate.getDate() == 1)
@@ -201,41 +168,38 @@ export default defineComponent({
 					+ floorStr(cdate.getMinutes())
 			}
 		},
-  },
-  computed: {
-    margin_input() {
-      if (this.$store.drawerStatus)
-        return "300px"
-      return "0px"
-    },
-  },
-  mounted() {
-    this.$ws.listen("message", () => {
-      this.scrollBottom()
-      this.$store.message_received = false;
-    });
-    this.getDatas()
+	},
+	computed: {
+		margin_input() {
+			if (this.$store.drawerStatus)
+				return "300px"
+			return "0px"
+		},
+	},
+	mounted() {
+		this.$ws.listen("message", () => {
+			this.scrollBottom(true)
+		});
+		this.getDatas()
+	},
+	beforeUpdate() {
+		// this.getDatas()
+	},
+	async beforeUnmount() {
+		await this.$api.leavehttpChannel()
+		this.$store.setCurrentChannel("")
+	},
 
-  },
-  beforeUpdate() {
-    this.getDatas()
-  },
-  async beforeUnmount() {
-    await this.$api.leavehttpChannel()
-	this.$store.setCurrentChannel("")
-  },
-  
 });
 </script>
 
 <style lang="sass" scoped>
 @use "../../css/interpolate" as r
 .list_messages
-  overflow: auto
   height: calc(100vh - (90px + 50px + 70px))
-  padding: 1vh
-  word-break: break-word
   width: 100%
+  padding: 0px 50px 0px 50px
+//   word-break: break-word
 
 	
 .message_element
