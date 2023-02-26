@@ -1,35 +1,35 @@
 <template> <!-- hide-scrollbar -->
   <q-page>
     <div class="q-flex">
+		<!-- <q-btn label="scrolltobottom" @click="chatVirtualScroll.scrollTo($store.messagesCount)"/> -->
+		<ChatUsersList  @lockChannel="lockChannel" />
 	
-      <ChatUsersList  @lockChannel="lockChannel" />
-					<q-virtual-scroll v-if="$store.messagesCount" class="list_messages" 
-							component="q-list"
-							separator
-							:items="$store.messages"
-							ref="chatScroll"
-							v-slot="{ index, item }">
-						<!-- <transition appear enter-active-class="animated fadeIn"> -->
-							<q-chat-message
-								:key="index"
-								:avatar=avatarstr(item.username)
-								:text="[item.content]"
-								:stamp="getRelativeDate(new Date(item.CreatedAt))"
-								:sent="item.username === $store.username"
-								:bg-color="item.username === $store.username ? 'secondary' : 'blue-grey-11'"
-								>
-								<template v-slot:name>
-									<span class="linkMessageProfile" @click="goProfilPage(item.username)">{{ item.username === $store.username ? 'me' : item.username }}</span>
-								</template>
-							</q-chat-message>
-
-					  	<!-- </transition> -->
-					</q-virtual-scroll>
-					<div v-else>
-						<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-							 <div  class="loadingState">No messages</div>
-						 </transition>
-					</div>
+			<q-virtual-scroll v-if="$store.messagesCount" id="virtScroll" ref="chatVirtualScroll" component="q-list" :items="$store.messages"
+				scroll-target="#virtScroll .scroll"
+				virtual-scroll-item-size="93.19"
+				@virtual-scroll="onVirtualScroll">
+					<template #default="{item, index}">
+					  <q-chat-message
+					  	:key="index"
+						:avatar=avatarstr(item.username)
+						:text="[item.content]"
+						:stamp="getRelativeDate(new Date(item.CreatedAt))"
+						:sent="item.username === $store.username"
+						:bg-color="item.username === $store.username ? 'secondary' : 'blue-grey-11'">
+						<template v-slot:name>
+							<span class="linkMessageProfile" @click="goProfilPage(item.username)">{{ item.username === $store.username ? 'me' : item.username }} {{ index }}</span>
+						</template>
+					  </q-chat-message>
+					</template>
+					<!-- <template #after :key="$store.messagesCount">
+						<div style="height:93px"> end</div>
+					</template> -->
+			</q-virtual-scroll>
+		<div v-else>
+			<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+			  <div class="loadingState">No messages</div>
+			</transition>
+		</div>
 	  <div v-if="$store.currentChannelSubState === 'BANNED'">
 			<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
 			<div class="loadingState">Banned !</div>
@@ -62,7 +62,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, } from 'vue';
 // import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from './components/Message.vue'
 import ChatUsersList from './components/ChatUsersList.vue'
@@ -70,6 +70,8 @@ import { ChanState } from 'src/stores/store.types';
 
 export default defineComponent({
   name: 'Conversation',
+  /// <reference path="" />
+  
   components: { ChatUsersList, Message },
 //   beforeRouteEnter (to, from) {
 // 	console.log('Conversation beforeRouteEnter', to, from);
@@ -82,6 +84,11 @@ export default defineComponent({
 // 		}
 // 		return false
 //   },
+	setup(){
+		return {
+			chatVirtualScroll: ref(),
+		}
+	},
   beforeRouteUpdate(to, from) {
 	console.log('beforeRouteUpdate', to, from);
 	const channelId : string = to.params.channelId as string;
@@ -106,7 +113,9 @@ export default defineComponent({
     }
   },
   methods: {
-
+	    onVirtualScroll({ index }) {
+			// this.virtualListIndex = index
+		},
     async lockChannel() {
       await this.$api.leavehttpChannel()
       this.$router.push({ path: `/` })
@@ -129,17 +138,26 @@ export default defineComponent({
       return `/api/avatar/${username}/thumbnail`
     },
 	scrollBottom() {
-		const scrollArea : any = this.$refs.chatScroll;
-		const scrollTarget = scrollArea.getScrollTarget();
-		const duration = 0; // ms - use 0 to instant scroll
-		scrollArea.setScrollPosition(scrollTarget.scrollHeight, duration);
+		this.chatVirtualScroll.scrollTo(this.$store.messagesCount - 1)
+		// if (this.$store.messagesCount > 0)
+		// 	this.chatVirtualScroll.scrollTo(this.$store.messagesCount - 1)
 	},
-    async scrollBottom2() {
-      const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
-      while (element?.children?.length != this.$store.messagesCount)
-        await new Promise(r => setTimeout(r, 10));
-      element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
-    },
+	// scrollBottom() {
+	// 	if (this.$refs.chatScroll) {
+	// 		const scrollArea = this.$refs.chatScroll;
+	// 		const scrollTarget = scrollArea.getScrollTarget();
+	// 		const duration = 0; // ms - use 0 to instant scroll
+	// 		scrollArea.setScrollPosition('vertical', scrollTarget.scrollHeight, duration);
+
+	// 	}
+
+	// },
+    // async scrollBottom() {
+    //   const element: any = this.$refs.chatList // récupérer l'élément de liste de messages en utilisant ref
+    //   while (element?.children?.length != this.$store.messagesCount)
+    //     await new Promise(r => setTimeout(r, 10));
+    //   element.scrollTop = element.scrollHeight // fait dessendre le scroll tout en bas de la page
+    // },
 
     getDatas() {
     //   const channelId = this.$route.path.split('/').slice(-1)[0]
@@ -150,9 +168,7 @@ export default defineComponent({
       .then(() => {
 		setTimeout(()=> {
 			this.$store.current_channel_state = ChanState.ACTIVE
-					setTimeout(() => {
-							this.scrollBottom()
-						}, 300)
+			this.scrollBottom()
 		},300)
       })
       .catch(err => {
@@ -219,6 +235,10 @@ export default defineComponent({
   height: calc(100vh - (90px + 50px + 70px))
   padding: 1vh
   word-break: break-word
+  width: 100%
+
+	
+.message_element
   width: 100%
 
 .input
