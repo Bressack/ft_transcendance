@@ -63,7 +63,7 @@ export default defineComponent({
       fetchGames() {
         this.$api.games()
         .then((result) => {
-          console.log(result)
+        //   console.log(result)
           this.games = result.data
         })
         .catch((error) => { console.error('error:', error); })

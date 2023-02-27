@@ -159,7 +159,7 @@ export default defineComponent({
 
     mounted() {
         this.$ws.listen("message", (payload: any) => {
-            console.log("new message: ", payload);
+            // console.log("new message: ", payload);
             const msg : TMessage = Convert.toMessage2(payload as any);
             this.$store.addMessage(msg);
             this.scrollBottom(true);
@@ -207,7 +207,7 @@ export default defineComponent({
             }
         },
         getDatas() {
-            console.log("requests: ", this.$store.pendingRequests);
+            // console.log("requests: ", this.$store.pendingRequests);
             return this.$api
                 .joinChannel(this.$store.active_channel, this.$store.channelPassword)
                 .then(() => {

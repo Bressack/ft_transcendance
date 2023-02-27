@@ -144,7 +144,6 @@ const useMainStore = defineStore("main-store", {
       else return [];
     },
     friends(state: MainStoreState): string[] {
-      console.log("toto", this.followedBy, this.following);
       if (this.followedBy)
         return intersection(this.followedBy_str, this.following_str);
       else return [];
@@ -250,11 +249,6 @@ const useMainStore = defineStore("main-store", {
     },
 
     getChannelIDByUsername(username: string): string | undefined {
-      console.log(
-        "getChannelIDByUsername:",
-        username,
-        this.channelSubscriptions
-      );
       const needle: ChannelSubscription | undefined =
         this.channelSubscriptions?.find(
           (e: ChannelSubscription) =>
@@ -276,7 +270,7 @@ const useMainStore = defineStore("main-store", {
       this.message_received = true;
     },
     setCurrentChannel(channelId: string) {
-      console.log("setCurrentChannel:", channelId);
+      //   console.log("setCurrentChannel:", channelId);
       this.active_channel = channelId;
     },
     setStoreData(data: StoreData) {

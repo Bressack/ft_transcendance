@@ -95,7 +95,7 @@ export default {
     const response = await this.axiosInstance.get(
       "/users/search" + SearchQueryBuilder(query)
     );
-    console.log(response.data);
+    //console.log(response.data);
     return response.data;
   },
 
@@ -103,7 +103,7 @@ export default {
     const response = await this.axiosInstance.patch(
       `/users/${username}/unfollow`
     );
-    console.log(response);
+    //console.log(response);
     return response;
   },
 
@@ -111,13 +111,13 @@ export default {
     const response = await this.axiosInstance.patch(
       `/users/${username}/follow`
     );
-    console.log(response);
+    //console.log(response);
     return response;
   },
 
   async block(username: String) {
     const response = await this.axiosInstance.patch(`/users/${username}/block`);
-    console.log(response);
+    //console.log(response);
     return response;
   },
 
@@ -206,9 +206,9 @@ export default {
     let lines = (stack.split("\n")[2].trim().split(":").slice(-1)[0] +
       ":" +
       stack.split("\n")[2].trim().split(":").slice(-2)[0]) as any;
-    console.log(
-      "[ DEBUG MESSAGE ] " + caller + " at " + lines + ": " + message
-    );
+    //console.log(
+    //   "[ DEBUG MESSAGE ] " + caller + " at " + lines + ": " + message
+    // );
   },
 
   /**

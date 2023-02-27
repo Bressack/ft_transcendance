@@ -220,7 +220,7 @@ export default defineComponent({
 		this.canvas.addEventListener('dblclick', this.toggle);
 		window.addEventListener('resize', this.onResize);
 		watch(() => this.$q.fullscreen.isActive, val => {
-			console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
+			// console.log(val ? 'In fullscreen now' : 'Exited fullscreen')
 			this.onResize();
 		})
 		this.onResize();

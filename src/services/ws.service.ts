@@ -101,7 +101,7 @@ class WsService {
     if (this.socket) {
       this.socket.removeAllListeners();
       this.socket.disconnect();
-      console.log("Socket disconnected"); // should invalidate certain routes and what not, like the chat and games
+      console.warn("Socket disconnected"); // should invalidate certain routes and what not, like the chat and games
     }
   }
 }

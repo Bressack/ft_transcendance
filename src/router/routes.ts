@@ -1,11 +1,7 @@
-import { useQuasar } from "quasar";
-import { useChatStore } from "src/stores/chat";
 import { useMainStore } from "src/stores/store";
 import { ChanState } from "src/stores/store.types";
 import { RouteRecordRaw } from "vue-router";
 import api from "../services/api.service";
-import WsService from "../services/ws.service";
-import { defineAsyncComponent } from "vue";
 
 const routes: RouteRecordRaw[] = [
   {
@@ -27,7 +23,7 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: async (to, from, next) => {
           const store = useMainStore();
           const channelId: string = to.params.channelId as string;
-          console.log("beforeEnter", channelId);
+          //   console.log("beforeEnter", channelId);
           if (store.isSubscribedToChannel(channelId)) {
             store.current_channel_state = ChanState.LOADING;
             store.setCurrentChannel(channelId);
@@ -56,7 +52,7 @@ const routes: RouteRecordRaw[] = [
           await api.axiosInstance
             .get(`/games/play/${to.params.gameId}`)
             .then((res) => {
-              console.log(res.status);
+              //   console.log(res.status);
               if (res.status == 404) {
                 next({ name: "GameError" });
               } else next();
@@ -76,7 +72,7 @@ const routes: RouteRecordRaw[] = [
           await api.axiosInstance
             .get(`/games/play/${to.params.gameId}`)
             .then((res) => {
-              console.log(res.status);
+              //   console.log(res.status);
               if (res.status == 404) {
                 next({ name: "GameError" });
               } else next();
@@ -93,11 +89,11 @@ const routes: RouteRecordRaw[] = [
 
         component: () => import("pages/Game/Spectate.vue"),
         beforeEnter: async (to, from, next) => {
-          console.log(to.params.gameId);
+          //   console.log(to.params.gameId);
           await api.axiosInstance
             .get(`/games/watch/${to.params.gameId}`)
             .then((res) => {
-              console.log(res.status);
+              //   console.log(res.status);
               if (res.status == 404) {
                 if (from.name === "game") {
                   next({ name: "GameError" });
@@ -120,7 +116,7 @@ const routes: RouteRecordRaw[] = [
           await api.axiosInstance
             .get(`/games/watch/${to.params.gameId}`)
             .then((res) => {
-              console.log(res.status);
+              //   console.log(res.status);
               if (res.status == 404) {
                 next({ name: "GameError" });
               } else next();

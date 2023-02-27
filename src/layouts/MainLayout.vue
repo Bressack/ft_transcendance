@@ -428,7 +428,7 @@ export default defineComponent({
         "game-setup-and-init-go-go-power-ranger",
         (gameOptions: any, callback: Function) => {
           callback("OK");
-          console.log(gameOptions);
+        //   console.log(gameOptions);
           this.$router.push(
             `/game${gameOptions.map == "3D" ? "3d" : ""}/${
               gameOptions.gameId
