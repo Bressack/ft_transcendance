@@ -161,10 +161,10 @@ export default defineComponent({
 		},
 		scrollBottom(refresh: boolean = false) {
 			if (refresh) {
-				(this.$refs['chatVirtualScroll'] as any).refresh(this.$store.messagesCount)
+				(this.$refs['chatVirtualScroll'] as any)?.refresh(this.$store.messagesCount)
 			}
 			else {
-				(this.$refs['chatVirtualScroll'] as any).scrollTo(this.$store.messagesCount)
+				(this.$refs['chatVirtualScroll'] as any)?.scrollTo(this.$store.messagesCount)
 			}
 		},
 		getDatas() {
@@ -173,7 +173,7 @@ export default defineComponent({
 				.joinChannel(this.$store.active_channel, this.$store.channelPassword)
 				.then(() => {
 					this.$store.current_channel_state = ChanState.ACTIVE;
-					(this.$refs['chatVirtualScroll'] as any).refresh(this.$store.messagesCount)
+					(this.$refs['chatVirtualScroll'] as any)?.refresh(this.$store.messagesCount)
 				})
 
 		},
