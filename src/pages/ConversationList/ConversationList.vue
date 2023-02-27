@@ -44,7 +44,10 @@
 
         <!-- #################################################################################################################### -->
         <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
-          <q-list>
+          <div v-if="!$store.friends?.length" class="text-h5 text-center" style="margin-top: 30vh;">
+            you have no friends
+          </div>
+          <q-list v-else>
             <UserCard v-for="friend in $store.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
               shortcut_chat shortcut_play menu_profile menu_block menu_play menu_chat menu_unfollow />
           </q-list>
@@ -62,8 +65,8 @@
               <q-item clickable v-ripple
                 v-for="sub in ($store.getPublicPrivateChannels)"
                 :key="sub.channelId"
-				manual-focus
-				:focused="$store.active_channel === sub.channelId"
+                manual-focus
+                :focused="$store.active_channel === sub.channelId"
                 @click="chanSelected(sub.channel.id)"
               >
                 <q-item-section>
@@ -72,37 +75,27 @@
                 <q-item-section side v-if="sub.channel.passwordProtected">
                   <q-icon name="lock" color="grey-7" />
                 </q-item-section>
-
               </q-item>
             </q-list>
           </q-tab-panel>
 <!-- #################################################################################################################### -->
-          <!-- <q-tab-panel name="following" class="tab-panel hide-scrollbar">
-            <q-list>
-              <UserCard v-for="rsent in $store.friendRequestSent" :key="rsent" @goGameOptions="goGameOptions"
-                :username="rsent"
-                shortcut_unfollow menu_profile menu_unfollow menu_block menu_play />
-            </q-list>
-          </q-tab-panel> -->
           <q-tab-panel name="pending requests" class="tab-panel hide-scrollbar">
-            <q-list>
+            <div v-if="!$store.pendingRequests?.length" class="text-h5 text-center" style="margin-top: 30vh;">
+              you have no pending requests
+            </div>
+            <q-list v-else>
               <PendingRequest v-for="req in $store.pendingRequests" :key="req.username"
                 :username="req.username"
-				:category="req.category"
+                :category="req.category"
                  menu_profile menu_block />
             </q-list>
           </q-tab-panel>
 <!-- #################################################################################################################### -->
-          <!-- <q-tab-panel name="follower" class="tab-panel hide-scrollbar">
-            <q-list>
-              <UserCard v-for="rrecv in $store.friendRequestRecevied" :key="rrecv" @goGameOptions="goGameOptions"
-                :username="rrecv"
-                shortcut_follow menu_profile menu_follow menu_block menu_play />
-            </q-list>
-          </q-tab-panel> -->
-<!-- #################################################################################################################### -->
           <q-tab-panel name="blocked" class="tab-panel hide-scrollbar">
-            <q-list>
+            <div v-if="!$store.blocked?.length" class="text-h5 text-center" style="margin-top: 30vh;">
+              you did not block anyone
+            </div>
+            <q-list v-else>
               <UserCard v-for="username in $store.blocked" :key="username" @goGameOptions="goGameOptions"
                 :username="username"
                 shortcut_unblock menu_profile menu_unblock />

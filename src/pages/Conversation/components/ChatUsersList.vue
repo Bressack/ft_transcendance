@@ -9,54 +9,17 @@
       <q-btn v-if="$store.currentChannelSub?.channel.passwordProtected === true"
         color="brown-9" class="q-mr-lg" @click="lockChannel" >Lock channel</q-btn>
 
-      <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
-        <q-menu class="menuusers">
+      <!-- <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
+        <q-drawer
+          v-model="minidrawerStatus"
+          show-if-above
+          :breakpoint="500"
+          :width="300"
+          right
+        >
 
-          <q-item class="q-bg q-flex pannel">
-            <q-item-section side class="card">
-              <q-item-label class="menuusers-username">User count:</q-item-label>
-            </q-item-section>
-            <q-item-section side class="card">
-              <q-item-label>{{ $store.currentChannelUserCount }}</q-item-label>
-            </q-item-section>
-            <q-space />
-            <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$store.currentChannelSub.role !== 'OWNER' && $store.currentChannelSub.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
-              <q-btn v-else-if="$store.currentChannelSub.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
-            </q-item-section>
-            <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE` && $store.currentChannelSub.role === 'OWNER'" side>
-              <q-btn color="orange" label="settings" class="interpolate-btn" @click="settings = true" />
-            </q-item-section>
-            <q-item-section side>
-              <q-btn color="pink" label="debug" @click="debug" />
-            </q-item-section>
-          </q-item>
-
-          <q-list class="userlist">
-
-            <q-item v-for="user in $store.currentChannelUsers" :key="user.username" class="q-bg">
-              <q-item-section class="avatar">
-                <img :src="avatarstr(user?.username)" class="image" />
-                <div :class="getLoginStatus(user?.username)" class="loginstatus" />
-              </q-item-section>
-              <q-item-section side class="">
-                <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
-              </q-item-section>
-              <q-item-section side class="q-pa-sm">
-                <q-img></q-img>
-              </q-item-section>
-              <q-item-section side class="card role">
-                <q-item-label>Role</q-item-label>
-                <q-item-label>{{ user.role }}</q-item-label>
-              </q-item-section>
-              <q-item-section>
-                <BanMute :subscription="user" />
-              </q-item-section>
-            </q-item>
-
-          </q-list>
-        </q-menu>
-      </q-btn>
+        </q-drawer>
+      </q-btn> -->
     </q-toolbar>
     <q-dialog persistent v-model="settings">
       <CreateChannel settings :oldname=$store.currentChannelSub?.channel.name :closeFn=closeSettings />
@@ -69,6 +32,53 @@
     </q-dialog>
   </div>
 </template>
+
+<!-- <q-menu class="menuusers">
+
+  <q-item class="q-bg q-flex pannel">
+    <q-item-section side class="card">
+      <q-item-label class="menuusers-username">User count:</q-item-label>
+    </q-item-section>
+    <q-item-section side class="card">
+      <q-item-label>{{ $store.currentChannelUserCount }}</q-item-label>
+    </q-item-section>
+    <q-space />
+    <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE`" side>
+      <q-btn v-if="$store.currentChannelSub.role !== 'OWNER' && $store.currentChannelSub.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
+      <q-btn v-else-if="$store.currentChannelSub.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
+    </q-item-section>
+    <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE` && $store.currentChannelSub.role === 'OWNER'" side>
+      <q-btn color="orange" label="settings" class="interpolate-btn" @click="settings = true" />
+    </q-item-section>
+    <q-item-section side>
+      <q-btn color="pink" label="debug" @click="debug" />
+    </q-item-section>
+  </q-item>
+
+  <q-list class="userlist">
+
+    <q-item v-for="user in $store.currentChannelUsers" :key="user.username" class="q-bg">
+      <q-item-section class="avatar">
+        <img :src="avatarstr(user?.username)" class="image" />
+        <div :class="getLoginStatus(user?.username)" class="loginstatus" />
+      </q-item-section>
+      <q-item-section side class="">
+        <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
+      </q-item-section>
+      <q-item-section side class="q-pa-sm">
+        <q-img></q-img>
+      </q-item-section>
+      <q-item-section side class="card role">
+        <q-item-label>Role</q-item-label>
+        <q-item-label>{{ user.role }}</q-item-label>
+      </q-item-section>
+      <q-item-section>
+        <BanMute :subscription="user" />
+      </q-item-section>
+    </q-item>
+
+  </q-list>
+</q-menu> -->
 
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
