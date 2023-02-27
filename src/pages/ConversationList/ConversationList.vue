@@ -131,7 +131,7 @@ import ChooseGameOptions from '../../components/ChooseGameOptions.vue'
 import { ISearchQuery } from 'src/services/api.models'
 import QInputMenu from 'src/components/QInputMenu.component.vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
-import UserCard from './components/UserCard.vue'
+import UserCard from 'src/pages/conversationList/components/UserCard.vue'
 import PendingRequest from './components/PendingRequest.vue'
 
 enum EUserStatus {
@@ -339,8 +339,6 @@ body
   z-index: 0
   // position: absolute
   padding: 0 !important
-
-
   background-color: $bg-secondary
   margin-top: 50px
   height: calc(100vh - 260px)

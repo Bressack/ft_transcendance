@@ -40,10 +40,14 @@ export default defineComponent({
       return await fetch('/api/auth/clear-cookies')
     },
     notifyAlreadyConnected() {
-      this.$notifyCenter.send({
-        type: 'warning',
-        message: 'You are already connected'
-      })
+      try {
+        this.$notifyCenter.send({
+          type: 'warning',
+          message: 'You are already connected'
+        })
+      } catch {
+        // this.$router.push('/login')
+      }
     },
     async disconnect(next: NavigationGuardNext | null) {
 		if (next) {

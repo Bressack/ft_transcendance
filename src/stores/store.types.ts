@@ -66,8 +66,8 @@ export type SubscribedUser = {
 };
 
 export enum Role {
-  ADMIN = "ADMIN",
   OWNER = "OWNER",
+  ADMIN = "ADMIN",
   USER = "USER",
 }
 

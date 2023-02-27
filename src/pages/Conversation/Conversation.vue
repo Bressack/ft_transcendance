@@ -1,87 +1,95 @@
 <template><!-- hide-scrollbar -->
-  <q-page>
-    <div class="q-flex">
+  <q-page class="q-flex">
+    <div class="row">
+      <div class="conv">
 
-      <ChatUsersList @lockChannel="lockChannel" />
+        <ChatUsersList @lockChannel="lockChannel" />
 
-      <div v-show="
-        $store.current_channel_state === 'ACTIVE' &&
-        $store.currentChannelSub.state !== 'BANNED'
-      " class="row q-pa-md justify-center" style="padding-top: 0px; padding-right: 0px; bottom: auto">
-        <q-scroll-area id="virtScroll" class="list_messages">
-          <q-virtual-scroll component="q-list" :items="$store.messages" ref="chatVirtualScroll"
-            scroll-target="#virtScroll > .scroll" virtual-scroll-item-size="80" virtual-scroll-slice-size="12"
-            virtual-scroll-slice="15">
-            <template #default="{ item, index }">
-              <q-chat-message class="chat-message" :key="index" :avatar="avatarstr(item.username)" :text="[item.content]"
-                :stamp="getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username" :bg-color="
-                  item.username === $store.username
-                    ? 'secondary'
-                    : 'blue-grey-11'
-                ">
-                <template v-slot:name>
-                  <span class="linkMessageProfile" @click="goProfilPage(item.username)">{{
-                    item.username === $store.username ? "me" : item.username
-                  }}</span>
-                </template>
-              </q-chat-message>
-            </template>
-            <template #after>
-              <div :key="$store.messagesCount">
-                <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-                  <div v-show="!$store.messagesCount" class="loadingState">
-                    No messages
-                  </div>
-                </transition>
-              </div>
-            </template>
-          </q-virtual-scroll>
-        </q-scroll-area>
-      </div>
-      <div v-if="
-        $store.current_channel_state === 'LOADING' &&
-        $store.currentChannelSub.state !== 'BANNED'
-      ">
-        <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-          <div class="loadingState">Loading...</div>
-        </transition>
-      </div>
-      <div v-else-if="
-        $store.current_channel_state === 'ERROR' &&
-        $store.currentChannelSub.state !== 'BANNED'
-      ">
-        <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-          <div class="loadingState">Error</div>
-        </transition>
-      </div>
-      <div v-else-if="$store.currentChannelSub.state === 'BANNED'">
-        <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-          <div class="loadingState" style="text-align: center">
-            Banned
-            <div style="font-size: small">
-              until
-              {{
-                getRelativeDate(
-                  new Date(
-                    $store.currentChannelSub.stateActiveUntil || Date.now()
-                  )
-                )
-              }}
-            </div>
-          </div>
-        </transition>
-      </div>
-
-      <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
-        class="absolute-bottom custom-input input" maxlength="128" :loading="$store.current_channel_state === 'LOADING'"
-        :disable="
-          !($store.current_channel_state === 'ACTIVE') ||
-          $store.currentChannelSub.state !== 'OK'
+        <div v-show="
+          $store.current_channel_state === 'ACTIVE' &&
+          $store.currentChannelSub.state !== 'BANNED'
+        " class="row q-pa-md justify-center" style="padding-top: 0px; padding-right: 0px; bottom: auto">
+          <q-scroll-area id="virtScroll" class="list_messages">
+            <q-virtual-scroll component="q-list" :items="$store.messages" ref="chatVirtualScroll"
+              scroll-target="#virtScroll > .scroll" virtual-scroll-item-size="80" virtual-scroll-slice-size="12"
+              virtual-scroll-slice="15">
+              <template #default="{ item, index }">
+                <q-chat-message class="chat-message" :key="index" :avatar="avatarstr(item.username)" :text="[item.content]"
+                  :stamp="getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username" :bg-color="
+                    item.username === $store.username
+                      ? 'secondary'
+                      : 'blue-grey-11'
+                  ">
+                  <template v-slot:name>
+                    <span class="linkMessageProfile" @click="goProfilPage(item.username)">{{
+                      item.username === $store.username ? "me" : item.username
+                    }}</span>
+                  </template>
+                </q-chat-message>
+              </template>
+              <template #after>
+                <div :key="$store.messagesCount">
+                  <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+                    <div v-show="!$store.messagesCount" class="loadingState">
+                      No messages
+                    </div>
+                  </transition>
+                </div>
+              </template>
+            </q-virtual-scroll>
+          </q-scroll-area>
+        </div>
+        <div v-if="
+          $store.current_channel_state === 'LOADING' &&
+          $store.currentChannelSub.state !== 'BANNED'
         ">
-        <template v-slot:append>
-          <q-icon name="send" @click="sendmessage" class="cursor-pointer" />
-        </template>
-      </q-input>
+          <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <div class="loadingState">Loading...</div>
+          </transition>
+        </div>
+        <div v-else-if="
+          $store.current_channel_state === 'ERROR' &&
+          $store.currentChannelSub.state !== 'BANNED'
+        ">
+          <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <div class="loadingState">Error</div>
+          </transition>
+        </div>
+        <div v-else-if="$store.currentChannelSub.state === 'BANNED'">
+          <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <div class="loadingState" style="text-align: center">
+              Banned
+              <div style="font-size: small">
+                until
+                {{
+                  getRelativeDate(
+                    new Date(
+                      $store.currentChannelSub.stateActiveUntil || Date.now()
+                    )
+                  )
+                }}
+              </div>
+            </div>
+          </transition>
+        </div>
+
+        <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
+          class="absolute-bottom custom-input input" maxlength="128" :loading="$store.current_channel_state === 'LOADING'"
+          :disable="
+            !($store.current_channel_state === 'ACTIVE') ||
+            $store.currentChannelSub.state !== 'OK'
+          ">
+          <template v-slot:append>
+            <q-icon name="send" @click="sendmessage" class="cursor-pointer" />
+          </template>
+        </q-input>
+      </div>
+      <div class="userlist">
+        <q-list>
+          <UserCard v-for="user of userlist" :key="user.username" :username="user.username" :class="username_color(user)"
+              shortcut_follow shortcut_play menu_profile menu_block menu_play menu_follow />
+        </q-list>
+      </div>
     </div>
   </q-page>
 </template>
@@ -91,14 +99,13 @@ import { defineComponent, computed, ref } from "vue";
 // import CreateChannel from 'src/components/CreateChannel.vue'
 import Message from "./components/Message.vue";
 import ChatUsersList from "./components/ChatUsersList.vue";
-import { ChanState, SubscribedUser, Message as TMessage } from "src/stores/store.types";
+import { ChanState, SubscribedUser, Message as TMessage, Role } from "src/stores/store.types";
 import { Convert } from "src/stores/store.validation";
+import UserCard from 'src/pages/ConversationList/components/UserCard.vue'
 
 export default defineComponent({
   name: "Conversation",
-  /// <reference path="" />
-
-  components: { ChatUsersList, Message },
+  components: { ChatUsersList, Message, UserCard },
   //   beforeRouteEnter (to, from) {
   // 	console.log('Conversation beforeRouteEnter', to, from);
 
@@ -140,6 +147,11 @@ export default defineComponent({
       if (this.$store.drawerStatus) return "300px";
       return "0px";
     },
+    userlist() {
+      return this.$store.currentChannelSub.channel.subscribedUsers.sort((a: SubscribedUser, b: SubscribedUser) => {
+        return a.role > b.role ? 1 : -1
+      })
+    }
   },
 
   mounted() {
@@ -159,6 +171,13 @@ export default defineComponent({
     this.$store.setCurrentChannel("");
   },
   methods: {
+    username_color(user: SubscribedUser) {
+      switch (user.role) {
+        case Role.OWNER: return 'text-red-8'
+        case Role.ADMIN: return 'text-orange-3'
+        case Role.USER : return 'text-gray-9'
+      }
+    },
     async lockChannel() {
       await this.$api.leavehttpChannel();
       this.$router.push({ path: `/` });
@@ -298,4 +317,12 @@ export default defineComponent({
   margin-bottom: 0px
   padding-bottom: 8px
   min-height: 80px
+
+.userlist
+  height: calc(100vh - 92px)
+  overflow: auto
+  width: 20vw
+
+.conv
+  width: calc(100% - 20vw)
 </style>
