@@ -464,6 +464,7 @@ export default defineComponent({
 	// console.log("MainLayout:470 altered_subscription", payload);
     // if (this.$store.username == payload.username)
       this.$api.fetchMe();
+
   });
 
 
@@ -471,6 +472,8 @@ export default defineComponent({
 	this.listenForGameInvite();
     // fetch datas
 	this.nc.init(this.$q);
+	if (this.$route.query?.refreshed === "true" && this.$route.query?.from)
+		this.$router.push(this.$route.query.from as string || "");
   },
   mounted() {
     document.addEventListener(

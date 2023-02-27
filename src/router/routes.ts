@@ -1,6 +1,6 @@
 import { useMainStore } from "src/stores/store";
 import { ChanState } from "src/stores/store.types";
-import { RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw, useRouter } from "vue-router";
 import api from "../services/api.service";
 
 const routes: RouteRecordRaw[] = [
@@ -18,13 +18,23 @@ const routes: RouteRecordRaw[] = [
       },
       {
         path: "/conversation/:channelId",
+        name: "chat",
         meta: { requiresAuth: true },
         component: () => import("pages/Conversation/Conversation.vue"),
         beforeEnter: async (to, from, next) => {
           const store = useMainStore();
           const channelId: string = to.params.channelId as string;
-          //   console.log("beforeEnter", channelId);
-          if (store.isSubscribedToChannel(channelId)) {
+          console.log(from);
+          if (!store.ws_connected && to.query.refresh !== "true") {
+            next({
+              path: "/",
+              query: {
+                refreshed: "true",
+                from: to.path,
+              },
+            });
+            //   redirectedFrom: to.path,
+          } else if (store.isSubscribedToChannel(channelId)) {
             store.current_channel_state = ChanState.LOADING;
             store.setCurrentChannel(channelId);
             next();
