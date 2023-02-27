@@ -172,21 +172,10 @@ import ncc, {
   NotifyCenter,
   Notifications,
 } from "src/services/notifyCenter";
-import ld from "lodash";
-import api from "src/services/api.service";
 import { Convert } from "src/stores/store.validation";
 import {
-  Blocking,
-  Channel,
   ChannelSubscription,
-  ChannelType,
-  FollowedBy,
-  Message,
-  State,
-  StoreData,
-  SubscribedUser,
 } from "src/stores/store.types";
-import { useMainStore } from "src/stores/store";
 
 export default defineComponent({
   name: "MainLayout",
