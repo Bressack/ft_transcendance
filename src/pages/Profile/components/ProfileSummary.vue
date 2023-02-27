@@ -10,7 +10,7 @@
         <q-item-section>
           <q-item-label class="label name">{{ name }}</q-item-label>
         </q-item-section>
-        <q-item v-if="interact && name != $storeMe.username">
+        <q-item v-if="interact && name != $store.username">
           <q-item-section>
             <q-btn label="play" class="interpolate-btn q-mr-xs" color="orange" @click="goGameOptions" />
           </q-item-section>
@@ -92,14 +92,14 @@ export default defineComponent({
       return (v / (v + d) * 100).toFixed(0)
     },
     isFriend () {
-      return (this.$storeMe.friends?.find((element: any) => element === this.name))
+      return (this.$store.friends?.find((element: any) => element === this.name))
     },
     friendStatus () {
-      if (this.$storeMe.friendRequestRecevied?.includes(this.name)) {
+      if (this.$store.friendRequestRecevied?.includes(this.name)) {
         this.friendLabel = 'add friend'
         this.friendColor = 'green'
       }
-      else if (this.$storeMe.friendRequestSent?.includes(this.name)) {
+      else if (this.$store.friendRequestSent?.includes(this.name)) {
         this.friendLabel = 'cancel friend'
         this.friendColor = 'red'
       }
@@ -127,7 +127,7 @@ export default defineComponent({
         .catch()
     },
     userSelected() {
-			const channelID = this.$storeMe.getChannelIDByUsername(this.name as string)
+			const channelID = this.$store.getChannelIDByUsername(this.name as string)
 			this.$router.push({
 				path: `/conversation/${channelID}`,
 			})

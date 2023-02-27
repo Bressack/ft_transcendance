@@ -107,8 +107,9 @@ export default defineComponent({
   },
   methods: {
     getLoginStatus() {
-      if (this.$storeChat.connectedUsers.includes(this.username))
-        return 'ONLINE-status'
+	//TODO: check login status
+    //   if (this.$storeChat.connectedUsers.includes(this.username))
+    //     return 'ONLINE-status'
       return 'OFFLINE-status'
     },
     goProfilPage() {

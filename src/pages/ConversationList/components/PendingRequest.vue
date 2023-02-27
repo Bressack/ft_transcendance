@@ -20,8 +20,8 @@
 			<q-icon v-if="shortcut_block" class="shortcut" name="person_off" color="red" @click="block" /> -->
 			<!-- <q-icon v-if="category === 'sent'" class="shortcut" name="cancel" color="red" @click="unfollow" />
 			<q-icon v-if="category === 'received'" class="shortcut" name="done" color="green" @click="follow" /> -->
-						<q-icon v-if="category === 'received'" class=" " name="mdi-account-arrow-down-outline" color="cyan" />
-				<q-icon v-else-if="category === 'sent'" class=" " name="mdi-account-arrow-up-outline" color="orange" />
+			<q-icon v-if="category === 'received'" class=" " name="mdi-account-arrow-down-outline" color="cyan" />
+			<q-icon v-else-if="category === 'sent'" class=" " name="mdi-account-arrow-up-outline" color="orange" />
 
 		</q-item-section>
 		<q-item-section id="reqbuttons" class="toggleVisibility">
@@ -89,8 +89,9 @@ export default defineComponent({
 	},
 	methods: {
 		getLoginStatus() {
-			if (this.$storeChat.connectedUsers.includes(this.username))
-				return 'ONLINE-status'
+			//TODO:
+			// if (this.$storeChat.connectedUsers.includes(this.username))
+			// 	return 'ONLINE-status'
 			return 'OFFLINE-status'
 		},
 		goProfilPage() {

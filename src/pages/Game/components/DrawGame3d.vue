@@ -15,8 +15,6 @@
 import {defineComponent} from 'vue'
 import { watch } from 'vue'
 import * as THREE from 'three';
-import { useMeStore } from '../../../stores/me';
-// import THREE from 'three';
 
 var	paddle1Material = new THREE.MeshBasicMaterial({color: 0x00ffff});
 var	paddle2Material = new THREE.MeshBasicMaterial({color: 0xFF0000});
@@ -64,7 +62,6 @@ export default defineComponent({
 			gameId: "",
 			player1_score: 0,
 			player2_score: 0,
-			storeMe: useMeStore(),
 			playerOneName: "p1",
 			playerTwoName: "p2",
 			prevviewside: false,
@@ -172,7 +169,7 @@ export default defineComponent({
 		{
 			if (this.prevviewside != this.viewside)
 				this.travelingdesesmort()
-			else if (this.storeMe.username == this.playerOneName || this.viewside)
+			else if (this.$store.username == this.playerOneName || this.viewside)
 			{
 				// p1 position
 				camera.position.y += (paddle1.position.y - camera.position.y) * 0.001;

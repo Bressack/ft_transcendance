@@ -33,6 +33,9 @@ export class Convert {
   public static toMessage(json: string): Message {
     return cast(JSON.parse(json), r("Message"));
   }
+  public static toMessage2(json: string): Message {
+    return cast(json, r("Message"));
+  }
 
   public static toSubscribedUser(json: string): SubscribedUser {
     return cast(JSON.parse(json), r("SubscribedUser"));

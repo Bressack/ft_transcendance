@@ -56,17 +56,12 @@ export default defineComponent({
 		}
       await this._fClearCookies()
       this.$ws.disconnect()
-      this.$storeMe.$reset()
-    //   this.$storeChat.leave()
-      this.$storeChat.$reset()
       if (next)
         return next('/login')
       this.$router.push('/login')
     },
 
     initSystem() {
-		//   this.nc.init(this.$q)
-			this.$api.init(this)
       this.$router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
         if (to.meta.requiresAuth && this.is_fully_logged())
           return next();
@@ -107,14 +102,13 @@ export default defineComponent({
 
 
       this.$api.axiosInstance.interceptors.response.use((resp) => {
-        if (resp.status === 205)
-          this.$storeMe.fetch()
-          // this.$storeChat.fetch()
+        // if (resp.status === 205)
+        //   this.$storeMe.fetch()
         return resp
       }, undefined)
     },
   },
-  beforeMount() {
+  created() {
     this.initSystem()
   },
 

@@ -1,10 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig } from "axios";
-import {
-  join_channel_output,
-  join_channel_output_payload,
-} from "src/services/channel";
+
 import { useMainStore } from "src/stores/store";
-import { ChannelSubscription } from "src/stores/store.types";
 import { Convert } from "src/stores/store.validation";
 import {
   IGameQuery,
@@ -14,8 +10,6 @@ import {
 } from "./api.models";
 
 export default {
-  vue: {},
-
   axiosInstance: axios.create({
     baseURL: "/api",
     timeout: 3000,
@@ -47,12 +41,8 @@ export default {
         transformResponse: (r: string) => Convert.toStoreData(r),
       })
       .then((response) => {
-        // console.log(response.data);
         const store = useMainStore();
         store.setStoreData(response.data);
-        // console.log("YOOOOO", store.username);
-
-        // console.log(response.data);
         return response.status;
       });
   },
@@ -66,13 +56,6 @@ export default {
     const response = await this.axiosInstance.get("/auth/refresh");
     return response.data;
   },
-
-  // async ping() {
-  //   const response = await this.axiosInstance.get('/auth')
-  //   const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
-  //   sleep(1000).then()
-  //   return response.status
-  // },
 
   /**
    **   users
@@ -233,31 +216,15 @@ export default {
    **/
 
   async joinChannel(channelId: string, password: string): Promise<void> {
-    // console.log("joinChannel started");
-
     const store = useMainStore();
     if (!password) password = "";
     try {
       await this.axiosInstance
-        .post(
-          `/chat/${channelId}/join`,
-          {
-            password: password,
-          }
-          //   {
-          //     transformResponse: ((r: string) =>
-          //       Convert.toChannelSubscription(r)),
-          //   } as AxiosRequestConfig
-        )
+        .post(`/chat/${channelId}/join`, {
+          password: password,
+        })
         .then((response) => {
-          //   console.log("join response", response.data);
-          //   console.log(
-          // "join response",
-          //   const truc = Convert.toChannelSubscription2(response.data);
-          //   console.log("join truc");
           store.updateChannelSubscription(response.data);
-
-          //   );
         });
     } catch {}
   },
@@ -280,9 +247,5 @@ export default {
       content: text,
       password: password,
     });
-  },
-
-  init(vue: any) {
-    this.vue = vue;
   },
 };

@@ -9,9 +9,7 @@
 <script lang="ts">
 import { ref, defineComponent, computed } from 'vue'
 import DrawGame3d from './components/DrawGame3d.vue'
-// import { watch } from 'vue'
 import { throttle } from 'lodash'
-import { useMeStore } from '../../stores/me';
 
 var timeOutFunctionId = undefined as any;
 
@@ -31,7 +29,6 @@ export default defineComponent({
 			throttleValue: 10,
 			playerOneName: "p1",
 			playerTwoName: "p2",
-			storeMe: useMeStore(),
 			game_paused : false,
 			// playermod : false,
 		};
@@ -49,7 +46,7 @@ export default defineComponent({
 			let y = 50
 
 			/* // mouseposition p1 */
-			if ((this.playerOneName == this.storeMe.username))
+			if ((this.playerOneName == this.$store.username))
 			{
 				if (mouseLocation <= this.canvas.width / 4) {
 					y = 0;
@@ -76,7 +73,7 @@ export default defineComponent({
 			this.$ws.socket.volatile.emit(`${this.gameId}___mousemove`, this.getPlayerPosition(event))
 		},
 		askForPauseUnpause(){
-			this.$ws.socket.volatile.emit(`${this.gameId}___ask_pause`, this.storeMe.username)
+			this.$ws.socket.volatile.emit(`${this.gameId}___ask_pause`, this.$store.username)
 		},
 		handleCoundown(data: any) {
 			if (data.status == 'done') {

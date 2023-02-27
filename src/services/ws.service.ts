@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 import { Cookies } from "quasar";
-import { useChatStore } from "src/stores/chat";
+// import { useChatStore } from "src/stores/chat";
 import { useMainStore } from "src/stores/store";
 
 var that: any = null;
@@ -8,9 +8,7 @@ var that: any = null;
 class WsService {
   public socket: any;
   storeChat: any;
-  constructor() {
-    this.storeChat = useChatStore();
-  }
+  constructor() {}
   get connected(): boolean {
     return this.socket && this.socket.connected;
   }

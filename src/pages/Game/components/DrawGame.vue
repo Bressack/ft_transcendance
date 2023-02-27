@@ -17,7 +17,6 @@
 import {defineComponent} from 'vue'
 import { watch } from 'vue'
 // import { throttle, uniqueId } from 'lodash'
-import { useMeStore } from '../../../stores/me';
 
 var timeOutFunctionId = undefined as any;
 let test = undefined as any
@@ -44,7 +43,6 @@ export default defineComponent({
 			player2_score: 0,
 			playerOneName: "p1",
 			playerTwoName: "p2",
-			storeMe: useMeStore(),
 			namedisplay : ""
 		};
 	},

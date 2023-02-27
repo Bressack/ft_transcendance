@@ -2,7 +2,7 @@
 <q-page>
   <q-item class="flex-center">
     <q-item-label class="bigger q-ma-lg">
-      Welcome {{ $storeMe.username }} !
+      Welcome {{ $store.username }} !
     </q-item-label>
   </q-item>
   <q-item class="flex-center">

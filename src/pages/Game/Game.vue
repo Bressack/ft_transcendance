@@ -11,7 +11,6 @@ import { ref, defineComponent, computed } from 'vue'
 import DrawGame from './components/DrawGame.vue'
 // import { watch } from 'vue'
 import { throttle } from 'lodash'
-import { useMeStore } from '../../stores/me';
 
 // var timeOutFunctionId = undefined as any;
 
@@ -28,7 +27,6 @@ export default defineComponent({
 			gameId: "",
 			animResize: 0,
 			throttleValue: 10,
-			storeMe: useMeStore(),
 			game_paused: false,
 		};
 	},
@@ -55,7 +53,7 @@ export default defineComponent({
 			this.$ws.socket.volatile.emit(`${this.gameId}___mousemove`, this.getPlayerPosition(event))
 		},
 		askForPauseUnpause(){
-			this.$ws.socket.volatile.emit(`${this.gameId}___ask_pause`, this.storeMe.username)
+			this.$ws.socket.volatile.emit(`${this.gameId}___ask_pause`, this.$store.username)
 		},
 		handleCoundown(data: any) {
 			if (data.status == 'done') {
