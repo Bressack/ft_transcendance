@@ -17,7 +17,7 @@
         <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilPage" />
         <q-icon v-if="shortcut_block"     class="shortcut" name="person_off" color="red"    @click="block" />
         <q-icon v-if="shortcut_unblock"   class="shortcut" name="done"       color="green"  @click="block" />
-        <q-icon v-if="shortcut_play"      class="shortcut" name="videogame_asset" color="green"  @click="goGameOptions" />
+        <q-icon v-if="shortcut_play"      class="shortcut" name="mdi-gamepad-variant-outline" color="green"  @click="goGameOptions" />
         <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="goChat" />
         <q-icon v-if="shortcut_unfollow"  class="shortcut" name="cancel"     color="red"    @click="unfollow" />
         <q-icon v-if="shortcut_follow"    class="shortcut" name="done"       color="green"  @click="follow" />

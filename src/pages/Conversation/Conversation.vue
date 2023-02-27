@@ -168,6 +168,7 @@ export default defineComponent({
 			}
 		},
 		getDatas() {
+			console.log("requests: ", this.$store.pendingRequests)
 			return this.$api
 				.joinChannel(this.$store.active_channel, this.$store.channelPassword)
 				.then(() => {

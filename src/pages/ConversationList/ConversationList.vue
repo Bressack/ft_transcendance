@@ -10,17 +10,22 @@
         active-color="orange" indicator-color="orange" align="justify" narrow-indicator>
         <q-tab name="friends" icon="group" class="tab unautretruc" />
         <q-tab name="channels" icon="chat" class="tab" />
-        <q-tab name="following" icon="hourglass_bottom" class="tab">
+        <!-- <q-tab name="following" icon="hourglass_bottom" class="tab">
           <div class="notif justify-center items-center circle" v-if="$store.friendRequestSent?.length > 0" />
           <div class="notif justify-center items-center" v-if="$store.friendRequestSent?.length > 0">
             {{ $store.friendRequestSent?.length < 99 ? $store.friendRequestSent?.length : '99+' }} </div>
-        </q-tab>
-        <q-tab name="follower" icon="notifications" class="tab">
+        </q-tab> -->
+        <!-- <q-tab name="follower" icon="notifications" class="tab">
           <div class="notif justify-center items-center circle" v-if="$store.friendRequestRecevied?.length > 0" />
           <div class="notif justify-center items-center" v-if="$store.friendRequestRecevied?.length > 0">
             {{ $store.friendRequestRecevied?.length < 99 ? $store.friendRequestRecevied?.length : '99+' }} </div>
+        </q-tab> -->
+        <q-tab name="pending requests" icon="mdi-account-clock-outline" class="tab">
+          <div class="notif justify-center items-center circle" v-if="$store.pendingRequests?.length > 0" />
+          <div class="notif justify-center items-center" v-if="$store.pendingRequests?.length">
+            {{ $store.pendingRequests?.length < 99 ? $store.pendingRequests?.length : '99+' }} </div>
         </q-tab>
-        <q-tab name="blocked" icon="person_off" class="tab">
+        <q-tab name="blocked" icon="mdi-account-cancel" class="tab">
           <div class="notif justify-center items-center circle" v-if="$store.blocked?.length > 0" />
           <div class="notif justify-center items-center" v-if="$store.blocked?.length > 0">
             {{ $store.blocked?.length < 99 ? $store.blocked?.length : '99+' }} </div>
@@ -49,7 +54,7 @@
 <!-- #################################################################################################################### -->
           <q-tab-panel name="channels" class="tab-panel hide-scrollbar">
             <q-item class="flex-center">
-              <q-btn class="full-width" outline size="sm" label="Create channel" icon-right="add" color="secondary" @click="dialog = true" />
+              <q-btn class="full-width" outline label="Create channel" icon-right="mdi-playlist-plus" color="secondary" @click="dialog = true" />
             </q-item>
             <q-dialog persistent v-model="dialog">
               <CreateChannel :closeFn=closeDialog />
@@ -73,21 +78,29 @@
             </q-list>
           </q-tab-panel>
 <!-- #################################################################################################################### -->
-          <q-tab-panel name="following" class="tab-panel hide-scrollbar">
+          <!-- <q-tab-panel name="following" class="tab-panel hide-scrollbar">
             <q-list>
               <UserCard v-for="rsent in $store.friendRequestSent" :key="rsent" @goGameOptions="goGameOptions"
                 :username="rsent"
                 shortcut_unfollow menu_profile menu_unfollow menu_block menu_play />
             </q-list>
+          </q-tab-panel> -->
+          <q-tab-panel name="pending requests" class="tab-panel hide-scrollbar">
+            <q-list>
+              <PendingRequest v-for="req in $store.pendingRequests" :key="req.username"
+                :username="req.username"
+				:category="req.category"
+                 menu_profile menu_block />
+            </q-list>
           </q-tab-panel>
 <!-- #################################################################################################################### -->
-          <q-tab-panel name="follower" class="tab-panel hide-scrollbar">
+          <!-- <q-tab-panel name="follower" class="tab-panel hide-scrollbar">
             <q-list>
               <UserCard v-for="rrecv in $store.friendRequestRecevied" :key="rrecv" @goGameOptions="goGameOptions"
                 :username="rrecv"
                 shortcut_follow menu_profile menu_follow menu_block menu_play />
             </q-list>
-          </q-tab-panel>
+          </q-tab-panel> -->
 <!-- #################################################################################################################### -->
           <q-tab-panel name="blocked" class="tab-panel hide-scrollbar">
             <q-list>
@@ -128,6 +141,7 @@ import { ISearchQuery } from 'src/services/api.models'
 import QInputMenu from 'src/components/QInputMenu.component.vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
 import UserCard from './components/UserCard.vue'
+import PendingRequest from './components/PendingRequest.vue'
 
 enum EUserStatus {
   UNKNOWN,
@@ -152,7 +166,7 @@ interface IUserSelected {
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { ChooseGameOptions, QInputMenu, CreateChannel, UserCard },
+  components: { ChooseGameOptions, QInputMenu, CreateChannel, UserCard, PendingRequest},
   setup() {
     const gameOptions = ref(false)
     const dialog = ref(false)
