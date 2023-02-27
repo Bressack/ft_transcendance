@@ -49,7 +49,7 @@
 <!-- #################################################################################################################### -->
           <q-tab-panel name="channels" class="tab-panel hide-scrollbar">
             <q-item class="flex-center">
-              <q-btn class="createChannelButton" label="Create channel" color="orange" @click="dialog = true" />
+              <q-btn class="full-width" outline size="sm" label="Create channel" icon-right="add" color="secondary" @click="dialog = true" />
             </q-item>
             <q-dialog persistent v-model="dialog">
               <CreateChannel :closeFn=closeDialog />
@@ -313,6 +313,7 @@ body
 
 .createChannelButton
   width: 100%
+
 
 .password_dialog
   background-color: $bg-primary

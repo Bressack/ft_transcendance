@@ -12,7 +12,7 @@
 			<div class="loadingState">Banned !</div>
 			</transition>
 	  </div> -->
-			<div v-show="$store.current_channel_state === 'ACTIVE'" class="row q-pa-md justify-center"
+			<div v-show="$store.current_channel_state === 'ACTIVE' && $store.currentChannelSub.state !== 'BANNED'" class="row q-pa-md justify-center"
 				style="padding-top: 0px; padding-right: 0px; bottom:auto;">
 				<q-scroll-area id="virtScroll" class="list_messages">
 					<q-virtual-scroll component="q-list" :items="$store.messages" ref="chatVirtualScroll"
@@ -41,14 +41,22 @@
 				</q-scroll-area>
 
 			</div>
-			<div v-if="$store.current_channel_state === 'LOADING'">
+			<div v-if="$store.current_channel_state === 'LOADING'  && $store.currentChannelSub.state !== 'BANNED'">
 				<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
 					<div class="loadingState">Loading...</div>
 				</transition>
 			</div>
-			<div v-else-if="$store.current_channel_state === 'ERROR'">
+			<div v-else-if="$store.current_channel_state === 'ERROR' && $store.currentChannelSub.state !== 'BANNED'">
 				<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
 					<div class="loadingState">Error</div>
+				</transition>
+			</div>
+			<div v-else-if="$store.currentChannelSub.state === 'BANNED'">
+				<transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+					<div class="loadingState" style="text-align: center;">
+						Banned
+						<div style="font-size: small;">until {{ getRelativeDate(new Date($store.currentChannelSub.stateActiveUntil || Date.now())) }}</div>
+					</div>
 				</transition>
 			</div>
 
@@ -56,7 +64,7 @@
 				class="absolute-bottom custom-input input"
 				maxlength="128"
 				:loading="$store.current_channel_state === 'LOADING'"
-				:disable="!($store.current_channel_state === 'ACTIVE')">
+				:disable="!($store.current_channel_state === 'ACTIVE') || $store.currentChannelSub.state !== 'OK'">
 				<template v-slot:append>
 					<q-icon name="send" @click="sendmessage" class="cursor-pointer" />
 				</template>
@@ -92,12 +100,13 @@ export default defineComponent({
 	//   },
 	setup() {
 		return {
-			chatVirtualScroll: ref(),
+			// chatVirtualScroll: ref(),
 		}
 	},
 	beforeRouteUpdate(to, from) {
 		const channelId: string = to.params.channelId as string;
-		this.$store.current_channel_state = ChanState.LOADING
+		this.$store.current_channel_state = ChanState.LOADING;
+		(this.$refs['chatVirtualScroll'] as any).reset(0)
 
 		if (this.$store.isSubscribedToChannel(channelId) && to.params.channelId !== from.params.channelId) {
 			this.$store.setCurrentChannel(channelId);
@@ -152,18 +161,18 @@ export default defineComponent({
 		},
 		scrollBottom(refresh: boolean = false) {
 			if (refresh) {
-				this.chatVirtualScroll.refresh(this.$store.messagesCount)
+				(this.$refs['chatVirtualScroll'] as any).refresh(this.$store.messagesCount)
 			}
 			else {
-				this.chatVirtualScroll.scrollTo(this.$store.messagesCount)
+				(this.$refs['chatVirtualScroll'] as any).scrollTo(this.$store.messagesCount)
 			}
 		},
 		getDatas() {
 			return this.$api
 				.joinChannel(this.$store.active_channel, this.$store.channelPassword)
 				.then(() => {
-					this.$store.current_channel_state = ChanState.ACTIVE
-					this.chatVirtualScroll.refresh(this.$store.messagesCount)
+					this.$store.current_channel_state = ChanState.ACTIVE;
+					(this.$refs['chatVirtualScroll'] as any).refresh(this.$store.messagesCount)
 				})
 
 		},

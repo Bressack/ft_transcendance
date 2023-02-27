@@ -154,6 +154,12 @@
       <router-view />
     </q-page-container>
   </q-layout>
+      <q-ajax-bar
+	      ref="ajaxBar"
+	      position="bottom"
+	      color="blue-grey-3"
+	      size="10px"
+	    />
 </template>
 
 <script lang="ts">
@@ -194,6 +200,7 @@ export default defineComponent({
     const invitationFrom = ref(false);
     const settings = ref(false);
     const notifyCenterLever = ref(false);
+	const ajaxBar = ref(null)
 
     return {
       notifyCenterLever,
@@ -202,6 +209,7 @@ export default defineComponent({
         settings.value = true;
       },
       invitationFrom,
+	  ajaxBar
     };
   },
   data() {
@@ -446,6 +454,7 @@ export default defineComponent({
   async created() {
     // this.$store.$reset()
     // if (this.$store.username) {
+
     await this.$api.axiosInstance
       .get("/users/me", {
         transformResponse: (r: string) => Convert.toStoreData(r),
