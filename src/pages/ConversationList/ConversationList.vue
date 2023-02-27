@@ -50,24 +50,6 @@
           </q-list>
         </q-tab-panel>
 
-        <!-- #################################################################################################################### -->
-        <q-tab-panel name="channels" class="tab-panel hide-scrollbar">
-          <q-item class="flex-center">
-            <q-btn class="createChannelButton" label="Create channel" color="orange" @click="dialog = true" />
-          </q-item>
-          <q-dialog persistent v-model="dialog">
-            <CreateChannel :closeFn=closeDialog />
-          </q-dialog>
-          <q-list>
-            <q-item clickable v-ripple v-for="sub in ($store.getPublicPrivateChannels)" :key="sub.channelId" manual-focus
-              :focused="$store.active_channel === sub.channelId" @click="chanSelected(sub.channel.id)">
-              <q-item-section>
-                <span class="text-bold text-h6 pubchan">{{ sub.channel.name }}</span>
-              </q-item-section>
-              <q-item-section side v-if="sub.channel.passwordProtected">
-                <q-icon name="lock" color="grey-7" />
-              </q-item-section>
-
 <!-- #################################################################################################################### -->
           <q-tab-panel name="channels" class="tab-panel hide-scrollbar">
             <q-item class="flex-center">
