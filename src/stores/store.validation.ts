@@ -33,7 +33,7 @@ export class Convert {
   public static toMessage(json: string): Message {
     return cast(JSON.parse(json), r("Message"));
   }
-  public static toMessage2(json: string): Message {
+  public static toMessage2(json: any): Message {
     return cast(json, r("Message"));
   }
 
