@@ -84,10 +84,10 @@
           </template>
         </q-input>
       </div>
-      <div class="userlist">
+      <div class="userlist hide-scrollbar">
         <q-list>
           <UserCard v-for="user of userlist" :key="user.username" :username="user.username" :class="username_color(user)"
-              shortcut_follow shortcut_play menu_profile menu_block menu_play menu_follow />
+              menu_profile menu_block menu_play menu_follow />
         </q-list>
       </div>
     </div>
@@ -319,10 +319,11 @@ export default defineComponent({
   min-height: 80px
 
 .userlist
-  height: calc(100vh - 92px)
+  height: calc(100vh - (92px + 50px))
   overflow: auto
-  width: 20vw
+  width: 15vw
+  background-color: $bg-secondary
 
 .conv
-  width: calc(100% - 20vw)
+  width: calc(100% - 15vw)
 </style>
