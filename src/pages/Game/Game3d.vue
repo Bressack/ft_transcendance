@@ -71,8 +71,8 @@ export default defineComponent({
 			return y
 		},
 		sendPosition(event: any) {
-			if (this.game_paused)
-				return
+			// if (this.game_paused)
+			// 	return
 			this.$ws.socket.volatile.emit(`${this.gameId}___mousemove`, this.getPlayerPosition(event))
 		},
 		askForPauseUnpause(){
