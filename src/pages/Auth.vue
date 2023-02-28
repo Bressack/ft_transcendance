@@ -86,7 +86,7 @@
       </q-form>
       <q-form>
         <q-card class="q-pa-md q-ma-sm text-center text-bold text-h6" v-for="user in preSetUsers" :key="user" @click="quickconnect(user)">
-          {{ user.username }}
+          {{ (user as preset).username }}
         </q-card>
       </q-form>
     </q-card>
@@ -95,8 +95,8 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-
-const _preSetUsers = [
+type preset = { username: string, password: string }
+const _preSetUsers : preset[] = [
   {
     username: 'Alice99',
     password: 'null',
@@ -143,15 +143,15 @@ export default defineComponent({
 
       this.$api.login(payload)
       .then(() => {
-        this.$router.push('/')
+        this.$router.push({ path: '/', query: { fetched: "true" } })
       })
       .catch((error) =>  {
-        // this.$notifyCenter.send({
-        //     // position: 'center',
-        //     // multiLine: true,
-        //     type: 'negative',
-        //     message: 'incorrect username or password'
-        //   })
+		for (let message of error?.response?.data?.message || []) {
+			this.$q.notify({
+				type: 'negative',
+				message
+			})
+		}
         console.log(error);
       })
     },
@@ -159,7 +159,6 @@ export default defineComponent({
       this.signIn(this.username, this.password)
     },
     onSubmitSignUp() {
-      let that = this
       let payload: object = Object({
         username: this.username,
         email: this.email,
@@ -167,18 +166,17 @@ export default defineComponent({
       })
 
       this.$api.signup(payload)
-      .then(function (/* data */) {
-        that.$router.replace('/')
+      .then(() => {
+        this.$router.push({path: '/', query: {fetched: "true"}});
       })
-      .catch(function (error) {
-        // if (error.response)
-        console.log(error.response.data)
-        for (let i = 0; i < error.response.data.message.length; i++) {
-          that.$notifyCenter.send({
-              type: 'negative',
-              message: error.response.data.message[i]
-            })
-        }
+      .catch((error) => {
+		console.log(error);
+		for (let message of error?.response?.data?.message || []) {
+			this.$q.notify({
+				type: 'negative',
+				message
+			})
+		}
       })
     },
   },

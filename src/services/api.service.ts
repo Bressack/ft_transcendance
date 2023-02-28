@@ -20,8 +20,15 @@ export default {
    **/
 
   async signup(payload: object) {
-    const response = await this.axiosInstance.post("/auth/signup", payload);
-    return response.status;
+    return await this.axiosInstance
+      .post("/auth/signup", payload, {
+        transformResponse: (r: string) => Convert.toStoreData(r),
+      })
+      .then((response) => {
+        const store = useMainStore();
+        store.setStoreData(response.data);
+        return response.status;
+      });
   },
 
   async fetchMe() {

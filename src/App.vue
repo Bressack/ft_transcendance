@@ -93,7 +93,7 @@ export default defineComponent({
           await this._fRefresh().catch(() => { this.$router.push("/logout") });
           return req
         }
-        if (this.must_logout() && req.url !== "/auth/login") {
+        if (this.must_logout() && req.url !== "/auth/login" && req.url !== "/auth/signup") {
           this.$router.push("/logout")
           throw new Error("Token expired")
         }
