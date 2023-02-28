@@ -52,6 +52,9 @@ let	sphereMaterial18 = new THREE.MeshBasicMaterial( {color: 0x39fdfe, wireframe:
 let	sphereMaterial19 = new THREE.MeshBasicMaterial( {color: 0x00fdfe , wireframe: true} );
 
 let	sphereMaterial_2 = new THREE.MeshBasicMaterial( {color: 0x7DFDFE , wireframe: true} );
+let	sphereMaterial_3 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF , wireframe: true} );
+let	sphereMaterial_4 = new THREE.MeshBasicMaterial( {color: 0xDF740C , wireframe: true} );
+let	sphereMaterial_5 = new THREE.MeshBasicMaterial( {color: 0xFF0000 , wireframe: true} );
 
 let		timeOutFunctionId = undefined as any;
 // scene object variables
@@ -128,10 +131,10 @@ trail18.position.z = radius + 5
 trail19.position.z = radius + 5
 
 let ball =  new THREE.Mesh(new THREE.SphereGeometry(radius, segments, rings), sphereMaterial);
-let bigSphere =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
-let bigSphere_2 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
-let bigSphere_3 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
-let bigSphere_4 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
+let bigSphere =  new THREE.Mesh(new THREE.SphereGeometry(bigradius - 200, bigsegments, bigrings), sphereMaterial_2);
+let bigSphere_2 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius - 400 , bigsegments, bigrings), sphereMaterial_3);
+let bigSphere_3 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius - 600, bigsegments, bigrings), sphereMaterial_4);
+let bigSphere_4 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_5);
 let paddle1=  new THREE.Mesh(new THREE.CylinderGeometry(paddleWidth,paddleWidth, paddleHeight, 3, 4), paddle1Material);
 let paddle2 =  new THREE.Mesh(new THREE.CylinderGeometry(paddleWidth,paddleWidth, paddleHeight, 3, 4),paddle2Material);
 let plane =  new THREE.Mesh(new THREE.BoxGeometry(fieldWidth - 10, fieldHeight - 10, 10 ), planeMaterial);
