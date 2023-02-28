@@ -39,20 +39,20 @@ module.exports = configure(function (/* ctx */) {
 				browser: ['es2021']
 			},
 
-			vueRouterMode: 'history', // available values: 'hash', 'history'
+			vueRouterMode: 'hash', // available values: 'hash', 'history'
 			// minify: false,
 			// distDir
 			// vueRouterBase,
 			// vueDevtools,
 			// vueOptionsAPI: false,
 
-			rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
+
 		},
 
 		// Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
 		devServer: {
 			// https: true,
-			vueDevtools: true,
+			// vueDevtools: true,
 			open: false, // opens browser window automatically
 			proxy: {
 				// proxy all requests starting with /api to jsonplaceholder

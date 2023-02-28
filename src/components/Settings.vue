@@ -129,16 +129,15 @@ export default defineComponent({
               type: 'positive',
               message: 'Username successfully changed'
             })
-            this.profile.username = this.username
           })
           .catch((error) => {
-            console.log(error.response.data)
-            for (let i = 0; i < error.response.data.message.length; i++) {
-              this.$notifyCenter.send({
-                type: 'negative',
-                message: error.response.data.message[i]
-              })
-            }
+            console.log(error)
+            // for (let i = 0; i < error.response.data.message.length; i++) {
+            //   this.$notifyCenter.send({
+            //     type: 'negative',
+            //     message: error.response.data.message[i]
+            //   })
+            // }
           })
       }
       else {

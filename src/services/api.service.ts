@@ -20,38 +20,28 @@ export default {
    **/
 
   async signup(payload: object) {
-    return await this.axiosInstance
-      .post("/auth/signup", payload, {
-        transformResponse: (r: string) => Convert.toStoreData(r),
-      })
-      .then((response) => {
-        const store = useMainStore();
-        store.setStoreData(response.data);
-        return response.status;
-      });
+    return await this.axiosInstance.post("/auth/signup", payload).then((r) => {
+      const store = useMainStore();
+      store.setStoreData(Convert.toStoreData2(r.data));
+      return r.status;
+    });
   },
 
   async fetchMe() {
     const store = useMainStore();
-    return await this.axiosInstance
-      .get("/users/me", {
-        transformResponse: (r: string) => Convert.toStoreData(r),
-      })
-      .then((response) => {
-        store.setStoreData(response.data);
-      });
+    return await this.axiosInstance.get("/users/me").then((r) => {
+      store.setStoreData(Convert.toStoreData2(r.data));
+      return r.status;
+    });
   },
 
   async login(payload: object) {
-    return await this.axiosInstance
-      .post("/auth/login", payload, {
-        transformResponse: (r: string) => Convert.toStoreData(r),
-      })
-      .then((response) => {
-        const store = useMainStore();
-        store.setStoreData(response.data);
-        return response.status;
-      });
+    const store = useMainStore();
+
+    return await this.axiosInstance.post("/auth/login", payload).then((r) => {
+      store.setStoreData(Convert.toStoreData2(r.data));
+      return r.status;
+    });
   },
 
   async logout() {
@@ -69,8 +59,11 @@ export default {
    **/
 
   async me() {
-    const response = await this.axiosInstance.get("/users/me");
-    return response.data;
+    const store = useMainStore();
+    return await this.axiosInstance.get("/users/me").then((r) => {
+      store.setStoreData(Convert.toStoreData2(r.data));
+      return r.status;
+    });
   },
 
   async user(username: String) {
@@ -128,21 +121,21 @@ export default {
     return response;
   },
 
-  async auth() {
-    const response = await this.axiosInstance.get("auth");
-    return response;
-  },
-
   async avatar(username: String) {
     const response = await this.axiosInstance.get(`/avatar/${username}/medium`);
     return response.data;
   },
 
   async changeUsername(username: String) {
-    const response = await this.axiosInstance.patch("/users/username", {
-      username: username,
-    });
-    return response.data;
+    const store = useMainStore();
+    return await this.axiosInstance
+      .patch("/users/username", {
+        username: username,
+      })
+      .then((r) => {
+        store.setStoreData(Convert.toStoreData2(r.data));
+        return r.status;
+      });
   },
 
   async createChannel(payload: object) {

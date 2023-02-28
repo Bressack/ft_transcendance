@@ -160,7 +160,7 @@ export default defineComponent({
     mounted() {
         this.$ws.listen("message", (payload: any) => {
             // console.log("new message: ", payload);
-            const msg : TMessage = Convert.toMessage2(payload as any);
+            const msg : TMessage = Convert.toMessage2(payload as object);
             this.$store.addMessage(msg);
             this.scrollBottom(true);
         });

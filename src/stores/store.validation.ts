@@ -14,39 +14,59 @@ export class Convert {
   public static toStoreData(json: string): StoreData {
     return cast(JSON.parse(json), r("StoreData"));
   }
-
-  public static toBlocking(json: string): Blocking {
-    return cast(JSON.parse(json), r("Blocking"));
+  public static toStoreData2(data: object): StoreData {
+    return cast(data, r("StoreData"));
   }
 
   public static toChannelSubscription(json: string): ChannelSubscription {
     return cast(JSON.parse(json), r("ChannelSubscription"));
   }
-  public static toChannelSubscription2(json: string): ChannelSubscription {
-    return cast(json, r("ChannelSubscription"));
+  public static toChannelSubscription2(data: object): ChannelSubscription {
+    return cast(data, r("ChannelSubscription"));
   }
 
   public static toChannel(json: string): Channel {
     return cast(JSON.parse(json), r("Channel"));
   }
+  public static toChannel2(data: object): Channel {
+    return cast(data, r("Channel"));
+  }
 
   public static toMessage(json: string): Message {
     return cast(JSON.parse(json), r("Message"));
   }
-  public static toMessage2(json: any): Message {
-    return cast(json, r("Message"));
+  public static toMessage2(data: object): Message {
+    return cast(data, r("Message"));
   }
 
   public static toSubscribedUser(json: string): SubscribedUser {
     return cast(JSON.parse(json), r("SubscribedUser"));
   }
+  public static toSubscribedUser2(data: object): SubscribedUser {
+    return cast(data, r("SubscribedUser"));
+  }
 
   public static toFollowedBy(json: string): FollowedBy {
     return cast(JSON.parse(json), r("FollowedBy"));
   }
+  public static toFollowedBy2(data: object): FollowedBy {
+    return cast(data, r("FollowedBy"));
+  }
 
   public static toFollowing(json: string): Following {
     return cast(JSON.parse(json), r("Following"));
+  }
+
+  public static toFollowing2(data: object): Following {
+    return cast(data, r("Following"));
+  }
+
+  public static toBlocking(json: string): Blocking {
+    return cast(JSON.parse(json), r("Blocking"));
+  }
+
+  public static toBlocking2(data: object): Blocking {
+    return cast(data, r("Blocking"));
   }
 }
 

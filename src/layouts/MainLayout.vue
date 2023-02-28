@@ -443,11 +443,9 @@ export default defineComponent({
   async created() {
     this.$store.$reset()
     await this.$api.axiosInstance
-      .get("/users/me", {
-        transformResponse: (r: string) => Convert.toStoreData(r),
-      })
+      .get("/users/me")
       .then((response) => {
-        this.$store.setStoreData(response.data);
+        this.$store.setStoreData(Convert.toStoreData2(response.data));
       });
     // }
     await this.$ws.connect()
@@ -492,15 +490,6 @@ export default defineComponent({
       "stop-for-matchmaking",
       this.StoplisteningForMatchmaking
     );
-    // this.$api.axiosInstance.get('/users/me', { transformResponse: (r:string) => Convert.toStoreData(r) }).then(response => {
-    // 	this.$store.setStoreData(response.data)
-    // 	console.log(this.$store.getOneToOneChannels)
-    // })
-    // this.$api.axiosInstance.post('/chat/f8edc315-dc99-43ab-ab3c-cda60a30828e/join', { transformResponse: (r:string) => Convert.toChannelSubscription(r) }).then(response => {
-    // 	this.$store.updateChannelSubscription(response.data);
-    // 	console.log(response.data);
-
-    // })
   },
 
   beforeUnMount() {
