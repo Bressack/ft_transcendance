@@ -4,8 +4,8 @@
 					manual-focus
 					:focused="$store.active_channel === channelId">
       <q-item-section style="max-width: 50px;" @click="goProfilPage">
-        <q-avatar class="avatar">
-          <img size="20px" :src="`/api/avatar/${username}/thumbnail`">
+        <q-avatar size="38px" class="avatar" :style="`box-shadow: 0 0 3px 2px ${$utils.usernameToColor(username)};`">
+          <img :src="`/api/avatar/${username}/thumbnail`">
           <div :class="getLoginStatus()" class="loginstatus"/>
         </q-avatar>
       </q-item-section>

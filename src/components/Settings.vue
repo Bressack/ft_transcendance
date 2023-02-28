@@ -26,13 +26,13 @@
     </q-item>
     <div class="q-pa-md">
       <form onsubmit="return false">
-        <q-input dark color="#F7F7FF" label="Change username" v-model="username">
+        <q-input dark color="#F7F7FF" label="Change username" v-model="$store.username">
           <q-btn color="orange" type="submit" label="ok" @click="confirmChangeUsername = true" />
         </q-input>
       </form>
     </div>
     <q-item class="justify-center q-pb-md">
-      <q-toggle color="orange" @update:model-value="onUpdate" v-model="twoFA">
+      <q-toggle color="orange" @update:model-value="onUpdate" v-model="$store.twoFA">
         <q-item-label class="label">Two factor authentification</q-item-label>
       </q-toggle>
     </q-item>
@@ -94,9 +94,9 @@ export default defineComponent({
       this.$api.me()
         .then((result) => {
           this.profile = result
-          this.username = result.username
-          this.avatar = `/api/avatar/${result.username}/large?${this.refresh++}`
-          this.twoFA = result.TwoFA
+          this.username = this.$store.username
+          this.avatar = `/api/avatar/${this.$store.username}/medium?${this.refresh++}`
+          this.twoFA = this.$store.twoFA
         })
         .catch((error) => {
           console.error('error:', error);
@@ -116,13 +116,13 @@ export default defineComponent({
               type: 'positive',
               message: 'Avatar successfully removed'
             })
-            this.avatar = `/api/avatar/${this.profile.username}/large?${this.refresh++}`
+            this.avatar = `/api/avatar/${this.$store.username}/medium?${this.refresh++}`
           }
           this.$refs.uploader.reset()
         })
     },
     changeUsername() {
-      if (this.username !== this.profile.username) {
+      if (this.username !== this.$store.username) {
         this.$api.changeUsername(this.username)
           .then(() => {
             this.$notifyCenter.send({
@@ -158,7 +158,7 @@ export default defineComponent({
         message: 'Avatar successfully uploaded'
       })
       this.$refs.uploader.removeUploadedFiles()
-      this.avatar = `/api/avatar/${this.profile.username}/large?${this.refresh++}`
+      this.avatar = `/api/avatar/${this.$store.username}/medium?${this.refresh++}`
     },
     onRejected(rejectedEntries: QRejectedEntry[]) {
       if (rejectedEntries[0].failedPropValidation === 'filter') {

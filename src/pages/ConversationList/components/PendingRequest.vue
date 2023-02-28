@@ -5,8 +5,9 @@
 			<!-- <q-icon v-if="category === 'received'" class=" " name="call_received" color="cyan" />
 			<q-icon v-else-if="category === 'sent'" class=" " name="call_made" color="orange" /> -->
 
-			<q-avatar class="avatar ">
-				<img size="20px" :src="`/api/avatar/${username}/thumbnail`">
+			<q-avatar size="38px" class=" " :style="`box-shadow: 0 0 3px 2px ${$utils.usernameToColor(username)};`">
+				<img  :src="`/api/avatar/${username}/thumbnail`">
+				<!-- <q-badge floating rounded color="teal"></q-badge> -->
 				<div :class="getLoginStatus()" class="loginstatus" />
 			</q-avatar>
 		</q-item-section>

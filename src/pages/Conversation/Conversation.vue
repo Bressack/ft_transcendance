@@ -26,6 +26,7 @@
                       margin-bottom: 0px;
                       padding-bottom: 8px;
                       min-height: 80px;
+					  
                     " :key="index" :avatar="avatarstr(item.username)" :text="[item.content]"
                                 :stamp="getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username"
                                 :bg-color="
@@ -278,6 +279,7 @@ export default defineComponent({
   #virtScroll
     padding: 0px 100px 0px 100px
 //   word-break: break-word
+
 
 
 .message_element

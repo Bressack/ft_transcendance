@@ -1,6 +1,7 @@
 import { boot } from "quasar/wrappers";
 import { AxiosInstance } from "axios";
 import WsService from "src/services/ws.service";
+import utils from "src/services/utils.service";
 import API from "src/services/api.service";
 import nc from "src/services/notifyCenter";
 import { useMainStore } from "src/stores/store";
@@ -11,6 +12,7 @@ declare module "@vue/runtime-core" {
     $ws: typeof ws;
     $api: typeof api;
     $notifyCenter: typeof notifyCenter;
+    $utils: typeof utils;
     $store: ReturnType<typeof useMainStore>;
   }
 }
@@ -34,6 +36,7 @@ declare module "vue" {
     $api: typeof api;
     $notifyCenter: typeof notifyCenter;
     $store: ReturnType<typeof useMainStore>;
+    $utils: typeof utils;
   }
 }
 export default boot(({ app }) => {
@@ -45,6 +48,7 @@ export default boot(({ app }) => {
   //   app.use(createPinia());
   app.config.globalProperties.$ws = ws;
   app.config.globalProperties.$api = api;
+  app.config.globalProperties.$utils = utils;
   app.config.globalProperties.$notifyCenter = notifyCenter;
   app.config.globalProperties.$store = store;
 });
