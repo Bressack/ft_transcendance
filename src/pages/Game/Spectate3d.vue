@@ -14,7 +14,7 @@ export default defineComponent({
 	components: {DrawGame3d},
 	data() {
 		return {
-			viewside:true,
+			viewside:false,
 		}
 	},
 	methods:

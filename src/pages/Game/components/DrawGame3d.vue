@@ -18,46 +18,46 @@ import {RenderPass} from 'three/examples/jsm/postprocessing/RenderPass';
 import {EffectComposer} from 'three/examples/jsm/postprocessing/EffectComposer';
 import {UnrealBloomPass} from 'three/examples/jsm/postprocessing/UnrealBloomPass';
 
-var renderscene = undefined as any;
-var composer = undefined as any;
-var bloomPass = undefined as any;
+let renderscene = undefined as any;
+let composer = undefined as any;
+let bloomPass = undefined as any;
 
-var	loader = new THREE.TextureLoader();
-var	borderMaterial = new THREE.MeshBasicMaterial({color: 0xDF740C, wireframe: true});
-var	planeMaterial = new THREE.MeshBasicMaterial({color: 0x000000, wireframe: false});
-var	paddle1Material = new THREE.MeshBasicMaterial({color: 0x00FDFE, wireframe: true});
-var	paddle2Material = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
+let	loader = new THREE.TextureLoader();
+let	borderMaterial = new THREE.MeshBasicMaterial({color: 0xDF740C, wireframe: true});
+let	planeMaterial = new THREE.MeshBasicMaterial({color: 0x000000, wireframe: false});
+let	paddle1Material = new THREE.MeshBasicMaterial({color: 0x7DFDFE, wireframe: true});
+let	paddle2Material = new THREE.MeshBasicMaterial({color: 0xff0000, wireframe: true});
 
-var	sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF , wireframe: true} );
+let	sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xFFFFFF , wireframe: true} );
 
-var	sphereMaterial0 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF , wireframe: true} );
-var	sphereMaterial1 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial2 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial3 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial4 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial5 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial6 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial7 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial8 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial9 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial10 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial11 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial12 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial13 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial14 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial15 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial16 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial17 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial18 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, wireframe: true} );
-var	sphereMaterial19 = new THREE.MeshBasicMaterial( {color: 0xFFFFFF , wireframe: true} );
+let	sphereMaterial0 = new THREE.MeshBasicMaterial( {color: 0xffffff , wireframe: true} );
+let	sphereMaterial1 = new THREE.MeshBasicMaterial( {color: 0xf8ffff, wireframe: true} );
+let	sphereMaterial2 = new THREE.MeshBasicMaterial( {color: 0xf0ffff, wireframe: true} );
+let	sphereMaterial3 = new THREE.MeshBasicMaterial( {color: 0xe8ffff, wireframe: true} );
+let	sphereMaterial4 = new THREE.MeshBasicMaterial( {color: 0xe1ffff, wireframe: true} );
+let	sphereMaterial5 = new THREE.MeshBasicMaterial( {color: 0xd9ffff, wireframe: true} );
+let	sphereMaterial6 = new THREE.MeshBasicMaterial( {color: 0xd0ffff, wireframe: true} );
+let	sphereMaterial7 = new THREE.MeshBasicMaterial( {color: 0xc8ffff, wireframe: true} );
+let	sphereMaterial8 = new THREE.MeshBasicMaterial( {color: 0xbfffff, wireframe: true} );
+let	sphereMaterial9 = new THREE.MeshBasicMaterial( {color: 0xb6ffff, wireframe: true} );
+let	sphereMaterial10 = new THREE.MeshBasicMaterial( {color: 0xadfffe, wireframe: true} );
+let	sphereMaterial11 = new THREE.MeshBasicMaterial( {color: 0xa3fffe, wireframe: true} );
+let	sphereMaterial12 = new THREE.MeshBasicMaterial( {color: 0x98fffe, wireframe: true} );
+let	sphereMaterial13 = new THREE.MeshBasicMaterial( {color: 0x8dfffe, wireframe: true} );
+let	sphereMaterial14 = new THREE.MeshBasicMaterial( {color: 0x81fefe, wireframe: true} );
+let	sphereMaterial15 = new THREE.MeshBasicMaterial( {color: 0x73fefe, wireframe: true} );
+let	sphereMaterial16 = new THREE.MeshBasicMaterial( {color: 0x64fefe, wireframe: true} );
+let	sphereMaterial17 = new THREE.MeshBasicMaterial( {color: 0x52fefe, wireframe: true} );
+let	sphereMaterial18 = new THREE.MeshBasicMaterial( {color: 0x39fdfe, wireframe: true} );
+let	sphereMaterial19 = new THREE.MeshBasicMaterial( {color: 0x00fdfe , wireframe: true} );
 
-var	sphereMaterial_2 = new THREE.MeshBasicMaterial( {color: 0x00FDFE , wireframe: true} );
+let	sphereMaterial_2 = new THREE.MeshBasicMaterial( {color: 0x7DFDFE , wireframe: true} );
 
-var		timeOutFunctionId = undefined as any;
+let		timeOutFunctionId = undefined as any;
 // scene object variables
-var		scene = new THREE.Scene();
-var		renderer = new THREE.WebGLRenderer();
-var		camera = null as any
+let		scene = new THREE.Scene();
+let		renderer = new THREE.WebGLRenderer();
+let		camera = null as any
 
 // field const
 const	fieldWidth = 1150, fieldHeight = 725;
@@ -78,34 +78,34 @@ const bloomradius = 0.1
 const bloomthreshold = 0
 
 // geometric elements
-var light_ball = new THREE.PointLight( 0xff00ff, 20, 100);
+let light_ball = new THREE.PointLight( 0xff00ff, 20, 100);
 
 
-var back =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, fieldHeight + 5, 3, 25), borderMaterial);
-var front =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, fieldHeight + 5, 3, 25),borderMaterial);
-var left =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, fieldWidth + 5, 3, 25), borderMaterial);
-var right =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, fieldWidth + 5, 3, 25),borderMaterial);
+let back =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, fieldHeight + 5, 3, 25), borderMaterial);
+let front =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, fieldHeight + 5, 3, 25),borderMaterial);
+let left =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, fieldWidth + 5, 3, 25), borderMaterial);
+let right =  new THREE.Mesh(new THREE.CylinderGeometry(5, 5, fieldWidth + 5, 3, 25),borderMaterial);
 
-var trail0 =  new THREE.Mesh(new THREE.SphereGeometry(5              , segments, rings), sphereMaterial0);
-var trail1 =  new THREE.Mesh(new THREE.SphereGeometry(5 - 0.625      , segments, rings), sphereMaterial1);
-var trail2 =  new THREE.Mesh(new THREE.SphereGeometry(5 - (2 * 0.625), segments, rings), sphereMaterial2);
-var trail3 =  new THREE.Mesh(new THREE.SphereGeometry(5 - (3 * 0.625), segments, rings), sphereMaterial3);
-var trail4 =  new THREE.Mesh(new THREE.SphereGeometry(2.5              , segments, rings), sphereMaterial4);
-var trail5 =  new THREE.Mesh(new THREE.SphereGeometry(2.5 - 0.31      , segments, rings), sphereMaterial5);
-var trail6 =  new THREE.Mesh(new THREE.SphereGeometry(2.5 - (2 * 0.31), segments, rings), sphereMaterial6);
-var trail7 =  new THREE.Mesh(new THREE.SphereGeometry(2.5 - (3 * 0.31), segments, rings), sphereMaterial7);
-var trail8 =  new THREE.Mesh(new THREE.SphereGeometry(1.25, segments, rings), sphereMaterial8);
-var trail9 =  new THREE.Mesh(new THREE.SphereGeometry(1.25, segments, rings), sphereMaterial9);
-var trail10 =  new THREE.Mesh(new THREE.SphereGeometry(1.25, segments, rings), sphereMaterial10);
-var trail11 =  new THREE.Mesh(new THREE.SphereGeometry(1.25, segments, rings), sphereMaterial11);
-var trail12 =  new THREE.Mesh(new THREE.SphereGeometry(0.75, segments, rings), sphereMaterial12);
-var trail13 =  new THREE.Mesh(new THREE.SphereGeometry(0.75, segments, rings), sphereMaterial13);
-var trail14 =  new THREE.Mesh(new THREE.SphereGeometry(0.75, segments, rings), sphereMaterial14);
-var trail15 =  new THREE.Mesh(new THREE.SphereGeometry(0.75, segments, rings), sphereMaterial15);
-var trail16 =  new THREE.Mesh(new THREE.SphereGeometry(0.5, segments, rings), sphereMaterial16);
-var trail17 =  new THREE.Mesh(new THREE.SphereGeometry(0.5, segments, rings), sphereMaterial17);
-var trail18 =  new THREE.Mesh(new THREE.SphereGeometry(0.5, segments, rings), sphereMaterial18);
-var trail19 =  new THREE.Mesh(new THREE.SphereGeometry(0.5, segments, rings), sphereMaterial19);
+let trail0 =  new THREE.Mesh(new THREE.SphereGeometry(5              , segments, rings), sphereMaterial0);
+let trail1 =  new THREE.Mesh(new THREE.SphereGeometry(5 - 0.625      , segments, rings), sphereMaterial1);
+let trail2 =  new THREE.Mesh(new THREE.SphereGeometry(5 - (2 * 0.625), segments, rings), sphereMaterial2);
+let trail3 =  new THREE.Mesh(new THREE.SphereGeometry(5 - (3 * 0.625), segments, rings), sphereMaterial3);
+let trail4 =  new THREE.Mesh(new THREE.SphereGeometry(2.5              , segments, rings), sphereMaterial4);
+let trail5 =  new THREE.Mesh(new THREE.SphereGeometry(2.5 - 0.31      , segments, rings), sphereMaterial5);
+let trail6 =  new THREE.Mesh(new THREE.SphereGeometry(2.5 - (2 * 0.31), segments, rings), sphereMaterial6);
+let trail7 =  new THREE.Mesh(new THREE.SphereGeometry(2.5 - (3 * 0.31), segments, rings), sphereMaterial7);
+let trail8 =  new THREE.Mesh(new THREE.SphereGeometry(1.25, segments, rings), sphereMaterial8);
+let trail9 =  new THREE.Mesh(new THREE.SphereGeometry(1.25, segments, rings), sphereMaterial9);
+let trail10 =  new THREE.Mesh(new THREE.SphereGeometry(1.25, segments, rings), sphereMaterial10);
+let trail11 =  new THREE.Mesh(new THREE.SphereGeometry(1.25, segments, rings), sphereMaterial11);
+let trail12 =  new THREE.Mesh(new THREE.SphereGeometry(0.75, segments, rings), sphereMaterial12);
+let trail13 =  new THREE.Mesh(new THREE.SphereGeometry(0.75, segments, rings), sphereMaterial13);
+let trail14 =  new THREE.Mesh(new THREE.SphereGeometry(0.75, segments, rings), sphereMaterial14);
+let trail15 =  new THREE.Mesh(new THREE.SphereGeometry(0.75, segments, rings), sphereMaterial15);
+let trail16 =  new THREE.Mesh(new THREE.SphereGeometry(0.5, segments, rings), sphereMaterial16);
+let trail17 =  new THREE.Mesh(new THREE.SphereGeometry(0.5, segments, rings), sphereMaterial17);
+let trail18 =  new THREE.Mesh(new THREE.SphereGeometry(0.5, segments, rings), sphereMaterial18);
+let trail19 =  new THREE.Mesh(new THREE.SphereGeometry(0.5, segments, rings), sphereMaterial19);
 trail0.position.z = radius + 5
 trail1.position.z = radius + 5
 trail2.position.z = radius + 5
@@ -127,14 +127,16 @@ trail17.position.z = radius + 5
 trail18.position.z = radius + 5
 trail19.position.z = radius + 5
 
-var ball =  new THREE.Mesh(new THREE.SphereGeometry(radius, segments, rings), sphereMaterial);
-var bigSphere =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
-var bigSphere_2 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
-var paddle1=  new THREE.Mesh(new THREE.CylinderGeometry(paddleWidth,paddleWidth, paddleHeight, 3, 4), paddle1Material);
-var paddle2 =  new THREE.Mesh(new THREE.CylinderGeometry(paddleWidth,paddleWidth, paddleHeight, 3, 4),paddle2Material);
-var plane =  new THREE.Mesh(new THREE.BoxGeometry(fieldWidth - 10, fieldHeight - 10, 10 ), planeMaterial);
+let ball =  new THREE.Mesh(new THREE.SphereGeometry(radius, segments, rings), sphereMaterial);
+let bigSphere =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
+let bigSphere_2 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
+let bigSphere_3 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
+let bigSphere_4 =  new THREE.Mesh(new THREE.SphereGeometry(bigradius, bigsegments, bigrings), sphereMaterial_2);
+let paddle1=  new THREE.Mesh(new THREE.CylinderGeometry(paddleWidth,paddleWidth, paddleHeight, 3, 4), paddle1Material);
+let paddle2 =  new THREE.Mesh(new THREE.CylinderGeometry(paddleWidth,paddleWidth, paddleHeight, 3, 4),paddle2Material);
+let plane =  new THREE.Mesh(new THREE.BoxGeometry(fieldWidth - 10, fieldHeight - 10, 10 ), planeMaterial);
 // var table =  new THREE.Mesh(new THREE.PlaneGeometry(fieldWidth + 15, fieldHeight + 15), tableMaterial);
-var light =new THREE.AmbientLight( 0x404040 )
+let light =new THREE.AmbientLight( 0x404040 )
 //  new THREE.HemisphereLight(0xffffff, 0xffffff, 100);
 
  
@@ -184,6 +186,8 @@ export default defineComponent({
 			scene.add(right);
 			scene.add(bigSphere);
 			scene.add(bigSphere_2);
+			scene.add(bigSphere_3);
+			scene.add(bigSphere_4);
 			scene.add(light);
 			scene.add(camera);
 			scene.add(paddle1);
@@ -232,7 +236,7 @@ export default defineComponent({
 			paddle2.position.x = fieldWidth/2 - paddleWidth - 15;
 			paddle1.position.z = 15;
 			paddle2.position.z = 15;
-			camera.position.z = paddleDepth + 800;
+			camera.position.z = 1050;
 			this.cameraPhysics()
 			renderscene = new RenderPass( scene, camera );
 			composer = new EffectComposer(renderer);
@@ -324,6 +328,7 @@ export default defineComponent({
 		{
 			if (player)
 			{
+				camera.position.z -=  0.004 * (1050 -  (805));
 				camera.position.x -=  0.004 * (-3500 -  (paddle1.position.x - 300));
 				camera.rotation.y -= 0.004 * ((-70 * Math.PI/180) - (-40 * Math.PI/180));
 				if (camera.position.x >= paddle1.position.x - 300)
@@ -331,6 +336,7 @@ export default defineComponent({
 			}
 			else
 			{
+				camera.position.z -=  0.004 * (950 -  (805));
 				camera.position.x -=  0.004 * (3500 -  (paddle2.position.x + 300));
 				camera.rotation.y -= 0.004 * ((70 * Math.PI/180) - (40 * Math.PI/180));
 				if (camera.position.x <= paddle2.position.x + 300)
@@ -426,11 +432,17 @@ export default defineComponent({
 			light_ball.position.x =  bidule[2] - 550
 			light_ball.position.x = -1 * (bidule[3]) + 360
 			bigSphere.rotation.x += 0.1 * Math.PI/180;
-			bigSphere.rotation.y -= 0.1 * Math.PI/180;
-			bigSphere.rotation.z -= 0.1 * Math.PI/180;
-			bigSphere_2.rotation.x -= 0.1 * Math.PI/180;
-			bigSphere_2.rotation.y += 0.1 * Math.PI/180;
+			bigSphere.rotation.y += 0.1 * Math.PI/180;
+			bigSphere.rotation.z += 0.1 * Math.PI/180;
+			bigSphere_2.rotation.x += 0.1 * Math.PI/180;
+			bigSphere_2.rotation.y -= 0.1 * Math.PI/180;
 			bigSphere_2.rotation.z += 0.1 * Math.PI/180;
+			bigSphere_3.rotation.x -= 0.1 * Math.PI/180;
+			bigSphere_3.rotation.y += 0.1 * Math.PI/180;
+			bigSphere_3.rotation.z += 0.1 * Math.PI/180;
+			bigSphere_4.rotation.x -= 0.1 * Math.PI/180;
+			bigSphere_4.rotation.y -= 0.1 * Math.PI/180;
+			bigSphere_4.rotation.z += 0.1 * Math.PI/180;
 			ball.rotation.x += 0.5 * Math.PI/180;
 			this.player1_score = bidule[4]
 			this.player2_score = bidule[5]
