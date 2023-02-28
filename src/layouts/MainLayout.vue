@@ -21,7 +21,7 @@
           clickable
           @click="goHome"
           style=""
-          >Transcendence</q-item
+          >Trong Legacy</q-item
         >
         <q-btn color="red" @click="logout()">LOGOUT DEV</q-btn>
 

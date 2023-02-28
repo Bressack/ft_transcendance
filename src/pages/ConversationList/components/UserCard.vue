@@ -148,7 +148,7 @@ export default defineComponent({
 <style lang="sass" scoped>
 
 .name
-  margin-left: 0
+  margin-left: 10px
 .avatar
   width: 30px
   height: 30px

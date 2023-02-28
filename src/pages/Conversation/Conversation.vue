@@ -17,8 +17,8 @@
                 <q-chat-message class="chat-message" :key="index" :avatar="avatarstr(item.username)" :text="[item.content]"
                   :stamp="getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username" :bg-color="
                     item.username === $store.username
-                      ? 'secondary'
-                      : 'blue-grey-11'
+                    ? 'warning'
+                    : 'info'
                   ">
                   <template v-slot:name>
                     <span class="linkMessageProfile" @click="goProfilPage(item.username)">{{
@@ -86,7 +86,14 @@
       </div>
       <div class="userlist hide-scrollbar">
         <q-list>
-          <UserCard v-for="user of userlist" :key="user.username" :username="user.username" :class="username_color(user)"
+          <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center" v-if="userlist_owner?.length">Owner</q-item>
+          <UserCard v-for="user of userlist_owner" :key="user.username" :username="user.username" class="text-red text-bold"
+              menu_profile menu_block menu_play menu_follow />
+          <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center" v-if="userlist_admins?.length">Admins - {{ userlist_admins?.length }}</q-item>
+          <UserCard v-for="user of userlist_admins" :key="user.username" :username="user.username" class="text-warning text-bold"
+              menu_profile menu_block menu_play menu_follow />
+          <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center" v-if="userlist_users?.length">Users - {{ userlist_users?.length }}</q-item>
+          <UserCard v-for="user of userlist_users" :key="user.username" :username="user.username" class="text-info text-bold"
               menu_profile menu_block menu_play menu_follow />
         </q-list>
       </div>
@@ -147,11 +154,15 @@ export default defineComponent({
       if (this.$store.drawerStatus) return "300px";
       return "0px";
     },
-    userlist() {
-      return this.$store.currentChannelSub.channel.subscribedUsers.sort((a: SubscribedUser, b: SubscribedUser) => {
-        return a.role > b.role ? 1 : -1
-      })
-    }
+    userlist_owner() {
+      return this.$store.currentChannelSub.channel.subscribedUsers.filter(user => user.role == Role.OWNER);
+    },
+    userlist_admins() {
+      return this.$store.currentChannelSub.channel.subscribedUsers.filter(user => user.role == Role.ADMIN);
+    },
+    userlist_users() {
+      return this.$store.currentChannelSub.channel.subscribedUsers.filter(user => user.role == Role.USER);
+    },
   },
 
   mounted() {
