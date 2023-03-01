@@ -15,6 +15,9 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true },
         name: "index",
         component: () => import("pages/Index/Index.vue"),
+		// beforeEnter: (to, from, next) => {
+
+		// }
       },
       {
         path: "/conversation/:channelId",

@@ -223,6 +223,7 @@ export default {
       await this.axiosInstance
         .post(`/chat/${channelId}/join`, {
           password: password,
+          socketId: useMainStore().socketId,
         })
         .then((response) => {
           store.updateChannelSubscription(response.data);
@@ -232,7 +233,9 @@ export default {
 
   async leavehttpChannel(): Promise<void> {
     try {
-      await this.axiosInstance.patch(`/chat/leave`);
+      await this.axiosInstance.patch(`/chat/leave`, {
+        socketId: useMainStore().socketId,
+      });
     } catch (err: any) {
       throw err;
     }

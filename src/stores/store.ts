@@ -73,6 +73,8 @@ type InternalAppInfos = {
   followedBy_str: string[] | undefined;
   following_str: string[] | undefined;
   blocking_str: string[] | undefined;
+
+  socketId: string | undefined;
 };
 
 interface storeGetters extends StateTree {
@@ -124,6 +126,7 @@ const useMainStore = defineStore("main-store", {
       channels_passwords: new Map<string, string>(),
       users_status: new Map<string, UserStatus>(),
       message_received: false,
+      socketId: undefined,
     };
   },
   getters: {
@@ -242,6 +245,9 @@ const useMainStore = defineStore("main-store", {
     // }
   },
   actions: {
+    setSocketId(socketId: string) {
+      this.socketId = socketId;
+    },
     getStatus(state: MainStoreState): Function {
       return (username: string): UserStatus => {
         return state.users_status.get(username) || UserStatus.OFFLINE;
