@@ -447,11 +447,18 @@ export default defineComponent({
       .then((response) => {
         this.$store.setStoreData(Convert.toStoreData2(response.data));
       });
-    // }
     await this.$ws.connect()
-	.catch((err) => {
-		console.log(err); // should deactivate stuff that needs websockets ?
+	.catch(async (err) => {
+		await await this.$ws.connect().catch(()=>{
+			this.$router.push("/logout");
+		})
 	});
+	this.$ws.socket.on("disconnect", async () => {
+		console.log("disconnected");
+		await await this.$ws.connect().catch(() => {
+			this.$router.push("/logout");
+		})
+	})
 	this.$ws.socket.on("fetch_me", async () => {
 		await this.$api.fetchMe()
 	})
@@ -459,11 +466,8 @@ export default defineComponent({
 	// this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
 	this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
     this.$ws.listen("altered_subscription", (payload: ChannelSubscription) => {
-	// console.log("MainLayout:470 altered_subscription", payload);
-    // if (this.$store.username == payload.username)
-      this.$api.fetchMe();
-
-  });
+        this.$api.fetchMe();
+	});
 
 
 
@@ -621,7 +625,7 @@ body
   @include r.interpolate(font-size, 320px, 2560px, 10px, 40px)
 
 .glow
-  text-shadow: 1px 1px 2px white
+  text-shadow: -1px 1px 2px $grey-9
   color: transparent
   --bg-size: 200%
   background: -webkit-linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000)  0 0 / var(--bg-size) 100%

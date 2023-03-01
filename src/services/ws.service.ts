@@ -1,16 +1,14 @@
 import { io } from "socket.io-client";
-import { Cookies } from "quasar";
+import { Cookies, useQuasar } from "quasar";
 // import { useChatStore } from "src/stores/chat";
 import { useMainStore } from "src/stores/store";
-
-var that: any = null;
+import { Router } from "vue-router";
 
 class WsService {
   public socket: any;
-  storeChat: any;
   constructor() {}
   get connected(): boolean {
-    return this.socket && this.socket.connected;
+    return this.socket?.connected;
   }
   getToken() {
     return Cookies.get("WsAuth");
@@ -74,7 +72,7 @@ class WsService {
     return connection;
   }
   // should only be called once access token has been received after initial REST request
-  async connect() {
+  async connect(retry?: boolean) {
     // if (!this.socket)
     //   this.socket = io(`/?token=${this.getToken()}`, {
     //     auth: (cb) => {
@@ -84,15 +82,26 @@ class WsService {
     //     path: "/api/ws",
     //   }).connect();
     // else this.socket.connect();
-    this.socket = await this.__init(); //.catch((err) => {});
-    this.socket?.on("disconnect", (e: any) => {
-      useMainStore().ws_connected = false;
-
-      console.warn("WsService DISCONNECTED", e);
-    });
-    this.socket.on("connect", () => {
-      useMainStore().ws_connected = true;
-    });
+    if (retry) {
+      this.socket = await this.__init().catch((e) => {
+        const quasar = useQuasar();
+        quasar.notify({
+          message: e.message,
+          type: "error",
+        });
+        throw e; // to be catched in mainLayout
+      });
+    } else {
+      this.socket = await this.__init(); //.catch((err) => {});
+      this.socket.on("disconnect", (e: any) => {
+        useMainStore().ws_connected = false;
+        console.warn("WsService DISCONNECTED", e);
+        fetch("/api/auth/logout", {});
+      });
+      this.socket.on("connect", () => {
+        useMainStore().ws_connected = true;
+      });
+    }
   }
 
   setupDefaultListeners() {}

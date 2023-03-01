@@ -39,6 +39,7 @@ export default {
     const store = useMainStore();
 
     return await this.axiosInstance.post("/auth/login", payload).then((r) => {
+      console.log(r);
       store.setStoreData(Convert.toStoreData2(r.data));
       return r.status;
     });

@@ -63,7 +63,9 @@ export default defineComponent({
 
     initSystem() {
       this.$router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-        if (to.meta.requiresAuth && this.is_fully_logged())
+		if (to.path === "/logout")
+			return this.disconnect(next)
+        else if (to.meta.requiresAuth && this.is_fully_logged())
           return next();
         else if (to.meta.requiresAuth && this.must_refresh())
           return await this._fRefresh().then(() => next()).catch(() => next('/logout'));
@@ -80,9 +82,7 @@ export default defineComponent({
           this.notifyAlreadyConnected()
           return next("/");
         }
-        else if (to.path === "/logout")
-          return this.disconnect(next)
-        else
+        else 
           return next();
       })
 
@@ -97,7 +97,7 @@ export default defineComponent({
           this.$router.push("/logout")
           throw new Error("Token expired")
         }
-        else return req
+		return req;
       })
 
 
