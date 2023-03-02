@@ -64,8 +64,7 @@ export default defineComponent({
 
     initSystem() {
       this.$router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
-        // if (to.meta.requiresAuth && this.is_fully_logged())
-        //   return next();
+
         // else if (to.meta.requiresAuth && this.must_refresh())
         //   return await this._fRefresh().then(() => next()).catch(() => next('/logout'));
         // else if (to.meta.requiresAuth && this.must_logout())
@@ -85,6 +84,10 @@ export default defineComponent({
 			await this._fClearCookies();
 			next('/login')
 		}
+		else if (to.meta.requiresAuth && this.is_fully_logged())
+		  return next();
+		else if (to.meta.requiresAuth && !this.is_fully_logged())
+		  return next("/logout");
         else
           return next();
 		// return next();

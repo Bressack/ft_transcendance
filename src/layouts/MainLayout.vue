@@ -174,7 +174,7 @@ import ncc, {
 } from "src/services/notifyCenter";
 import { Convert } from "src/stores/store.validation";
 import {
-  ChannelSubscription,
+  ChannelSubscription, UserStatus,
 } from "src/stores/store.types";
 
 export default defineComponent({
@@ -468,7 +468,10 @@ export default defineComponent({
     this.$ws.listen("altered_subscription", (payload: ChannelSubscription) => {
         this.$api.fetchMe();
 	});
-
+	this.$ws.listen("users-status", (payload: { username: string; status: UserStatus}[]) => {
+		this.$store.setUsersStatus(payload);
+		console.log(this.$store.users_status);
+	});
 
 
 	this.listenForGameInvite();

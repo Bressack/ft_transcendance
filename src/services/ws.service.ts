@@ -1,8 +1,7 @@
 import { io } from "socket.io-client";
 import { Cookies, useQuasar } from "quasar";
-// import { useChatStore } from "src/stores/chat";
 import { useMainStore } from "src/stores/store";
-import { Router } from "vue-router";
+import { UserStatus } from "src/stores/store.types";
 
 class WsService {
   public socket: any;
@@ -74,15 +73,6 @@ class WsService {
   }
   // should only be called once access token has been received after initial REST request
   async connect(retry?: boolean) {
-    // if (!this.socket)
-    //   this.socket = io(`/?token=${this.getToken()}`, {
-    //     auth: (cb) => {
-    //       cb({ token: this.getToken() });
-    //     },
-    //     transports: ["websocket"],
-    //     path: "/api/ws",
-    //   }).connect();
-    // else this.socket.connect();
     if (retry) {
       this.socket = await this.__init().catch((e) => {
         const quasar = useQuasar();
@@ -100,11 +90,15 @@ class WsService {
         console.warn("WsService DISCONNECTED", e);
         fetch("/api/auth/logout", {});
       });
-      this.socket.on("connect", () => {
-        useMainStore().socketId = this.socket.id;
-        console.log("SOCKET", this.socket);
-        useMainStore().ws_connected = true;
-      });
+      this.socket.on(
+        "connect",
+        (usersStatus: { username: string; status: UserStatus }[]) => {
+          useMainStore().socketId = this.socket.id;
+          useMainStore().setUsersStatus(usersStatus);
+          console.log("SOCKET", this.socket);
+          useMainStore().ws_connected = true;
+        }
+      );
     }
   }
 
@@ -114,6 +108,7 @@ class WsService {
     if (this.socket) {
       this.socket.removeAllListeners();
       useMainStore().socketId = undefined;
+      useMainStore().ws_connected = false;
 
       this.socket.disconnect();
       console.warn("Socket disconnected"); // should invalidate certain routes and what not, like the chat and games

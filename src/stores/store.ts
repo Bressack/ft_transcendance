@@ -14,6 +14,7 @@ import {
   State,
   StoreData,
   SubscribedUser,
+  UserStatus,
 } from "./store.types";
 import { Convert } from "./store.validation";
 
@@ -35,12 +36,6 @@ type PendingRequest = {
   // createdAt: Date;
   category: "received" | "sent";
 };
-
-enum UserStatus {
-  OFFLINE = "OFFLINE",
-  ONLINE = "ONLINE",
-  INGAME = "INGAME",
-}
 
 type running_game = {
   gameId: string;
@@ -245,6 +240,11 @@ const useMainStore = defineStore("main-store", {
     // }
   },
   actions: {
+    setUsersStatus(usersStatus: { username: string; status: UserStatus }[]) {
+      this.users_status = new Map(
+        usersStatus.map((e) => [e.username, e.status])
+      );
+    },
     setSocketId(socketId: string) {
       this.socketId = socketId;
     },

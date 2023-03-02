@@ -7,6 +7,13 @@
 // These functions will throw an error if the JSON doesn't
 // match the expected interface, even if the JSON is valid.
 
+export enum UserStatus {
+  OFFLINE = "OFFLINE",
+  ONLINE = "ONLINE",
+  INGAME = "INGAME",
+  WATCHING = "WATCHING",
+}
+
 export type StoreData = {
   username: string;
   email?: string;
