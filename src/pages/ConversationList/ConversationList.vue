@@ -57,7 +57,7 @@
                 :key="sub.channelId"
                 manual-focus
                 :focused="$store.active_channel === sub.channelId"
-                @click="chanSelected(sub.channel.id)"
+                @click="chanSelected(sub.channel)"
               >
                 <q-item-section>
                   <span class="text-bold text-h6 pubchan">{{ sub.channel.name }}</span>
@@ -124,6 +124,7 @@ import QInputMenu from 'src/components/QInputMenu.component.vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
 import UserCard from 'src/pages/conversationList/components/UserCard.vue'
 import PendingRequest from './components/PendingRequest.vue'
+import { Channel } from 'src/stores/store.types'
 
 enum EUserStatus {
   UNKNOWN,
@@ -234,10 +235,26 @@ export default defineComponent({
     },
 
 
-    chanSelected(channelId: string) {
-      this.$router.replace({
-        path: `/conversation/${channelId}`,
+    async joinprotectedchannel() : Promise<void> {
+      this.closePasswordDialog()
+      this.$store.channels_passwords.set(this.channelSelector, this.password)
+      this.password = ''
+      this.$router.push({
+        path: `/conversation/${this.channelSelector}`,
       })
+      this.channelSelector = ''
+    },
+
+    chanSelected(channel: Channel) {
+      if (channel.passwordProtected) {
+        this.channelSelector = channel.id
+        this.dialogpassword = true
+      } else {
+        this.password = ''
+        this.$router.push({
+          path: `/conversation/${channel.id}`,
+        })
+      }
     },
 
 

@@ -15,7 +15,7 @@
               virtual-scroll-slice="15">
               <template #default="{ item, index }">
                 <q-chat-message class="chat-message" :key="index" :avatar="avatarstr(item.username)" :text="[item.content]"
-                  :stamp="getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username" :bg-color="
+                  :stamp="$store.getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username" :bg-color="
                     item.username === $store.username
                     ? 'warning'
                     : 'info'
@@ -59,16 +59,7 @@
           <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
             <div class="loadingState" style="text-align: center">
               Banned
-              <div style="font-size: small">
-                until
-                {{
-                  getRelativeDate(
-                    new Date(
-                      $store.currentChannelSub.stateActiveUntil || Date.now()
-                    )
-                  )
-                }}
-              </div>
+              <div style="font-size: small"> until {{ $store.getRelativeDate(new Date($store.currentChannelSub.stateActiveUntil || Date.now())) }} </div>
             </div>
           </transition>
         </div>
@@ -231,49 +222,7 @@ export default defineComponent({
             this.$store.messagesCount
           );
         });
-    },
-    getRelativeDate(cdate: Date): string {
-      function floorStr(n: number) {
-        return (n < 10 ? "0" : "") + n;
-      }
-      const now = new Date();
-      if (now.getDate() - cdate.getDate() == 0)
-        return (
-          "Today at " +
-          floorStr(cdate.getHours()) +
-          ":" +
-          floorStr(cdate.getMinutes())
-        );
-      else if (now.getDate() - cdate.getDate() == 1)
-        return (
-          "Yesterday at " +
-          floorStr(cdate.getHours()) +
-          ":" +
-          floorStr(cdate.getMinutes())
-        );
-      else if (now.getDate() - cdate.getDate() == -1)
-        return (
-          "Tomorrow at " +
-          floorStr(cdate.getHours()) +
-          ":" +
-          floorStr(cdate.getMinutes())
-        );
-      else {
-        const d = cdate.getDate();
-        const m = cdate.getMonth() + 1;
-        return (
-          floorStr(d) +
-          "/" +
-          floorStr(m) +
-          "/" +
-          cdate.getFullYear() +
-          " " +
-          floorStr(cdate.getHours()) +
-          ":" +
-          floorStr(cdate.getMinutes())
-        );
-      }
-    },
+    }
   },
 });
 </script>
