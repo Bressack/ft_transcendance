@@ -84,9 +84,9 @@ export default defineComponent({
 			await this._fClearCookies();
 			next('/login')
 		}
-		else if (to.meta.requiresAuth && this.is_fully_logged())
+		else if (to.meta.requiresAuth && this.has_refresh())
 		  return next();
-		else if (to.meta.requiresAuth && !this.is_fully_logged())
+		else if (to.meta.requiresAuth && !this.has_refresh())
 		  return next("/logout");
         else
           return next();
