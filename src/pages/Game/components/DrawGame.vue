@@ -162,12 +162,13 @@ export default defineComponent({
 			this.draw();
 		},
 		update_and_draw(data: any) {
-			this.player1_y = data.p1
-			this.player2_y = data.p2
-			this.player1_score = data.scorep1
-			this.player2_score = data.scorep2
-			this.ball_x = data.ball.x
-			this.ball_y = data.ball.y
+			let bidule = new Uint16Array(data.gamedata)
+			this.player1_y = bidule[0]
+			this.player2_y = bidule[1]
+			this.ball_x =  bidule[2]
+			this.ball_y = bidule[3]
+			this.player1_score = bidule[4]
+			this.player2_score = bidule[5]
 			this.draw();
 		},
 		// handleCoundown(data: any) {
