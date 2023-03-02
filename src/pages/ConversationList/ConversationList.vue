@@ -10,16 +10,6 @@
         active-color="orange" indicator-color="orange" align="justify" narrow-indicator>
         <q-tab name="friends" icon="group" class="tab unautretruc" />
         <q-tab name="channels" icon="chat" class="tab" />
-        <!-- <q-tab name="following" icon="hourglass_bottom" class="tab">
-          <div class="notif justify-center items-center circle" v-if="$store.friendRequestSent?.length > 0" />
-          <div class="notif justify-center items-center" v-if="$store.friendRequestSent?.length > 0">
-            {{ $store.friendRequestSent?.length < 99 ? $store.friendRequestSent?.length : '99+' }} </div>
-        </q-tab> -->
-        <!-- <q-tab name="follower" icon="notifications" class="tab">
-          <div class="notif justify-center items-center circle" v-if="$store.friendRequestRecevied?.length > 0" />
-          <div class="notif justify-center items-center" v-if="$store.friendRequestRecevied?.length > 0">
-            {{ $store.friendRequestRecevied?.length < 99 ? $store.friendRequestRecevied?.length : '99+' }} </div>
-        </q-tab> -->
         <q-tab name="pending requests" icon="mdi-account-clock-outline" class="tab">
           <div class="notif justify-center items-center circle" v-if="$store.pendingRequests?.length > 0" />
           <div class="notif justify-center items-center" v-if="$store.pendingRequests?.length">
@@ -42,7 +32,7 @@
 
       <q-tab-panels v-model="tab" animated class="list">
 
-        <!-- #################################################################################################################### -->
+<!-- #################################################################################################################### -->
         <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
           <div v-if="!$store.friends?.length" class="text-h5 text-center" style="margin-top: 30vh;">
             you have no friends
@@ -111,7 +101,7 @@
     <ChooseGameOptions :opponent="opponent" :closeFunction="closeGameOptions" :inviteType="false" />
   </q-dialog>
 
-<!-- <q-dialog persistent v-model="dialogpassword" @keydown.esc="dialogpassword = false">
+<q-dialog persistent v-model="dialogpassword" @keydown.esc="dialogpassword = false">
     <div class="password_dialog">
       <div class="q-ma-lg q-pt-lg">
         <q-item class="text-h6">Enter Password</q-item>
@@ -122,7 +112,8 @@
         <q-btn class="q-ma-lg" label="Submit" color="green-8" @click="joinprotectedchannel"/>
       </div>
     </div>
-  </q-dialog> --></template>
+  </q-dialog>
+</template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
@@ -161,7 +152,7 @@ export default defineComponent({
   setup() {
     const gameOptions = ref(false)
     const dialog = ref(false)
-    // const dialogpassword = ref(false)
+    const dialogpassword = ref(false)
     return {
       channelSelector: '',
       tab: ref('friends'),
@@ -176,32 +167,25 @@ export default defineComponent({
         dialog.value = false
       },
       dialog,
-      // dialogpassword,
+      dialogpassword,
     }
   },
   computed: {
   },
   data() {
     return {
-      //   password: '',
-      //   dialogpassword: false,
-      //   conversationList: fake_IConvList(15) as IConvList,
+      password: '',
+      dialogpassword: false,
       searchInput: '',
       searchResult: {} as IResult,
       opponent: '' as string,
       socialtoggle: '1' as string,
     }
-    // console.log(this.$route.params.channel_id)
   },
-  // watch: {
-  //   toto(n_value, o_value) {
-
-  //   }
-  // },
   methods: {
-    // closePasswordDialog() {
-    //   this.dialogpassword = false
-    // },
+    closePasswordDialog() {
+      this.dialogpassword = false
+    },
     goGameOptions(username: string) {
       this.opponent = username
       this.openGameOptions()
