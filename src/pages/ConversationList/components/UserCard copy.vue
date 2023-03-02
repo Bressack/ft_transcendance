@@ -1,5 +1,5 @@
 <template>
-  <q-item clickable v-ripple class="usermenu q-flex row justify-evenly" manual-focus :focused="$store.active_channel === channelId">
+  <q-item clickable v-ripple class="usermenu q-flex row justify-evenly debug" manual-focus :focused="$store.active_channel === channelId">
 
     <q-item-section style="max-width: 50px;" @click="goProfilPage">
       <q-avatar class="avatar">
@@ -9,31 +9,23 @@
     </q-item-section>
 
     <q-item-section class="name" @click="goProfilPage">
-      {{ username }}
+      <span>{{ username }}</span>
     </q-item-section>
 
     <q-item-section side class="tata text-right">
-      <q-icon v-show="shortcut_profile" class="shortcut" name="person" color="cyan" @click="goProfilPage" />
-      <q-icon v-show="shortcut_block" class="shortcut" name="person_off" color="red" @click="block" />
-      <q-icon v-show="shortcut_unblock" class="shortcut" name="done" color="green" @click="block" />
-      <q-icon v-show="shortcut_play" class="shortcut" name="mdi-gamepad-variant-outline" color="green"
+      <q-icon v-if="shortcut_profile" class="shortcut" name="person" color="cyan" @click="goProfilPage" />
+      <q-icon v-if="shortcut_block" class="shortcut" name="person_off" color="red" @click="block" />
+      <q-icon v-if="shortcut_unblock" class="shortcut" name="done" color="green" @click="block" />
+      <q-icon v-if="shortcut_play" class="shortcut" name="mdi-gamepad-variant-outline" color="green"
         @click="goGameOptions" />
-      <q-icon v-show="shortcut_chat" class="shortcut" name="chat" color="orange" @click="goChat" />
-      <q-icon v-show="shortcut_unfollow" class="shortcut" name="cancel" color="red" @click="unfollow" />
-      <q-icon v-show="shortcut_follow" class="shortcut" name="done" color="green" @click="follow" />
+      <q-icon v-if="shortcut_chat" class="shortcut" name="chat" color="orange" @click="goChat" />
+      <q-icon v-if="shortcut_unfollow" class="shortcut" name="cancel" color="red" @click="unfollow" />
+      <q-icon v-if="shortcut_follow" class="shortcut" name="done" color="green" @click="follow" />
     </q-item-section>
 
-    <q-item-section>
-      <q-icon v-if="banned" class="shortcut" name="mdicancel" color="red" size="18px">
-        <q-tooltip v-if="duration">
-          {{ $store.getRelativeDate(new Date(duration)) }}
-        </q-tooltip>
-      </q-icon>
-      <q-icon v-if="muted " class="shortcut" name="mdi-microphone-off" color="cyan" size="18px">
-        <q-tooltip v-if="duration">
-          {{ $store.getRelativeDate(new Date(duration)) }}
-        </q-tooltip>
-      </q-icon>
+    <q-item-section side class="text-right" dense>
+      <!-- <q-icon v-if="banned" class="shortcut" name="mdicancel" color="red" /> -->
+      <q-icon v-if="muted" class="shortcut" name="mdi-microphone-off" color="cyan" />
     </q-item-section>
 
     <q-item-section side class="toto">
@@ -42,33 +34,33 @@
 
           <q-list style="min-width: 100px">
 
-            <q-item v-show="menu_profile" clickable @click="goProfilPage">
+            <q-item v-if="menu_profile" clickable @click="goProfilPage">
               <q-item-section>Profile</q-item-section>
             </q-item>
 
-            <q-item v-show="menu_play" clickable @click="goGameOptions">
+            <q-item v-if="menu_play" clickable @click="goGameOptions">
               <q-item-section>Invite to play</q-item-section>
             </q-item>
 
-            <q-item v-show="menu_chat" clickable :to="channelPath">
+            <q-item v-if="menu_chat" clickable :to="channelPath">
               <q-item-section>Chat</q-item-section>
             </q-item>
 
-            <q-item v-show="menu_unblock" clickable @click="block">
+            <q-item v-if="menu_unblock" clickable @click="block">
               <q-item-section>Unblock</q-item-section>
             </q-item>
 
-            <q-item v-show="menu_follow" clickable @click="follow">
+            <q-item v-if="menu_follow" clickable @click="follow">
               <q-item-section>Follow</q-item-section>
             </q-item>
 
             <q-separator dark />
 
-            <q-item v-show="menu_block" clickable class="text-red-7" @click="block">
+            <q-item v-if="menu_block" clickable class="text-red-7" @click="block">
               <q-item-section>Block</q-item-section>
             </q-item>
 
-            <q-item v-show="menu_unfollow" clickable class="text-red-7" @click="unfollow">
+            <q-item v-if="menu_unfollow" clickable class="text-red-7" @click="unfollow">
               <q-item-section>Unfollow</q-item-section>
             </q-item>
           </q-list>
@@ -81,7 +73,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'UserCard',
@@ -109,7 +101,6 @@ export default defineComponent({
 
     banned: { type: Boolean, default: false },
     muted: { type: Boolean, default: false },
-    duration: { type: String, default: '' }
   },
   data() {
     return {
@@ -167,14 +158,13 @@ export default defineComponent({
 
 <style lang="sass" scoped>
 
-.name
-  margin-left: 30px
-
+// .name
+//   margin-left: 10px
 .avatar
-  width: 25px
-  height: 25px
+  width: 30px
+  height: 30px
   border-radius: 50%
-  // margin-right: 2px
+  // margin-right: 0
 
 .usermenu .toto
   visibility: hidden

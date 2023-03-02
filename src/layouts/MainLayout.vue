@@ -23,7 +23,7 @@
           style=""
           >Trong Legacy</q-item
         >
-        <q-btn color="red" @click="logout()">LOGOUT DEV</q-btn>
+        <q-btn class="q-mx-sm" color="red" @click="logout()">LOGOUT DEV</q-btn>
 
         <q-space />
 
@@ -353,46 +353,46 @@ export default defineComponent({
       }
     },
 
-    // handleUserConnectedEvent(users: Array<string>) {
-    //   const diff = ld.difference(users, this.$storeChat.connectedUsers);
-    //   if (diff.length > 2)
-    //     this.nc.send({
-    //       message: `${users.length} users connected !`,
-    //       color: "cyan",
-    //     });
-    //   else
-    //     diff.forEach((e) => {
-    //       if (e != this.$storeMe.username)
-    //         this.nc.send({
-    //           message: `${e} is connected !`,
-    //           color: "cyan",
-    //           avatar: `/api/avatar/${e}/thumbnail`,
-    //         });
-    //     });
+    handleUserConnectedEvent(users: Array<string>) {
+      const diff = ld.difference(users, this.$storeChat.connectedUsers);
+      if (diff.length > 2)
+        this.nc.send({
+          message: `${users.length} users connected !`,
+          color: "cyan",
+        });
+      else
+        diff.forEach((e) => {
+          if (e != this.$storeMe.username)
+            this.nc.send({
+              message: `${e} is connected !`,
+              color: "cyan",
+              avatar: `/api/avatar/${e}/thumbnail`,
+            });
+        });
 
-    //   if (diff.includes(this.$storeMe.username))
-    //     this.nc.send({
-    //       message: `Welcome back ${this.$storeMe.username} ! Ready to lose ?`,
-    //       type: "positive",
-    //       avatar: `/api/avatar/${this.$storeMe.username}/thumbnail`,
-    //     });
-    //   users.forEach((user) => {
-    //     if (this.$storeChat.connectedUsers.includes(user) == false)
-    //       this.$storeChat.connectedUsers.push(user);
-    //   });
-    // },
-    // handleUserDisconnectedEvent(username: string) {
-    //   this.$storeChat.connectedUsers = this.$storeChat.connectedUsers.filter(
-    //     (elem: any) => {
-    //       return elem !== username;
-    //     }
-    //   );
-    //   this.nc.send({
-    //     message: `${username} disconnected !`,
-    //     color: "cyan",
-    //     avatar: `/api/avatar/${username}/thumbnail`,
-    //   });
-    // },
+      if (diff.includes(this.$storeMe.username))
+        this.nc.send({
+          message: `Welcome back ${this.$storeMe.username} ! Ready to lose ?`,
+          type: "positive",
+          avatar: `/api/avatar/${this.$storeMe.username}/thumbnail`,
+        });
+      users.forEach((user) => {
+        if (this.$storeChat.connectedUsers.includes(user) == false)
+          this.$storeChat.connectedUsers.push(user);
+      });
+    },
+    handleUserDisconnectedEvent(username: string) {
+      this.$storeChat.connectedUsers = this.$storeChat.connectedUsers.filter(
+        (elem: any) => {
+          return elem !== username;
+        }
+      );
+      this.nc.send({
+        message: `${username} disconnected !`,
+        color: "cyan",
+        avatar: `/api/avatar/${username}/thumbnail`,
+      });
+    },
     handleNotifMessageEvent(payload: any) {
       interface __NotifMessage {
         username: string;
@@ -450,22 +450,26 @@ export default defineComponent({
         this.$store.setStoreData(response.data);
       });
     // }
-    await this.$ws.connect()
-	.catch((err) => {
-		console.log(err); // should deactivate stuff that needs websockets ?
-	});
-	this.$ws.socket.on("fetch_me", async () => {
-		await this.$api.fetchMe()
-	})
-	// this.$ws.listen("user-connected", this.handleUserConnectedEvent);
-	// this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
-	this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
+      await this.$ws.connect()
+      .catch((err) => {
+        console.log(err); // should deactivate stuff that needs websockets ?
+      });
+    this.$ws.socket.on("fetch_me", async () => {
+      await this.$api.fetchMe()
+    })
+    // this.$ws.listen("user-connected", this.handleUserConnectedEvent);
+    // this.$ws.listen("user-disconnected", this.handleUserDisconnectedEvent);
+    this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
+    this.$ws.listen("command_result", (payload: any) => {
+      console.log('command_result:', payload);
+      this.nc.send({
+        type: payload.type,
+        message: payload.message,
+      })
+    });
     this.$ws.listen("altered_subscription", (payload: ChannelSubscription) => {
-	// console.log("MainLayout:470 altered_subscription", payload);
-    // if (this.$store.username == payload.username)
-      this.$api.fetchMe();
-
-  });
+        this.$api.fetchMe();
+    });
 
 
 

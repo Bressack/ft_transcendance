@@ -47,12 +47,6 @@ const routes: RouteRecordRaw[] = [
         component: () => import("pages/Profile/Profile.vue"),
       },
       {
-        path: "/sandbox",
-        meta: { requiresAuth: true },
-
-        component: () => import("pages/Sandbox.vue"),
-      },
-      {
         path: "/game/:gameId",
         name: "game",
         meta: { requiresAuth: true },
