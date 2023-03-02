@@ -26,7 +26,7 @@
     </q-item>
     <div class="q-pa-md">
       <form onsubmit="return false">
-        <q-input dark color="#F7F7FF" label="Change username" v-model="$store.username">
+        <q-input dark color="#F7F7FF" label="Change username" v-model="username">
           <q-btn color="orange" type="submit" label="ok" @click="confirmChangeUsername = true" />
         </q-input>
       </form>
