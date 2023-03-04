@@ -241,6 +241,10 @@ const useMainStore = defineStore("main-store", {
   },
   actions: {
     setUsersStatus(usersStatus: { username: string; status: UserStatus }[]) {
+      if (usersStatus.length == 0) {
+        this.users_status.clear();
+        return;
+      }
       usersStatus.forEach((e) => {
         this.users_status.set(e.username, e.status);
       });
