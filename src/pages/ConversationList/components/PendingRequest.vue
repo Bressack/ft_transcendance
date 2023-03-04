@@ -61,6 +61,7 @@
 </template>
 
 <script lang="ts">
+import { UserStatus } from 'src/stores/store.types';
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
@@ -90,9 +91,11 @@ export default defineComponent({
 	},
 	methods: {
 		getLoginStatus() {
-			//TODO:
-			// if (this.$storeChat.connectedUsers.includes(this.username))
-			// 	return 'ONLINE-status'
+			const status = this.$store.getStatus(this.username)
+			//TODO: check login status
+			if (status === UserStatus.ONLINE)
+				return 'ONLINE-status'
+
 			return 'OFFLINE-status'
 		},
 		goProfilPage() {
