@@ -241,9 +241,13 @@ const useMainStore = defineStore("main-store", {
   },
   actions: {
     setUsersStatus(usersStatus: { username: string; status: UserStatus }[]) {
-      this.users_status = new Map(
-        usersStatus.map((e) => [e.username, e.status])
-      );
+      usersStatus.forEach((e) => {
+        this.users_status.set(e.username, e.status);
+      });
+      const usernames = usersStatus.map((e) => e.username);
+      this.users_status.forEach((e, key, map) => {
+        if (!usernames.includes(key)) map.delete(key);
+      });
     },
     setSocketId(socketId: string) {
       this.socketId = socketId;
