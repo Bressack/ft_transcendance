@@ -63,7 +63,6 @@ class WsService {
       socket.once("connect", () => {
         useMainStore().ws_connected = true;
         useMainStore().socketId = socket.id;
-        console.log("WsService CONNECTED");
         clearTimeout(connectionTimeOut);
         resolve(socket);
       });
@@ -87,15 +86,12 @@ class WsService {
       this.socket.on("disconnect", (e: any) => {
         useMainStore().ws_connected = false;
         useMainStore().socketId = undefined;
-        console.warn("WsService DISCONNECTED", e);
-        fetch("/api/auth/logout", {});
       });
       this.socket.on(
         "connect",
         (usersStatus: { username: string; status: UserStatus }[]) => {
           useMainStore().socketId = this.socket.id;
           useMainStore().setUsersStatus(usersStatus);
-          console.log("SOCKET", this.socket);
           useMainStore().ws_connected = true;
         }
       );
@@ -109,9 +105,8 @@ class WsService {
       this.socket.removeAllListeners();
       useMainStore().socketId = undefined;
       useMainStore().ws_connected = false;
-
       this.socket.disconnect();
-      console.warn("Socket disconnected"); // should invalidate certain routes and what not, like the chat and games
+      this.socket = undefined;
     }
   }
 }

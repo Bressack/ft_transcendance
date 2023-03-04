@@ -41,19 +41,19 @@ export default {
     return await this.axiosInstance.post("/auth/login", payload).then((r) => {
       console.log(r);
       store.setStoreData(Convert.toStoreData2(r.data));
-      return r.status;
+      return r;
     });
   },
 
-  async logout() {
-    const response = await this.axiosInstance.get("/auth/logout");
-    return response.status;
-  },
+  //   async logout() {
+  //     const response = await this.axiosInstance.get("/auth/logout");
+  //     return response.status;
+  //   },
 
-  async refresh() {
-    const response = await this.axiosInstance.get("/auth/refresh");
-    return response.data;
-  },
+  //   async refresh() {
+  //     const response = await this.axiosInstance.get("/auth/refresh");
+  //     return response.data;
+  //   },
 
   /**
    **   users

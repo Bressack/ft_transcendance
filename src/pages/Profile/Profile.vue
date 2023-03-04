@@ -71,7 +71,7 @@ export default defineComponent({
       gameFetched : false as boolean
     }
   },
-  created () {
+  mounted () {
     this.fetchUserProfile()
   },
   updated() {
@@ -87,7 +87,6 @@ export default defineComponent({
         this.userFetched = true
         this.fetchGameHistory()
       })
-      .catch((error) => { console.error(error) })
     },
     fetchGameHistory() {
       const searchQuery : IGameQuery = {

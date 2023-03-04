@@ -21,6 +21,9 @@ export default defineComponent({
     }
   },
   methods: {},
+  mounted() {
+	
+  }
 });
 </script>
 

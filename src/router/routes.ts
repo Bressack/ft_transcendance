@@ -15,9 +15,9 @@ const routes: RouteRecordRaw[] = [
         meta: { requiresAuth: true },
         name: "index",
         component: () => import("pages/Index/Index.vue"),
-		// beforeEnter: (to, from, next) => {
+        // beforeEnter: (to, from, next) => {
 
-		// }
+        // }
       },
       {
         path: "/conversation/:channelId",
@@ -27,7 +27,6 @@ const routes: RouteRecordRaw[] = [
         beforeEnter: async (to, from, next) => {
           const store = useMainStore();
           const channelId: string = to.params.channelId as string;
-          console.log(from);
           if (!store.ws_connected && to.query.refresh !== "true") {
             next({
               path: "/",

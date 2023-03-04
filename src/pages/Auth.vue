@@ -1,185 +1,137 @@
 <template>
-  <q-page class="row justify-center items-center q-flex">
-    <q-card class="form q-pa-lg" style="width: 400px">
-      <q-btn-toggle
-        v-model="signOpt"
-        @click="switchMode"
-        spread
-        class="my-custom-toggle q-pa-md"
-        no-caps
-        rounded
-        unelevated
-        toggle-color="primary"
-        color="#F7F7FF"
-        text-color="primary"
-        :options="[
-          {label: 'SIGN IN', value: true},
-          {label: 'SIGN UP', value: false}
-        ]"
-      />
+	<q-page class="row justify-center items-center q-flex">
+		<q-card class="form q-pa-lg" style="width: 400px">
+			<q-btn-toggle v-model="signOpt" @click="switchMode" spread class="my-custom-toggle q-pa-md" no-caps rounded
+				unelevated toggle-color="primary" color="#F7F7FF" text-color="primary" :options="[
+					{ label: 'SIGN IN', value: true },
+					{ label: 'SIGN UP', value: false }
+				]" />
 
-      <q-form
-        v-if="signOpt"
-        @submit="onSubmitSignIn"
-        class="q-gutter-md"
-      >
-        <q-input
-        class="input"
-          filled
-          v-model="username"
-          label="Username"
-          lazy-rules
-        />
+			<q-form v-if="signOpt" @submit="onSubmitSignIn" class="q-gutter-md">
+				<q-input class="input" filled v-model="username" label="Username" lazy-rules />
 
-        <q-input
-          class="input"
-          filled
-          v-model="password"
-          label="Password"
-          lazy-rules
-          type="password"
-          current-password
-        />
-        <q-card-actions class="q-mt-md">
-          <q-btn label="Connect" type="submit" color="primary" class="submitbutton"/>
-        </q-card-actions>
-        <q-card-actions>
-          <q-btn label="Connect with 42" type="submit" color="primary" class="submitbutton"/>
-        </q-card-actions>
-      </q-form>
+				<q-input class="input" filled v-model="password" label="Password" lazy-rules type="password"
+					current-password />
+				<q-card-actions class="q-mt-md">
+					<q-btn label="Connect" type="submit" color="primary" class="submitbutton" />
+				</q-card-actions>
+				<q-card-actions>
+					<q-btn label="Connect with 42" type="submit" color="primary" class="submitbutton" />
+				</q-card-actions>
+			</q-form>
 
-      <q-form
-        v-else
-        @submit="onSubmitSignUp"
-        class="q-gutter-md"
-      >
-        <q-input
-        class="input"
-          filled
-          v-model="username"
-          label="Username"
-          lazy-rules
-        />
+			<q-form v-else @submit="onSubmitSignUp" class="q-gutter-md">
+				<q-input class="input" filled v-model="username" label="Username" lazy-rules />
 
-        <q-input
-        class="input"
-          filled
-          v-model="email"
-          label="Email"
-          lazy-rules
-        />
+				<q-input class="input" filled v-model="email" label="Email" lazy-rules />
 
-        <q-input
-        class="input"
-          filled
-          v-model="password"
-          label="Password"
-          lazy-rules
-          type="password"
-        />
-        <q-card-actions class="q-mt-md">
-          <q-btn label="signup" type="submit" color="primary" class="submitbutton"/>
-        </q-card-actions>
-        <q-card-actions>
-          <q-btn label="signup with 42" type="submit" color="primary" class="submitbutton"/>
-        </q-card-actions>
-      </q-form>
-      <q-form>
-        <q-card class="q-pa-md q-ma-sm text-center text-bold text-h6" v-for="user in preSetUsers" :key="user" @click="quickconnect(user)">
-          {{ (user as preset).username }}
-        </q-card>
-      </q-form>
-    </q-card>
-  </q-page>
+				<q-input class="input" filled v-model="password" label="Password" lazy-rules type="password" />
+				<q-card-actions class="q-mt-md">
+					<q-btn label="signup" type="submit" color="primary" class="submitbutton" />
+				</q-card-actions>
+				<q-card-actions>
+					<q-btn label="signup with 42" type="submit" color="primary" class="submitbutton" />
+				</q-card-actions>
+			</q-form>
+			<q-form>
+				<q-card class="q-pa-md q-ma-sm text-center text-bold text-h6" v-for="user in preSetUsers" :key="user"
+					@click="quickconnect(user)">
+					{{ (user as preset).username }}
+				</q-card>
+			</q-form>
+		</q-card>
+	</q-page>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
 type preset = { username: string, password: string }
-const _preSetUsers : preset[] = [
-  {
-    username: 'Alice99',
-    password: 'null',
-  },
-  {
-    username: 'admin',
-    password: 'null',
-  },
-  {
-    username: 'leCaca',
-    password: 'null',
-  },
+const _preSetUsers: preset[] = [
+	{
+		username: 'Alice99',
+		password: 'null',
+	},
+	{
+		username: 'admin',
+		password: 'null',
+	},
+	{
+		username: 'leCaca',
+		password: 'null',
+	},
 ]
 
 export default defineComponent({
-  name: 'Auth',
-  components: {},
-  props: {},
-  data() {
-    return {
-      preSetUsers: _preSetUsers as [],
-      username: '' as string,
-      password: '' as string,
-      email: '' as string,
-      signOpt: true as boolean
-    }
-  },
-  methods: {
-    quickconnect(user: any) {
-      this.username = user.username
-      this.password = user.password
-      this.onSubmitSignIn()
-    },
-    switchMode() {
-      this.username = ''
-      this.password = ''
-      this.email = ''
-    },
-    signIn(username: string, password: string) {
-      let payload: object = Object({
-        username: username,
-        password: password,
-      })
-
-      this.$api.login(payload)
-      .then(() => {
-        this.$router.push({ path: '/', query: { fetched: "true" } })
-      })
-      .catch((error) =>  {
-		for (let message of error?.response?.data?.message || []) {
-			this.$q.notify({
-				type: 'negative',
-				message
-			})
+	name: 'Auth',
+	components: {},
+	props: {},
+	data() {
+		return {
+			preSetUsers: _preSetUsers as [],
+			username: '' as string,
+			password: '' as string,
+			email: '' as string,
+			signOpt: true as boolean
 		}
-        console.log(error);
-      })
-    },
-    onSubmitSignIn() {
-      this.signIn(this.username, this.password)
-    },
-    onSubmitSignUp() {
-      let payload: object = Object({
-        username: this.username,
-        email: this.email,
-        password: this.password,
-      })
-
-      this.$api.signup(payload)
-      .then(() => {
-        this.$router.push({path: '/', query: {fetched: "true"}});
-      })
-      .catch((error) => {
-		console.log(error);
-		for (let message of error?.response?.data?.message || []) {
-			this.$q.notify({
-				type: 'negative',
-				message
+	},
+	methods: {
+		quickconnect(user: any) {
+			this.username = user.username
+			this.password = user.password
+			this.onSubmitSignIn()
+		},
+		switchMode() {
+			this.username = ''
+			this.password = ''
+			this.email = ''
+		},
+		signIn(username: string, password: string) {
+			let payload: object = Object({
+				username: username,
+				password: password,
 			})
-		}
-      })
-    },
-  },
+
+			this.$api.login(payload)
+				.then(() => {
+					this.$router.push({ path: '/', query: { fetched: "true" } })
+				})
+				.catch((error) => {
+					if (error?.response?.status) {
+						console.log(error.response.status)
+						for (let message of error?.response?.data?.message || []) {
+							this.$q.notify({
+								type: 'negative',
+								message
+							})
+						}
+					}
+				})
+		},
+		onSubmitSignIn() {
+			this.signIn(this.username, this.password)
+		},
+		onSubmitSignUp() {
+			let payload: object = Object({
+				username: this.username,
+				email: this.email,
+				password: this.password,
+			})
+
+			this.$api.signup(payload)
+				.then(() => {
+					this.$router.push({ path: '/', query: { fetched: "true" } });
+				})
+				.catch((error) => {
+					console.log(error);
+					for (let message of error?.response?.data?.message || []) {
+						this.$q.notify({
+							type: 'negative',
+							message
+						})
+					}
+				})
+		},
+	},
 });
 </script>
 

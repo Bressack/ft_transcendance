@@ -35,9 +35,15 @@ export default defineComponent({
     initSystem() {
       this.$router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
         if (to.path === "/logout") {
-			await this._fLogout().catch();
+			console.log("loging out...")
+			if (this.has_refresh())
+				await this._fLogout().catch();
+			console.log("logging out done")
 			next('/login')
 		}
+		else if (to.path === "/force-logout") {
+			await fetch('/api/auth/clear-cookies').then(() => {next('/login')})
+        }
 		else if (to.meta.requiresAuth && this.has_refresh())
 		  return next();
 		else if (this.has_refresh() && to.path === "/login")
@@ -49,7 +55,19 @@ export default defineComponent({
       })
 
       this.$api.axiosInstance.interceptors.request.use(async (req) => {
-		 return req
+		if (req.url === ("/auth/login") && this.has_refresh()) {
+			const res = await fetch('/api/auth/refresh')
+			if (res.status === 204) {
+				this.$q.notify({
+					type: 'warning',
+					message: 'You are already connected'
+				})
+				this.$router.push('/');
+				throw new Error('You are already connected');
+			}
+			return req;
+		}
+		return req
       }, undefined)
 	 
 
@@ -57,15 +75,13 @@ export default defineComponent({
         return resp
       }, async (error) => {
 			if (error.response.status === 401) {
-				const res = await fetch('/api/auth/refresh')
-				if (res.status !== 204) {
-					useMainStore().$reset();
-					this.$ws.disconnect();
-					this.$router.push("/logout")
-					return Promise.reject(res)
-				} else {
-					return Promise.resolve(this.$api.axiosInstance.request(error.config))
+				if (this.has_refresh()) {
+					let res = await fetch('/api/auth/refresh')
+					if (res.status === 204) return Promise.resolve(this.$api.axiosInstance.request(error.config))
 				}
+
+				this.$router.push("/force-logout")
+				return Promise.reject(error)
 			}
 			return Promise.reject(error)
 		})

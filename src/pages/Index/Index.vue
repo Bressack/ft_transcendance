@@ -54,14 +54,14 @@ export default defineComponent({
       this.MatchMaking = false;
       this.$notifyCenter.send({ type: 'warning', message: "your are already in matchmacking" })
     })
+    this.fetchGames()
+
     
   },
   created () {
     
-    this.fetchGames()
   },
   updated() {
-    this.fetchGames()
   },
 	methods: {
     onGameAnnouncement(running_games : any[]) {
@@ -70,10 +70,9 @@ export default defineComponent({
       fetchGames() {
         this.$api.games()
         .then((result) => {
-        //   console.log(result)
           this.games = result.data
         })
-        .catch((error) => { console.error('error:', error); })
+        .catch()
     },
 	},
 });
