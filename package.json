@@ -1,8 +1,8 @@
 {
-  "name": "ft_transcendance",
-  "version": "0.0.1",
+  "name": "ft_transcendence",
+  "version": "2.1",
   "description": "A pong game arena",
-  "productName": "ft_transcendance",
+  "productName": "ft_transcendence",
   "author": "bressack <tharchen@student.42.fr>",
   "private": true,
   "scripts": {
