@@ -3,7 +3,7 @@
   <div class="row">
     <q-item v-bind:href=pOne class="col">
       <q-item-section avatar>
-          <q-avatar class="avatar">
+          <q-avatar class="avatar" :style="`background-color: ${$utils.usernameToColor(pOne || 'pOne')};`">
               <q-img :src="avatarOne"/>
           </q-avatar>
         </q-item-section>
@@ -24,7 +24,7 @@
         <q-item-label class="right label username">{{pTwo}}</q-item-label>
       </q-item-section>
       <q-item-section avatar>
-        <q-avatar class="avatar">
+        <q-avatar class="avatar"  :style="`background-color: ${$utils.usernameToColor(pTwo || 'pTwo')};`">
             <q-img :src="avatarTwo"/>
           </q-avatar>
         </q-item-section>

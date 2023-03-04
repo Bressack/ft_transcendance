@@ -6,7 +6,7 @@
         <q-item v-for="elem in menuList" clickable :key="elem?.username">
 
           <q-item-section style="max-width: 50px;">
-            <q-avatar class="avatar">
+            <q-avatar class="avatar" :style="`background-color: ${$utils.usernameToColor(elem?.username)};`">
               <img size="20px" :src="`/api/avatar/${elem?.username}/thumbnail`">
             </q-avatar>
           </q-item-section>
