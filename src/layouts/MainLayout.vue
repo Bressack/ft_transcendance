@@ -323,6 +323,7 @@ export default defineComponent({
 		})
 		this.$ws.socket.on("logout", async () => {
 			console.log("logout event");
+			this.$store.ws_connected = false;
 			this.$router.push("/force-logout");
 		})
 		this.$ws.listen("notifmessage", this.handleNotifMessageEvent);

@@ -171,7 +171,8 @@ export default defineComponent({
         // this.getDatas()
     },
     async beforeUnmount() {
-        await this.$api.leavehttpChannel();
+		if (this.$store.ws_connected)
+        	await this.$api.leavehttpChannel().catch();
         this.$store.setCurrentChannel("");
     },
     methods: {
