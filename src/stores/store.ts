@@ -256,10 +256,8 @@ const useMainStore = defineStore("main-store", {
     setSocketId(socketId: string) {
       this.socketId = socketId;
     },
-    getStatus(state: MainStoreState): Function {
-      return (username: string): UserStatus => {
-        return state.users_status.get(username) || UserStatus.OFFLINE;
-      };
+    getStatus(username: string): UserStatus {
+      return this.users_status.get(username) || UserStatus.OFFLINE;
     },
 
     getChannelIDByUsername(username: string): string | undefined {
