@@ -244,12 +244,14 @@ export default {
   async sendMessage(
     channelId: string,
     password: string,
-    text: string
+    text: string,
+    socketId: string
   ): Promise<void> {
     if (!password) password = "";
     return await this.axiosInstance.post(`/chat/${channelId}/message`, {
       content: text,
-      password: password,
+      password,
+      socketId,
     });
   },
 };

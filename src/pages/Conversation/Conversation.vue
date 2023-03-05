@@ -189,7 +189,8 @@ export default defineComponent({
 			this.$api.sendMessage(
 				this.$store.active_channel,
 				this.$store.channelPassword,
-				this.text
+				this.text,
+				this.$store.socketId||""
 			);
 			this.text = "";
 		},
