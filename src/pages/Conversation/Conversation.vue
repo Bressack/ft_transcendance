@@ -1,8 +1,8 @@
 <template>
 	<!-- hide-scrollbar -->
-	<q-page>
-		<ChatUsersList @lockChannel="lockChannel" style="z-index:100;"/>
+	<q-page style="overflow-y: hidden;">
 		<div class="left-side">
+			<ChatUsersList @lockChannel="lockChannel" style="z-index:100;"/>
 
 				<div v-show="
 					$store.current_channel_state === 'ACTIVE' &&
@@ -270,11 +270,10 @@ export default defineComponent({
 
 
 .left-side
-  top: 70px
   padding:0 0 0 0
   margin:0 0 0 0
   position: absolute
-  height: calc(100vh - (90px + 70px))
+  height: calc(100vh - (90px))
   bottom:0px
   left: 0px
   width: 80%
@@ -282,8 +281,7 @@ export default defineComponent({
   padding:0 0 0 0
   margin:0 0 0 0
   position: absolute
-  top: 70px
-  height: calc(100vh - (90px + 70px))
+  height: calc(100vh - (90px))
   right: 0px
   width: 20%
 .message_element
@@ -325,7 +323,7 @@ export default defineComponent({
 .userlist
   position: absolute
   bottom: 0px
-  height: calc(100vh - (90px + 70px))
+  height: calc(100vh - (90px))
   overflow: auto
   background-color: $bg-secondary
 //   width: 20vw
