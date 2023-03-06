@@ -183,8 +183,9 @@ export default defineComponent({
 	},
 
 	mounted() {
+
 		this.$ws.listen("message", (payload: any) => {
-			// console.log("new message: ", payload);
+			console.log("new message: ", payload);
 			const msg: TMessage = Convert.toMessage2(payload as object);
 			this.$store.addMessage(msg);
 			this.scrollBottom(true);
@@ -198,6 +199,8 @@ export default defineComponent({
 		if (this.$store.ws_connected)
 			await this.$api.leavehttpChannel().catch();
 		this.$store.setCurrentChannel("");
+		console.log("end message vue")
+		this.$ws.removeListener("message");
 	},
 	methods: {
 		async lockChannel() {
