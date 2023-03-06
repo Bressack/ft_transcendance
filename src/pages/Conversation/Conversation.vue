@@ -1,6 +1,6 @@
 <template>
 	<!-- hide-scrollbar -->
-	<q-page style="overflow-y: hidden;">
+	<q-page style="overflow-y: hidden; overflow-x: hidden;">
 		<div class="left-side">
 			<ChatUsersList @lockChannel="lockChannel" style="z-index:100;"/>
 
