@@ -62,14 +62,17 @@
 						<div style="font-size: small">
 							{{ error_message }}
 						</div>
-						<q-input dark dense v-model="channel_password" label-color="orange" color="orange"
+						<div v-if="error_message === 'wrong password'">
+
+							<q-input  dark dense v-model="channel_password" label-color="orange" color="orange"
 							hint="Enter Channel Password">
 							<template v-slot:after>
 								<q-icon name="check" class="cursor-pointer"
-									@click="pwdSubmitAndJoin" />
+								@click="pwdSubmitAndJoin" />
 							</template>
-
+							
 						</q-input>
+					</div>
 					</div>
 				</transition>
 			</div>
@@ -231,7 +234,7 @@ export default defineComponent({
 					);
 				}).catch((error) => {
 					this.$store.current_channel_state = ChanState.ERROR;
-					this.error_message = error.message[0];
+					this.error_message = error.response.data.message[0];
 				}).finally(() => {
 					this.channel_password = "";
 				});
