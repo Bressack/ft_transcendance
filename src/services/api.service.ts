@@ -228,7 +228,9 @@ export default {
         .then((response) => {
           store.updateChannelSubscription(response.data);
         });
-    } catch {}
+    } catch (err: any) {
+      throw err;
+    }
   },
 
   async leavehttpChannel(): Promise<void> {
