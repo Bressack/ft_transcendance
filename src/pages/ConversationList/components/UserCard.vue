@@ -112,7 +112,10 @@ export default defineComponent({
 	//TODO: check login status
       if (status === UserStatus.ONLINE)
         return 'ONLINE-status'
-
+      else if (status === UserStatus.WATCHING)
+        return 'WATCHING-status'
+      else if (status === UserStatus.INGAME)
+        return 'INGAME-status'
       return 'OFFLINE-status'
     },
     goProfilPage() {
@@ -196,6 +199,10 @@ export default defineComponent({
 .INGAME-status
   background-color: $onlineStatus-ingame
   box-shadow: 0px 0px 5px $onlineStatus-ingame
+
+.WATCHING-status
+  background-color: $onlineStatus-watching
+  box-shadow: 0px 0px 5px $onlineStatus-watching
 
 .shortcut .toto
   visibility: hidden
