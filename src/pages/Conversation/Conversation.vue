@@ -1,114 +1,115 @@
 <template>
   <!-- hide-scrollbar -->
   <q-page style="overflow-y: hidden; overflow-x: hidden;">
-    <div class="left-side">
-      <ChatUsersList @lockChannel="lockChannel" style="z-index:100;" />
+    <div class="q-flex row">
+      <div class="nleft-side">
+        <ChatUsersList @lockChannel="lockChannel" style="z-index:100;" />
 
-      <div v-show="
-        $store.current_channel_state === 'ACTIVE' &&
-        $store.currentChannelSub.state !== 'BANNED'
-      " class="row q-pa-md justify-center" style="padding-top: 0px; padding-right: 0px; bottom: auto">
-        <q-scroll-area id="virtScroll" class="list_messages">
-          <q-virtual-scroll component="q-list" :items="$store.messages" ref="chatVirtualScroll"
-            scroll-target="#virtScroll > .scroll" virtual-scroll-item-size="80" virtual-scroll-slice-size="12"
-            virtual-scroll-slice="15">
-            <template #default="{ item, index }">
-              <q-chat-message style=" margin-top: 0px; margin-bottom: 0px; padding-bottom: 8px; min-height: 80px; "
-                :key="index" :avatar="avatarstr(item.username)" :text="[item.content]"
-                :stamp="$utils.getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username"
-                :bg-color="
-                  item.username === $store.username
-                    ? 'secondary'
-                    : 'blue-grey-11'
-                ">
-                <template v-slot:name>
-                  <span class="linkMessageProfile" @click="goProfilPage(item.username)">{{
-                    item.username === $store.username ? "me" : item.username
-                  }}</span>
-                </template>
-              </q-chat-message>
-            </template>
-            <template #after>
-              <div :key="$store.messagesCount">
-                <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-                  <div v-show="!$store.messagesCount" class="loadingState">
-                    No messages
-                  </div>
-                </transition>
-              </div>
-            </template>
-          </q-virtual-scroll>
-        </q-scroll-area>
-      </div>
-      <div v-if="
-        $store.current_channel_state === 'LOADING' &&
-        $store.currentChannelSub.state !== 'BANNED'
-      ">
-        <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-          <div class="loadingState">Loading...</div>
-        </transition>
-      </div>
-      <div v-else-if="
-        $store.current_channel_state === 'ERROR' &&
-        $store.currentChannelSub.state !== 'BANNED'
-      ">
-        <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-          <div class="loadingState">Error</div>
-        </transition>
-      </div>
-      <div v-else-if="$store.currentChannelSub.state === 'BANNED'">
-        <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-          <div class="loadingState" style="text-align: center">
-            Banned
-            <div style="font-size: small">
-              until
-              {{
-                $utils.getRelativeDate(
-                  new Date(
-                    $store.currentChannelSub.stateActiveUntil || Date.now()
-                  )
-                )
-              }}
-            </div>
-          </div>
-        </transition>
-      </div>
-      <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
-        class="absolute-bottom custom-input input" maxlength="128" :loading="$store.current_channel_state === 'LOADING'"
-        :disable="
-          !($store.current_channel_state === 'ACTIVE') ||
-          $store.currentChannelSub.state !== 'OK'
+        <div v-show="
+          $store.current_channel_state === 'ACTIVE' &&
+          $store.currentChannelSub.state !== 'BANNED'
+        " class="row q-pa-md justify-center" style="padding-top: 0px; padding-right: 0px; bottom: auto">
+          <q-scroll-area id="virtScroll" class="list_messages">
+            <q-virtual-scroll component="q-list" :items="$store.messages" ref="chatVirtualScroll"
+              scroll-target="#virtScroll > .scroll" virtual-scroll-item-size="80" virtual-scroll-slice-size="12"
+              virtual-scroll-slice="15">
+              <template #default="{ item, index }">
+                <q-chat-message style=" margin-top: 0px; margin-bottom: 0px; padding-bottom: 8px; min-height: 80px; "
+                  :key="index" :avatar="avatarstr(item.username)" :text="[item.content]"
+                  :stamp="$utils.getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username"
+                  :bg-color="
+                    item.username === $store.username
+                      ? 'secondary'
+                      : 'blue-grey-11'
+                  ">
+                  <template v-slot:name>
+                    <span class="linkMessageProfile" @click="goProfilPage(item.username)">{{
+                      item.username === $store.username ? "me" : item.username
+                    }}</span>
+                  </template>
+                </q-chat-message>
+              </template>
+              <template #after>
+                <div :key="$store.messagesCount">
+                  <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+                    <div v-show="!$store.messagesCount" class="loadingState">
+                      No messages
+                    </div>
+                  </transition>
+                </div>
+              </template>
+            </q-virtual-scroll>
+          </q-scroll-area>
+        </div>
+        <div v-if="
+          $store.current_channel_state === 'LOADING' &&
+          $store.currentChannelSub.state !== 'BANNED'
         ">
-        <template v-slot:append>
-          <q-icon name="send" @click="sendmessage" class="cursor-pointer" />
-        </template>
-      </q-input>
+          <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <div class="loadingState">Loading...</div>
+          </transition>
+        </div>
+        <div v-else-if="
+          $store.current_channel_state === 'ERROR' &&
+          $store.currentChannelSub.state !== 'BANNED'
+        ">
+          <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <div class="loadingState">Error</div>
+          </transition>
+        </div>
+        <div v-else-if="$store.currentChannelSub.state === 'BANNED'">
+          <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
+            <div class="loadingState" style="text-align: center">
+              Banned
+              <div style="font-size: small">
+                until
+                {{
+                  $utils.getRelativeDate(
+                    new Date(
+                      $store.currentChannelSub.stateActiveUntil || Date.now()
+                    )
+                  )
+                }}
+              </div>
+            </div>
+          </transition>
+        </div>
+        <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
+          class="absolute-bottom custom-input input" maxlength="128" :loading="$store.current_channel_state === 'LOADING'"
+          :disable="
+            !($store.current_channel_state === 'ACTIVE') ||
+            $store.currentChannelSub.state !== 'OK'
+          ">
+          <template v-slot:append>
+            <q-icon name="send" @click="sendmessage" class="cursor-pointer" />
+          </template>
+        </q-input>
 
-    </div>
-    <div class="right-side">
-
-      <div class="userlist hide-scrollbar">
-        <q-list>
-          <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center"
-            v-if="userlist_owner?.length">Owner</q-item>
-          <UserCard v-for="user of userlist_owner" :key="user.username" :username="user.username"
-            class="text-red text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_play
-            menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" />
-          <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center"
-            v-if="userlist_admins?.length">Admins - {{ userlist_admins?.length }}</q-item>
-          <UserCard v-for="user of userlist_admins" :key="user.username" :username="user.username"
-            class="text-warning text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block
-            menu_play menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" />
-          <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center"
-            v-if="userlist_users?.length">Users - {{ userlist_users?.length }}</q-item>
-          <UserCard v-for="user of userlist_users" :key="user.username" :username="user.username"
-            class="text-info text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_play
-            menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" />
-        </q-list>
       </div>
+      <div class="nright-side">
 
+        <div class="userlist hide-scrollbar">
+          <q-list>
+            <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center"
+              v-if="userlist_owner?.length">Owner</q-item>
+            <UserCard v-for="user of userlist_owner" :key="user.username" :username="user.username"
+              class="text-red text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_play
+              menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" />
+            <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center"
+              v-if="userlist_admins?.length">Admins - {{ userlist_admins?.length }}</q-item>
+            <UserCard v-for="user of userlist_admins" :key="user.username" :username="user.username"
+              class="text-warning text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block
+              menu_play menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" />
+            <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center"
+              v-if="userlist_users?.length">Users - {{ userlist_users?.length }}</q-item>
+            <UserCard v-for="user of userlist_users" :key="user.username" :username="user.username"
+              class="text-info text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_play
+              menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" />
+          </q-list>
+        </div>
+
+      </div>
     </div>
-
   </q-page>
 </template>
 
@@ -264,21 +265,14 @@ export default defineComponent({
 //   word-break: break-word
 
 
-.left-side
-  padding:0 0 0 0
-  margin:0 0 0 0
-  position: absolute
-  height: calc(100vh - (90px))
-  bottom:0px
-  left: 0px
-  width: 80%
-.right-side
-  padding:0 0 0 0
-  margin:0 0 0 0
-  position: absolute
-  height: calc(100vh - (90px))
-  right: 0px
-  width: 20%
+.nleft-side
+  width: 85%
+  // @include r.interpolate(width, 320px, 2560px, 70%, 85%)
+
+.nright-side
+  width: 15%
+  // @include r.interpolate(width, 320px, 2560px, 30%, 15%)
+
 .message_element
   width: 100%
 
@@ -315,8 +309,6 @@ export default defineComponent({
 //   width: calc(100% - 20vw)
 
 .userlist
-  position: absolute
-  bottom: 0px
   height: calc(100vh - (90px))
   overflow: auto
   background-color: $bg-secondary
