@@ -247,6 +247,7 @@ export default defineComponent({
 				message: `New message from ${notif.username}: ${notif.message}`,
 				type: "message",
 				avatar: `/api/avatar/${notif.username}/thumbnail`,
+        timeout: 3000,
 			});
 		},
 		listenForMatchmaking() {
