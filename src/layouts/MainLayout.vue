@@ -1,5 +1,4 @@
 <template>
-	<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet" />
 
 	<q-layout view="lHh Lpr lFf">
 
@@ -58,8 +57,9 @@
 			<q-scroll-area class="scroll">
 				<ConversationList />
 			</q-scroll-area>
+				<!-- <q-img class="absolute-top" src="src/assets/one.jpg" style="height: 90px"> -->
 
-			<q-img class="absolute-top" src="https://cdn.quasar.dev/img/material.png" style="height: 90px">
+			<q-img class="absolute-top" src="src/assets/material.png" style="height: 90px">
 				<q-item clickable @click="goProfilePage" class="usercard">
 					<q-item-section v-if="$store.username">
 						<q-img :src="`/api/avatar/${$store.username}/thumbnail`" width="60px" height="60px"
