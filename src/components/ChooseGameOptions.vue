@@ -12,7 +12,7 @@
 				<template v-slot:label="map">
 					<div class="row items-center">
 						<!-- <q-item-label class="label">{{ map.label }}</q-item-label> -->
-						<q-img class="image q-ma-md" :src="`/src/assets/maps/${map.value}.png`" />
+						<q-img class="image q-ma-md" :src="`/maps/${map.value}.png`" />
 					</div>
 				</template>
 			</q-option-group>
@@ -145,7 +145,7 @@ export default defineComponent({
             else
                 this.sendInviteAndOpen()
         }
-		
+
 	},
     mounted(){
 			document.dispatchEvent(new CustomEvent('stop-listening-for-game-invite'));

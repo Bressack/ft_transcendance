@@ -59,15 +59,16 @@
 			</q-scroll-area>
 				<!-- <q-img class="absolute-top" src="src/assets/one.jpg" style="height: 90px"> -->
 
-			<q-img class="absolute-top" src="src/assets/material.png" style="height: 90px">
-				<q-item clickable @click="goProfilePage" class="usercard">
-					<q-item-section v-if="$store.username">
-						<q-img :src="`/api/avatar/${$store.username}/thumbnail`" width="60px" height="60px"
-							img-class="usercard-image" />
-					</q-item-section>
-					<q-item-section class="usercard-name">
-						<q-item-label>{{ $store.username }}</q-item-label>
-					</q-item-section>
+			<q-img @click="goProfilePage" class="absolute-top" src="/material.png" style="height: 90px">
+				<q-item clickable class="usercard">
+        <q-item-section avatar>
+          <q-avatar class="avatar" :style="`background-color: ${$utils.usernameToColor($store.username)};`" size="60px" >
+            <q-img :src="`/api/avatar/${$store.username}/thumbnail`" />
+          </q-avatar>
+        </q-item-section>
+        <q-item-section class="usercard-name">
+          <q-item-label>{{ $store.username }}</q-item-label>
+        </q-item-section>
 				</q-item>
 			</q-img>
 			<q-dialog v-model="settings">

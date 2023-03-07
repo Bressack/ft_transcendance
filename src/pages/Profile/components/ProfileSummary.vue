@@ -1,6 +1,6 @@
 <template>
   <div class="r-pa-lg">
-    <q-item >
+    <q-item>
       <q-item-section  avatar>
         <q-avatar class="avatar"  :style="`background-color: ${$utils.usernameToColor(name)};`">
           <q-img :src="avatar"/>

@@ -17,7 +17,7 @@
     <q-item>
       <q-item-section class="q-pt-md flex-center">
       <q-item>
-        <q-img class="image" :src="`/src/assets/maps/${map}.png`" />
+        <q-img class="image" :src="`/maps/${map}.png`" />
       </q-item>
         <q-item-label class="q-pt-lg label">
             Difficulty : <span class="bigger">{{ difficulty }}</span>
