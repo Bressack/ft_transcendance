@@ -3,8 +3,8 @@
     <q-item clickable v-ripple class="usermenu"
 					manual-focus
 					:focused="$store.active_channel === channelId">
-      <q-tooltip v-if="muted || banned">
-        <span class="text-subtitle1">{{ muted ? 'muted' : 'banned' }} until {{ utils.getRelativeDate(new Date(duration)) }}</span>
+      <q-tooltip v-if="muted || banned" style="width: 250px;">
+        <span class="text-subtitle2">{{ muted ? 'Muted' : 'Banned' }} until {{ utils.getRelativeDate(new Date(duration)) }}</span>
       </q-tooltip>
       <q-item-section style="max-width: 30px;" @click="goProfilPage" >
         <q-avatar size="38px" class="avatar" :style="`background-color: ${$utils.usernameToColor(username)};`">

@@ -187,6 +187,10 @@ export default defineComponent({
 
   mounted() {
 
+    this.$ws.listen("command_result", (payload: any) => {
+      this.$q.notify(payload)
+    })
+
     this.$ws.listen("message", (payload: any) => {
       console.log("new message: ", payload);
       const msg: TMessage = Convert.toMessage2(payload as object);

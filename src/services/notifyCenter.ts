@@ -10,19 +10,19 @@ export type NotifyOptions = {
 }
 
 interface INotifications {
-  id : number
+  id : symbol
   createdAt: Date;
   options: NotifyOptions;
 }
 
 export class Notifications implements INotifications {
 
-  id: number
+  id: symbol
   createdAt: Date;
   options: NotifyOptions;
 
   constructor(options: NotifyOptions) {
-    this.id = randFloat(0, 1)
+    this.id = Symbol()
     this.createdAt = new Date()
     this.options = reactive<NotifyOptions>(options)
   }
@@ -31,7 +31,7 @@ export class Notifications implements INotifications {
 
 export class NotifyCenter {
 
-  public notifications = reactive<Map<number, Notifications>>(new Map<number, Notifications>());
+  public notifications = reactive<Map<symbol, Notifications>>(new Map<symbol, Notifications>());
   public quasar: any
 
 
@@ -40,7 +40,7 @@ export class NotifyCenter {
     this.notifications.set(n.id, n)
   }
 
-  pop(id: number) {
+  pop(id: symbol) {
     this.notifications.delete(id)
   }
 
