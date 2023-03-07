@@ -6,8 +6,7 @@
 
       <q-space/>
 
-      <q-btn v-if="$store.currentChannelSub?.channel.passwordProtected === true"
-        color="brown-9" class="q-mr-lg" @click="lockChannel" >Lock channel</q-btn>
+
 
       <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
         <q-menu class="menuusers">
@@ -32,29 +31,7 @@
             </q-item-section>
           </q-item>
 
-          <q-list class="userlist">
 
-            <q-item v-for="user in $store.currentChannelUsers" :key="user.username" class="q-bg">
-              <q-item-section class="avatar">
-                <img :src="avatarstr(user?.username)" class="image" />
-                <div :class="getLoginStatus(user?.username)" class="loginstatus" />
-              </q-item-section>
-              <q-item-section side class="">
-                <q-item-label class="menuusers-username">{{ user.username }}</q-item-label>
-              </q-item-section>
-              <q-item-section side class="q-pa-sm">
-                <q-img></q-img>
-              </q-item-section>
-              <q-item-section side class="card role">
-                <q-item-label>Role</q-item-label>
-                <q-item-label>{{ user.role }}</q-item-label>
-              </q-item-section>
-              <q-item-section>
-                <BanMute :subscription="user" />
-              </q-item-section>
-            </q-item>
-
-          </q-list>
         </q-menu>
       </q-btn>
     </q-toolbar>
@@ -72,14 +49,13 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
-import BanMute from './BanMute.vue'
 import Confirm from 'src/components/Confirm.vue'
 import CreateChannel from 'src/components/CreateChannel.vue'
 import * as storeTypes from "src/stores/store.types";
 
 export default defineComponent({
   name: 'ChatUsersList',
-  components: { BanMute, CreateChannel, Confirm },
+  components: { CreateChannel, Confirm },
   setup () {
     const confirmDelete = ref(false)
     const confirmLeave = ref(false)

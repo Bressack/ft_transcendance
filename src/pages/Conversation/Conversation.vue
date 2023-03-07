@@ -140,7 +140,6 @@
 <script lang="ts">
 import { defineComponent, computed, ref } from "vue";
 // import CreateChannel from 'src/components/CreateChannel.vue'
-import Message from "./components/Message.vue";
 import ChatUsersList from "./components/ChatUsersList.vue";
 import { ChanState, SubscribedUser, Message as TMessage, Role } from "src/stores/store.types";
 import UserCard from 'src/pages/ConversationList/components/UserCard.vue'
@@ -150,7 +149,7 @@ export default defineComponent({
 	name: "Conversation",
 	/// <reference path="" />
 
-	components: { ChatUsersList, Message, UserCard },
+	components: { ChatUsersList, UserCard },
 	//   beforeRouteEnter (to, from) {
 	// 	console.log('Conversation beforeRouteEnter', to, from);
 
