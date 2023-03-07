@@ -132,7 +132,7 @@ export default defineComponent({
   name: "Conversation",
   /// <reference path="" />
 
-  components: { ChatUsersList, Message, UserCard },
+  components: { ChatUsersList, UserCard },
   //   beforeRouteEnter (to, from) {
   // 	console.log('Conversation beforeRouteEnter', to, from);
 
