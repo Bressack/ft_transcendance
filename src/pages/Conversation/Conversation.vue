@@ -92,7 +92,7 @@
             </div>
           </transition>
         </div>
-        <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" placeholder="Enter text here"
+        <q-input @keydown.enter.prevent="sendmessage" filled v-model="text" :placeholder="$store.currentChannelSub.state !== 'OK' ? 'You are Muted !' : 'Enter text here'"
           class="absolute-bottom custom-input input" maxlength="128" :loading="$store.current_channel_state === 'LOADING'"
           :disable="
             !($store.current_channel_state === 'ACTIVE') ||
@@ -117,7 +117,6 @@
               class="text-red text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_play
               menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" >
             </UserCard>
-
             <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center"
 			v-if="userlist_admins?.length">
 			<q-icon color="grey-6" size="25px" style="margin-right:10px;" name="mdi-shield-sword-outline"/>

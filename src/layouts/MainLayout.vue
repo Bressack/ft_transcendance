@@ -9,7 +9,7 @@
 				<q-item class="absolute-center relative-position label thetitle glow" clickable @click="goHome" style="">
           <q-tooltip anchor="center middle" self="center middle">Home</q-tooltip>Transcendence
         </q-item>
-				<q-btn color="red" @click="logout()">LOGOUT DEV</q-btn>
+				<!-- <q-btn color="red" @click="logout()">LOGOUT DEV</q-btn> -->
 
 				<q-space />
 
@@ -52,6 +52,7 @@
 				</q-btn>
 
 				<q-btn class="r-mx-md" flat @click="goSettingsNotif" round dense icon="settings"><q-tooltip>Settings</q-tooltip></q-btn>
+				<q-btn class="r-mx-md" style="margin-left: 0px;" color="red-8" flat @click="logout" round dense icon="mdi-logout"><q-tooltip>Quick Logout</q-tooltip></q-btn>
 			</q-toolbar>
 		</q-header>
 
