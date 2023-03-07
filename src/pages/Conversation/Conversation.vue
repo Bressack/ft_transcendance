@@ -211,6 +211,14 @@ export default defineComponent({
     this.$ws.listen("command_result", (payload: any) => {
       this.$q.notify(payload)
     })
+    this.$ws.listen("kick", (payload: any) => {
+		if (payload === this.$store.active_channel) {
+			console.log("kicked", payload)
+			this.$store.channels_passwords.set(this.$store.active_channel, "")
+			this.$q.notify({type: "warning", message: "You have been kicked from this channel."});
+			this.$router.push("/");
+		}
+    })
 
     this.$ws.listen("message", (payload: any) => {
       console.log("new message: ", payload);
@@ -230,6 +238,7 @@ export default defineComponent({
     console.log("end message vue")
     this.$ws.removeListener("message");
     this.$ws.removeListener("command_result");
+    this.$ws.removeListener("kick");
   },
   methods: {
 		pwdSubmitAndJoin() {
