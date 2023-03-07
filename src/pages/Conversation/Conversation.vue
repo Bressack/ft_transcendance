@@ -37,7 +37,7 @@
               <template #after>
                 <div :key="$store.messagesCount">
                   <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-                    <div v-show="!$store.messagesCount" class="loadingState">
+                    <div v-show="!$store.messagesCount" class="loadingState" style="text-align: center;">
                       No messages
                     </div>
                   </transition>
@@ -51,7 +51,7 @@
           $store.currentChannelSub.state !== 'BANNED'
         ">
           <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-            <div class="loadingState">Loading...</div>
+            <div class="loadingState loadingStateCorrec">Loading...</div>
           </transition>
         </div>
         <div v-else-if="
@@ -59,7 +59,7 @@
           $store.currentChannelSub.state !== 'BANNED'
         ">
           <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-            <div class="loadingState" style="text-align: center;">Error
+            <div class="loadingState loadingStateCorrec" style="text-align: center;">Error
 				<div style="font-size: small">
 					{{ error_message }}
 				</div>
@@ -77,7 +77,7 @@
         </div>
         <div v-else-if="$store.currentChannelSub.state === 'BANNED'">
           <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-            <div class="loadingState" style="text-align: center">
+            <div class="loadingState loadingStateCorrec" style="text-align: center">
               Banned
               <div style="font-size: small">
                 until
@@ -345,11 +345,13 @@ export default defineComponent({
   color: #8E8E8E
   font-family: 'Press Start 2P'
   font-weight: bold
-  @include r.interpolate(font-size, 320px, 2560px, 10px, 40px)
   position: absolute
-  left: calc(50% - (125px))
+  left: calc(50%)
   top:50%
   transform: translate(-50%, -50%)
+  @include r.interpolate(font-size, 320px, 2560px, 10px, 40px)
+.loadingStateCorrec
+  left: calc(50% - (125px))
 
 .q-message-sent
   color: #aeaeae !important
