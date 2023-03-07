@@ -213,6 +213,7 @@ export default defineComponent({
     this.$store.setCurrentChannel("");
     console.log("end message vue")
     this.$ws.removeListener("message");
+    this.$ws.removeListener("command_result");
   },
   methods: {
     async lockChannel() {
