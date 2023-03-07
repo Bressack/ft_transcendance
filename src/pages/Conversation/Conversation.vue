@@ -332,7 +332,6 @@ export default defineComponent({
   width: 100%
 
 .input
-  postion: absolute
   bottom:0px
   width: 100%
   height: 50px
