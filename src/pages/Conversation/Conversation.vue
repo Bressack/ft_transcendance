@@ -13,11 +13,10 @@
 						scroll-target="#virtScroll > .scroll" virtual-scroll-item-size="80" virtual-scroll-slice-size="12"
 						virtual-scroll-slice="15">
 						<template #default="{ item, index }">
-							<q-chat-message style="
-					                    			margin-top: 0px;
-					                   				margin-bottom: 0px;
-					                				padding-bottom: 8px;
-					                    			min-height: 80px; " :key="index" :avatar="avatarstr(item.username)" :text="[item.content]"
+							<!-- :avatar="avatarstr(item.username)" -->
+							<q-chat-message class="chat_message" style=".q-message-avatar {background-color: red !important;}"
+								:key="index" 
+								:text="[item.content]"
 								:stamp="$utils.getRelativeDate(new Date(item.CreatedAt))"
 								:sent="item.username === $store.username" :bg-color="
 									item.username === $store.username
@@ -29,6 +28,11 @@
 										item.username === $store.username ? "me" : item.username
 									}}</span>
 								</template>
+										<template v-slot:avatar >
+											<img :src="avatarstr(item.username)" :alt="item.username"
+											:class="item.username === $store.username ? 'q-message-avatar q-message-avatar--sent' : 'q-message-avatar q-message-avatar--received'"
+											:style="`background-color: ${$utils.usernameToColor(item.username)};`">
+									</template>
 							</q-chat-message>
 						</template>
 						<template #after>
@@ -43,6 +47,7 @@
 						</template>
 					</q-virtual-scroll>
 				</q-scroll-area>
+
 			</div>
 			<div v-if="
 				$store.current_channel_state === 'LOADING' &&
@@ -367,7 +372,8 @@ export default defineComponent({
   overflow: auto
   background-color: $bg-secondary
 //   width: 20vw
-
+img .q-message-avatar
+  background-color: red !important
 .chat-message
   margin-top: 0px
   margin-bottom: 0px
