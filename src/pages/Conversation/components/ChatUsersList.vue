@@ -2,10 +2,14 @@
   <div class="top-panel row items-center">
 
     <q-toolbar>
-      <span class="titlename" >{{ $store.currentChannelName }}</span>
-      <q-space/>
-      <q-btn v-if="$store.currentChannelSub?.channel.passwordProtected === true"
-        color="brown-9" class="q-mr-lg" @click="lockChannel" >Lock channel</q-btn>
+		<span class="titlename" >{{ $store.currentChannelName }}</span>
+		<q-space/>
+		<q-icon v-if="$store.currentChannelSub?.role === 'ADMIN'" color="grey-6" text-color="white" size="35px" style="margin-left:20px;" name="mdi-shield-sword-outline"><q-tooltip>Owner</q-tooltip></q-icon>
+		
+		<q-icon v-else-if="$store.currentChannelSub?.role === 'OWNER'" color="grey-6" text-color="white" size="35px" style="margin-left:20px;" name="mdi-shield-crown-outline"><q-tooltip>Admin</q-tooltip></q-icon>
+		<q-icon v-else color="grey-6" text-color="white" size="35px" style="margin-left:20px;" name="mdi-shield-bug-outline"><q-tooltip>Peon</q-tooltip></q-icon>
+      <!-- <q-btn v-if="$store.currentChannelSub?.channel.passwordProtected === true"
+        color="brown-9" class="q-mr-lg" @click="lockChannel" >Lock channel</q-btn> -->
     </q-toolbar>
 
     <q-dialog persistent v-model="settings">
