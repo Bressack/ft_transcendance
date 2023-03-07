@@ -6,14 +6,16 @@
 			<q-toolbar class="toolbar">
 				<q-btn flat @click="$store.drawerStatus = !$store.drawerStatus" round dense icon="menu" />
 
-				<q-item class="absolute-center relative-position label thetitle glow" clickable @click="goHome"
-					style="">Transcendence</q-item>
+				<q-item class="absolute-center relative-position label thetitle glow" clickable @click="goHome" style="">
+          <q-tooltip anchor="center middle" self="center middle">Home</q-tooltip>Transcendence
+        </q-item>
 				<q-btn color="red" @click="logout()">LOGOUT DEV</q-btn>
 
 				<q-space />
 
 				<q-icon flat @click="" round size="25px" v-if="!$store.ws_connected" name="wifi_off" class="isconnected" />
 				<q-btn flat @click="notifyCenterLever = !notifyCenterLever" round dense icon="notifications">
+          <q-tooltip>Notification center</q-tooltip>
 					<div class="notif-count justify-center items-center circle" v-if="nc.notifications.size > 0" />
 					<div class="notif-count justify-center items-center" v-if="nc.notifications.size > 0">
 						{{ nc.notifications.size < 99 ? nc.notifications.size : "99+" }} </div>
@@ -49,7 +51,7 @@
 							</q-menu>
 				</q-btn>
 
-				<q-btn class="r-mx-md" flat @click="goSettingsNotif" round dense icon="settings" />
+				<q-btn class="r-mx-md" flat @click="goSettingsNotif" round dense icon="settings"><q-tooltip>Settings</q-tooltip></q-btn>
 			</q-toolbar>
 		</q-header>
 
@@ -61,13 +63,16 @@
 
 			<q-img @click="goProfilePage" class="absolute-top" src="/material.png" style="height: 90px">
 				<q-item clickable class="usercard">
+          <q-tooltip anchor="center middle" self="center middle">
+            Your profile page
+          </q-tooltip>
         <q-item-section avatar>
           <q-avatar class="avatar" :style="`background-color: ${$utils.usernameToColor($store.username)};`" size="60px" >
             <q-img :src="`/api/avatar/${$store.username}/thumbnail`" />
           </q-avatar>
         </q-item-section>
-        <q-item-section class="usercard-name">
-          <q-item-label>{{ $store.username }}</q-item-label>
+        <q-item-section>
+          <q-item-label class="main-name text-orange">{{ $store.username }}</q-item-label>
         </q-item-section>
 				</q-item>
 			</q-img>
@@ -343,6 +348,10 @@ export default defineComponent({
 </script>
 
 <style lang="sass">
+.main-name
+  font-size: 20px
+  font-weight: bold
+
 .usercard-image
   border-radius: 1000px
   z-index: 2

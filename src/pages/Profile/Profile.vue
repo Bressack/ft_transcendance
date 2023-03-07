@@ -87,6 +87,7 @@ export default defineComponent({
         this.userFetched = true
         this.fetchGameHistory()
       })
+      .catch(() => {})
     },
     fetchGameHistory() {
       const searchQuery : IGameQuery = {

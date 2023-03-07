@@ -12,8 +12,8 @@
     <q-item>
       <q-item-label class="bigger">Spectate games</q-item-label>
     </q-item>
-    
-    <q-separator class="q-ma-md" color="#F7F7FF" />
+
+    <q-separator class="q-ma-md" color="blue-grey-3" />
     <q-item v-if="!games.length">
       <q-item-label class="label">No game is currently running</q-item-label>
     </q-item>
@@ -56,10 +56,10 @@ export default defineComponent({
     })
     this.fetchGames()
 
-    
+
   },
   created () {
-    
+
   },
   updated() {
   },

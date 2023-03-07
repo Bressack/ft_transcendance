@@ -1,14 +1,14 @@
 <template>
   <div class="r-pa-lg">
-    <q-item>
-      <q-item-section  avatar>
-        <q-avatar class="avatar"  :style="`background-color: ${$utils.usernameToColor(name)};`">
+    <q-item class="q-pb-lg">
+      <q-item-section avatar>
+        <q-avatar class="avatar" :style="`background-color: ${$utils.usernameToColor(name)};`">
           <q-img :src="avatar"/>
         </q-avatar>
       </q-item-section>
       <q-item class="q-pa-none">
         <q-item-section>
-          <q-item-label class="label name">{{ name }}</q-item-label>
+          <q-item-label class="bigger name">{{ name }}</q-item-label>
         </q-item-section>
         <q-item v-if="interact && name != $store.username">
           <q-item-section>
@@ -27,18 +27,18 @@
   </div>
   <q-item>
     <q-item-section>
-      <q-item-label class="label score">Victory<div class="bigger victory">{{victory}}</div></q-item-label>
+      <q-item-label class="press2p label score">Victory<div class="bigger victory">{{victory}}</div></q-item-label>
     </q-item-section>
-    <q-separator vertical color="#F7F7FF" spaced/>
+    <q-separator vertical color="blue-grey-5" spaced/>
     <q-item-section>
-      <q-item-label class="label score">Defeat<div class="bigger defeat">{{defeat}}</div></q-item-label>
+      <q-item-label class="press2p label score">Defeat<div class="bigger defeat">{{defeat}}</div></q-item-label>
     </q-item-section>
-    <q-separator vertical color="#F7F7FF" spaced/>
+    <q-separator vertical color="blue-grey-5" spaced/>
     <q-item-section>
-      <q-item-label class="label score">Ratio<div class="bigger">{{ratio(victory, defeat)}}%</div></q-item-label>
+      <q-item-label class="press2p label score">Ratio<div class="bigger">{{ratio(victory, defeat)}}%</div></q-item-label>
     </q-item-section>
   </q-item>
-  <q-separator color="#F7F7FF" spaced/>
+  <q-separator color="blue-grey-5" spaced/>
 </template>
 
 <script lang="ts">
@@ -146,14 +146,14 @@ export default defineComponent({
   flex-wrap: wrap
 
 .name
-  @include r.interpolate(font-size, 320px, 2560px, 14px, 40px)
+  @include r.interpolate(font-size, 320px, 2560px, 20px, 60px)
   @include r.interpolate(padding-left, 320px, 2560px, 0px, 40px)
   font-weight: bold
   overflow: auto
   text-align: left
 
 .avatar
-  @include r.interpolate(font-size, 320px, 2560px, 40px, 140px)
+  @include r.interpolate(font-size, 320px, 2560px, 35px, 90px)
 
 .score
   text-align: center

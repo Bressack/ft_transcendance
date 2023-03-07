@@ -1,12 +1,12 @@
 <template>
 <div class="r-py-md">
   <q-item>
-    <q-item-label class="absolute-full flex flex-center bigger">Level {{level}}</q-item-label>
+    <q-item-label class="press2p absolute-full flex flex-center bigger">Level {{level}}</q-item-label>
   </q-item>
 </div>
 <q-linear-progress class="progress" :value="progress" color="green">
   <div class="absolute-full flex flex-center">
-    <q-badge class="badge" color="#F7F7FF" text-color="black" :label="progressLabel"/>
+    <q-badge class="badge" color="blue-grey-3" text-color="black" :label="progressLabel"/>
   </div>
 </q-linear-progress>
 </template>

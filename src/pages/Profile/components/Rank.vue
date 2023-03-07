@@ -3,7 +3,7 @@
   <q-item>
     <q-item-section>
       <q-img class="rank-img" :src="`/rank/${setRank(victory, defeat)}.png`"/>
-      <q-item-label class="bigger rank">{{setRank(victory, defeat)}}</q-item-label>
+      <q-item-label class="press2p bigger rank">{{setRank(victory, defeat)}}</q-item-label>
     </q-item-section>
   </q-item>
 </div>
