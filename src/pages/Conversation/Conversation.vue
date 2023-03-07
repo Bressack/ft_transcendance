@@ -14,7 +14,7 @@
 						virtual-scroll-slice="15">
 						<template #default="{ item, index }">
 							<!-- :avatar="avatarstr(item.username)" -->
-							<q-chat-message class="chat_message" style=".q-message-avatar {background-color: red !important;}"
+							<q-chat-message class="chat_message"
 								:key="index" 
 								:text="[item.content]"
 								:stamp="$utils.getRelativeDate(new Date(item.CreatedAt))"
