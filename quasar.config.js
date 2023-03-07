@@ -39,8 +39,8 @@ module.exports = configure(function (/* ctx */) {
 				browser: ['es2021']
 			},
 
-			vueRouterMode: 'hash', // available values: 'hash', 'history'
-			// minify: false,
+			vueRouterMode: 'history', // available values: 'hash', 'history'
+			minify: true,
 			// distDir
 			// vueRouterBase,
 			// vueDevtools,
