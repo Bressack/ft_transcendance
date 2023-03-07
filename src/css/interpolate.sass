@@ -20,29 +20,3 @@
 		$sign: "-"
 		$b: abs($b)
 	@return calc(#{$a*100}vw #{$sign} #{$b})
-
-
-// @function calc-interpolation($min-screen, $min-value, $max-screen, $max-value)
-// 	$unit: unit($min-value)
-// 	$a: ($max-value - $min-value) / ($max-screen - $min-screen)
-// 	$b: $min-value - $a * $min-screen
-
-// 	$sign: "+"
-// 	@if ($b < 0)
-// 		$sign: "-"
-// 		$b: abs($b)
-// 	@return calc(#{$a*100}#{$unit} #{$sign} #{$b})
-
-
-// @function calc-interpolation($min-screen, $min-value, $max-screen, $max-value)
-// 	$unit: unit($min-value)
-// 	$a: ($max-value - $min-value) / ($max-screen - $min-screen)
-// 	$b: $min-value - $a * $min-screen
-
-// 	$sign: "+"
-// 	@if ($b < 0)
-// 		$sign: "-"
-// 		$b: abs($b)
-// 	$unit: if($unit=='%','%','vw')
-// 	// @return calc(#{$a*100}#{$unit=='%'?"%":'vw'} #{$sign} #{$b}#{$unit})
-// 	@return calc(#{$a*100}#{$sign} #{$b})

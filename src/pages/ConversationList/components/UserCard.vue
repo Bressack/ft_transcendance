@@ -3,14 +3,21 @@
     <q-item clickable v-ripple class="usermenu"
 					manual-focus
 					:focused="$store.active_channel === channelId">
-      <q-item-section style="max-width: 50px;" @click="goProfilPage">
+      <q-tooltip v-if="muted || banned">
+        <span class="text-subtitle1">{{ muted ? 'muted' : 'banned' }} until {{ utils.getRelativeDate(new Date(duration)) }}</span>
+      </q-tooltip>
+      <q-item-section style="max-width: 30px;" @click="goProfilPage" >
         <q-avatar size="38px" class="avatar" :style="`background-color: ${$utils.usernameToColor(username)};`">
           <img :src="`/api/avatar/${username}/thumbnail`">
           <div :class="getLoginStatus()" class="loginstatus"/>
         </q-avatar>
       </q-item-section>
+      <q-item-section class="" style="max-width: 25px;">
+        <q-icon size="20px" color="red" name="mdi-cancel" v-if="banned"/>
+        <q-icon size="20px" color="yellow" name="mdi-microphone-off" v-if="muted"/>
+      </q-item-section>
       <q-item-section class="name" @click="goProfilPage">
-        {{ username }}
+        <span>{{ username }}</span>
       </q-item-section>
 
       <q-item-section side thumbnail class="q-mb-xs tata">
@@ -75,6 +82,7 @@
 import { UserStatus } from 'src/stores/store.types';
 import Confirm from 'src/components/Confirm.vue'
 import { defineComponent, ref } from 'vue';
+import utils from 'src/services/utils.service'
 
 export default defineComponent({
   name: 'UserCard',
@@ -99,6 +107,11 @@ export default defineComponent({
     shortcut_chat     : { type: Boolean, default: false },
     shortcut_follow   : { type: Boolean, default: false },
     shortcut_unfollow : { type: Boolean, default: false },
+
+    banned            : { type: Boolean, default: false },
+    muted             : { type: Boolean, default: false },
+
+    duration          : { type: String, default: '' }
   },
   setup() {
     const confirmUnfollow = ref(false)
@@ -112,6 +125,7 @@ export default defineComponent({
   },
   data() {
     return {
+      utils
     }
   },
   computed: {

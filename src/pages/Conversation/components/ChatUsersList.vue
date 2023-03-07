@@ -1,49 +1,25 @@
 <template>
   <div class="top-panel row items-center">
+
     <q-toolbar>
-
-      <span class="titlename">{{ $store.currentChannelName }}</span>
-
+      <span class="titlename" >{{ $store.currentChannelName }}</span>
       <q-space/>
-
-
-
-      <q-btn flat @click="minidrawerStatus = !minidrawerStatus" round dense icon="menu" class="justify-right">
-        <q-menu class="menuusers">
-
-          <q-item class="q-bg q-flex pannel">
-            <q-item-section side class="card">
-              <q-item-label class="menuusers-username">User count:</q-item-label>
-            </q-item-section>
-            <q-item-section side class="card">
-              <q-item-label>{{ $store.currentChannelUserCount }}</q-item-label>
-            </q-item-section>
-            <q-space />
-            <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE`" side>
-              <q-btn v-if="$store.currentChannelSub.role !== 'OWNER' && $store.currentChannelSub.channel.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
-              <q-btn v-else-if="$store.currentChannelSub.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
-            </q-item-section>
-            <q-item-section v-if="$store.currentChannelSub.channel.channelType !== `ONE_TO_ONE` && $store.currentChannelSub.role === 'OWNER'" side>
-              <q-btn color="orange" label="settings" class="interpolate-btn" @click="settings = true" />
-            </q-item-section>
-            <q-item-section side>
-              <q-btn color="pink" label="debug" @click="debug" />
-            </q-item-section>
-          </q-item>
-
-
-        </q-menu>
-      </q-btn>
+      <q-btn v-if="$store.currentChannelSub?.channel.passwordProtected === true"
+        color="brown-9" class="q-mr-lg" @click="lockChannel" >Lock channel</q-btn>
     </q-toolbar>
+
     <q-dialog persistent v-model="settings">
       <CreateChannel settings :oldname=$store.currentChannelSub?.channel.name :closeFn=closeSettings />
     </q-dialog>
+
     <q-dialog persistent v-model=confirmDelete>
       <Confirm what="delete the channel" :accept=leaveChannel />
     </q-dialog>
+
     <q-dialog persistent v-model=confirmLeave>
       <Confirm what="leave the channel" :accept=leaveChannel />
     </q-dialog>
+
   </div>
 </template>
 
@@ -122,10 +98,10 @@ export default defineComponent({
   width: 100%
 
 .titlename
-  font-size: 20px
   font-weight: bold
-  color: white
-  height: 40px
+  color: grey
+  font-family: 'Press Start 2P'
+  font-size: 1.5em
 
 .menuusers-username
   width: 200px
