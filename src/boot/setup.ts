@@ -1,17 +1,15 @@
 import { boot } from "quasar/wrappers";
 import { AxiosInstance } from "axios";
-import WsService from "src/services/ws.service";
-import utils from "src/services/utils.service";
-import API from "src/services/api.service";
-import nc from "src/services/notifyCenter";
-import { useMainStore } from "src/stores/store";
+import WsService from "../services/ws.service";
+import utils from "../services/utils.service";
+import API from "../services/api.service";
+import { useMainStore } from "../stores/store";
 
 declare module "@vue/runtime-core" {
   interface ComponentCustomProperties {
     $axios: AxiosInstance;
     $ws: typeof ws;
     $api: typeof api;
-    $notifyCenter: typeof notifyCenter;
     $utils: typeof utils;
     $store: ReturnType<typeof useMainStore>;
   }
@@ -26,7 +24,6 @@ declare module "@vue/runtime-core" {
 // const api = axios.create({ baseURL: 'https://api.example.com' });
 const api = API;
 const ws = new WsService();
-const notifyCenter = nc;
 // const storeChat: ReturnType<typeof useChatStore> = useChatStore();
 // const storeMe: ReturnType<typeof useMeStore> = useMeStore();
 const store: ReturnType<typeof useMainStore> = useMainStore();
@@ -34,7 +31,6 @@ declare module "vue" {
   interface ComponentCustomProperties {
     $ws: typeof ws;
     $api: typeof api;
-    $notifyCenter: typeof notifyCenter;
     $store: ReturnType<typeof useMainStore>;
     $utils: typeof utils;
   }
@@ -49,6 +45,5 @@ export default boot(({ app }) => {
   app.config.globalProperties.$ws = ws;
   app.config.globalProperties.$api = api;
   app.config.globalProperties.$utils = utils;
-  app.config.globalProperties.$notifyCenter = notifyCenter;
   app.config.globalProperties.$store = store;
 });

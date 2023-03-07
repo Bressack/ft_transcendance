@@ -60,6 +60,10 @@ export class NotifyCenter {
 
   init(quasar: any) {
     this.quasar = quasar
+    this.send({
+      type: 'positive',
+      message: 'Welcome back ! Ready to lose ? :)'
+    })
   }
 
 }

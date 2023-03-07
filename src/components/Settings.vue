@@ -104,13 +104,13 @@ export default defineComponent({
       this.$api.delete('avatar')
         .then((res) => {
           if (res.data === true) {
-            this.$notifyCenter.send({
+            this.$store.notifCenter.send({
               type: 'warning',
               message: 'Avatar is already set as default'
             })
           }
           else {
-            this.$notifyCenter.send({
+            this.$store.notifCenter.send({
               type: 'positive',
               message: 'Avatar successfully removed'
             })
@@ -123,7 +123,7 @@ export default defineComponent({
       if (this.username !== this.$store.username) {
         this.$api.changeUsername(this.username)
           .then(() => {
-            this.$notifyCenter.send({
+            this.$store.notifCenter.send({
               type: 'positive',
               message: 'Username successfully changed'
             })
@@ -131,7 +131,7 @@ export default defineComponent({
           .catch((error) => {
             console.log(error)
             // for (let i = 0; i < error.response.data.message.length; i++) {
-            //   this.$notifyCenter.send({
+            //   this.$store.notifCenter.send({
             //     type: 'negative',
             //     message: error.response.data.message[i]
             //   })
@@ -139,7 +139,7 @@ export default defineComponent({
           })
       }
       else {
-        this.$notifyCenter.send({
+        this.$store.notifCenter.send({
           type: 'warning',
           message: `Your username is already "${this.username}"`
         })
@@ -151,7 +151,7 @@ export default defineComponent({
       return ([])
     },
     onUploaded(info: UploadObject) {
-      this.$notifyCenter.send({
+      this.$store.notifCenter.send({
         type: 'positive',
         message: 'Avatar successfully uploaded'
       })
@@ -160,14 +160,14 @@ export default defineComponent({
     },
     onRejected(rejectedEntries: QRejectedEntry[]) {
       if (rejectedEntries[0].failedPropValidation === 'filter') {
-        this.$notifyCenter.send({
+        this.$store.notifCenter.send({
           type: 'negative',
           message: 'The file should be an image (.jpg, .jpeg or .png)'
         })
       }
       else {
         console.log(rejectedEntries[0])
-        this.$notifyCenter.send({
+        this.$store.notifCenter.send({
           type: 'warning',
           message: 'This file has already been downloaded'
         })

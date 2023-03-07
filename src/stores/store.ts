@@ -1,8 +1,10 @@
+import { NotifyCenter } from './../services/notifyCenter';
 import { defineStore, StateTree, StoreGetters } from "pinia";
-import { QNotifyOptions } from "quasar";
-import * as models from "src/services/api.models";
+// import { QNotifyOptions } from "quasar";
 import { intersection, difference } from "lodash";
-import * as ld from "lodash";
+// import * as ld from "lodash";
+import nc from '../services/notifyCenter'
+
 import {
   Blocking,
   Channel,
@@ -18,19 +20,6 @@ import {
 } from "./store.types";
 import { Convert } from "./store.validation";
 
-// type NotifyOptions = {
-//   type?: string | null;
-//   color?: string | null;
-//   message: string | null;
-//   avatar?: string | null;
-//   timeout?: number;
-// };
-
-// interface INotification {
-//   id: number;
-//   createdAt: Date;
-//   options: NotifyOptions;
-// }
 type PendingRequest = {
   username: string;
   // createdAt: Date;
@@ -57,7 +46,7 @@ enum ChanState {
 
 type InternalAppInfos = {
   drawerStatus: boolean;
-  //   notifications: INotification[];
+  notifCenter: NotifyCenter;
   ws_connected: boolean;
   users_status: Map<string, UserStatus>;
   active_channel: string;
@@ -122,6 +111,8 @@ const useMainStore = defineStore("main-store", {
       users_status: new Map<string, UserStatus>(),
       message_received: false,
       socketId: undefined,
+
+      notifCenter: nc // from import
     };
   },
   getters: {

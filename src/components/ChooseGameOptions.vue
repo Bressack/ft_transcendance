@@ -124,11 +124,11 @@ export default defineComponent({
 				this.$ws.removeListener('game-invite-accepted')
 				this.$ws.removeListener('game-invite-declined')
 				if (err.status === "DECLINED")
-					this.$notifyCenter.send({ type: 'warning', avatar: `/api/avatar/${this.opponent}/thumbnail`, message: this.opponent + " refused your invitation" })
+					this.$store.notifCenter.send({ type: 'warning', avatar: `/api/avatar/${this.opponent}/thumbnail`, message: this.opponent + " refused your invitation" })
 				else if (err.status === "NOT_CONNECTED")
-					this.$notifyCenter.send({ type: 'warning', avatar: `/api/avatar/${this.opponent}/thumbnail`, message: this.opponent + " is not connected" })
+					this.$store.notifCenter.send({ type: 'warning', avatar: `/api/avatar/${this.opponent}/thumbnail`, message: this.opponent + " is not connected" })
 				else if (err.status === "TIMEOUT")
-					this.$notifyCenter.send({ type: 'warning', avatar: `/api/avatar/${this.opponent}/thumbnail`, message: this.opponent + " did not respond" })
+					this.$store.notifCenter.send({ type: 'warning', avatar: `/api/avatar/${this.opponent}/thumbnail`, message: this.opponent + " did not respond" })
 				document.dispatchEvent(new CustomEvent('can-listen-for-game-invite'));
 				this.closeFunction()
 			}

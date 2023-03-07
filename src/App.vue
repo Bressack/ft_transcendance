@@ -19,18 +19,18 @@ export default defineComponent({
     has_access(): boolean {
       return Cookies.get("has_access")
     },
-  
+
     async _fLogout() {
       return await fetch('/api/auth/logout')
     },
 
     notifyAlreadyConnected() {
-      this.$notifyCenter.send({
+      this.$store.notifCenter.send({
         type: 'warning',
         message: 'You are already connected'
       })
     },
-  
+
 
     initSystem() {
       this.$router.beforeEach(async (to: RouteLocationNormalized, from: RouteLocationNormalized, next: NavigationGuardNext) => {
@@ -69,7 +69,7 @@ export default defineComponent({
 		}
 		return req
       }, undefined)
-	 
+
 
       this.$api.axiosInstance.interceptors.response.use((resp) => {
         return resp
