@@ -59,7 +59,20 @@
           $store.currentChannelSub.state !== 'BANNED'
         ">
           <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-            <div class="loadingState">Error</div>
+            <div class="loadingState" style="text-align: center;">Error
+				<div style="font-size: small">
+					{{ error_message }}
+				</div>
+				<div v-if="error_message === 'wrong password'">
+					<q-input  dark dense v-model="channel_password" label-color="orange" color="orange"
+						hint="Enter Channel Password">
+						<template v-slot:after>
+							<q-icon name="check" class="cursor-pointer"
+								@click="pwdSubmitAndJoin" />
+						</template>
+					</q-input>
+				</div>
+			</div>
           </transition>
         </div>
         <div v-else-if="$store.currentChannelSub.state === 'BANNED'">
@@ -172,6 +185,9 @@ export default defineComponent({
   data() {
     return {
       text: ref(""),
+		error_message: "",
+		channel_password: ref(''),
+		isPwd: ref(true),
     };
   },
   computed: {
@@ -216,6 +232,23 @@ export default defineComponent({
     this.$ws.removeListener("command_result");
   },
   methods: {
+		pwdSubmitAndJoin() {
+			this.$store.current_channel_state = ChanState.LOADING;
+			return this.$api
+				.joinChannel(this.$store.active_channel, this.channel_password)
+				.then(() => {
+					this.$store.channels_passwords.set(this.$store.active_channel, this.channel_password)
+					this.$store.current_channel_state = ChanState.ACTIVE;
+					(this.$refs["chatVirtualScroll"] as any)?.refresh(
+						this.$store.messagesCount
+					);
+				}).catch((error) => {
+					this.$store.current_channel_state = ChanState.ERROR;
+					this.error_message = error.response.data.message[0];
+				}).finally(() => {
+					this.channel_password = "";
+				});
+		},
     async lockChannel() {
       await this.$api.leavehttpChannel();
       this.$router.push({ path: `/` });
@@ -258,7 +291,11 @@ export default defineComponent({
           (this.$refs["chatVirtualScroll"] as any)?.refresh(
             this.$store.messagesCount
           );
-        });
+		}).catch((error) => {
+			console.error(error.response.data.message[0]);
+			this.$store.current_channel_state = ChanState.ERROR;
+			this.error_message = error.response.data.message[0];
+		});
     },
 
   },
@@ -310,7 +347,7 @@ export default defineComponent({
   font-weight: bold
   @include r.interpolate(font-size, 320px, 2560px, 10px, 40px)
   position: absolute
-  left:50%
+  left: calc(50% - (125px))
   top:50%
   transform: translate(-50%, -50%)
 
@@ -331,8 +368,6 @@ export default defineComponent({
   overflow: auto
   background-color: $bg-secondary
 //   width: 20vw
-img .q-message-avatar
-  background-color: red !important
 .chat-message
   margin-top: 0px
   margin-bottom: 0px
