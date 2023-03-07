@@ -8,8 +8,8 @@
     <q-card >
       <q-tabs v-model="tab" dense class="text-grey-6 q-fixed qtab "
         active-color="orange" indicator-color="orange" align="justify" narrow-indicator>
-        <q-tab name="friends" icon="group" class="tab unautretruc" />
-        <q-tab name="channels" icon="chat" class="tab" />
+        <q-tab name="friends" icon="group" class="tab unautretruc"><q-tooltip>Friends</q-tooltip></q-tab>
+        <q-tab name="channels" icon="chat" class="tab"><q-tooltip>Channels</q-tooltip></q-tab>
         <!-- <q-tab name="following" icon="hourglass_bottom" class="tab">
           <div class="notif justify-center items-center circle" v-if="$store.friendRequestSent?.length > 0" />
           <div class="notif justify-center items-center" v-if="$store.friendRequestSent?.length > 0">
@@ -21,11 +21,13 @@
             {{ $store.friendRequestRecevied?.length < 99 ? $store.friendRequestRecevied?.length : '99+' }} </div>
         </q-tab> -->
         <q-tab name="pending requests" icon="mdi-account-clock-outline" class="tab">
+          <q-tooltip>Pending requests</q-tooltip>
           <div class="notif justify-center items-center circle" v-if="$store.pendingRequests?.length > 0" />
           <div class="notif justify-center items-center" v-if="$store.pendingRequests?.length">
             {{ $store.pendingRequests?.length < 99 ? $store.pendingRequests?.length : '99+' }} </div>
         </q-tab>
         <q-tab name="blocked" icon="mdi-account-cancel" class="tab">
+          <q-tooltip>Blocked users</q-tooltip>
           <div class="notif justify-center items-center circle" v-if="$store.blocked?.length > 0" />
           <div class="notif justify-center items-center" v-if="$store.blocked?.length > 0">
             {{ $store.blocked?.length < 99 ? $store.blocked?.length : '99+' }} </div>

@@ -13,20 +13,17 @@
         {{ username }}
       </q-item-section>
 
-      <q-item-section side class="tata text-right">
+      <q-item-section side thumbnail class="q-mb-xs tata">
         <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilPage" />
         <q-icon v-if="shortcut_block"     class="shortcut" name="person_off" color="red"    @click="block" />
-        <q-icon v-if="shortcut_unblock"   class="shortcut" name="done"       color="green"  @click="block" />
-        <q-icon v-if="shortcut_play"      class="shortcut" name="mdi-gamepad-variant-outline" color="green"  @click="goGameOptions" />
-        <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="goChat" />
+        <q-icon v-if="shortcut_unblock"   class="shortcut" name="cancel"     color="red"    @click="confirmUnblock = true"><q-tooltip>Unblock</q-tooltip></q-icon>
+        <q-icon v-if="shortcut_play"      class="shortcut" name="mdi-gamepad-variant-outline" color="green"  @click="goGameOptions"><q-tooltip>Play</q-tooltip></q-icon>
+        <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="goChat"><q-tooltip>Chat</q-tooltip></q-icon>
         <q-icon v-if="shortcut_unfollow"  class="shortcut" name="cancel"     color="red"    @click="unfollow" />
         <q-icon v-if="shortcut_follow"    class="shortcut" name="done"       color="green"  @click="follow" />
-      </q-item-section>
-
-      <q-item-section side class="toto">
-        <q-icon name="more_vert" color="#F7F7FF" class="toto">
+        <q-icon name="more_vert" color="#F7F7FF" class="shortcut">
+          <q-tooltip>More</q-tooltip>
           <q-menu class="bg-grey-9 text-white" auto-close>
-
             <q-list style="min-width: 100px">
 
               <q-item v-if="menu_profile" clickable @click="goProfilPage">
@@ -41,7 +38,7 @@
                 <q-item-section>Chat</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_unblock" clickable @click="block">
+              <q-item v-if="menu_unblock" clickable @click="confirmUnblock = true">
                 <q-item-section>Unblock</q-item-section>
               </q-item>
 
@@ -51,28 +48,37 @@
 
               <q-separator dark />
 
-              <q-item v-if="menu_block" clickable class="text-red-7" @click="block">
+              <q-item v-if="menu_block" clickable class="text-red-7" @click="confirmBlock = true">
                 <q-item-section>Block</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_unfollow" clickable class="text-red-7" @click="unfollow">
+              <q-item v-if="menu_unfollow" clickable class="text-red-7" @click="confirmUnfollow = true">
                 <q-item-section>Unfollow</q-item-section>
               </q-item>
             </q-list>
-
           </q-menu>
         </q-icon>
       </q-item-section>
+    <q-dialog persistent v-model=confirmUnfollow>
+      <Confirm :what="`unfollow ${username}`" :accept="unfollow" />
+    </q-dialog>
+    <q-dialog persistent v-model=confirmBlock>
+      <Confirm :what="`block ${username}`" :accept="block" />
+    </q-dialog>
+    <q-dialog persistent v-model=confirmUnblock>
+      <Confirm :what="`unblock ${username}`" :accept="block" />
+    </q-dialog>
   </q-item>
 </template>
 
 <script lang="ts">
 import { UserStatus } from 'src/stores/store.types';
+import Confirm from 'src/components/Confirm.vue'
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
   name: 'UserCard',
-  components: {},
+  components: { Confirm },
   props: {
     username          : { type: String,  required: true },
     icon_name         : { type: String,  default : ''   },
@@ -93,6 +99,16 @@ export default defineComponent({
     shortcut_chat     : { type: Boolean, default: false },
     shortcut_follow   : { type: Boolean, default: false },
     shortcut_unfollow : { type: Boolean, default: false },
+  },
+  setup() {
+    const confirmUnfollow = ref(false)
+    const confirmBlock = ref(false)
+    const confirmUnblock = ref(false)
+    return {
+      confirmUnfollow,
+      confirmBlock,
+      confirmUnblock
+    }
   },
   data() {
     return {
@@ -170,6 +186,7 @@ export default defineComponent({
   padding-left: 5px
 
 .usermenu .tata
+  width: auto
   visibility: hidden
   padding: 0
   padding-left: 5px
@@ -211,7 +228,7 @@ export default defineComponent({
   visibility: visible
 
 .shortcut
-  margin-right: 10px
+  margin-left: 10px
 
 .shortcut .tata
   visibility: hidden

@@ -43,13 +43,16 @@
             border: 1px solid cyan
 
 .label
-  @include r.interpolate(font-size, 320px, 2560px, 12px, 30px)
-  color: white
+  @include r.interpolate(font-size, 320px, 2560px, 10px, 30px)
+  color: $blue-grey-3
+
+.press2p
+  font-family: 'Press Start 2P'
 
 .bigger
-  @include r.interpolate(font-size, 320px, 2560px, 14px, 40px)
+  @include r.interpolate(font-size, 320px, 2560px, 8px, 40px)
   @include r.interpolate((padding-top, padding-bottom), 20rem, 70rem, 0rem, .5rem)
-  color: white
+  color: $blue-grey-2
   font-weight: bold
 
 .r-py-md

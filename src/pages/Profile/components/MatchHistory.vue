@@ -1,7 +1,8 @@
 <template>
 <div class="doc-container">
   <div class="row">
-    <q-item v-bind:href=pOne class="col">
+    <q-item clickable @click=goProfilePage(pOne) class="col">
+      <q-tooltip anchor="center middle" self="center right">{{ pOne }}'s profile</q-tooltip>
       <q-item-section avatar>
           <q-avatar class="avatar" :style="`background-color: ${$utils.usernameToColor(pOne || 'pOne')};`">
               <q-img :src="avatarOne"/>
@@ -11,15 +12,16 @@
           <q-item-label class="label username">{{pOne}}</q-item-label>
         </q-item-section>
       </q-item>
-      <q-separator class="mobile-hide" vertical inset color="#F7F7FF"/>
+      <q-separator class="mobile-hide" vertical inset color="white"/>
       <q-item class="col-2">
         <q-item-section>
           <q-item-label class="bigger score"><span v-bind:class=status>{{status}}</span></q-item-label>
           <q-item-label class="label score">{{scoreOne}} - {{scoreTwo}}</q-item-label>
         </q-item-section>
       </q-item>
-    <q-separator class="mobile-hide" vertical inset color="#F7F7FF"/>
-    <q-item v-bind:href=pTwo class="col">
+    <q-separator class="mobile-hide" vertical inset color="white"/>
+    <q-item clickable @click=goProfilePage(pTwo) class="col">
+      <q-tooltip anchor="center middle" self="center left">{{ pTwo }}'s profile</q-tooltip>
       <q-item-section>
         <q-item-label class="right label username">{{pTwo}}</q-item-label>
       </q-item-section>
@@ -40,10 +42,17 @@ export default defineComponent({
   name: 'MatchHistory',
   props: {
     status : { type: String , default: 'Defeat' },
-    pOne : { type: String , default: undefined },
-    pTwo : { type: String , default: undefined },
+    pOne : { type: String , default: '' },
+    pTwo : { type: String , default: '' },
     scoreOne : { type: Number, default: 0 },
     scoreTwo : { type: Number, default: 0 }
+  },
+  methods: {
+    goProfilePage(username : string) {
+      this.$router.push({
+        path: '/profile/' + username,
+      })
+    }
   },
   data () {
     return {
@@ -67,6 +76,7 @@ export default defineComponent({
 
 .score
   text-align: center
+  color: white
 
 .Draw
   color: $orange
@@ -79,6 +89,7 @@ export default defineComponent({
 
 .username
   overflow: auto
+  color: white
 
 .right
   text-align: right
