@@ -15,7 +15,7 @@
               virtual-scroll-slice="15">
               <template #default="{ item, index }">
                 <q-chat-message style=" margin-top: 0px; margin-bottom: 0px; padding-bottom: 8px; min-height: 80px; "
-                  :key="index" :avatar="avatarstr(item.username)" :text="[item.content]"
+                  :key="index" :text="[item.content]"
                   :stamp="$utils.getRelativeDate(new Date(item.CreatedAt))" :sent="item.username === $store.username"
                   :bg-color="
                     item.username === $store.username
@@ -27,6 +27,11 @@
                       item.username === $store.username ? "me" : item.username
                     }}</span>
                   </template>
+					<template v-slot:avatar >
+						<img :src="avatarstr(item.username)" :alt="item.username"
+							:class="item.username === $store.username ? 'q-message-avatar q-message-avatar--sent' : 'q-message-avatar q-message-avatar--received'"
+							:style="`background-color: ${$utils.usernameToColor(item.username)};`">
+						</template>
                 </q-chat-message>
               </template>
               <template #after>
