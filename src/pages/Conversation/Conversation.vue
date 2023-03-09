@@ -307,7 +307,6 @@ export default defineComponent({
             this.$store.messagesCount
           );
 		}).catch((error) => {
-			console.error(error.response.data.message[0]);
 			this.$store.current_channel_state = ChanState.ERROR;
 			this.error_message = error.response.data.message[0];
 		});

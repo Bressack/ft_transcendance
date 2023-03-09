@@ -19,6 +19,7 @@ import {
   UserStatus,
 } from "./store.types";
 import { Convert } from "./store.validation";
+import { eChannelType } from 'src/services/api.models';
 
 type PendingRequest = {
   username: string;
@@ -181,6 +182,10 @@ const useMainStore = defineStore("main-store", {
     //     });
     //   }
     // },
+    currentChannelType(state: MainStoreState) : eChannelType {
+      const channel = this.currentChannelSub?.channel
+      return channel.channelType as eChannelType
+    },
     currentChannelSub(state: MainStoreState): ChannelSubscription {
       return (
         state.channelSubscriptions?.find(
@@ -212,6 +217,13 @@ const useMainStore = defineStore("main-store", {
       if (channel) {
         return channel.subscribedUsers;
       }
+      return {} as SubscribedUser[];
+    },
+    currentChannelUsersOnly(state: MainStoreState): SubscribedUser[] {
+      const channel = this.currentChannelSub?.channel;
+      console.log(hannel.subscribedUsers)
+      if (channel)
+        return channel.subscribedUsers?.filter(s => s !== this.$store.username) || []
       return {} as SubscribedUser[];
     },
     currentChannelUserCount(state: MainStoreState): number {

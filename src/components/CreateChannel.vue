@@ -101,18 +101,21 @@ export default defineComponent({
       accessLabelOne: 'Click the lock if you want to define your channel password',
       accessLabelTwo: 'Define your password',
       access: ref(false),
-      name: this.oldname as string,
+      name: '' as string,
       password: '' as string,
       usernames: [] as string[],
     }
   },
   created () {
+    console.log('pwd', this.$store.currentChannelType)
     if (this.settings) {
-      if (this.$storeChat.channelType === 'PRIVATE') {
+      this.name = this.$store.currentChannelSub?.channel.name
+      if (this.$store.currentChannelType === 'PRIVATE') {
         this.access = true
         this.fillUserList()
       }
-      if (this.$storeChat.passwordProtected) {
+      if (this.$store.channelPassword) {
+        this.password = this.$store.channelPassword
         this.protect = true
         this.accessLabelOne = 'Your password will be removed'
         this.accessLabelTwo = `Leave this field blank if you don't want to modify your password or click the lock if you want to remove it`
@@ -127,7 +130,6 @@ export default defineComponent({
     })
   },
   props: {
-    oldname : { type: String, default: '' },
     settings : { type: Boolean, default: false },
     closeFn : { type: Function, default: null },
   },
@@ -145,7 +147,7 @@ export default defineComponent({
       // Si j'ai un mdp, je veux rien changer -> false et j'envoie password = ''
       // Si j'ai pas de mdp, je veux en set un -> true et j'envoie password = '********'
       // Si j'ai pas de mdp, et que je veux rien changer -> false et j'envoie password = ''
-      this.$api.channelSettings(this.$storeChat.channelId, payload)
+      this.$api.channelSettings(this.$store.active_channel, payload)
       .then(() => {
         this.$store.notifCenter.send({
             type: 'positive',
@@ -191,10 +193,11 @@ export default defineComponent({
       })
     },
     passwordState () : boolean {
-      if (this.$storeChat.passwordProtected && this.protect && this.password === '')
+      if (this.$store.channelPassword && this.protect && this.password === '')
         return false
-      else if (!this.$storeChat.passwordProtected && !this.protect)
+      else if (!this.$store.channelPassword && !this.protect)
         return false
+      this.password = this.$store.channelPassword
       return true
     },
     clearPwd () {
@@ -202,9 +205,10 @@ export default defineComponent({
         this.password = ''
     },
     fillUserList () {
-      this.$storeChat.SubscribedUsers.values().forEach((e: Subscription) => {
-        this.userList.push(e.username)
-      });
+      console.log(this.$store.currentChannelUsers)
+      // this.$storeChat.currentChannelSub.values().forEach((e: Subscription) => {
+      //   this.userList.push(e.username)
+      // });
       // for (let i = 0; i < this.$storeChat.SubscribedUsers.length; i++) {
       //   if (this.$storeChat.SubscribedUsers[i].role !== 'OWNER')
       //     this.userList.push(this.$storeChat.SubscribedUsers[i].username)
