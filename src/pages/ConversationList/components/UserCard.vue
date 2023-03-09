@@ -1,8 +1,6 @@
 <template>
 
-    <q-item clickable v-ripple class="usermenu"
-					manual-focus
-					:focused="$store.active_channel === channelId">
+    <q-item clickable v-ripple class="usermenu" manual-focus :focused="$store.active_channel === channelId">
       <q-tooltip v-if="muted || banned" style="width: 250px;">
         <span class="text-subtitle2">{{ muted ? 'Muted' : 'Banned' }} until {{ utils.getRelativeDate(new Date(duration)) }}</span>
       </q-tooltip>
@@ -212,28 +210,6 @@ export default defineComponent({
 
 .usermenu:hover .tata
   visibility: visible
-
-.loginstatus
-  width: 12px
-  height: 12px
-  border-radius: 100px
-  position: absolute
-  margin-top: 20px
-  margin-left: 20px
-
-.ONLINE-status
-  background-color: $onlineStatus-online
-  box-shadow: 0px 0px 5px $onlineStatus-online
-.OFFLINE-status
-  background-color: $onlineStatus-offline
-  box-shadow: 0px 0px 5px $onlineStatus-offline
-.INGAME-status
-  background-color: $onlineStatus-ingame
-  box-shadow: 0px 0px 5px $onlineStatus-ingame
-
-.WATCHING-status
-  background-color: $onlineStatus-watching
-  box-shadow: 0px 0px 5px $onlineStatus-watching
 
 .shortcut .toto
   visibility: hidden

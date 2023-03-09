@@ -29,15 +29,21 @@ export default {
 
   async fetchMe() {
     const store = useMainStore();
-    return await this.axiosInstance.get("/users/me").then((r) => {
+    await this.axiosInstance.get("/users/me").then((r) => {
       store.setStoreData(Convert.toStoreData2(r.data));
-      return r.status;
     });
+  },
+
+  async getAllUsers(): Promise<any> {
+    try {
+      return await this.axiosInstance.get("/users/allusers");
+    } catch(err: any) {
+      console.error('[ api service ] getAllUsers:', err);
+    }
   },
 
   async login(payload: object) {
     const store = useMainStore();
-
     return await this.axiosInstance.post("/auth/login", payload).then((r) => {
       console.log(r);
       store.setStoreData(Convert.toStoreData2(r.data));
@@ -205,11 +211,10 @@ export default {
       .split("/")
       .slice(-1)[0] as any;
     let lines = (stack.split("\n")[2].trim().split(":").slice(-1)[0] +
-      ":" +
-      stack.split("\n")[2].trim().split(":").slice(-2)[0]) as any;
-    //console.log(
-    //   "[ DEBUG MESSAGE ] " + caller + " at " + lines + ": " + message
-    // );
+      ":" + stack.split("\n")[2].trim().split(":").slice(-2)[0]) as any;
+    console.log(
+      "[ DEBUG MESSAGE ] " + caller + " at " + lines + ": " + message
+    );
   },
 
   /**

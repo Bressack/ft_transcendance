@@ -20,7 +20,7 @@
                   :bg-color="
                     item.username === $store.username
                       ? 'secondary'
-                      : 'blue-grey-11'
+                      : 'grey-7'
                   ">
                   <template v-slot:name>
                     <span class="linkMessageProfile" @click="goProfilPage(item.username)">{{

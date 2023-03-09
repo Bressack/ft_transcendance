@@ -9,11 +9,11 @@
 				<q-item class="absolute-center relative-position label thetitle glow" clickable @click="goHome" style="">
           <q-tooltip anchor="center middle" self="center middle">Home</q-tooltip>Transcendence
         </q-item>
-				<!-- <q-btn color="red" @click="logout()">LOGOUT DEV</q-btn> -->
 
 				<q-space />
 
 				<q-icon flat @click="" round size="25px" v-if="!$store.ws_connected" name="wifi_off" class="isconnected" />
+        <q-btn class="r-mx-md" style="margin-left: 0px;" color="orange-4" flat @click="goLeaderBoardPage()" round dense icon="mdi-podium"><q-tooltip>LeaderBoard</q-tooltip></q-btn>
 				<q-btn flat @click="notifyCenterLever = !notifyCenterLever" round dense icon="notifications">
           <q-tooltip>Notification center</q-tooltip>
 					<div class="notif-count justify-center items-center circle" v-if="nc.notifications.size > 0" />
@@ -31,12 +31,6 @@
 										:class="notifcolor(tmp.options)">
 										<q-img v-if="tmp.options.avatar" :src="tmp.options.avatar"
 											class="notify-avatar q-mr-sm" />
-										<!-- <q-icon v-if="tmp.options?.type == 'info' "     name="info" size="32px" class="q-mr-sm"/> -->
-										<!-- <q-icon v-if="tmp.options?.type == 'negative' " name="error" size="32px" class="q-mr-sm"/> -->
-										<!-- <q-icon v-if="tmp.options?.type == 'positive' " name="done" size="32px" class="q-mr-sm"/> -->
-										<!-- <q-icon v-if="tmp.options?.type == 'warning' "  name="warning" size="32px" class="q-mr-sm"/> -->
-										<!-- <q-icon v-if="tmp.options?.type == 'message' "  name="chat" size="32px" class="q-mr-sm"/> -->
-
 										<q-item-section class="notify-message">
 											{{ tmp.options.message }}
 											<q-separator />
@@ -161,6 +155,11 @@ export default defineComponent({
 		goProfilePage() {
 			this.$router.push({
 				path: "/profile/me",
+			});
+		},
+    goLeaderBoardPage() {
+			this.$router.push({
+				path: "/leaderboard",
 			});
 		},
 		goSettingsNotif() {

@@ -163,4 +163,5 @@ export default defineComponent({
 
 .defeat
   color: $red
+
 </style>
