@@ -14,6 +14,14 @@ export enum UserStatus {
   WATCHING = "WATCHING",
 }
 
+export type UserBoard = {
+  username: string,
+  victoriesAsPOne: number,
+  victoriesAsPTwo: number,
+  defeatsAsPOne: number,
+  defeatsAsPTwo: number,
+}
+
 export type StoreData = {
   username: string;
   email?: string;

@@ -10,16 +10,6 @@
         active-color="orange" indicator-color="orange" align="justify" narrow-indicator>
         <q-tab name="friends" icon="group" class="tab unautretruc"><q-tooltip>Friends</q-tooltip></q-tab>
         <q-tab name="channels" icon="chat" class="tab"><q-tooltip>Channels</q-tooltip></q-tab>
-        <!-- <q-tab name="following" icon="hourglass_bottom" class="tab">
-          <div class="notif justify-center items-center circle" v-if="$store.friendRequestSent?.length > 0" />
-          <div class="notif justify-center items-center" v-if="$store.friendRequestSent?.length > 0">
-            {{ $store.friendRequestSent?.length < 99 ? $store.friendRequestSent?.length : '99+' }} </div>
-        </q-tab> -->
-        <!-- <q-tab name="follower" icon="notifications" class="tab">
-          <div class="notif justify-center items-center circle" v-if="$store.friendRequestRecevied?.length > 0" />
-          <div class="notif justify-center items-center" v-if="$store.friendRequestRecevied?.length > 0">
-            {{ $store.friendRequestRecevied?.length < 99 ? $store.friendRequestRecevied?.length : '99+' }} </div>
-        </q-tab> -->
         <q-tab name="pending requests" icon="mdi-account-clock-outline" class="tab">
           <q-tooltip>Pending requests</q-tooltip>
           <div class="notif justify-center items-center circle" v-if="$store.pendingRequests?.length > 0" />
@@ -64,8 +54,8 @@
               <q-item clickable v-ripple
                 v-for="sub in ($store.getPublicPrivateChannels)"
                 :key="sub.channelId"
-				manual-focus
-				:focused="$store.active_channel === sub.channelId"
+                manual-focus
+                :focused="$store.active_channel === sub.channelId"
                 @click="chanSelected(sub.channel.id)"
               >
                 <q-item-section>
@@ -79,29 +69,14 @@
             </q-list>
           </q-tab-panel>
 <!-- #################################################################################################################### -->
-          <!-- <q-tab-panel name="following" class="tab-panel hide-scrollbar">
-            <q-list>
-              <UserCard v-for="rsent in $store.friendRequestSent" :key="rsent" @goGameOptions="goGameOptions"
-                :username="rsent"
-                shortcut_unfollow menu_profile menu_unfollow menu_block menu_play />
-            </q-list>
-          </q-tab-panel> -->
           <q-tab-panel name="pending requests" class="tab-panel hide-scrollbar">
             <q-list>
               <PendingRequest v-for="req in $store.pendingRequests" :key="req.username"
                 :username="req.username"
-				:category="req.category"
+                :category="req.category"
                  menu_profile menu_block />
             </q-list>
           </q-tab-panel>
-<!-- #################################################################################################################### -->
-          <!-- <q-tab-panel name="follower" class="tab-panel hide-scrollbar">
-            <q-list>
-              <UserCard v-for="rrecv in $store.friendRequestRecevied" :key="rrecv" @goGameOptions="goGameOptions"
-                :username="rrecv"
-                shortcut_follow menu_profile menu_follow menu_block menu_play />
-            </q-list>
-          </q-tab-panel> -->
 <!-- #################################################################################################################### -->
           <q-tab-panel name="blocked" class="tab-panel hide-scrollbar">
             <q-list>
@@ -120,18 +95,7 @@
     <ChooseGameOptions :opponent="opponent" :closeFunction="closeGameOptions" :inviteType="false" />
   </q-dialog>
 
-<!-- <q-dialog persistent v-model="dialogpassword" @keydown.esc="dialogpassword = false">
-    <div class="password_dialog">
-      <div class="q-ma-lg q-pt-lg">
-        <q-item class="text-h6">Enter Password</q-item>
-        <q-separator/>
-        <q-input v-model="password" dark autofocus color="orange" label-color="#F7F7FF"/>
-        <q-separator/>
-        <q-btn class="q-ma-lg" label="Cancel" color="red-8" v-close-popup />
-        <q-btn class="q-ma-lg" label="Submit" color="green-8" @click="joinprotectedchannel"/>
-      </div>
-    </div>
-  </q-dialog> --></template>
+</template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
@@ -257,7 +221,6 @@ export default defineComponent({
     isPrivate(item: IConvItem) {
       return item.scope == Scope.PRIVATE
     },
-
 
     chanSelected(channelId: string) {
       this.$router.replace({
