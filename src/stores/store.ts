@@ -219,13 +219,6 @@ const useMainStore = defineStore("main-store", {
       }
       return {} as SubscribedUser[];
     },
-    currentChannelUsersOnly(state: MainStoreState): SubscribedUser[] {
-      const channel = this.currentChannelSub?.channel;
-      console.log(hannel.subscribedUsers)
-      if (channel)
-        return channel.subscribedUsers?.filter(s => s !== this.$store.username) || []
-      return {} as SubscribedUser[];
-    },
     currentChannelUserCount(state: MainStoreState): number {
       return this.currentChannelUsers.length;
     },

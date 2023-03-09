@@ -4,19 +4,20 @@
     <q-toolbar>
 		<span class="titlename" >{{ $store.currentChannelName }}</span>
 		<q-space/>
-    <!-- <q-item-section v-if="$store.channelType !== `ONE_TO_ONE`" side>
-      <q-btn v-if="$storeChat.role !== 'OWNER' && $storeChat.channelType === 'PRIVATE'" color="red" label="quit" class="interpolate-btn" @click="confirmLeave = true" />
-      <q-btn v-else-if="$storeChat.role === 'OWNER'" color="red" label="delete" class="interpolate-btn" @click="confirmDelete = true" />
-    </q-item-section>
-    <q-item-section v-if="$storeChat.channelType !== `ONE_TO_ONE` && $storeChat.role === 'OWNER'" side>
-      <q-btn color="orange" label="settings" class="interpolate-btn" @click="settings = true" />
-    </q-item-section> -->
-		<q-icon v-if="$store.currentChannelSub?.role === 'ADMIN'" color="grey-6" text-color="white" size="35px" style="margin-left:20px;" name="mdi-shield-sword-outline"><q-tooltip>Admin</q-tooltip></q-icon>
-    <div v-else-if="$store.currentChannelSub?.role === 'OWNER'">
-      <q-btn v-if="$store.current_channel_state === 'ACTIVE'" flat dense round icon="mdi-cog-outline" @click="settings = true"><q-tooltip>Channel settings</q-tooltip></q-btn>
-      <q-icon color="grey-6" text-color="white" size="35px" style="margin-left:20px;" name="mdi-shield-crown-outline"><q-tooltip>Owner</q-tooltip></q-icon>
+    <!-- <div v-else-if="$store.currentChannelSub?.role === 'OWNER'">
+      <div v-if="$store.currentChannelType !== `ONE_TO_ONE`" side>
+      </div>
+    </div> -->
+    <div v-if="$store.currentChannelType !== 'ONE_TO_ONE'">
+      <q-btn v-if="$store.currentChannelSub?.role === 'OWNER' && $store.current_channel_state === 'ACTIVE'" flat dense round icon="mdi-cog-outline" @click="settings = true"><q-tooltip>Channel settings</q-tooltip></q-btn>
+      <q-btn v-if="$store.currentChannelSub?.role !== 'OWNER' && $store.currentChannelType === 'PRIVATE'" flat dense round size="14px" icon="mdi-logout" class="interpolate-btn" @click="confirmLeave = true"><q-tooltip>Leave channel</q-tooltip></q-btn>
+      <q-btn v-else-if="$store.currentChannelSub?.role === 'OWNER'" flat dense round size="16px" icon="mdi-delete-forever" class="interpolate-btn" @click="confirmDelete = true"><q-tooltip>Delete channel</q-tooltip></q-btn>
     </div>
-		<q-icon v-else color="grey-6" text-color="white" size="35px" style="margin-left:20px;" name="mdi-shield-bug-outline"><q-tooltip>User</q-tooltip></q-icon>
+    <div class="q-ml-sm" v-if="$store.currentChannelType !== 'ONE_TO_ONE'">
+      <q-icon v-if="$store.currentChannelSub?.role === 'ADMIN'" color="grey-6" size="35px" name="mdi-shield-sword-outline"><q-tooltip>Admin</q-tooltip></q-icon>
+      <q-icon v-else-if="$store.currentChannelSub?.role === 'OWNER'" color="grey-6" size="35px" name="mdi-shield-crown-outline"><q-tooltip>Owner</q-tooltip></q-icon>
+      <q-icon v-else color="grey-6" size="35px" name="mdi-shield-bug-outline"><q-tooltip>User</q-tooltip></q-icon>
+    </div>
       <!-- <q-btn v-if="$store.currentChannelSub?.channel.passwordProtected === true"
         color="brown-9" class="q-mr-lg" @click="lockChannel" >Lock channel</q-btn> -->
     </q-toolbar>

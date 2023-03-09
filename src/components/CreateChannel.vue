@@ -107,7 +107,6 @@ export default defineComponent({
     }
   },
   created () {
-    console.log('pwd', this.$store.currentChannelType)
     if (this.settings) {
       this.name = this.$store.currentChannelSub?.channel.name
       if (this.$store.currentChannelType === 'PRIVATE') {
@@ -205,14 +204,12 @@ export default defineComponent({
         this.password = ''
     },
     fillUserList () {
-      console.log(this.$store.currentChannelUsers)
-      // this.$storeChat.currentChannelSub.values().forEach((e: Subscription) => {
-      //   this.userList.push(e.username)
-      // });
-      // for (let i = 0; i < this.$storeChat.SubscribedUsers.length; i++) {
-      //   if (this.$storeChat.SubscribedUsers[i].role !== 'OWNER')
-      //     this.userList.push(this.$storeChat.SubscribedUsers[i].username)
-      // }
+      const users = this.$store.currentChannelUsers
+      console.log(users)
+      for (let i = 0; i < users.length; i++) {
+        if (users[i].role !== 'OWNER')
+          this.userList.push(users[i].username)
+      }
     },
     filterFn (val : String, update : Function) {
         // call abort() at any time if you can't retrieve data somehow
