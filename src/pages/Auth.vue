@@ -102,7 +102,7 @@ export default defineComponent({
 				console.log(err);
 				this.twoFACode = "";
 			}).then(()=> {
-				this.$router.push({ path: '/', query: { fetched: "true" } })
+        this.$router.push({ path: '/', query: { fetched: "true" } })
 			})
 		},
 		signIn(username: string, password: string) {

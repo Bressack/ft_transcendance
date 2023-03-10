@@ -30,11 +30,11 @@
       </q-input>
     </div>
     <q-item class="justify-center q-pb-md">
-      <q-checkbox color="orange" v-model="$store.twoFA" @update:model-value="onUpdate">
+      <q-checkbox color="orange" v-model="twoFA" @update:model-value="onUpdate">
         <q-item-label class="label text-white">Two factor authentification</q-item-label>
       </q-checkbox>
       <!-- QR-DIALOG -->
-      <q-dialog persistent v-model="qrcode">
+      <q-dialog persistent allow-focus-outside v-model="qrcode">
         <div class="dialog">
           <div class="q-px-xl r-py-md">
             <q-item-label class="bigger">QR-CODE</q-item-label>
@@ -45,14 +45,13 @@
           <q-item>
             <q-item-label class="text-white">Please scan this QR code with your authenticator</q-item-label>
           </q-item>
-            <!-- <q-separator color="white" inset /> -->
           <q-item class="flex-center">
             <q-input item-aligned label="Validation code" dark color="white" v-model="validateQrcode">
               <q-btn color="orange" type="submit" label="ok" @click="sendCode"/>
             </q-input>
           </q-item>
           <q-item class="flex-center q-pb-md">
-            <q-btn color="red" label="cancel" v-close-popup />
+            <q-btn color="red" label="cancel" @click="cancelQRCode" />
           </q-item>
         </div>
       </q-dialog>
@@ -173,16 +172,15 @@ export default defineComponent({
       }
     },
     sendCode () {
-
       this.$api.axiosInstance.post('/auth/2FA/validate', { code: this.validateQrcode })
       .then(() => {
-		this.validateQrcode = '';
-		this.$store.twoFA = true;
-		this.$store.notifCenter.send({
-				type: 'positive',
-				message: "2FA Successfuly Enabled"
-			})
-		this.qrcode = false;
+      this.validateQrcode = '';
+      this.$store.twoFA = true;
+      this.$store.notifCenter.send({
+          type: 'positive',
+          message: "2FA Successfuly Enabled"
+        })
+        this.qrcode = false
       })
       .catch ((e) => {
         this.validateQrcode = ''
@@ -191,6 +189,10 @@ export default defineComponent({
           message: e.response.data.message[0]
         })
       })
+    },
+    cancelQRCode () {
+      this.qrcode = false
+      this.twoFA = false
     },
     imgOnly(files: readonly any[] | FileList): readonly any[] {
       if (files[0].type === 'image/png' || files[0].type === 'image/jpg' || files[0].type === 'image/jpeg')
@@ -206,11 +208,11 @@ export default defineComponent({
       this.avatar = `/api/avatar/${this.$store.username}/medium?${this.refresh++}`
     },
     onUpdate(value: boolean, evt: Event) {
-      // console.log(value)
-      if (value === true) {
+      if (value === true)
         this.qrcode = true
-      }
-      // this.$api.patch(`/users/2FA?toggle=${value}`)
+      else
+        this.$api.axiosInstance.post('/auth/2FA/deactivate', { code: 'delete_this_string_after_backend_fix'})
+      // Delete this string after backend
     },
     onRejected(rejectedEntries: QRejectedEntry[]) {
       if (rejectedEntries[0].failedPropValidation === 'filter') {
