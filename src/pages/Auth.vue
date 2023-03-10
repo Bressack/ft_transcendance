@@ -98,7 +98,7 @@ export default defineComponent({
 		},
 
 		submit2FAcode() {
-			this.$api.axiosInstance.post("/auth/2FA/login", {code: this.twoFACode}, {params: {token: this.twoFAToken}}).catch(err => {
+			this.$api.login2fa({code: this.twoFACode, token: this.twoFAToken }).catch(err => {
 				console.log(err);
 				this.twoFACode = "";
 			}).then(()=> {

@@ -26,6 +26,19 @@ export default {
       return r.status;
     });
   },
+  async login2fa(payload: { code: string; token: string }) {
+    return await this.axiosInstance
+      .post(
+        "/auth/2FA/login",
+        { code: payload.code },
+        { params: { token: payload.token } }
+      )
+      .then((r) => {
+        const store = useMainStore();
+        store.setStoreData(Convert.toStoreData2(r.data));
+        return r;
+      });
+  },
 
   async fetchMe() {
     const store = useMainStore();
@@ -37,8 +50,8 @@ export default {
   async getAllUsers(): Promise<any> {
     try {
       return await this.axiosInstance.get("/users/allusers");
-    } catch(err: any) {
-      console.error('[ api service ] getAllUsers:', err);
+    } catch (err: any) {
+      console.error("[ api service ] getAllUsers:", err);
     }
   },
 
@@ -211,7 +224,8 @@ export default {
       .split("/")
       .slice(-1)[0] as any;
     let lines = (stack.split("\n")[2].trim().split(":").slice(-1)[0] +
-      ":" + stack.split("\n")[2].trim().split(":").slice(-2)[0]) as any;
+      ":" +
+      stack.split("\n")[2].trim().split(":").slice(-2)[0]) as any;
     console.log(
       "[ DEBUG MESSAGE ] " + caller + " at " + lines + ": " + message
     );
