@@ -42,7 +42,7 @@
 		</q-card>
 		<q-card v-else-if="state === 'twoFA'" class="form q-pa-lg" style="width: 400px">
 			<q-form @submit="submit2FAcode" class="q-gutter-md">
-				<q-input class="input" mask="### ###" filled v-model="twoFACode" label="2FA Code"/>
+				<q-input class="input" mask="### ###" unmasked-value filled v-model="twoFACode" label="2FA Code"/>
 
 				<q-card-actions class="q-mt-md">
 					<q-btn label="Connect" type="submit" color="primary" class="submitbutton" />
