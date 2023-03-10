@@ -158,10 +158,4 @@ export default defineComponent({
 .score
   text-align: center
 
-.victory
-  color: $green
-
-.defeat
-  color: $red
-
 </style>

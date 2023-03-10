@@ -1,7 +1,7 @@
 <template>
   <div class="q-px-md">
     <div class="q-pa-sm row" :class="$store.username == user.username ? 'isme' : ''">
-      <q-item class="press2p labelh items-center text-h5">#{{rank}}</q-item>
+      <q-item class="press2p labelh items-center text-h6">#<span class="text-h4">{{ rank }}</span></q-item>
       <q-item class="main items-center" :class="rankborder" clickable @click="goProfilPage">
         <q-item-section style="max-width: 52px;" class="" >
           <q-avatar size="52px" class="avatar" :style="`background-color: ${$utils.usernameToColor(user.username)};`">
@@ -20,18 +20,33 @@
           <q-card-label class="biggerh victory">
             {{ user.victoriesAsPOne + user.victoriesAsPTwo }}
           </q-card-label>
+          <q-tooltip transition-show="flip-right" transition-hide="flip-left" class="bg-green text-h6">
+            <span>P1: {{ user.victoriesAsPOne }}</span>
+            <br/>
+            <span>P2: {{ user.victoriesAsPTwo }}</span>
+          </q-tooltip>
         </q-card-section>
         <q-separator vertical color="blue-grey-5" spaced/>
         <q-card-section class="base">
           <q-card-label class="biggerh defeat">
             {{ user.defeatsAsPOne + user.defeatsAsPTwo }}
           </q-card-label>
+          <q-tooltip transition-show="flip-right" transition-hide="flip-left" class="bg-red text-h6">
+            <span>P1: {{ user.defeatsAsPOne }}</span>
+            <br/>
+            <span>P2: {{ user.defeatsAsPTwo }}</span>
+          </q-tooltip>
         </q-card-section>
         <q-separator vertical color="blue-grey-5" spaced/>
         <q-card-section class="base">
           <q-card-label class="biggerh">
             {{ (getRatio(user) * 100).toFixed(2) }} %
           </q-card-label>
+          <q-tooltip transition-show="flip-right" transition-hide="flip-left" class="bg-green text-h6">
+            <span>P1: {{ getRatiobyPlayer(user, 'One') }}%</span>
+            <br/>
+            <span>P2: {{ getRatiobyPlayer(user, 'Two') }}%</span>
+          </q-tooltip>
         </q-card-section>
       </q-item>
     </div>
@@ -66,6 +81,11 @@ export default defineComponent({
   methods: {
     getRatio(user: UserBoard) : number {
       return (user.victoriesAsPOne + user.victoriesAsPTwo) / (user.victoriesAsPOne + user.victoriesAsPTwo + user.defeatsAsPOne + user.defeatsAsPTwo)
+    },
+    getRatiobyPlayer(user: UserBoard, player: string) : string {
+      const userVictoriesAsP = user[('victoriesAsP' + player) as keyof UserBoard] as number
+      const userdefeatsAsP = user[('defeatsAsP' + player) as keyof UserBoard] as number
+      return (userVictoriesAsP / (userVictoriesAsP + userdefeatsAsP) * 100).toFixed(2)
     },
     getLoginStatus() {
       const status = this.$store.getStatus(this.user.username)
