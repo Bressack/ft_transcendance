@@ -272,7 +272,7 @@ export default defineComponent({
 	},
 	created() {
 		this.$store.$reset()
-
+    this.$store.notifCenter?.clear()
 	},
 	async beforeCreate() {
 		await this.$api.axiosInstance
