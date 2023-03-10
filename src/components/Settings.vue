@@ -176,7 +176,13 @@ export default defineComponent({
 
       this.$api.axiosInstance.post('/auth/2FA/validate', { code: this.validateQrcode })
       .then(() => {
-
+		this.validateQrcode = '';
+		this.$store.twoFA = true;
+		this.$store.notifCenter.send({
+				type: 'positive',
+				message: "2FA Successfuly Enabled"
+			})
+		this.qrcode = false;
       })
       .catch ((e) => {
         this.validateQrcode = ''

@@ -1,6 +1,6 @@
 <template>
 	<q-page class="row justify-center items-center q-flex">
-		<q-card class="form q-pa-lg" style="width: 400px">
+		<q-card v-if="state === 'loginOrSignup'" class="form q-pa-lg" style="width: 400px">
 			<q-btn-toggle v-model="signOpt" @click="switchMode" spread class="my-custom-toggle q-pa-md" no-caps rounded
 				unelevated toggle-color="primary" color="#F7F7FF" text-color="primary" :options="[
 					{ label: 'SIGN IN', value: true },
@@ -40,11 +40,20 @@
 				</q-card>
 			</q-form>
 		</q-card>
+		<q-card v-else-if="state === 'twoFA'" class="form q-pa-lg" style="width: 400px">
+			<q-form @submit="submit2FAcode" class="q-gutter-md">
+				<q-input class="input" filled v-model="twoFACode" label="2FA Code" lazy-rules type="number"/>
+
+				<q-card-actions class="q-mt-md">
+					<q-btn label="Connect" type="submit" color="primary" class="submitbutton" />
+				</q-card-actions>
+			</q-form>
+		</q-card>
 	</q-page>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 type preset = { username: string, password: string }
 const _preSetUsers: preset[] = [
 	{
@@ -64,14 +73,16 @@ const _preSetUsers: preset[] = [
 export default defineComponent({
 	name: 'Auth',
 	components: {},
-	props: {},
 	data() {
 		return {
+			state: ref("loginOrSignup"),
+			twoFAToken: ref(""),
+			twoFACode: "",
 			preSetUsers: _preSetUsers as [],
 			username: '' as string,
 			password: '' as string,
 			email: '' as string,
-			signOpt: true as boolean
+			signOpt: true as boolean,
 		}
 	},
 	methods: {
@@ -84,6 +95,15 @@ export default defineComponent({
 			this.username = ''
 			this.password = ''
 			this.email = ''
+		},
+
+		submit2FAcode() {
+			this.$api.axiosInstance.post("/auth/2FA/login", {code: this.twoFACode}, {params: {token: this.twoFAToken}}).catch(err => {
+				console.log(err);
+				this.twoFACode = "";
+			}).then(()=> {
+				this.$router.push({ path: '/', query: { fetched: "true" } })
+			})
 		},
 		signIn(username: string, password: string) {
 			let payload: object = Object({
@@ -98,11 +118,20 @@ export default defineComponent({
 				.catch((error) => {
 					if (error?.response?.status) {
 						console.log(error.response.status)
-						for (let message of error?.response?.data?.message || []) {
-							this.$q.notify({
-								type: 'negative',
-								message
-							})
+						if (error.response.status === 401) {
+							if (error.response.data.message[0] === "2fa needed")
+							{
+								this.state = "twoFA";
+								this.twoFAToken = error.response.data.message[1];
+							}
+						}
+						else {
+							for (let message of error?.response?.data?.message || []) {
+								this.$q.notify({
+									type: 'negative',
+									message
+								})
+							}
 						}
 					}
 				})
