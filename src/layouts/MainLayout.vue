@@ -108,7 +108,6 @@ export default defineComponent({
 		Settings,
 		GameInvitation,
 	},
-	props: {},
 	setup() {
 		const invitationFrom = ref(false);
 		const settings = ref(false);
@@ -275,6 +274,7 @@ export default defineComponent({
     this.$store.notifCenter?.clear()
 	},
 	async beforeCreate() {
+		console.log(this.$route.query);
 		await this.$api.axiosInstance
 		.get("/users/me")
 		.then((response) => {
@@ -295,7 +295,6 @@ export default defineComponent({
 		});
 		this.$ws.listen("users-status", (payload: { username: string; status: UserStatus }[]) => {
 			this.$store.setUsersStatus(payload);
-			console.log(this.$store.users_status);
 		});
 		this.listenForGameInvite();
 		this.nc.init(this.$q);
@@ -320,6 +319,10 @@ export default defineComponent({
 	},
 
 	beforeUnMount() {
+		this.$ws.removeListener("users-status");
+		this.$ws.removeListener("notifmessage");
+		this.$ws.removeListener("logout");
+		this.$ws.removeListener("fetch_me");
 		this.$ws.removeListener("game-invite");
 		document.removeEventListener(
 			"can-listen-for-game-invite",
