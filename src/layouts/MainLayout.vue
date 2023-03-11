@@ -282,12 +282,16 @@ export default defineComponent({
 		});
 		await this.$ws.connect().catch();
 		this.$ws.socket.on("fetch_me", async () => {
+			console.log("FETCH_ME REQUESTED");
 			await this.$api.fetchMe()
 		})
 		this.$ws.socket.on("logout", async () => {
 			console.log("logout event");
 			this.$store.ws_connected = false;
 			this.$router.push("/force-logout");
+		})
+		this.$ws.socket.on("channel_deleted", (channelId: string) => {
+			this.$store.deleteChannel(channelId);
 		})
 		this.$ws.listen("notifmessage", this.handleNotifMessageEvent);
 		this.$ws.listen("altered_subscription", (payload: ChannelSubscription) => {

@@ -1,9 +1,9 @@
-import { NotifyCenter } from './../services/notifyCenter';
+import { NotifyCenter } from "./../services/notifyCenter";
 import { defineStore, StateTree, StoreGetters } from "pinia";
 // import { QNotifyOptions } from "quasar";
 import { intersection, difference } from "lodash";
 // import * as ld from "lodash";
-import nc from '../services/notifyCenter'
+import nc from "../services/notifyCenter";
 
 import {
   Blocking,
@@ -19,7 +19,7 @@ import {
   UserStatus,
 } from "./store.types";
 import { Convert } from "./store.validation";
-import { eChannelType } from 'src/services/api.models';
+import { eChannelType } from "src/services/api.models";
 
 type PendingRequest = {
   username: string;
@@ -113,7 +113,7 @@ const useMainStore = defineStore("main-store", {
       message_received: false,
       socketId: undefined,
 
-      notifCenter: nc // from import
+      notifCenter: nc, // from import
     };
   },
   getters: {
@@ -182,9 +182,9 @@ const useMainStore = defineStore("main-store", {
     //     });
     //   }
     // },
-    currentChannelType(state: MainStoreState) : eChannelType {
-      const channel = this.currentChannelSub?.channel
-      return channel.channelType as eChannelType
+    currentChannelType(state: MainStoreState): eChannelType {
+      const channel = this.currentChannelSub?.channel;
+      return channel.channelType as eChannelType;
     },
     currentChannelSub(state: MainStoreState): ChannelSubscription {
       return (
@@ -299,6 +299,12 @@ const useMainStore = defineStore("main-store", {
           this.updateChannelSubscription(e);
         });
       }
+    },
+    deleteChannel(channelId: string) {
+      if (this.channelSubscriptions)
+        this.channelSubscriptions = this.channelSubscriptions.filter(
+          (e: ChannelSubscription) => e.channelId !== channelId
+        );
     },
     updateChannelSubscription(channelSubscription: ChannelSubscription) {
       const foundSub: ChannelSubscription | undefined =
