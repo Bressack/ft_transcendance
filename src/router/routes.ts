@@ -143,28 +143,41 @@ const routes: RouteRecordRaw[] = [
             },
         ],
     },
+  {
+    path: "/login",
+    meta: { requiresAuth: false },
+    component: () => import("layouts/LoginLayout.vue"),
+    children: [{ path: "", component: () => import("pages/Auth.vue") }],
+  },
+  {
+    path: "/42/callback",
+    name: "42callback",
+    meta: { requiresAuth: false },
+    component: () => import("layouts/LoginLayout.vue"),
+    beforeEnter: async (to, from, next) => {
+      
+      if (!to.query.code)
+        console.error('query code unavailable')
+      console.log("query : ", to.query)
+      api.signin42(to.query.code)
+      next()
+    },
+  },
 
-    {
-        path: "/login",
-        meta: { requiresAuth: false },
-        component: () => import("layouts/LoginLayout.vue"),
-        children: [{ path: "", component: () => import("pages/Auth.vue") }],
-    },
-
-    // Always leave this as last one,
-    // but you can also remove it
-    {
-        path: "/game-error",
-        name: "GameError",
-        meta: { requiresAuth: true },
-        component: () => import("pages/GameError.vue"),
-    },
-    {
-        path: "/:catchAll(.*)*",
-        name: "404",
-        meta: { requiresAuth: false },
-        component: () => import("pages/ErrorNotFound.vue"),
-    },
+  // Always leave this as last one,
+  // but you can also remove it
+  {
+    path: "/game-error",
+    name: "GameError",
+    meta: { requiresAuth: true },
+    component: () => import("pages/GameError.vue"),
+  },
+  {
+    path: "/:catchAll(.*)*",
+    name: "404",
+    meta: { requiresAuth: false },
+    component: () => import("pages/ErrorNotFound.vue"),
+  },
 ];
 
 export default routes;

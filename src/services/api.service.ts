@@ -64,6 +64,17 @@ export default {
     });
   },
 
+  async signin42(code : string) {
+    const store = useMainStore();
+
+    return await this.axiosInstance.get(`/auth/42/callback/${code}`).then((r) => {
+      console.log("signin42-----");
+      console.log(r);
+      // store.setStoreData(Convert.toStoreData2(r.data));
+      return r;
+    });
+  },
+
   //   async logout() {
   //     const response = await this.axiosInstance.get("/auth/logout");
   //     return response.status;

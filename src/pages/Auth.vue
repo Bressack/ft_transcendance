@@ -16,11 +16,11 @@
 					<q-btn label="Connect" type="submit" color="primary" class="submitbutton" />
 				</q-card-actions>
 				<q-card-actions>
-					<q-btn label="Connect with 42" type="submit" color="primary" class="submitbutton" />
+					<q-btn label="Connect with 42" @click=onSubmitSignIn42 color="primary" class="submitbutton" />
 				</q-card-actions>
 			</q-form>
 
-			<q-form v-else @submit="onSubmitSignUp" class="q-gutter-md">
+			<q-form v-else @submit="onSubmitSignUp" @submit42="onSubmitSignIn42" class="q-gutter-md">
 				<q-input class="input" filled v-model="username" label="Username" lazy-rules />
 
 				<q-input class="input" filled v-model="email" label="Email" lazy-rules />
@@ -30,7 +30,7 @@
 					<q-btn label="signup" type="submit" color="primary" class="submitbutton" />
 				</q-card-actions>
 				<q-card-actions>
-					<q-btn label="signup with 42" type="submit" color="primary" class="submitbutton" />
+					<q-btn label="signup with 42" type="submit42" color="primary" class="submitbutton"  />
 				</q-card-actions>
 			</q-form>
 			<q-form>
@@ -110,7 +110,7 @@ export default defineComponent({
 				username: username,
 				password: password,
 			})
-
+			console.log("aled signIn")
 			this.$api.login(payload)
 				.then(() => {
 					this.$router.push({ path: '/', query: { fetched: "true" } })
@@ -137,6 +137,7 @@ export default defineComponent({
 				})
 		},
 		onSubmitSignIn() {
+			console.log("here")
 			this.signIn(this.username, this.password)
 		},
 		onSubmitSignUp() {
@@ -151,7 +152,7 @@ export default defineComponent({
 					this.$router.push({ path: '/', query: { fetched: "true" } });
 				})
 				.catch((error) => {
-					console.log(error);
+					console.log("test   :", error);
 					for (let message of error?.response?.data?.message || []) {
 						this.$q.notify({
 							type: 'negative',
@@ -160,6 +161,26 @@ export default defineComponent({
 					}
 				})
 		},
+		onSubmitSignIn42() {
+			console.log("test42")
+			window.location.href = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-8b9d0217f52fb79f14e4b78e341dc0f511a01064379408fcc7c62ccf35a3d73a&redirect_uri=http%3A%2F%2Flocalhost%3A9000%2F42%2Fcallback&response_type=code"
+			// console.log("pipi");
+			return
+			this.$api.signin42()
+				.then(() => {
+					console.log("aled")
+					this.$router.push({ path: '/', query: { fetched: "true" } });
+				})
+				.catch((error) => {
+					console.log("aled 42\n",error);
+					for (let message of error?.response?.data?.message || []) {
+						this.$q.notify({
+							type: 'negative',
+							message
+						})
+					}
+				})
+		}
 	},
 });
 </script>
