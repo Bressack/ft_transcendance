@@ -163,7 +163,7 @@ export default defineComponent({
 		},
 		onSubmitSignIn42() {
 			console.log("test42")
-			window.location.href = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-8b9d0217f52fb79f14e4b78e341dc0f511a01064379408fcc7c62ccf35a3d73a&redirect_uri=http%3A%2F%2Flocalhost%3A9000%2F42%2Fcallback&response_type=code"
+			window.location.href = "add url from 42 api"
 			// console.log("pipi");
 			return
 			this.$api.signin42()
