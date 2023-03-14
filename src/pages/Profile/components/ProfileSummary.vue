@@ -12,11 +12,11 @@
         </q-item-section>
         <q-item v-if="interact && name != $store.username">
           <q-item-section>
-            <q-btn label="play" class="interpolate-btn q-mr-xs" color="green" @click="goGameOptions" />
+            <q-btn icon="mdi-gamepad-variant-outline" flat round class="interpolate-btn q-mr-xs" color="green" @click="goGameOptions"><q-tooltip>Play</q-tooltip></q-btn>
           </q-item-section>
           <q-item-section>
-            <q-btn v-if="!isFriend()" class="interpolate-btn" :label=friendLabel :color=friendColor @click="followOrUnfollow()"/>
-            <q-btn v-else class="interpolate-btn" label="chat" color="orange" @click="userSelected()" />
+            <q-btn v-if="!isFriend()" flat round class="interpolate-btn" :icon=friendIcon :color=friendColor @click="followOrUnfollow()"><q-tooltip v-if="friendIcon === 'add'">Add friend</q-tooltip><q-tooltip v-else>Cancel friend request</q-tooltip></q-btn>
+            <q-btn v-else class="interpolate-btn" icon="chat" flat round color="orange" @click="userSelected()"><q-tooltip>Chat</q-tooltip></q-btn>
           </q-item-section>
         </q-item>
       </q-item>
@@ -73,7 +73,7 @@ export default defineComponent({
 	},
   data () {
     return {
-      friendLabel: 'add friend' as string,
+      friendIcon: 'add' as string,
       friendColor: 'green' as string,
     }
   },
@@ -96,24 +96,24 @@ export default defineComponent({
     },
     friendStatus () {
       if (this.$store.friendRequestRecevied?.includes(this.name)) {
-        this.friendLabel = 'add friend'
+        this.friendIcon = 'add'
         this.friendColor = 'green'
       }
       else if (this.$store.friendRequestSent?.includes(this.name)) {
-        this.friendLabel = 'cancel friend'
+        this.friendIcon = 'cancel'
         this.friendColor = 'red'
       }
     },
     followOrUnfollow() {
-      if (this.friendLabel === 'add friend')
+      if (this.friendIcon === 'add')
         this.follow()
-      else if (this.friendLabel === 'cancel friend')
+      else if (this.friendIcon === 'cancel')
         this.unfollow()
     },
     async follow() {
       this.$api.follow(this.name)
         .then(() => {
-          this.friendLabel = 'cancel friend'
+          this.friendIcon = 'cancel'
           this.friendColor = 'red'
         })
         .catch()
@@ -121,7 +121,7 @@ export default defineComponent({
     async unfollow() {
       this.$api.unfollow(this.name)
         .then(() => {
-          this.friendLabel = 'add friend'
+          this.friendIcon = 'add'
           this.friendColor = 'green'
         })
         .catch()
@@ -146,14 +146,14 @@ export default defineComponent({
   flex-wrap: wrap
 
 .name
-  @include r.interpolate(font-size, 320px, 2560px, 20px, 60px)
+  @include r.interpolate(font-size, 320px, 2560px, 20px, 50px)
   @include r.interpolate(padding-left, 320px, 2560px, 0px, 40px)
   font-weight: bold
   overflow: auto
   text-align: left
 
 .avatar
-  @include r.interpolate(font-size, 320px, 2560px, 35px, 90px)
+  @include r.interpolate(font-size, 320px, 2560px, 35px, 80px)
 
 .score
   text-align: center

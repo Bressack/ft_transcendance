@@ -3,7 +3,7 @@
   <q-item>
     <q-item-section>
       <q-img class="rank-img" :src="`/rank/${setRank(victory, defeat)}.png`"/>
-      <q-item-label class="press2p bigger rank">{{setRank(victory, defeat)}}</q-item-label>
+      <q-item-label class="press2p label rank">{{setRank(victory, defeat)}}</q-item-label>
     </q-item-section>
   </q-item>
 </div>
@@ -42,7 +42,7 @@ export default defineComponent({
 @use "../../../css/interpolate" as r
 
 .rank-img
-  @include r.interpolate(width, 320px, 2560px, 75px, 175px)
+  @include r.interpolate(width, 320px, 2560px, 60px, 125px)
   display: block
   margin-left: auto
   margin-right: auto

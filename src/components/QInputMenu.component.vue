@@ -5,13 +5,13 @@
       <q-list v-if="menuList && menuList.length" class="listuser">
         <q-item v-for="elem in menuList" clickable :key="elem?.username">
 
-          <q-item-section style="max-width: 50px;">
+          <q-item-section @click="goProfilePage(elem?.username)" style="max-width: 50px;">
             <q-avatar class="avatar" :style="`background-color: ${$utils.usernameToColor(elem?.username)};`">
               <img size="20px" :src="`/api/avatar/${elem?.username}/thumbnail`">
             </q-avatar>
           </q-item-section>
 
-          <q-item-section>
+          <q-item-section @click="goProfilePage(elem?.username)">
             <q-item-label>
               {{ elem?.username }}
             </q-item-label>
@@ -19,19 +19,19 @@
 
           <!-- icon add to friend -->
           <q-item-section side v-if="statusUnknown(elem?.status)">
-            <q-icon name="add" color="green" @click="selectElement(elem?.username, 'follow')" />
+            <q-btn icon="add" flat round color="green" @click="selectElement(elem?.username, 'follow')" />
           </q-item-section>
 
           <q-item-section side v-else-if="statusFriend(elem?.status)">
-            <q-icon name="cancel" color="red" @click="selectElement(elem?.username, 'unfollow')" />
+            <q-btn icon="cancel" flat round color="red" @click="selectElement(elem?.username, 'unfollow')" />
           </q-item-section>
 
           <q-item-section side v-else-if="statusPendingto(elem?.status)">
-            <q-icon name="cancel" color="red" @click="selectElement(elem?.username, 'unfollow')" />
+            <q-btn icon="cancel" flat round color="red" @click="selectElement(elem?.username, 'unfollow')" />
           </q-item-section>
 
           <q-item-section side v-else-if="statusPendingfrom(elem?.status)">
-            <q-icon name="add" color="green" @click="selectElement(elem?.username, 'follow')" />
+            <q-btn icon="add" flat round color="green" @click="selectElement(elem?.username, 'follow')" />
           </q-item-section>
 
         </q-item>
@@ -135,6 +135,11 @@ export default defineComponent({
     },
     markAsTouched() {
       this.touched = true
+    },
+    goProfilePage(username: string) {
+      this.$router.push({
+        path: '/profile/' + username,
+      })
     }
 
   },

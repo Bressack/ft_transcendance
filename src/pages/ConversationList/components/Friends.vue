@@ -1,38 +1,29 @@
 <template>
-	<q-item id="PendingRequest" class="row q-pr-xs">
+	<q-item id="Friends" class="row q-pr-xs">
 		<q-item-section style="max-width: 44px;" @click="goProfilPage" id="avatar"><q-tooltip>{{username}}'s profile</q-tooltip>
 
-			<!-- <q-icon v-if="category === 'received'" class=" " name="call_received" color="cyan" />
-			<q-icon v-else-if="category === 'sent'" class=" " name="call_made" color="orange" /> -->
 
 			<q-avatar size="38px" class=" " :style="`background-color: ${$utils.usernameToColor(username)};`">
 				<img  :src="`/api/avatar/${username}/thumbnail`">
-				<!-- <q-badge floating rounded color="teal"></q-badge> -->
 				<div :class="getLoginStatus()" class="loginstatus" />
 			</q-avatar>
 		</q-item-section>
 
-		<q-item-section id="name" class="hideable">
+		<q-item-section id="name" class="hideable" @click="goProfilPage">
 			{{ username }}
 		</q-item-section>
 
 		<q-item-section side class="text-right hideable">
-			<!-- <q-icon v-if="shortcut_profile" class="shortcut" name="person" color="cyan" @click="goProfilPage" />
-			<q-icon v-if="shortcut_block" class="shortcut" name="person_off" color="red" @click="block" /> -->
-			<!-- <q-icon v-if="category === 'sent'" class="shortcut" name="cancel" color="red" @click="unfollow" />
-			<q-icon v-if="category === 'received'" class="shortcut" name="done" color="green" @click="follow" /> -->
-			<q-icon v-if="category === 'received'" name="mdi-account-arrow-down-outline" color="cyan" />
-			<q-icon v-else-if="category === 'sent'" name="mdi-account-arrow-up-outline" color="orange" />
-
+      <div>
+			  <q-icon class="q-pr-md" size="20px" name="mdi-gamepad-variant-outline" color="green" />
+        <q-icon size="20px" name="chat" color="orange" />
+      </div>
 		</q-item-section>
 		<q-item-section id="reqbuttons" class="toggleVisibility">
 
 			<q-btn-group flat class="justify-end  text-right">
-				<q-btn dense flat no-wrap
-				:color="category === 'received' ? 'red' : 'orange'"
-				:label="category === 'received' ? 'decline' : 'cancel'"
-				:icon="category === 'received' ?  'mdi-cancel' : 'mdi-close'" @click="unfollow"/>
-				<q-btn no-wrap dense flat v-if="category === 'received'" color="cyan" label="accept" icon="check" @click="follow"/>
+				<q-btn dense flat no-wrap color="green" label="play" icon="mdi-gamepad-variant-outline" @click="goGameOptions"/>
+				<q-btn no-wrap dense flat color="orange" label="chat" icon="chat" @click="goChat"/>
 			</q-btn-group>
 		</q-item-section>
 		<q-item-section  side>
@@ -41,13 +32,16 @@
 
             <q-list style="min-width: 100px">
 
-              <q-item v-if="menu_profile" clickable @click="goProfilPage">
+              <q-item clickable @click="goProfilPage">
                 <q-item-section>Profile</q-item-section>
               </q-item>
 
               <q-separator dark />
 
-              <q-item v-if="menu_block" clickable class="text-red-7" @click="confirmBlock = true">
+              <q-item clickable class="text-red-7" @click="confirmUnfollow = true">
+                <q-item-section>Unfollow</q-item-section>
+              </q-item>
+              <q-item clickable class="text-red-7" @click="confirmBlock = true">
                 <q-item-section>Block</q-item-section>
               </q-item>
 
@@ -61,6 +55,9 @@
   <q-dialog persistent v-model=confirmBlock>
     <Confirm :what="`block ${username}`" :accept="block" />
   </q-dialog>
+  <q-dialog persistent v-model=confirmUnfollow>
+    <Confirm :what="`unfollow ${username}`" :accept="unfollow" />
+  </q-dialog>
 </template>
 
 <script lang="ts">
@@ -69,22 +66,17 @@ import Confirm from 'src/components/Confirm.vue'
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-	name: 'PendingRequest',
+	name: 'Friends',
 	components: { Confirm },
 	props: {
 		username: { type: String, required: true },
-		category: { type: String, required: true },
-
-		menu_profile: { type: Boolean, default: false },
-		menu_block: { type: Boolean, default: false },
-
-		shortcut_profile: { type: Boolean, default: false },
-		shortcut_block: { type: Boolean, default: false },
 	},
   setup() {
     const confirmBlock = ref(false)
+    const confirmUnfollow = ref(false)
     return {
-      confirmBlock
+      confirmBlock,
+      confirmUnfollow
     }
   },
 	data() {
@@ -116,11 +108,17 @@ export default defineComponent({
 				path: '/profile/' + this.username,
 			})
 		},
-		follow() {
-			this.$api.follow(this.username)
-				.then(() => { })
-				.catch(() => { })
-		},
+    goGameOptions() {
+      this.$emit('goGameOptions', this.username)
+    },
+    goChat() {
+      if (this.channelId)
+        this.$router.push({
+          path: `/conversation/${this.channelId}`,
+        })
+      else
+        console.error('user one-to-one channelId undefined')
+    },
 		unfollow() {
 			this.$api.unfollow(this.username)
 				.then(() => { })
@@ -139,15 +137,15 @@ export default defineComponent({
 
 
 
-#PendingRequest:hover
+#Friends:hover
   background-color: $blue-grey-14
-#PendingRequest:hover .hideable
+#Friends:hover .hideable
   display: none
 
 .toggleVisibility
   display: none
 
-#PendingRequest:hover .toggleVisibility
+#Friends:hover .toggleVisibility
   display: flex
 
 .loginstatus

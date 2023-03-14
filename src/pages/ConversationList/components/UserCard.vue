@@ -1,10 +1,10 @@
 <template>
 
-    <q-item clickable v-ripple class="usermenu" manual-focus :focused="$store.active_channel === channelId">
+    <q-item clickable v-ripple class="usermenu " manual-focus :focused="$store.active_channel === channelId">
       <q-tooltip v-if="muted || banned" style="width: 250px;">
         <span class="text-subtitle2">{{ muted ? 'Muted' : 'Banned' }} until {{ utils.getRelativeDate(new Date(duration)) }}</span>
       </q-tooltip>
-      <q-item-section style="max-width: 30px;" @click="goProfilPage" >
+      <q-item-section style="max-width: 30px;" @click="goProfilePage" >
         <q-avatar size="38px" class="avatar" :style="`background-color: ${$utils.usernameToColor(username)};`">
           <img :src="`/api/avatar/${username}/thumbnail`">
           <div :class="getLoginStatus()" class="loginstatus"/>
@@ -14,24 +14,24 @@
         <q-icon size="20px" color="red" name="mdi-cancel" v-if="banned"/>
         <q-icon size="20px" color="yellow" name="mdi-microphone-off" v-if="muted"/>
       </q-item-section>
-      <q-item-section class="name" @click="goProfilPage">
+      <q-item-section class="name" @click="goProfilePage">
         <span>{{ username }}</span>
       </q-item-section>
 
       <q-item-section side thumbnail class="q-mb-xs tata">
-        <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilPage" />
+        <q-icon v-if="shortcut_profile"   class="shortcut" name="person"     color="cyan"   @click="goProfilePage" />
         <q-icon v-if="shortcut_block"     class="shortcut" name="person_off" color="red"    @click="block" />
         <q-icon v-if="shortcut_unblock"   class="shortcut" name="cancel"     color="red"    @click="confirmUnblock = true"><q-tooltip>Unblock</q-tooltip></q-icon>
         <q-icon v-if="shortcut_play"      class="shortcut" name="mdi-gamepad-variant-outline" color="green"  @click="goGameOptions"><q-tooltip>Play</q-tooltip></q-icon>
         <q-icon v-if="shortcut_chat"      class="shortcut" name="chat"       color="orange" @click="goChat"><q-tooltip>Chat</q-tooltip></q-icon>
         <q-icon v-if="shortcut_unfollow"  class="shortcut" name="cancel"     color="red"    @click="unfollow" />
         <q-icon v-if="shortcut_follow"    class="shortcut" name="done"       color="green"  @click="follow" />
-        <q-icon name="more_vert" color="#F7F7FF" class="shortcut">
+        <q-btn icon="more_vert" flat round padding="none" color="#F7F7FF" class="shortcut">
           <q-tooltip>More</q-tooltip>
           <q-menu class="bg-grey-9 text-white" auto-close>
             <q-list style="min-width: 100px">
 
-              <q-item v-if="menu_profile" clickable @click="goProfilPage">
+              <q-item v-if="menu_profile" clickable @click="goProfilePage">
                 <q-item-section>Profile</q-item-section>
               </q-item>
 
@@ -62,7 +62,7 @@
               </q-item>
             </q-list>
           </q-menu>
-        </q-icon>
+        </q-btn>
       </q-item-section>
     <q-dialog persistent v-model=confirmUnfollow>
       <Confirm :what="`unfollow ${username}`" :accept="unfollow" />
@@ -146,7 +146,7 @@ export default defineComponent({
         return 'INGAME-status'
       return 'OFFLINE-status'
     },
-    goProfilPage() {
+    goProfilePage() {
       this.$router.push({
         path: '/profile/' + this.username,
       })

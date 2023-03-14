@@ -10,8 +10,7 @@
         active-color="orange" indicator-color="orange" align="justify" narrow-indicator>
         <q-tab name="friends" icon="group" class="tab unautretruc"><q-tooltip>Friends</q-tooltip></q-tab>
         <q-tab name="channels" icon="chat" class="tab"><q-tooltip>Channels</q-tooltip></q-tab>
-        <q-tab name="pending requests" icon="mdi-account-clock-outline" class="tab">
-          <q-tooltip>Pending requests</q-tooltip>
+        <q-tab name="pending requests" icon="mdi-account-clock-outline" class="tab"><q-tooltip>Pending requests</q-tooltip>
           <div class="notif justify-center items-center circle" v-if="$store.pendingRequests?.length > 0" />
           <div class="notif justify-center items-center" v-if="$store.pendingRequests?.length">
             {{ $store.pendingRequests?.length < 99 ? $store.pendingRequests?.length : '99+' }} </div>
@@ -37,10 +36,21 @@
         <!-- #################################################################################################################### -->
         <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
           <q-list>
-            <UserCard v-for="friend in $store.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
-              shortcut_chat shortcut_play menu_profile menu_block menu_play menu_chat menu_unfollow />
+            <!-- <UserCard v-for="friend in $store.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
+              shortcut_chat shortcut_play menu_profile menu_block menu_play menu_chat menu_unfollow /> -->
+              <Friends v-for="friend in $store.friends" @goGameOptions="goGameOptions" :key="friend"
+              :username="friend"
+              category="sent"/>
           </q-list>
+
         </q-tab-panel>
+
+        <!-- <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
+          <q-list>
+
+          </q-list>
+        </q-tab-panel> -->
+
 
 <!-- #################################################################################################################### -->
           <q-tab-panel name="channels" class="tab-panel hide-scrollbar">
@@ -105,6 +115,7 @@ import { ISearchQuery } from 'src/services/api.models'
 import QInputMenu from 'src/components/QInputMenu.component.vue';
 import CreateChannel from 'src/components/CreateChannel.vue'
 import UserCard from './components/UserCard.vue'
+import Friends from './components/Friends.vue'
 import PendingRequest from './components/PendingRequest.vue'
 
 enum EUserStatus {
@@ -130,7 +141,7 @@ interface IUserSelected {
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { ChooseGameOptions, QInputMenu, CreateChannel, UserCard, PendingRequest},
+  components: { ChooseGameOptions, QInputMenu, CreateChannel, UserCard, Friends, PendingRequest},
   setup() {
     const gameOptions = ref(false)
     const dialog = ref(false)

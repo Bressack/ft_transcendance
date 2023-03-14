@@ -1,7 +1,7 @@
 <template>
 <div class="r-py-md">
   <q-item>
-    <q-item-label class="press2p absolute-full flex flex-center bigger">Level {{level}}</q-item-label>
+    <q-item-label class="press2p absolute-full flex flex-center label">Level {{level}}</q-item-label>
   </q-item>
 </div>
 <q-linear-progress class="progress" :value="progress" color="green">
@@ -60,10 +60,10 @@ export default defineComponent({
 @use "../../../css/interpolate" as r
 
 .progress
-  @include r.interpolate(font-size, 320px, 2560px, 30px, 50px)
+  @include r.interpolate(font-size, 320px, 2560px, 20px, 50px)
 
 .badge
-  @include r.interpolate(font-size, 320px, 2560px, 10px, 30px)
-  @include r.interpolate(height, 320px, 2560px, 20px, 40px)
+  @include r.interpolate(font-size, 320px, 2560px, 8px, 20px)
+  @include r.interpolate(height, 320px, 2560px, 18px, 30px)
   font-weight: bold
 </style>

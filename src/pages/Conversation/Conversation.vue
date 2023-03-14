@@ -322,7 +322,7 @@ export default defineComponent({
 #virtScroll
   height: calc(100vh - (90px + 70px + 50px))
   width: 100%
-  padding: 0px 50px 0px 50px
+  padding: 0px 35px 0px 35px
 
 @media screen and (max-width: 800px)
   #virtScroll
@@ -330,7 +330,7 @@ export default defineComponent({
 
 @media screen and (min-width: 1200px)
   #virtScroll
-    padding: 0px 100px 0px 100px
+    padding: 0px 60px 0px 60px
 //   word-break: break-word
 
 
