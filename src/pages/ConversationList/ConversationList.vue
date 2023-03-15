@@ -38,9 +38,7 @@
           <q-list>
             <!-- <UserCard v-for="friend in $store.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
               shortcut_chat shortcut_play menu_profile menu_block menu_play menu_chat menu_unfollow /> -->
-              <Friends v-for="friend in $store.friends" @goGameOptions="goGameOptions" :key="friend"
-              :username="friend"
-              category="sent"/>
+              <Friends v-for="friend in $store.friends" :key="friend" :username="friend"/>
           </q-list>
 
         </q-tab-panel>
@@ -90,9 +88,10 @@
 <!-- #################################################################################################################### -->
           <q-tab-panel name="blocked" class="tab-panel hide-scrollbar">
             <q-list>
-              <UserCard v-for="username in $store.blocked" :key="username" @goGameOptions="goGameOptions"
+              <!-- <UserCard v-for="username in $store.blocked" :key="username" @goGameOptions="goGameOptions"
                 :username="username"
-                shortcut_unblock menu_profile menu_unblock />
+                shortcut_unblock menu_profile menu_unblock /> -->
+              <Blocked v-for="username in $store.blocked" :key="username" :username=username />
             </q-list>
           </q-tab-panel>
 <!-- #################################################################################################################### -->
@@ -100,10 +99,6 @@
       </q-tab-panels>
     </q-card>
   </div>
-
-  <q-dialog v-model="gameOptions">
-    <ChooseGameOptions :opponent="opponent" :closeFunction="closeGameOptions" :inviteType="false" />
-  </q-dialog>
 
 </template>
 
@@ -117,6 +112,7 @@ import CreateChannel from 'src/components/CreateChannel.vue'
 import UserCard from './components/UserCard.vue'
 import Friends from './components/Friends.vue'
 import PendingRequest from './components/PendingRequest.vue'
+import Blocked from './components/Blocked.vue'
 
 enum EUserStatus {
   UNKNOWN,
@@ -141,7 +137,7 @@ interface IUserSelected {
 
 export default defineComponent({
   name: 'ConversationList',
-  components: { ChooseGameOptions, QInputMenu, CreateChannel, UserCard, Friends, PendingRequest},
+  components: { ChooseGameOptions, QInputMenu, CreateChannel, UserCard, Friends, PendingRequest, Blocked },
   setup() {
     const gameOptions = ref(false)
     const dialog = ref(false)
@@ -149,13 +145,6 @@ export default defineComponent({
     return {
       channelSelector: '',
       tab: ref('friends'),
-      gameOptions,
-      openGameOptions() {
-        gameOptions.value = true
-      },
-      closeGameOptions() {
-        gameOptions.value = false
-      },
       closeDialog() {
         dialog.value = false
       },
@@ -188,7 +177,6 @@ export default defineComponent({
     // },
     goGameOptions(username: string) {
       this.opponent = username
-      this.openGameOptions()
     },
     clearInput() {
       this.searchInput = ''

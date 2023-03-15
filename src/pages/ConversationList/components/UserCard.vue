@@ -47,14 +47,17 @@
                 <q-item-section>Unblock</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_follow" clickable @click="follow">
+              <q-item v-if="menu_follow && !isFriend() && !isBlocked()" clickable @click="follow">
                 <q-item-section>Follow</q-item-section>
               </q-item>
 
               <q-separator dark />
 
-              <q-item v-if="menu_block" clickable class="text-red-7" @click="confirmBlock = true">
+              <q-item v-if="menu_block && !isBlocked()" clickable class="text-red-7" @click="confirmBlock = true">
                 <q-item-section>Block</q-item-section>
+              </q-item>
+              <q-item v-else-if="menu_block && isBlocked()" clickable class="text-red-7" @click="confirmUnblock = true">
+                <q-item-section>Unblock</q-item-section>
               </q-item>
 
               <q-item v-if="menu_unfollow" clickable class="text-red-7" @click="confirmUnfollow = true">
@@ -135,6 +138,12 @@ export default defineComponent({
 	}
   },
   methods: {
+    isFriend () {
+      return (this.$store.friends?.find(e => e === this.username))
+    },
+    isBlocked () {
+      return (this.$store.blocked?.find(e => e === this.username))
+    },
     getLoginStatus() {
 		const status = this.$store.getStatus(this.username)
 	//TODO: check login status
