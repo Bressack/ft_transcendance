@@ -33,25 +33,18 @@
 
       <q-tab-panels v-model="tab" animated class="list">
 
-        <!-- #################################################################################################################### -->
+<!-- #################################################################################################################### -->
         <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
-          <q-list>
-            <!-- <UserCard v-for="friend in $store.friends" :key="friend" @goGameOptions="goGameOptions" :username="friend"
-              shortcut_chat shortcut_play menu_profile menu_block menu_play menu_chat menu_unfollow /> -->
+          <div v-if="!$store.friends?.length" class="emptylist text-center">
+            you have no friend
+          </div>
+          <q-list v-else>
               <Friends v-for="friend in $store.friends" @goGameOptions="goGameOptions" :key="friend"
               :username="friend"
               category="sent"/>
           </q-list>
 
         </q-tab-panel>
-
-        <!-- <q-tab-panel name="friends" class="tab-panel hide-scrollbar">
-          <q-list>
-
-          </q-list>
-        </q-tab-panel> -->
-
-
 <!-- #################################################################################################################### -->
           <q-tab-panel name="channels" class="tab-panel hide-scrollbar">
             <q-item class="flex-center">
@@ -60,7 +53,10 @@
             <q-dialog persistent v-model="dialog">
               <CreateChannel :closeFn=closeDialog />
             </q-dialog>
-            <q-list>
+            <div v-if="!$store.getPublicPrivateChannels?.length" class="emptylist text-center">
+              you have no subscribed channel
+            </div>
+            <q-list v-else>
               <q-item clickable v-ripple
                 v-for="sub in ($store.getPublicPrivateChannels)"
                 :key="sub.channelId"
@@ -80,7 +76,10 @@
           </q-tab-panel>
 <!-- #################################################################################################################### -->
           <q-tab-panel name="pending requests" class="tab-panel hide-scrollbar">
-            <q-list>
+            <div v-if="!$store.pendingRequests?.length" class="emptylist text-center">
+              you have no pending requests
+            </div>
+            <q-list v-else>
               <PendingRequest v-for="req in $store.pendingRequests" :key="req.username"
                 :username="req.username"
                 :category="req.category"
@@ -89,7 +88,10 @@
           </q-tab-panel>
 <!-- #################################################################################################################### -->
           <q-tab-panel name="blocked" class="tab-panel hide-scrollbar">
-            <q-list>
+            <div v-if="!$store.blocked?.length" class="emptylist text-center">
+              you have no blocked users
+            </div>
+            <q-list v-else>
               <UserCard v-for="username in $store.blocked" :key="username" @goGameOptions="goGameOptions"
                 :username="username"
                 shortcut_unblock menu_profile menu_unblock />
@@ -347,4 +349,9 @@ body
 .tabtitle
   margin-top: 100px
 
+.emptylist
+  width: 300px
+  height: 100%
+  font-family: 'Press Start 2P'
+  padding-top: calc(50vh - 260px)
 </style>
