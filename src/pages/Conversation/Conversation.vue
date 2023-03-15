@@ -114,8 +114,8 @@
 			  <q-icon color="grey-6" size="25px" style="margin-right:10px;" name="mdi-shield-crown-outline"/>
 			  Owner</q-item>
             <UserCard v-for="user of userlist_owner" :key="user.username" :username="user.username"
-              class="text-red text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_play
-              menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" >
+              class="text-red text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_follow
+              :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" >
             </UserCard>
             <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center"
 			v-if="userlist_admins?.length">
@@ -123,8 +123,8 @@
 			Admins - {{ userlist_admins?.length }}
 			</q-item>
             <UserCard v-for="user of userlist_admins" :key="user.username" :username="user.username"
-              class="text-warning text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block
-              menu_play menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" >
+              class="text-warning text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_follow
+              :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" >
             </UserCard>
 
             <q-item style="font-family: 'Press Start 2P'; font-size: 0.8em;" class="items-center"
@@ -132,8 +132,8 @@
 			<q-icon color="grey-6" size="25px" style="margin-right:10px;" name="mdi-shield-bug-outline"/>
 			Users - {{ userlist_users?.length }}</q-item>
             <UserCard v-for="user of userlist_users" :key="user.username" :username="user.username"
-              class="text-info text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_play
-              menu_follow :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" >
+              class="text-info text-bold" :duration="(user.stateActiveUntil?.toString())" menu_profile menu_block menu_follow
+              :banned="user.state == 'BANNED'" :muted="user.state == 'MUTED'" >
             </UserCard>
 
           </q-list>

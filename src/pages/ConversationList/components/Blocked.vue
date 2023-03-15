@@ -1,5 +1,5 @@
 <template>
-	<q-item id="Friends" class="row q-pr-xs">
+	<q-item id="Blocked" class="row q-pr-xs">
 		<q-item-section style="max-width: 44px;" @click="goProfilePage" id="avatar"><q-tooltip>{{username}}'s profile</q-tooltip>
 
 
@@ -15,15 +15,13 @@
 
 		<q-item-section side class="text-right hideable">
       <div>
-			  <q-icon class="q-pr-md" size="20px" name="mdi-gamepad-variant-outline" color="green" />
-        <q-icon size="20px" name="chat" color="orange" />
+			  <q-icon class="q-pr-md" size="20px" name="mdi-cancel" color="red" />
       </div>
 		</q-item-section>
 		<q-item-section id="reqbuttons" class="toggleVisibility">
 
 			<q-btn-group flat class="justify-end  text-right">
-				<q-btn dense flat no-wrap color="green" label="play" icon="mdi-gamepad-variant-outline" @click="gameOptions = true"/>
-				<q-btn no-wrap dense flat color="orange" label="chat" icon="chat" @click="goChat"/>
+				<q-btn no-wrap dense flat color="red" label="cancel" icon="cancel" @click="confirmUnblock = true"/>
 			</q-btn-group>
 		</q-item-section>
 		<q-item-section  side>
@@ -38,29 +36,21 @@
 
               <q-separator dark />
 
-              <q-item clickable class="text-red-7" @click="confirmUnfollow = true">
-                <q-item-section>Unfollow</q-item-section>
+              <q-item clickable class="text-red-7" @click="confirmUnblock = true">
+                <q-item-section>Unblock</q-item-section>
               </q-item>
-              <q-item clickable class="text-red-7" @click="confirmBlock = true">
-                <q-item-section>Block</q-item-section>
-              </q-item>
+
 
             </q-list>
-
-          </q-menu>
+         </q-menu>
         </q-btn>
       </q-item-section>
 	</q-item>
 	<q-separator />
 
-  <q-dialog v-model="gameOptions">
-    <ChooseGameOptions :opponent="username" :closeFunction="closeGameOptions" :inviteType="false" />
-  </q-dialog>
-  <q-dialog persistent v-model=confirmBlock>
-    <Confirm :what="`block ${username}`" :accept="block" />
-  </q-dialog>
-  <q-dialog persistent v-model=confirmUnfollow>
-    <Confirm :what="`unfollow ${username}`" :accept="unfollow" />
+
+  <q-dialog persistent v-model=confirmUnblock>
+    <Confirm :what="`unblock block ${username}`" :accept="block" />
   </q-dialog>
 </template>
 
@@ -71,32 +61,17 @@ import ChooseGameOptions from 'src/components/ChooseGameOptions.vue'
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-	name: 'Friends',
+	name: 'Blocked',
 	components: { Confirm, ChooseGameOptions },
 	props: {
 		username: { type: String, required: true },
 	},
   setup() {
-    const gameOptions = ref(false)
-    const confirmBlock = ref(false)
-    const confirmUnfollow = ref(false)
+    const confirmUnblock = ref(false)
     return {
-      gameOptions,
-      confirmBlock,
-      confirmUnfollow,
-      closeGameOptions() {
-        gameOptions.value = false
-      },
+      confirmUnblock,
     }
   },
-	computed: {
-		channelId() {
-			return this.$store.getChannelIDByUsername(this.username)
-		},
-		channelPath() {
-			return `/channel/${this.channelId}`
-		}
-	},
 	methods: {
 		getLoginStatus() {
 			const status = this.$store.getStatus(this.username)
@@ -114,22 +89,6 @@ export default defineComponent({
 				path: '/profile/' + this.username,
 			})
 		},
-    goGameOptions() {
-      this.$emit('goGameOptions', this.username)
-    },
-    goChat() {
-      if (this.channelId)
-        this.$router.push({
-          path: `/conversation/${this.channelId}`,
-        })
-      else
-        console.error('user one-to-one channelId undefined')
-    },
-		unfollow() {
-			this.$api.unfollow(this.username)
-				.then(() => { })
-				.catch(() => { })
-		},
 		block() {
 			this.$api.block(this.username)
 				.then(() => { })
@@ -143,15 +102,15 @@ export default defineComponent({
 
 
 
-#Friends:hover
+#Blocked:hover
   background-color: $blue-grey-14
-#Friends:hover .hideable
+#Blocked:hover .hideable
   display: none
 
 .toggleVisibility
   display: none
 
-#Friends:hover .toggleVisibility
+#Blocked:hover .toggleVisibility
   display: flex
 
 .loginstatus

@@ -7,7 +7,7 @@
   </q-item>
   <q-item>
     <q-item-section>
-      <q-btn color="red" class="interpolate-btn" label="cancel" v-close-popup />
+      <q-btn color="red" class="interpolate-btn"  label="cancel" v-close-popup />
     </q-item-section>
     <q-item-section>
       <q-btn color="green" class="interpolate-btn" label="accept" @click="accept()" v-close-popup />

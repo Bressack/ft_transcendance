@@ -10,7 +10,7 @@
         <q-item-section>
           <q-item-label class="bigger name">{{ name }}</q-item-label>
         </q-item-section>
-        <q-item v-if="interact && name != $store.username">
+        <q-item v-if="interact && name != $store.username && !isBlocked()">
           <q-item-section>
             <q-btn icon="mdi-gamepad-variant-outline" flat round class="interpolate-btn q-mr-xs" color="green" @click="goGameOptions"><q-tooltip>Play</q-tooltip></q-btn>
           </q-item-section>
@@ -92,7 +92,10 @@ export default defineComponent({
       return (v / (v + d) * 100).toFixed(0)
     },
     isFriend () {
-      return (this.$store.friends?.find((element: any) => element === this.name))
+      return (this.$store.friends?.find(e => e === this.name))
+    },
+    isBlocked () {
+      return (this.$store.blocked?.find(e => e === this.name))
     },
     friendStatus () {
       if (this.$store.friendRequestRecevied?.includes(this.name)) {
