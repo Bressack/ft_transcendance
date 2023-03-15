@@ -28,7 +28,11 @@
 		<q-item-section id="reqbuttons" class="toggleVisibility">
 
 			<q-btn-group flat class="justify-end  text-right">
+<<<<<<< Updated upstream
 				<q-btn dense flat no-wrap
+=======
+				<q-btn  dense flat
+>>>>>>> Stashed changes
 				:color="category === 'received' ? 'red' : 'orange'"
 				:label="category === 'received' ? 'decline' : 'cancel'"
 				:icon="category === 'received' ?  'mdi-cancel' : 'mdi-close'" @click="unfollow"/>

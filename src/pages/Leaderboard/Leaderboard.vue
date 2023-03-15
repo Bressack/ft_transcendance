@@ -1,32 +1,26 @@
 <template>
   <q-page>
-    <div class="press2p text-center text-h4 q-py-lg">
+    <div class="press2p text-center q-py-lg grandtitle">
       LeaderBoard
     </div>
     <q-item class="colnames">
-      <q-item-section class="base" @click="sortboard('username')">
-        <q-btn :color="sortindex == 'username' ? 'orange-7' : 'grey-8'" label="Username" class="press2p labelh score">
-          <q-icon :name="sorting('username')" size="30px" :color="sorttype ? 'green' : 'red'"/>
+      <q-btn-group flat rounded>
+        <q-btn :color="sortindex == 'username' ? 'orange-7' : 'grey-8'" label="Username" class="press2p sorting-btn" @click="sortboard('username')">
+          <q-icon :name="sorting('username')" :color="sorttype ? 'green' : 'red'" class="iconsize"/>
         </q-btn>
-      </q-item-section>
-      <q-separator vertical color="blue-grey-5" spaced/>
-      <q-item-section class="base" @click="sortboard('victory')">
-        <q-btn :color="sortindex == 'victory' ? 'orange-7' : 'grey-8'" label="Victory" class="press2p labelh score colnames-each">
-          <q-icon :name="sorting('victory')" size="30px" :color="sorttype ? 'green' : 'red'"/>
+        <q-separator vertical color="blue-grey-5" spaced="1vw"/>
+        <q-btn :color="sortindex == 'victory' ? 'orange-7' : 'grey-8'" label="Victory" class="press2p sorting-btn colnames-each" @click="sortboard('victory')">
+          <q-icon :name="sorting('victory')" :color="sorttype ? 'green' : 'red'" class="iconsize"/>
         </q-btn>
-      </q-item-section>
-      <q-separator vertical color="blue-grey-5" spaced/>
-      <q-item-section class="base" @click="sortboard('defeat')">
-        <q-btn :color="sortindex == 'defeat' ? 'orange-7' : 'grey-8'" label="Defeat" class="press2p labelh score colnames-each">
-          <q-icon :name="sorting('defeat')" size="30px" :color="sorttype ? 'green' : 'red'"/>
+        <q-separator vertical color="blue-grey-5" spaced="1vw"/>
+        <q-btn :color="sortindex == 'defeat' ? 'orange-7' : 'grey-8'" label="Defeat" class="press2p sorting-btn colnames-each" @click="sortboard('defeat')">
+          <q-icon :name="sorting('defeat')" :color="sorttype ? 'green' : 'red'" class="iconsize"/>
         </q-btn>
-      </q-item-section>
-      <q-separator vertical color="blue-grey-5" spaced/>
-      <q-item-section class="base" @click="sortboard('ratio')">
-        <q-btn :color="sortindex == 'ratio' ? 'orange-7' : 'grey-8'" label="Ratio" class="press2p labelh score colnames-each">
-          <q-icon :name="sorting('ratio')" size="30px" :color="sorttype ? 'green' : 'red'"/>
+        <q-separator vertical color="blue-grey-5" spaced="1vw"/>
+        <q-btn :color="sortindex == 'ratio' ? 'orange-7' : 'grey-8'" label="Ratio" class="press2p sorting-btn colnames-each" @click="sortboard('ratio')">
+          <q-icon :name="sorting('ratio')" :color="sorttype ? 'green' : 'red'" class="iconsize"/>
         </q-btn>
-      </q-item-section>
+      </q-btn-group>
     </q-item>
     <q-list class="board">
       <LeaderCard v-for="(user, index) of users" :key="user.username"
@@ -116,14 +110,20 @@ export default defineComponent({
   color: $red
 
 .colnames
-  width: 80%
   margin: auto
-
-.base
-  min-width: 100px
 
 .labelh
   @include r.interpolate(font-size, 320px, 2560px, 8px, 22px)
   color: $blue-grey-3
 
+.grandtitle
+  @include r.interpolate(font-size, 320px, 2560px, 17px, 80px)
+
+.sorting-btn
+  // width: calc(80vw / 4) !important
+  @include r.interpolate(width, 320px, 2560px, 70px, 300px)
+  @include r.interpolate(font-size, 320px, 2560px, 7px, 22px)
+
+.iconsize
+  font-size: 4vw
 </style>

@@ -1,17 +1,17 @@
 <template>
   <div class="q-px-md">
     <div class="q-pa-sm row" :class="$store.username == user.username ? 'isme' : ''">
-      <q-item class="press2p labelh items-center text-h6">#<span class="text-h4">{{ rank }}</span></q-item>
+      <q-item class="press2p labelh items-center rank">#<span>{{ rank }}</span></q-item>
       <q-item class="main items-center" :class="rankborder" clickable @click="goProfilPage">
-        <q-item-section style="max-width: 52px;" class="" >
-          <q-avatar size="52px" class="avatar" :style="`background-color: ${$utils.usernameToColor(user.username)};`">
+        <q-item-section style="max-width: 4vw" class="">
+          <q-avatar style="width: 4vw; height: 4vw" class="" :style="`background-color: ${$utils.usernameToColor(user.username)};`">
             <img :src="`/api/avatar/${user.username}/thumbnail`">
             <div :class="getLoginStatus()" class="loginstatush"/>
           </q-avatar>
         </q-item-section>
-        <q-separator vertical color="blue-grey-5" spaced/>
+        <!-- <q-separator vertical color="blue-grey-5" spaced/> -->
         <q-item-section class="">
-          <q-card-label class="text-h6 q-ml-lg">
+          <q-card-label class="lname q-ml-lg">
             {{ user.username }}
           </q-card-label>
         </q-item-section>
@@ -115,20 +115,20 @@ export default defineComponent({
   border-radius: 15px
 
 .rankborder-gold
-  border-top:    10px solid gold
-  border-bottom: 10px solid gold
+  border-top:    1vw solid gold
+  border-bottom: 1vw solid gold
 
 .rankborder-silver
-  border-top:    10px solid silver
-  border-bottom: 10px solid silver
+  border-top:    1vw solid silver
+  border-bottom: 1vw solid silver
 
 .rankborder-bronze
-  border-top:    10px solid $brown-6
-  border-bottom: 10px solid $brown-6
+  border-top:    1vw solid $brown-6
+  border-bottom: 1vw solid $brown-6
 
 .rankborder-others
-  border-top:    10px solid $grey-8
-  border-bottom: 10px solid $grey-8
+  border-top:    1vw solid $grey-8
+  border-bottom: 1vw solid $grey-8
 
 .base
   min-width: 100px
@@ -140,14 +140,22 @@ export default defineComponent({
   font-weight: bold
 
 .loginstatush
-  width: 20px
-  height: 20px
+  width: 1.2vw
+  height: 1.2vw
+  // @include r.interpolate((width, height), 320px, 2560px, 8px, 60px)
   border-radius: 100px
   position: absolute
-  margin-top: 35px
-  margin-left: 35px
+  // @include r.interpolate((margin-top, margin-left), 320px, 2560px, 8px, 110px)
+  margin-top: 2.5vw
+  margin-left: 2.5vw
 
 .isme
   border: 4px solid green
   border-radius: 10px
+
+.lname
+  @include r.interpolate(font-size, 320px, 2560px, 8px, 35px)
+
+.rank
+  font-size: 2vw
 </style>
