@@ -7,7 +7,7 @@
 				<q-btn flat @click="$store.drawerStatus = !$store.drawerStatus" round dense icon="menu" />
 
 				<q-item class="absolute-center relative-position label thetitle glow" clickable @click="goHome" style="">
-          <q-tooltip anchor="center middle" self="center middle">Home</q-tooltip>Transcendence
+          <q-tooltip anchor="bottom middle" self="center middle">Home</q-tooltip>Transcendence
         </q-item>
 
 				<q-space />
