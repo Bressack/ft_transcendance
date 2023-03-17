@@ -47,7 +47,7 @@
           </q-item>
           <q-item class="flex-center">
             <q-input item-aligned label="Validation code" dark color="white" v-model="validateQrcode">
-              <q-btn color="orange" type="submit" label="ok" @click="sendCode"/>
+              <q-btn color="orange" type="submit" label="ok" mask="### ###" @click="sendCode"/>
             </q-input>
           </q-item>
           <q-item class="flex-center q-pb-md">

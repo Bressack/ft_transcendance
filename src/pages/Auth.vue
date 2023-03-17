@@ -10,8 +10,7 @@
 			<q-form v-if="signOpt" @submit="onSubmitSignIn" class="q-gutter-md">
 				<q-input class="input" filled v-model="username" label="Username" lazy-rules />
 
-				<q-input class="input" filled v-model="password" label="Password" lazy-rules type="password"
-					current-password />
+				<q-input class="input" filled v-model="password" label="Password" lazy-rules type="password" autocomplete="on" current-password />
 				<q-card-actions class="q-mt-md">
 					<q-btn label="Connect" type="submit" color="primary" class="submitbutton" />
 				</q-card-actions>
@@ -25,7 +24,7 @@
 
 				<q-input class="input" filled v-model="email" label="Email" lazy-rules />
 
-				<q-input class="input" filled v-model="password" label="Password" lazy-rules type="password" />
+				<q-input class="input" filled v-model="password" label="Password" lazy-rules type="password" autocomplete="on" />
 				<q-card-actions class="q-mt-md">
 					<q-btn label="signup" type="submit" color="primary" class="submitbutton" />
 				</q-card-actions>

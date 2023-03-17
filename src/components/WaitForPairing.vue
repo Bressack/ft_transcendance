@@ -25,7 +25,7 @@ export default defineComponent({
     difficulty: { type: String, default: "EASY" },
     map: { type: String, default: "2D" },
   },
-  methods: 
+  methods:
   {
     stopMatchmaking()
     {

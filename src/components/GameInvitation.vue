@@ -19,8 +19,8 @@
       <q-item>
         <q-img class="image" :src="`/maps/${map}.png`" />
       </q-item>
-        <q-item-label class="q-pt-lg label">
-            Difficulty : <span class="bigger">{{ difficulty }}</span>
+        <q-item-label class="label press2p q-pt-md">
+            {{ difficulty }}
         </q-item-label>
       </q-item-section>
       <q-item-section class="flex-center">

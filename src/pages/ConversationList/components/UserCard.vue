@@ -161,7 +161,14 @@ export default defineComponent({
       })
     },
     goGameOptions() {
-      this.$emit('goGameOptions', this.username)
+      const status = this.$store.getStatus(this.username)
+      if (status === UserStatus.ONLINE) {
+        this.$emit('goGameOptions', this.username)
+      }
+      else if (status === UserStatus.WATCHING || status === UserStatus.INGAME)
+        this.$q.notify({type: "warning", message: `${this.username} is busy.`})
+      else
+        this.$q.notify({type: "warning", message: `${this.username} is not connected.`})
     },
     follow() {
       this.$api.follow(this.username)

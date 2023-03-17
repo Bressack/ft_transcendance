@@ -12,7 +12,7 @@
         </q-item-section>
         <q-item v-if="interact && name != $store.username && !isBlocked()">
           <q-item-section>
-            <q-btn icon="mdi-gamepad-variant-outline" flat round class="interpolate-btn q-mr-xs" color="green" @click="goGameOptions"><q-tooltip>Play</q-tooltip></q-btn>
+            <q-btn icon="mdi-gamepad-variant-outline" flat round class="interpolate-btn q-mr-xs" color="green" @click="goGameOptions()"><q-tooltip>Play</q-tooltip></q-btn>
           </q-item-section>
           <q-item-section>
             <q-btn v-if="!isFriend()" flat round class="interpolate-btn" :icon=friendIcon :color=friendColor @click="followOrUnfollow()"><q-tooltip v-if="friendIcon === 'add'">Add friend</q-tooltip><q-tooltip v-else>Cancel friend request</q-tooltip></q-btn>
@@ -43,7 +43,8 @@
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue'
-import ChooseGameOptions from '../../../components/ChooseGameOptions.vue'
+import ChooseGameOptions from 'src/components/ChooseGameOptions.vue'
+import { UserStatus } from 'src/stores/store.types';
 
 
 export default defineComponent({
@@ -63,9 +64,6 @@ export default defineComponent({
 		const gameOptions = ref(false)
 		return {
 			gameOptions,
-			openGameOptions() {
-				gameOptions.value = true
-			},
 			closeGameOptions() {
 				gameOptions.value = false
 			},
@@ -136,8 +134,16 @@ export default defineComponent({
 			})
 		},
     goGameOptions() {
-      this.openGameOptions()
-		},
+      const status = this.$store.getStatus(this.name)
+      if (status === UserStatus.ONLINE) {
+        this.$emit('goGameOptions', this.name)
+        this.gameOptions = true
+      }
+      else if (status === UserStatus.WATCHING || status === UserStatus.INGAME)
+        this.$q.notify({type: "warning", message: `${this.name} is busy.`})
+      else
+        this.$q.notify({type: "warning", message: `${this.name} is not connected.`})
+    },
   }
 })
 </script>

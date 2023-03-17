@@ -22,7 +22,7 @@
 		<q-item-section id="reqbuttons" class="toggleVisibility">
 
 			<q-btn-group flat class="justify-end  text-right">
-				<q-btn dense flat no-wrap color="green" label="play" icon="mdi-gamepad-variant-outline" @click="gameOptions = true"/>
+				<q-btn dense flat no-wrap color="green" label="play" icon="mdi-gamepad-variant-outline" @click="goGameOptions"/>
 				<q-btn no-wrap dense flat color="orange" label="chat" icon="chat" @click="goChat"/>
 			</q-btn-group>
 		</q-item-section>
@@ -115,7 +115,15 @@ export default defineComponent({
 			})
 		},
     goGameOptions() {
-      this.$emit('goGameOptions', this.username)
+      const status = this.$store.getStatus(this.username)
+      if (status === UserStatus.ONLINE) {
+        this.$emit('goGameOptions', this.username)
+        this.gameOptions = true
+      }
+      else if (status === UserStatus.WATCHING || status === UserStatus.INGAME)
+        this.$q.notify({type: "warning", message: `${this.username} is busy.`})
+      else
+        this.$q.notify({type: "warning", message: `${this.username} is not connected.`})
     },
     goChat() {
       if (this.channelId)

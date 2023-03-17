@@ -176,12 +176,6 @@ export default defineComponent({
   //   }
   // },
   methods: {
-    // closePasswordDialog() {
-    //   this.dialogpassword = false
-    // },
-    goGameOptions(username: string) {
-      this.opponent = username
-    },
     clearInput() {
       this.searchInput = ''
       this.searchResult = {} as IResult

@@ -100,6 +100,7 @@ import { Convert } from "src/stores/store.validation";
 import {
 	ChannelSubscription, UserStatus,
 } from "src/stores/store.types";
+// import { setTimeout } from "timers/promises";
 
 export default defineComponent({
 	name: "MainLayout",
@@ -321,7 +322,12 @@ export default defineComponent({
 			this.StoplisteningForMatchmaking
 		);
 	},
-
+  // mounted () {
+  //   console.log('ici', this.$ws.socket);
+  //   setTimeout(()=>{
+  //     console.log('ici', this.$ws.socket);
+  //   },1000)
+  // },
 	beforeUnMount() {
 		this.$ws.removeListener("users-status");
 		this.$ws.removeListener("notifmessage");
