@@ -154,13 +154,27 @@ const routes: RouteRecordRaw[] = [
     name: "42callback",
     meta: { requiresAuth: false },
     component: () => import("layouts/LoginLayout.vue"),
+    // children: [{ path: "", component: () => import("pages/Auth.vue") }],
     beforeEnter: async (to, from, next) => {
       
-      if (!to.query.code)
+      if (!to.query || !to.query.code)
         console.error('query code unavailable')
       console.log("query : ", to.query)
-      api.signin42(to.query.code)
-      next()
+      await api.signin42(to.query.code)
+      .then((res) => {
+          
+            if (res.status >= 400) {
+                next({ name: "GameError" });
+            } else {
+                console.log("is ok");
+                next({name: "index" })
+            }
+        })
+        .catch(() => {
+            console.log("pas bon")
+            next({ name: "GameError" });
+        });
+    //   next()
     },
   },
 

@@ -161,9 +161,9 @@ export default defineComponent({
 				})
 		},
 		onSubmitSignIn42() {
-			console.log("test42")
-			window.location.href = "add url from 42 api"
-			// console.log("pipi");
+			
+			// console.log(import.meta.env.VITE_CLIENT_URI)
+			window.location.href =  import.meta.env.VITE_CLIENT_URI;
 			return
 			this.$api.signin42()
 				.then(() => {

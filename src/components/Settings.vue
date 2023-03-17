@@ -191,7 +191,7 @@ export default defineComponent({
       })
     },
     cancelQRCode () {
-      this.qrcode = false
+      this.qrcode = false 
       this.twoFA = false
     },
     imgOnly(files: readonly any[] | FileList): readonly any[] {

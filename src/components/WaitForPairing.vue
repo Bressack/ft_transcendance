@@ -1,14 +1,14 @@
 <template>
   <div class="dialog">
     <div class="q-px-xl r-pt-md">
-			<q-item-label class="bigger">Looking for an opponent ...</q-item-label>
+            <q-item-label class="bigger">Looking for an opponent ...</q-item-label>
       <div class="q-pt-xl">
         <q-spinner-puff
           color="orange"
           size="7em"
         />
       </div>
-		</div>
+        </div>
     <q-item class="flex-center q-pt-xl q-pb-md">
       <q-btn label="Cancel" @click="stopMatchmaking" color="red" v-close-popup />
     </q-item>
@@ -20,17 +20,17 @@ import { WS } from 'engine.io-client/build/esm/transports/websocket';
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-	name: 'WaitForPairing',
+    name: 'WaitForPairing',
   props: {
     difficulty: { type: String, default: "EASY" },
     map: { type: String, default: "2D" },
   },
-  methods:
+  methods: 
   {
     stopMatchmaking()
     {
       console.log("stopMatchmaking")
-      this.$ws.emit('stop-matchmaking', {})
+      this.$ws.emit('matchmaking-canceled', {})
       document.dispatchEvent(new CustomEvent('stop-for-matchmaking'));
     },
     startMatchmaking()
@@ -41,12 +41,10 @@ export default defineComponent({
     }
   },
   beforeMount () {
-    // console.log("test1")
     this.startMatchmaking()
     // this.$ws.listen('matchmaking-accepted', this.startgame);
   },
   unmounted () {
-    // console.log("test2")
     this.stopMatchmaking()
   }
 })
