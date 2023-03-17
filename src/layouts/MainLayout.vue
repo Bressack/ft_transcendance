@@ -61,7 +61,7 @@
           <q-tooltip anchor="center middle" self="center middle">
             Your profile page
           </q-tooltip>
-        <q-item-section avatar>
+        <q-item-section v-if="$store.username" avatar>
           <q-avatar class="avatar" :style="`background-color: ${$utils.usernameToColor($store.username)};`" size="60px" >
             <q-img :src="`/api/avatar/${$store.username}/thumbnail`" />
           </q-avatar>
@@ -89,8 +89,8 @@
 <script lang="ts">
 import { defineComponent, ref, Suspense } from "vue";
 import ConversationList from "src/pages/ConversationList/ConversationList.vue";
-import Settings from "../components/Settings.vue";
-import GameInvitation from "../components/GameInvitation.vue";
+import Settings from "src/components/Settings.vue";
+import GameInvitation from "src/components/GameInvitation.vue";
 import ncc, {
 	NotifyOptions,
 	NotifyCenter,

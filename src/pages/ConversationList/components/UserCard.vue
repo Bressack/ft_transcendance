@@ -47,11 +47,14 @@
                 <q-item-section>Unblock</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_follow && !isFriend() && !isBlocked()" clickable @click="follow">
+              <q-item v-if="menu_follow && !isFriend() && !isBlocked() && !$store.friendRequestSent?.includes(username)" clickable @click="follow">
                 <q-item-section>Follow</q-item-section>
               </q-item>
 
               <q-separator dark />
+              <q-item v-if="menu_follow && ($store.friendRequestSent?.includes(username) || isFriend())" clickable class="text-red-7" @click="confirmUnfollow = true">
+                <q-item-section>Unfollow</q-item-section>
+              </q-item>
 
               <q-item v-if="menu_block && !isBlocked()" clickable class="text-red-7" @click="confirmBlock = true">
                 <q-item-section>Block</q-item-section>
@@ -60,9 +63,6 @@
                 <q-item-section>Unblock</q-item-section>
               </q-item>
 
-              <q-item v-if="menu_unfollow" clickable class="text-red-7" @click="confirmUnfollow = true">
-                <q-item-section>Unfollow</q-item-section>
-              </q-item>
             </q-list>
           </q-menu>
         </q-btn>
