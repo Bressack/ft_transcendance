@@ -59,12 +59,14 @@
           $store.currentChannelSub.state !== 'BANNED'
         ">
           <transition appear enter-active-class="animated fadeIn" leave-active-class="animated fadeOut">
-            <div class="loadingState loadingStateCorrec" style="text-align: center;">Error
-				<div style="font-size: small">
-					{{ error_message }}
-				</div>
+            <div class="loadingState loadingStateCorrec" style="text-align: center;">
+              <span v-if="submit">Error
+                <div style="font-size: small">
+                  {{ error_message }}
+                </div>
+              </span>
 				<div v-if="error_message === 'wrong password'">
-					<q-input  dark dense v-model="channel_password" label-color="orange" color="orange"
+					<q-input dark dense v-model="channel_password" label-color="orange" color="orange"
 						hint="Enter Channel Password">
 						<template v-slot:after>
 							<q-icon name="check" class="cursor-pointer"
@@ -191,9 +193,10 @@ export default defineComponent({
   data() {
     return {
       text: ref(""),
-		error_message: "",
-		channel_password: ref(''),
-		isPwd: ref(true),
+      error_message: "",
+      channel_password: ref(''),
+      isPwd: ref(true),
+      submit: false as boolean
     };
   },
   computed: {
@@ -235,6 +238,7 @@ export default defineComponent({
     this.getDatas();
   },
   beforeUpdate() {
+    this.submit = false
     // this.getDatas()
   },
   async beforeUnmount() {
@@ -249,6 +253,7 @@ export default defineComponent({
   methods: {
 		pwdSubmitAndJoin() {
 			this.$store.current_channel_state = ChanState.LOADING;
+      this.submit = true
 			return this.$api
 				.joinChannel(this.$store.active_channel, this.channel_password)
 				.then(() => {
