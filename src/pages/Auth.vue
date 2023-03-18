@@ -190,25 +190,14 @@ export default defineComponent({
 				})
 		},
 		onSubmitSignIn42() {
-			// localhost:9000/?42auth=true&code=machin
-			
-			// console.log(import.meta.env.VITE_CLIENT_URI)
-			window.location.href =  import.meta.env.VITE_CLIENT_URI;
-			// return
-			// this.$api.signin42()
-			// 	.then(() => {
-			// 		console.log("aled")
-			// 		this.$router.push({ path: '/', query: { fetched: "true" } });
-			// 	})
-			// 	.catch((error) => {
-			// 		console.log("aled 42\n",error);
-			// 		for (let message of error?.response?.data?.message || []) {
-			// 			this.$q.notify({
-			// 				type: 'negative',
-			// 				message
-			// 			})
-			// 		}
-			// 	})
+			this.$api.axiosInstance.get("auth/42authURI").then(res => {
+				window.location.href = res.data.uri;
+			}).catch(err => {
+				this.$q.notify({
+					type: 'negative',
+					message: "Auth 42 Unavailable"
+				})
+			})
 		}
 	},
 });
