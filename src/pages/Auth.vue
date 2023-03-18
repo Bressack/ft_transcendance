@@ -72,9 +72,11 @@ const _preSetUsers: preset[] = [
 export default defineComponent({
 	name: 'Auth',
 	components: {},
+
 	data() {
+		this.$route.name == 'auth';
 		return {
-			state: ref("loginOrSignup"),
+			state: ref(this.$route.name == 'auth' ? "loginOrSignup" : "auth42loading"),
 			twoFAToken: ref(""),
 			twoFACode: "",
 			preSetUsers: _preSetUsers as [],
@@ -82,6 +84,33 @@ export default defineComponent({
 			password: '' as string,
 			email: '' as string,
 			signOpt: true as boolean,
+		}
+	},
+	async mounted() {
+				if (this.$route.name === "42callback") {
+					console.log("42callback")
+			await this.$api.signin42(this.$route.query.code as string).then(res => {
+				this.$router.push("/");
+
+			}).catch((error) => {
+				if (error?.response?.status) {
+					console.log(error.response.status)
+					if (error.response.status === 401) {
+						if (error.response.data.message[0] === "2fa needed") {
+							this.state = "twoFA";
+							this.twoFAToken = error.response.data.message[1];
+						}
+					}
+					else {
+						for (let message of error?.response?.data?.message || []) {
+							this.$q.notify({
+								type: 'negative',
+								message
+							})
+						}
+					}
+				}
+			})
 		}
 	},
 	methods: {
@@ -161,24 +190,25 @@ export default defineComponent({
 				})
 		},
 		onSubmitSignIn42() {
+			// localhost:9000/?42auth=true&code=machin
 			
 			// console.log(import.meta.env.VITE_CLIENT_URI)
 			window.location.href =  import.meta.env.VITE_CLIENT_URI;
-			return
-			this.$api.signin42()
-				.then(() => {
-					console.log("aled")
-					this.$router.push({ path: '/', query: { fetched: "true" } });
-				})
-				.catch((error) => {
-					console.log("aled 42\n",error);
-					for (let message of error?.response?.data?.message || []) {
-						this.$q.notify({
-							type: 'negative',
-							message
-						})
-					}
-				})
+			// return
+			// this.$api.signin42()
+			// 	.then(() => {
+			// 		console.log("aled")
+			// 		this.$router.push({ path: '/', query: { fetched: "true" } });
+			// 	})
+			// 	.catch((error) => {
+			// 		console.log("aled 42\n",error);
+			// 		for (let message of error?.response?.data?.message || []) {
+			// 			this.$q.notify({
+			// 				type: 'negative',
+			// 				message
+			// 			})
+			// 		}
+			// 	})
 		}
 	},
 });
